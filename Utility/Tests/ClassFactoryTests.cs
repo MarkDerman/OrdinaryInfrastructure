@@ -14,7 +14,7 @@ namespace Tests.Odin.Utility
             ResultValue<Class3> result = activator.TryCreate<Class3>(typeof(Class3));
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Success, Is.True);
+            Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.Value, Is.Not.Null);
             Assert.That(result.Value, Is.InstanceOf<Class3>());
         }
@@ -26,7 +26,7 @@ namespace Tests.Odin.Utility
             ResultValue<Interface1> result = activator.TryCreate<Interface1>(typeof(Inherited2));
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Success, Is.True);
+            Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.Value, Is.Not.Null);
             Assert.That(result.Value, Is.InstanceOf<Interface1>());
         }
@@ -38,7 +38,7 @@ namespace Tests.Odin.Utility
             ResultValue<Class3> result = activator.TryCreate<Class3>("Tests.Odin.Utility.Class3");
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Success, Is.True);
+            Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.Value, Is.Not.Null);
             Assert.That(result.Value, Is.InstanceOf<Class3>());
         }
@@ -50,7 +50,7 @@ namespace Tests.Odin.Utility
             ResultValue<Interface1> result = activator.TryCreate<Interface1>("Tests.Odin.Utility.Inherited2");
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Success, Is.True);
+            Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.Value, Is.Not.Null);
             Assert.That(result.Value, Is.InstanceOf<Interface1>());
         }

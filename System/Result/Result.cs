@@ -2,16 +2,16 @@
 {
     /// <summary>
     /// Represents the result of an operation that can succeed or fail,
-    /// with a list of msessages of type TMessage.
+    /// with a list of messages of type TMessage.
     /// </summary>
     /// <typeparam name="TMessage"></typeparam>
     public record Result<TMessage> where TMessage : class
     {
         /// <summary>
-        /// Success
+        /// True if successful
         /// </summary>
-        public bool Success { get; init; }
-
+        public bool IsSuccess { get; init; }
+        
         /// <summary>
         /// Messages list
         /// </summary>
@@ -25,31 +25,45 @@
         {
             get
             {
-                return _messages ??= new List<TMessage>();       
+                _messages ??= new List<TMessage>();
+                return _messages;
             }
             init  // For deserialisation
             {
                 _messages = value.ToList();
             }
         }
+        
+        /// <summary>
+        /// All messages flattened into 1 message.
+        /// Assumes a decent implementation of TMessage.ToString()
+        /// </summary>
+        public string MessagesToString(string separator = " | ")
+        {
+            if (_messages == null || _messages.Count == 0)
+            {
+                return string.Empty;
+            }
+            return string.Join(separator, _messages.Select(c => c.ToString()));
+        }
 
         /// <summary>
-        /// Needed to serialization.
-        /// Success defaults to false.
+        /// Default constructor.
+        /// Note that IsSuccess defaults to false.
         /// </summary>
-        protected Result()
+        public Result()
         {
-            Success = false;
+            IsSuccess = false;
         }
         
         /// <summary>
         /// Result constructor.
         /// </summary>
-        /// <param name="success">True or False</param>
+        /// <param name="isSuccess">True or False</param>
         /// <param name="message">Optional message. Best practice is to include at least 1 message for failed operations however.</param>
-        protected Result(bool success, TMessage? message = null)
+        public Result(bool isSuccess, TMessage? message = null)
         {
-            Success = success;
+            IsSuccess = isSuccess;
             if (message != null)
             {
                 _messages = new List<TMessage> { message };
@@ -60,11 +74,11 @@
         /// <summary>
         /// Result constructor.
         /// </summary>
-        /// <param name="success">True or False</param>
+        /// <param name="isSuccess">True or False</param>
         /// <param name="messages">Optional message. Best practice is to include at least 1 message for failed operations however.</param>
-        public Result(bool success, IEnumerable<TMessage>? messages)
+        public Result(bool isSuccess, IEnumerable<TMessage>? messages)
         {
-            Success = success;
+            IsSuccess = isSuccess;
             if (messages != null)
             {
                 _messages = messages.ToList();
@@ -76,7 +90,7 @@
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static Result<TMessage> Fail(TMessage message)
+        public static Result<TMessage> Failure(TMessage message)
         {
             return new Result<TMessage>(false, message);
         }
@@ -86,17 +100,26 @@
         /// </summary>
         /// <param name="messages"></param>
         /// <returns></returns> 
-        public static Result<TMessage> Fail(IEnumerable<TMessage> messages)
+        public static Result<TMessage> Failure(IEnumerable<TMessage> messages)
         {
             return new Result<TMessage>(false, messages);
         }
-
+        
         /// <summary>
-        /// Success, including a message
+        /// Success.
+        /// </summary>
+        /// <returns></returns>
+        public static Result<TMessage> Success()
+        {
+            return new Result<TMessage>(true);
+        }
+        
+        /// <summary>
+        /// Success, optionally including a message
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static Result<TMessage> Succeed(TMessage? message = null)
+        public static Result<TMessage> Success(TMessage? message)
         {
             return new Result<TMessage>(true, message);
         }
@@ -106,7 +129,7 @@
         /// </summary>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public static Result<TMessage> Succeed(IEnumerable<TMessage> messages)
+        public static Result<TMessage> Success(IEnumerable<TMessage> messages)
         {
             return new Result<TMessage>(true, messages);
         }
@@ -120,19 +143,18 @@
         {
             foreach (Result<TMessage> result in results)
             {
-                if (!result.Success)
+                if (!result.IsSuccess)
                     return result;
             }
 
-            return Succeed();
+            return Success();
         }
     }
 
     /// <summary>
-    /// Represents the outcome of an operation that can succeed or fail, with a list of string Messages.
+    /// Represents the outcome of an operation that was successful or failed,
+    /// together with a list of Messages.
     /// </summary>
-    /// <remarks>Previously named Outcome</remarks>
-    /// <remarks>To be renamed to Result</remarks>
     public record Result : Result<string>
     {
         /// <inheritdoc />
@@ -141,16 +163,17 @@
         }
         
         /// <summary>
-        /// Default constructor. Use ResultValue.Succeed() for a successful Outcome with no message.
+        /// Default constructor.
+        /// Use ResultValue.Succeed() for a successful Outcome with no message.
         /// </summary>
-        /// <param name="success"></param>
+        /// <param name="isSuccess"></param>
         /// <param name="message"></param>
-        public Result(bool success, string? message = null) : base(success, message)
+        public Result(bool isSuccess, string? message = null) : base(isSuccess, message)
         {
         }
 
         /// <inheritdoc />
-        public Result(bool success, IEnumerable<string>? messages = null) : base(success, messages)
+        public Result(bool isSuccess, IEnumerable<string>? messages = null) : base(isSuccess, messages)
         {
         }
 
@@ -159,7 +182,7 @@
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public new static Result Fail(string? message)
+        public new static Result Failure(string? message)
         {
             return new Result(false, message);
         }
@@ -169,17 +192,26 @@
         /// </summary>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public new static Result Fail(IEnumerable<string> messages)
+        public new static Result Failure(IEnumerable<string> messages)
         {
             return new Result(false, messages);
         }
-
+        
+        /// <summary>
+        /// Success
+        /// </summary>
+        /// <returns></returns>
+        public new static Result Success()
+        {
+            return new Result(true, null as string);
+        }
+        
         /// <summary>
         /// Success
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public new static Result Succeed(string? message = null)
+        public new static Result Success(string? message)
         {
             return new Result(true, message);
         }
@@ -189,23 +221,11 @@
         /// </summary>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public new static Result Succeed(IEnumerable<string> messages)
+        public new static Result Success(IEnumerable<string> messages)
         {
             return new Result(true, messages);
         }
 
-        /// <summary>
-        /// All messages flattened into 1 message.
-        /// </summary>
-        public string MessagesToString(string separator = " | ")
-        {
-            if (_messages == null || _messages.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            return string.Join(separator, Messages);
-        }
     }
 
     internal static class Assertions

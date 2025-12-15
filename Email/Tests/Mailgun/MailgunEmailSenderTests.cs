@@ -118,7 +118,7 @@ namespace Tests.Odin.Email.Mailgun
         private void VerifySuccessfulSendAndLogging(MailgunEmailSenderTestBuilder scenario,EmailMessage message, ResultValue<string?> result)
         {
             // Result
-            Assert.That(result.Success, Is.True, result.MessagesToString());
+            Assert.That(result.IsSuccess, Is.True, result.MessagesToString());
             Assert.That(result.Value, Is.Not.Null);
             Assert.That(string.IsNullOrWhiteSpace(result.Value), Is.False, "Message Id expected from Mailgun");
 
@@ -159,7 +159,7 @@ namespace Tests.Odin.Email.Mailgun
             // 3 retries
             scenario.LoggerMock!.Verify(c => c.Log(LogLevel.Error, expectedLogMessage), Times.Exactly(4));
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Success, Is.False);
+            Assert.That(result.IsSuccess, Is.False);
             Assert.That(result.Messages[0].Contains("401"), Is.True, result.Messages[0]);
             Assert.That(result.Messages[0].Contains("Unauthorized"), Is.True, result.Messages[0]);
         }

@@ -38,13 +38,13 @@ namespace Odin.BackgroundProcessing
                 case FakeBackgroundJobProviderBehaviour.ReturnSuccessfulOutcome:
                     return ResultValue<JobDetails>.Succeed(new JobDetails("1", enqueueAt));
                 case FakeBackgroundJobProviderBehaviour.ReturnFailedOutcome:
-                    return ResultValue<JobDetails>.Fail("FakeBackgroundJobProvider faking an error");
+                    return ResultValue<JobDetails>.Failure("FakeBackgroundJobProvider faking an error");
                 case FakeBackgroundJobProviderBehaviour.ReturnNull:
                     return null!;
                 case FakeBackgroundJobProviderBehaviour.ThrowException:
                     throw new ApplicationException("FakeBackgroundJobProvider throwing an exception");
                 default:
-                    return ResultValue<JobDetails>.Fail($"Unknown Behaviour - {Behaviour}");
+                    return ResultValue<JobDetails>.Failure($"Unknown Behaviour - {Behaviour}");
             }
         }
 
@@ -75,13 +75,13 @@ namespace Odin.BackgroundProcessing
                 case FakeBackgroundJobProviderBehaviour.ReturnSuccessfulOutcome:
                     return ResultValue<JobDetails>.Succeed(new JobDetails("1", enqueueAt));
                 case FakeBackgroundJobProviderBehaviour.ReturnFailedOutcome:
-                    return ResultValue<JobDetails>.Fail("FakeBackgroundJobProvider faking an error");
+                    return ResultValue<JobDetails>.Failure("FakeBackgroundJobProvider faking an error");
                 case FakeBackgroundJobProviderBehaviour.ReturnNull:
                     return null!;
                 case FakeBackgroundJobProviderBehaviour.ThrowException:
                     throw new ApplicationException("FakeBackgroundJobProvider throwing an exception");
                 default:
-                    return ResultValue<JobDetails>.Fail($"Unknown Behaviour - {Behaviour}");
+                    return ResultValue<JobDetails>.Failure($"Unknown Behaviour - {Behaviour}");
             }
         }
 
@@ -114,15 +114,15 @@ namespace Odin.BackgroundProcessing
             switch (Behaviour)
             {
                 case FakeBackgroundJobProviderBehaviour.ReturnSuccessfulOutcome:
-                    return Result.Succeed();
+                    return Result.Success();
                 case FakeBackgroundJobProviderBehaviour.ReturnFailedOutcome:
-                    return Result.Fail("Failed");
+                    return Result.Failure("Failed");
                 case FakeBackgroundJobProviderBehaviour.ReturnNull:
                     return null!;
                 case FakeBackgroundJobProviderBehaviour.ThrowException:
                     throw new ApplicationException("FakeBackgroundJobProvider throwing an exception");
                 default:
-                    return Result.Fail($"Unknown Behaviour - {Behaviour}");
+                    return Result.Failure($"Unknown Behaviour - {Behaviour}");
             }
         }
 
@@ -137,15 +137,15 @@ namespace Odin.BackgroundProcessing
             switch (Behaviour)
             {
                 case FakeBackgroundJobProviderBehaviour.ReturnSuccessfulOutcome:
-                    return Result.Succeed();
+                    return Result.Success();
                 case FakeBackgroundJobProviderBehaviour.ReturnFailedOutcome:
-                    return Result.Succeed();
+                    return Result.Success();
                 case FakeBackgroundJobProviderBehaviour.ReturnNull:
-                    return Result.Succeed();
+                    return Result.Success();
                 case FakeBackgroundJobProviderBehaviour.ThrowException:
                     throw new ApplicationException("FakeBackgroundJobProvider throwing an exception");
                 default:
-                    return Result.Fail($"Unknown Behaviour - {Behaviour}");
+                    return Result.Failure($"Unknown Behaviour - {Behaviour}");
             }
         }
     }

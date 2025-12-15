@@ -21,7 +21,7 @@ namespace Odin.Email
             emailConfigurationSection.Bind(MailgunOptions.MailgunName,
                 mailGunSenderSettings);
             Result validationResult = mailGunSenderSettings.IsConfigurationValid();
-            if (!validationResult.Success)
+            if (!validationResult.IsSuccess)
             {
                 throw new ApplicationException($"Invalid {nameof(MailgunOptions)}: {validationResult.MessagesToString()}");
             }

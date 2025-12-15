@@ -40,11 +40,11 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
         Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(connectionName), "connectionName cannot be null");
 
         if (!_fileSourceConnections.ContainsKey(connectionName))
-            return ResultValue<IRemoteFileSession>.Fail($"Connection name not supported or configured: {connectionName}");
+            return ResultValue<IRemoteFileSession>.Failure($"Connection name not supported or configured: {connectionName}");
 
         if (!_fileSourceConnections[connectionName].ContainsKey(ConnectionSettingsHelper.ProtocolKey) ||
             !Enum.TryParse(_fileSourceConnections[connectionName][ConnectionSettingsHelper.ProtocolKey], true, out ConnectionProtocol protocol))
-            return ResultValue<IRemoteFileSession>.Fail(
+            return ResultValue<IRemoteFileSession>.Failure(
                 $"Unable to determine protocol from connection string. Connection: {connectionName}");
 
         return protocol switch
@@ -52,9 +52,9 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
             ConnectionProtocol.Sftp => ResultValue<IRemoteFileSession>.Succeed(
                 new SftpRemoteFileSession(ConnectionSettingsHelper.ConstructSftpSettings(_fileSourceConnections[connectionName]))),
             
-            ConnectionProtocol.Ftp => ResultValue<IRemoteFileSession>.Fail($"Protocol is not supported: {protocol}"),
-            ConnectionProtocol.Https => ResultValue<IRemoteFileSession>.Fail($"Protocol is not supported: {protocol}"),
-            _ => ResultValue<IRemoteFileSession>.Fail($"Protocol is not supported: {protocol}")
+            ConnectionProtocol.Ftp => ResultValue<IRemoteFileSession>.Failure($"Protocol is not supported: {protocol}"),
+            ConnectionProtocol.Https => ResultValue<IRemoteFileSession>.Failure($"Protocol is not supported: {protocol}"),
+            _ => ResultValue<IRemoteFileSession>.Failure($"Protocol is not supported: {protocol}")
         };
     }
 }

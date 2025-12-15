@@ -65,9 +65,9 @@ public abstract class StringEnum<TEnum> where TEnum: StringEnum<TEnum>
         StringComparer comparer = StringComparer.FromComparison(StringComparison.Ordinal);
         if (!Values.Contains(value, comparer))
         {
-            return Result.Fail(NotAMemberMessage(value));
+            return Result.Failure(NotAMemberMessage(value));
         }
-        return Result.Succeed();
+        return Result.Success();
     }
 
     private static string NotAMemberMessage(string? value) =>

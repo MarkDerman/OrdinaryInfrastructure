@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using Odin.System;
 
-namespace Tests.Odin.System
+namespace Tests.Odin.System.StringEnum
 {
     [TestFixture]
     public sealed class StringEnumTests
@@ -16,7 +16,7 @@ namespace Tests.Odin.System
         {
             Result sut = FourValsStringEnum.HasValue(testValue);
 
-            Assert.That(sut.Success, Is.EqualTo(expectedResult), sut.MessagesToString());
+            Assert.That(sut.IsSuccess, Is.EqualTo(expectedResult), sut.MessagesToString());
         }
         
         [Test]

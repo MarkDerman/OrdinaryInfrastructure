@@ -23,19 +23,19 @@ public class ClassFactory
 
         AssemblyName assemblyToLoad = new AssemblyName(assemblyToLoadFrom);
         Assembly? assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(assemblyToLoad);
-        if (assembly == null!) return ResultValue<T>.Fail($"Unable to load assembly {assemblyToLoadFrom}");
+        if (assembly == null!) return ResultValue<T>.Failure($"Unable to load assembly {assemblyToLoadFrom}");
         
         Type? type = assembly.GetType(fullTypeName);
-        if (type == null) return ResultValue<T>.Fail($"Unable to create type {fullTypeName} from assembly {assemblyToLoadFrom}");
+        if (type == null) return ResultValue<T>.Failure($"Unable to create type {fullTypeName} from assembly {assemblyToLoadFrom}");
 
         object? instance = Activator.CreateInstance(type);
-        if (instance == null) return ResultValue<T>.Fail($"Could not create instance of type {type.Name}");
+        if (instance == null) return ResultValue<T>.Failure($"Could not create instance of type {type.Name}");
         if (instance is T objT)
         {
             return ResultValue<T>.Succeed(objT);
         }
 
-        return ResultValue<T>.Fail($"Type {type.FullName} is not of type {nameof(T)}");
+        return ResultValue<T>.Failure($"Type {type.FullName} is not of type {nameof(T)}");
     }
 
 
@@ -61,7 +61,7 @@ public class ClassFactory
                 return TryCreate<T>(typeToCreate);
         }
 
-        return ResultValue<T>.Fail($"No assembly contains {fullTypeName}");
+        return ResultValue<T>.Failure($"No assembly contains {fullTypeName}");
     }
 
     /// <summary>
@@ -75,17 +75,17 @@ public class ClassFactory
         try
         {
             object? obj = Activator.CreateInstance(typeToCreate);
-            if (obj == null) return ResultValue<T>.Fail($"Could not create instance of type {typeToCreate.Name}");
+            if (obj == null) return ResultValue<T>.Failure($"Could not create instance of type {typeToCreate.Name}");
             if (obj is T objT)
             {
                 return ResultValue<T>.Succeed(objT);
             }
 
-            return ResultValue<T>.Fail($"Type {typeToCreate.FullName} is not of type {nameof(T)}");
+            return ResultValue<T>.Failure($"Type {typeToCreate.FullName} is not of type {nameof(T)}");
         }
         catch (Exception e)
         {
-            return ResultValue<T>.Fail($"Type {typeToCreate.FullName} could not be created. {e.Message}");
+            return ResultValue<T>.Failure($"Type {typeToCreate.FullName} could not be created. {e.Message}");
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Tests.Odin.Email
 
             Result result = sut.Validate();
             
-            Assert.That(result.Success, Is.EqualTo(isValidConfig));
+            Assert.That(result.IsSuccess, Is.EqualTo(isValidConfig));
         }
     }
 }

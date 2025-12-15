@@ -95,7 +95,7 @@ namespace Microsoft.Extensions.DependencyInjection
             configurationSection.Bind(options);
 
             Result configResult = options.Validate();
-            if (!configResult.Success)
+            if (!configResult.IsSuccess)
             {
                 throw new ApplicationException(
                     $"{nameof(AddOdinBackgroundProcessing)}: Invalid BackgroundProcessing configuration. Errors are: {configResult.MessagesToString()}");
@@ -120,7 +120,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 activator.TryCreate<IBackgroundProcessorServiceInjector>(
                     $"{providerAssemblyName}ServiceInjector", providerAssemblyName);
 
-            if (serviceInjectorCreation.Success)
+            if (serviceInjectorCreation.IsSuccess)
             {
                 serviceInjectorCreation.Value.TryAddBackgroundProcessor(serviceCollection, configuration,
                     configurationSection, sqlServerConnectionStringFactory);
@@ -156,7 +156,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 activator.TryCreate<IBackgroundProcessorServiceInjector>(
                     $"{providerAssemblyName}ServiceInjector", providerAssemblyName);
 
-            if (serviceInjectorCreation.Success)
+            if (serviceInjectorCreation.IsSuccess)
             {
                 return serviceInjectorCreation.Value.UseBackgroundProcessing(app, appServices);
             }

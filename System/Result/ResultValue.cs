@@ -13,18 +13,18 @@
         /// </summary>
         public ResultValue()
         {
-            Success = false;
+            IsSuccess = false;
         }
         
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="success">true or false</param>
+        /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValue(bool success, TValue? value, IEnumerable<string>? messages)
+        public ResultValue(bool isSuccess, TValue? value, IEnumerable<string>? messages)
         {
-            Assertions.RequiresArgumentPrecondition(!(value == null && success), "Value is required for a successful result.");
+            Assertions.RequiresArgumentPrecondition(!(value == null && isSuccess), "Value is required for a successful result.");
             Value = value;
             _messages = messages?.ToList();
         }
@@ -32,13 +32,13 @@
         /// <summary>
         /// Default constructor.
         /// </summary>
-        /// <param name="success">true or false</param>
+        /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValue(bool success, TValue? value, string? message = null)
+        public ResultValue(bool isSuccess, TValue? value, string? message = null)
         {
-            Assertions.RequiresArgumentPrecondition(!(value == null && success), "Value is required for a successful result.");
-            Success = success;
+            Assertions.RequiresArgumentPrecondition(!(value == null && isSuccess), "Value is required for a successful result.");
+            IsSuccess = isSuccess;
             Value = value;
             _messages = message != null ? [message] : null;
         }
@@ -48,7 +48,7 @@
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public new static ResultValue<TValue> Fail(string? message)
+        public new static ResultValue<TValue> Failure(string? message)
         {
             return new ResultValue<TValue>(false, default(TValue), message);
         }
@@ -59,7 +59,7 @@
         /// <param name="value"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static ResultValue<TValue?> Fail(TValue? value, string? message = null)
+        public static ResultValue<TValue?> Failure(TValue? value, string? message = null)
         {
             return new ResultValue<TValue?>(false, value, message);
         }
@@ -75,17 +75,6 @@
             return new ResultValue<TValue>(true, value, message);
         }
 
-        /// <summary>
-        /// All messages flattened into 1 message.
-        /// </summary>
-        public string MessagesToString(string separator = " | ")
-        {
-            if (_messages == null || _messages.Count == 0)
-            {
-                return string.Empty;
-            }
-            return string.Join(separator, Messages);
-        }
     }
 
     /// <summary>
@@ -146,7 +135,7 @@
         /// <param name="value">Required.</param>
         /// <param name="messages">Not normally used for successful operations, but can be for informational purposes.</param>
         /// <returns></returns>
-        public static ResultValue<TValue, TMessage> Succeed(TValue value, IEnumerable<TMessage>? messages)
+        public static ResultValue<TValue, TMessage> Success(TValue value, IEnumerable<TMessage>? messages)
         {
             Assertions.RequiresArgumentNotNull(value);
             return new ResultValue<TValue, TMessage>(true, value, messages);    
@@ -158,7 +147,7 @@
         /// <param name="value">Required.</param>
         /// <param name="message">Not normally used for successful operations, but can be for informational purposes.</param>
         /// <returns></returns>
-        public static ResultValue<TValue, TMessage> Succeed(TValue value, TMessage? message = null)
+        public static ResultValue<TValue, TMessage> Success(TValue value, TMessage? message = null)
         {
             Assertions.RequiresArgumentNotNull(value);
             return new ResultValue<TValue, TMessage>(true, value, new List<TMessage>() { message });
@@ -169,7 +158,7 @@
         /// </summary>
         /// <param name="messages">Normally included as best practice for failed operations, but not mandatory.</param>
         /// <returns></returns>
-        public new static ResultValue<TValue, TMessage> Fail(IEnumerable<TMessage>? messages = null)
+        public new static ResultValue<TValue, TMessage> Failure(IEnumerable<TMessage>? messages = null)
         {
             return new ResultValue<TValue, TMessage>(false, default(TValue), messages);
         }
@@ -179,7 +168,7 @@
         /// </summary>
         /// <param name="message">Normally included as best practice for failed operations, but not mandatory.</param>
         /// <returns></returns>
-        public new static ResultValue<TValue, TMessage> Fail(TMessage? message = null)
+        public new static ResultValue<TValue, TMessage> Failure(TMessage? message = null)
         {
             return new ResultValue<TValue, TMessage>(false, default(TValue), new List<TMessage>() { message });
         }

@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using Odin.System;
 using Odin.Templating;
+using RazorLight.Caching;
 
 namespace Tests.Odin.Templating.Razor
 {
@@ -10,12 +11,13 @@ namespace Tests.Odin.Templating.Razor
     {
 
         [Test]
-        [TestCase("Tests.Odin.Templating.Razor", "TestTemplate1", true, Description = "Without a period")]
-        [TestCase("tests.odin.templating.razor", "TestTemplate1", false, Description = "Case sensitive namespace..")]
-        [TestCase("Tests.Odin.Templating.Razor.", "TestTemplate1", true, Description = "With a period")]
+        [TestCase("Tests.Odin.Templating", "TestTemplate2", true, Description = "Should work. Without a period")]
+        [TestCase("Tests.Odin.Templating.Views", "TestTemplate1", true, Description = "Should work. Without a period")]
+        [TestCase("tests.odin.templating.views", "TestTemplate1", false, Description = "Case sensitive namespace..")]
+        [TestCase("Tests.Odin.Templating.Views.", "TestTemplate1", true, Description = "Should work. With a period")]
         [TestCase("tests.odin.templating.razor", "testtemplate1", false, Description = "Case sensitive template")]
         [TestCase("Wrong", "TestTemplate1", false, Description = "Wrong namespace")]
-        [TestCase("Tests.Odin.Templating.Razor", "Wrong", false, Description = "Wrong templateKey")]
+        [TestCase("Tests.Odin.Templating.Views", "Wrong", false, Description = "Wrong templateKey")]
         [TestCase("Tests.Odin.Templating", "TestTemplate1", false, Description = "Testing sub dirs - they don't work")]
         [TestCase(null, "TestTemplate1", false, Description = "Testing optionality of namespace. Doesn't work.")]
         [TestCase("", "TestTemplate1", false, Description = "Testing optionality of namespace. Doesn't work.")]
@@ -23,10 +25,14 @@ namespace Tests.Odin.Templating.Razor
         {
             Assembly testsAssembly = typeof(RazorTemplateRendererTests).Assembly;
             RazorTemplateRenderer sut = new RazorTemplateRenderer(testsAssembly, rootNamespace);
+
+            // TemplateCacheLookupResult? templateLookup = sut._razorLightEngine.Handler.Cache.RetrieveTemplate(templateKey);
+            // Assert.That(templateLookup, Is.Not.Null);
+            // Assert.That(templateLookup.Success, Is.EqualTo(shouldSucceed));
             
             ResultValue<string> result = await sut.RenderAsync(templateKey, new TestViewModel(){ Title = "World"});
 
-            Assert.That(result.Success, Is.EqualTo(shouldSucceed));
+            Assert.That(result.IsSuccess, Is.EqualTo(shouldSucceed));
             if (shouldSucceed)
             {
                 Assert.That(result.Value, Does.Contain("<div>Hello World</div>"), result.MessagesToString());

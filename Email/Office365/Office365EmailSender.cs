@@ -126,7 +126,7 @@ public class Office365EmailSender : IEmailSender
         catch (Exception ex)
         {
             LogSendEmailResult(email, false, LogLevel.Error, $"Failed to send with Office365 via user {_senderUserId}", ex);
-            return ResultValue<string?>.Fail("Fail: " + ex.Message);
+            return ResultValue<string?>.Failure("Fail: " + ex.Message);
         }
     }
 

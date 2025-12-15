@@ -52,7 +52,7 @@ namespace Odin.BackgroundProcessing
             {
                 string message = $"Exception scheduling {methodCall.Name} for {enqueueAt}. {err.Message}";
                 _logger.LogError($"{nameof(ScheduleJob)}: {message}", err);
-                return ResultValue<JobDetails>.Fail(message);
+                return ResultValue<JobDetails>.Failure(message);
             }
         }
         
@@ -74,7 +74,7 @@ namespace Odin.BackgroundProcessing
             {
                 string message = $"Exception scheduling {methodCall.Name} for {enqueueAt}. {err.Message}";
                 _logger.LogError($"{nameof(ScheduleJob)}: {message}", err);
-                return ResultValue<JobDetails>.Fail(message);
+                return ResultValue<JobDetails>.Failure(message);
             }
         }
 
@@ -95,13 +95,13 @@ namespace Odin.BackgroundProcessing
             try
             {
                 _recurringJobManager.AddOrUpdate<T>(recurringJobId, queueName, methodCall, cronExpression, new RecurringJobOptions(){ TimeZone = timeZoneInfo});
-                return Result.Succeed();
+                return Result.Success();
             }
             catch (Exception err)
             {
                 string message = $"Error scheduling recurring job {recurringJobId}. {err.Message}";
                 _logger.LogError($"{nameof(AddOrUpdateRecurringJob)}: {message}", err);
-                return Result.Fail(message);
+                return Result.Failure(message);
             }
         }
 
@@ -114,13 +114,13 @@ namespace Odin.BackgroundProcessing
             try
             {
                 _recurringJobManager.RemoveIfExists(jobName);
-                return Result.Succeed();
+                return Result.Success();
             }
             catch (Exception err)
             {
                 string message = $"Error removing recurring job {jobName}. {err.Message}";
                 _logger.LogError($"{nameof(RemoveRecurringJob)}: {message}", err);
-                return Result.Fail(message);
+                return Result.Failure(message);
             }
         }
 

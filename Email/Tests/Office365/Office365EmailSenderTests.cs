@@ -169,7 +169,7 @@ public class Office365EmailSenderTests : IntegrationTest
         ResultValue<string?> result)
     {
         // Result
-        Assert.That(result.Success, Is.True, result.MessagesToString());
+        Assert.That(result.IsSuccess, Is.True, result.MessagesToString());
         Assert.That(result.Value, Is.Not.Null);
         Assert.That(string.IsNullOrWhiteSpace(result.Value), Is.False, "Message Id expected from Office365");
 

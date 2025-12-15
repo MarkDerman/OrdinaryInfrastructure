@@ -47,7 +47,7 @@ namespace Microsoft.Extensions.DependencyInjection
             EmailSendingOptions emailOptions = new EmailSendingOptions();
             configurationSection.Bind(emailOptions);
             Result emailValidationResult = emailOptions.Validate();
-            if (!emailValidationResult.Success)
+            if (!emailValidationResult.IsSuccess)
             {
                 throw new ApplicationException(
                     $"Invalid EmailSending configuration. Errors are: {emailValidationResult.MessagesToString()}");
@@ -69,7 +69,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 activator.TryCreate<IEmailSenderServiceInjector>(
                     $"{providerAssemblyName}ServiceInjector", providerAssemblyName);
 
-            if (serviceInjectorCreation.Success)
+            if (serviceInjectorCreation.IsSuccess)
             {
                 serviceInjectorCreation.Value.TryAddEmailSender(serviceCollection, configurationSection);
             }

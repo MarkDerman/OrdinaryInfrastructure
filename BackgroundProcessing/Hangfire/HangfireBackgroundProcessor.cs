@@ -46,7 +46,7 @@ namespace Odin.BackgroundProcessing
             try
             {
                 string jobId = _jobClient.Schedule<T>(methodCall, enqueueAt);
-                return ResultValue<JobDetails>.Succeed(new JobDetails(jobId, enqueueAt));
+                return ResultValue<JobDetails>.Success(new JobDetails(jobId, enqueueAt));
             }
             catch (Exception err)
             {
@@ -68,7 +68,7 @@ namespace Odin.BackgroundProcessing
             try
             {
                 string jobId = _jobClient.Schedule<T>(methodCall, enqueueAt);
-                return ResultValue<JobDetails>.Succeed(new JobDetails(jobId, enqueueAt));
+                return ResultValue<JobDetails>.Success(new JobDetails(jobId, enqueueAt));
             }
             catch (Exception err)
             {

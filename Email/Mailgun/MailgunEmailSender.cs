@@ -182,7 +182,7 @@ namespace Odin.Email
 
                 MailgunSendResponse? response = await responseMessage.Content.ReadFromJsonAsync<MailgunSendResponse>();
                 LogSendEmailResult(email, true, LogLevel.Information, $"Sent with Mailgun reference {response?.Id}.");
-                return ResultValue<string?>.Succeed(response?.Id);
+                return ResultValue<string?>.Success(response?.Id);
             }
             catch (Exception e)
             {

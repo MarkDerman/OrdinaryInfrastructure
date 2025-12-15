@@ -94,38 +94,34 @@ namespace Tests.Odin.System
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.Messages[0], Is.EqualTo("cool man"));
         }
-    }
-
-    [TestFixture(typeof(MessageError))]
-    [TestFixture(typeof(MessageLoggingInfo))]
-    [TestFixture(typeof(MessageSeverity))]
-    public sealed class ResultTTests<TMessage> where TMessage : class
-    {
+        
         [Test]
-        public void Success()
+        public void Combine_with_success_and_failures()
         {
-            Result<TMessage> sut = Result<TMessage>.Success();
+            Result r1 = Result.Success();
+            Result r2 = Result.Failure("r2");
+            Result r3 = Result.Failure("r3");
+            
+            Result sut = Result.Combine(r1, r2, r3);
+
+            Assert.That(sut.IsSuccess, Is.False);
+            // First failure is returned...
+            Assert.That(sut.Messages[0], Is.EqualTo("r2"));
+        }
+
+        [Test]
+        public void Combine_with_only_success()
+        {
+            Result r1 = Result.Success("r1");
+            Result r2 = Result.Success("r2");
+            Result r3 = Result.Success("r3");
+            
+            Result sut = Result.Combine(r1, r2, r3);
 
             Assert.That(sut.IsSuccess, Is.True);
             Assert.That(sut.Messages, Is.Empty);
         }
+
         
-        [Test]
-        public void Failure_without_TMessage()
-        {
-            Result<TMessage> sut = Result<TMessage>.Failure((null as TMessage)!);
-
-            Assert.That(sut.IsSuccess, Is.False);
-            Assert.That(sut.Messages, Is.Empty);
-        }
-
-        [Test]
-        public void Default_result_is_a_failure()
-        {
-            Result<TMessage> sut = new Result<TMessage>();
-
-            Assert.That(sut.IsSuccess, Is.False);
-            Assert.That(sut.Messages, Is.Empty);
-        }
     }
 }

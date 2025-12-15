@@ -71,7 +71,7 @@ namespace Odin.Data
                 return ResultValue<SqlScriptsRunner>.Failure($"Unable to build connectionString. {err.Message}");
             }
 
-            return ResultValue<SqlScriptsRunner>.Succeed(runner);
+            return ResultValue<SqlScriptsRunner>.Success(runner);
         }
 
         public static ResultValue<SqlScriptsRunner> CreateFromConnectionString(string connectionString, Assembly assemblyWithEmbeddedScripts)
@@ -91,7 +91,7 @@ namespace Odin.Data
                 return ResultValue<SqlScriptsRunner>.Failure($"Unable to build connectionString. {err.Message}");
             }
 
-            return ResultValue<SqlScriptsRunner>.Succeed(runner);
+            return ResultValue<SqlScriptsRunner>.Success(runner);
         }
 
 

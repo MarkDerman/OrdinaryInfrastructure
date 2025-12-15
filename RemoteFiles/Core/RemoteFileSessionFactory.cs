@@ -49,7 +49,7 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
 
         return protocol switch
         {
-            ConnectionProtocol.Sftp => ResultValue<IRemoteFileSession>.Succeed(
+            ConnectionProtocol.Sftp => ResultValue<IRemoteFileSession>.Success(
                 new SftpRemoteFileSession(ConnectionSettingsHelper.ConstructSftpSettings(_fileSourceConnections[connectionName]))),
             
             ConnectionProtocol.Ftp => ResultValue<IRemoteFileSession>.Failure($"Protocol is not supported: {protocol}"),

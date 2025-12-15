@@ -47,7 +47,7 @@ public class RazorTemplateRenderer : IRazorTemplateRenderer
         try
         {
             string result = await _razorLightEngine.CompileRenderAsync<TModel>(templateKey, viewModel);
-            return ResultValue<string>.Succeed(result);
+            return ResultValue<string>.Success(result);
         }
         catch (Exception err)
         {

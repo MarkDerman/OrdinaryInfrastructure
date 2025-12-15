@@ -75,5 +75,21 @@
         {
             return new Result(true, messages);
         }
+        
+        /// <summary>
+        /// Returns Success only if all succeed, else returns the first failure.
+        /// </summary>
+        /// <param name="results"></param>
+        /// <returns></returns>
+        public new static Result Combine(params Result[] results)
+        {
+            foreach (Result result in results)
+            {
+                if (!result.IsSuccess)
+                    return result;
+            }
+
+            return Success();
+        }
     }
 }

@@ -121,7 +121,7 @@ public class Office365EmailSender : IEmailSender
 
             await _graphClient.Users[_senderUserId].SendMail.PostAsync(requestBody);
             LogSendEmailResult(email, true, LogLevel.Information, $"Sent with Office365 via user {_senderUserId}");
-            return ResultValue<string?>.Succeed("Success");
+            return ResultValue<string?>.Success("Success");
         }
         catch (Exception ex)
         {

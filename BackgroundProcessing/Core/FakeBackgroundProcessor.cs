@@ -36,7 +36,7 @@ namespace Odin.BackgroundProcessing
             switch (Behaviour)
             {
                 case FakeBackgroundJobProviderBehaviour.ReturnSuccessfulOutcome:
-                    return ResultValue<JobDetails>.Succeed(new JobDetails("1", enqueueAt));
+                    return ResultValue<JobDetails>.Success(new JobDetails("1", enqueueAt));
                 case FakeBackgroundJobProviderBehaviour.ReturnFailedOutcome:
                     return ResultValue<JobDetails>.Failure("FakeBackgroundJobProvider faking an error");
                 case FakeBackgroundJobProviderBehaviour.ReturnNull:
@@ -73,7 +73,7 @@ namespace Odin.BackgroundProcessing
             switch (Behaviour)
             {
                 case FakeBackgroundJobProviderBehaviour.ReturnSuccessfulOutcome:
-                    return ResultValue<JobDetails>.Succeed(new JobDetails("1", enqueueAt));
+                    return ResultValue<JobDetails>.Success(new JobDetails("1", enqueueAt));
                 case FakeBackgroundJobProviderBehaviour.ReturnFailedOutcome:
                     return ResultValue<JobDetails>.Failure("FakeBackgroundJobProvider faking an error");
                 case FakeBackgroundJobProviderBehaviour.ReturnNull:

@@ -32,7 +32,7 @@ public class ClassFactory
         if (instance == null) return ResultValue<T>.Failure($"Could not create instance of type {type.Name}");
         if (instance is T objT)
         {
-            return ResultValue<T>.Succeed(objT);
+            return ResultValue<T>.Success(objT);
         }
 
         return ResultValue<T>.Failure($"Type {type.FullName} is not of type {nameof(T)}");
@@ -78,7 +78,7 @@ public class ClassFactory
             if (obj == null) return ResultValue<T>.Failure($"Could not create instance of type {typeToCreate.Name}");
             if (obj is T objT)
             {
-                return ResultValue<T>.Succeed(objT);
+                return ResultValue<T>.Success(objT);
             }
 
             return ResultValue<T>.Failure($"Type {typeToCreate.FullName} is not of type {nameof(T)}");

@@ -43,6 +43,22 @@ At build time the rewriter injects the `Ensures(...)` checks immediately before 
 
 `Ensures` checks are gated by `ContractRuntime.PostconditionsEnabled` (see [`ContractRuntime`](Core/ContractRuntime.cs:1)). When disabled, postconditions are a no-op.
 
+## Object invariants (v1)
+
+Object invariants are authored by declaring a private, parameterless, `void` method marked with
+[`ContractInvariantMethodAttribute`](Core/ContractAttributes.cs:1), and calling
+[`Contract.Invariant()`](Core/Contract-New.cs:68) inside that method.
+
+At build time the IL rewriter wires up invariant execution as follows:
+
+- If a type declares exactly one invariant method (either `Odin.DesignContracts.ContractInvariantMethodAttribute`
+  or `System.Diagnostics.Contracts.ContractInvariantMethodAttribute`), the rewriter injects calls to that invariant method
+  at **entry and exit** of all **public instance** methods and **public instance** property accessors.
+- Public instance constructors (`.ctor`) get invariant calls at **exit only**.
+- Any public method/property accessor marked `[System.Diagnostics.Contracts.Pure]` is **excluded** from invariant weaving.
+
+Invariant checks are gated by `ContractRuntime.InvariantsEnabled`.
+
 ## Tooling package
 
 The meta-package [`Odin.DesignContracts.Tooling`](Tooling/Odin.DesignContracts.Tooling.csproj:1) is responsible for:
@@ -51,4 +67,3 @@ The meta-package [`Odin.DesignContracts.Tooling`](Tooling/Odin.DesignContracts.T
 - running the IL rewriter after compilation via `buildTransitive` targets.
 
 The IL rewriter implementation lives in [`DesignContracts/Rewriter/Program.cs`](Rewriter/Program.cs:1).
-

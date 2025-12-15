@@ -60,7 +60,7 @@
         /// Result constructor.
         /// </summary>
         /// <param name="isSuccess">True or False</param>
-        /// <param name="message">Optional message. Best practice is to include at least 1 message for failed operations however.</param>
+        /// <param name="message">Optional message. Best practice is to include at least 1 message for failed operations, however this is not enforced.</param>
         public Result(bool isSuccess, TMessage? message = null)
         {
             IsSuccess = isSuccess;
@@ -75,7 +75,7 @@
         /// Result constructor.
         /// </summary>
         /// <param name="isSuccess">True or False</param>
-        /// <param name="messages">Optional message. Best practice is to include at least 1 message for failed operations however.</param>
+        /// <param name="messages">Optional messages. Normal practice is to include at least 1 message for failed operations.</param>
         public Result(bool isSuccess, IEnumerable<TMessage>? messages)
         {
             IsSuccess = isSuccess;
@@ -86,7 +86,7 @@
         }
 
         /// <summary>
-        /// Failure
+        ///  Creates a failed result (IsSuccess==false) with a message.
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
@@ -96,7 +96,7 @@
         }
 
         /// <summary>
-        /// Creates a Failure outcome with messages.
+        /// Creates a failed result (IsSuccess==false) with messages.
         /// </summary>
         /// <param name="messages"></param>
         /// <returns></returns> 

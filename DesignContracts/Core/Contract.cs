@@ -108,7 +108,7 @@ namespace Odin.DesignContracts
 
         private static string BuildFailureMessage(ContractFailureKind kind, string? userMessage, string? conditionText)
         {
-            string kindText = kind.ToStringFast();
+            string kindText = kind.ToString();
 
             if (!string.IsNullOrWhiteSpace(userMessage) && !string.IsNullOrWhiteSpace(conditionText))
             {

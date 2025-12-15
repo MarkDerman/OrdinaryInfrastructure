@@ -94,5 +94,34 @@ namespace Tests.Odin.System
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.Messages[0], Is.EqualTo("cool man"));
         }
+        
+        [Test]
+        public void Combine_with_success_and_failures()
+        {
+            Result r1 = Result.Success();
+            Result r2 = Result.Failure("r2");
+            Result r3 = Result.Failure("r3");
+            
+            Result sut = Result.Combine(r1, r2, r3);
+
+            Assert.That(sut.IsSuccess, Is.False);
+            // First failure is returned...
+            Assert.That(sut.Messages[0], Is.EqualTo("r2"));
+        }
+
+        [Test]
+        public void Combine_with_only_success()
+        {
+            Result r1 = Result.Success("r1");
+            Result r2 = Result.Success("r2");
+            Result r3 = Result.Success("r3");
+            
+            Result sut = Result.Combine(r1, r2, r3);
+
+            Assert.That(sut.IsSuccess, Is.True);
+            Assert.That(sut.Messages, Is.Empty);
+        }
+
+        
     }
 }

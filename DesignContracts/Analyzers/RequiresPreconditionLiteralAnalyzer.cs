@@ -68,8 +68,8 @@ namespace Odin.DesignContracts.Analyzers
                 return;
 
             // Resolve the symbol to ensure it's Odin.DesignContracts.Contract.Requires
-            var symbolInfo  = context.SemanticModel.GetSymbolInfo(memberAccess);
-            var methodSymbol = symbolInfo.Symbol as IMethodSymbol;
+            SymbolInfo symbolInfo  = context.SemanticModel.GetSymbolInfo(memberAccess);
+            IMethodSymbol? methodSymbol = symbolInfo.Symbol as IMethodSymbol;
 
             if (methodSymbol is null)
                 return;
@@ -90,7 +90,7 @@ namespace Odin.DesignContracts.Analyzers
             if (arguments.Count == 0)
                 return;
 
-            var conditionArg = arguments[0];
+            ArgumentSyntax conditionArg = arguments[0];
 
             if (conditionArg.Expression is LiteralExpressionSyntax literal &&
                 (literal.IsKind(SyntaxKind.TrueLiteralExpression) ||
@@ -98,7 +98,7 @@ namespace Odin.DesignContracts.Analyzers
             {
                 var constantText = literal.Token.Text;
 
-                var diagnostic = Diagnostic.Create(
+                Diagnostic diagnostic = Diagnostic.Create(
                     Rule,
                     literal.GetLocation(),
                     constantText);

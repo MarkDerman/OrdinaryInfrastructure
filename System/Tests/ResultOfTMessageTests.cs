@@ -9,6 +9,7 @@ namespace Tests.Odin.System
     [TestFixture(typeof(MessageSeverity))]
     public sealed class ResultOfTMessageTests<TMessage> where TMessage : class
     {
+
         [Test]
         public void Success()
         {

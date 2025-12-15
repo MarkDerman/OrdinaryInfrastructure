@@ -1,11 +1,9 @@
-using NetEscapades.EnumGenerators;
 
 namespace Odin.DesignContracts
 {
     /// <summary>
     /// Defines the semantic category of a design contract failure.
     /// </summary>
-    [EnumExtensions]
     public enum ContractFailureKind : short
     {
         /// <summary>

@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>true</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>true</IsPackable>
+    <PackageId>Odin.DesignContracts.Tooling</PackageId>
+    <Description>Design-by-Contract tooling for Odin.DesignContracts: analyzers + IL rewriter integration.</Description>
+    <PackageIcon>icon.png</PackageIcon>
+    <WarningsAsErrors>1591;1573;</WarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Core/Odin.DesignContracts.csproj" />
+    <ProjectReference Include="../Analyzers/Odin.DesignContracts.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="../Rewriter/Odin.DesignContracts.Rewriter.csproj" ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../Core/icon.png" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
+  <!-- Pack MSBuild integration -->
+  <ItemGroup>
+    <None Include="buildTransitive/Odin.DesignContracts.Tooling.targets" Pack="true" PackagePath="buildTransitive/" />
+  </ItemGroup>
+
+  <!--
+    Note: the rewriter tool binary needs to be packed under tools/ and invoked by the .targets.
+    This will be produced by building the Rewriter project before packing this project.
+  -->
+  <ItemGroup>
+    <None Include="../Rewriter/bin/$(Configuration)/net8.0/Odin.DesignContracts.Rewriter.dll" Pack="true" PackagePath="tools/net8.0/any/" Visible="false" />
+    <None Include="../Rewriter/bin/$(Configuration)/net8.0/Odin.DesignContracts.Rewriter.runtimeconfig.json" Pack="true" PackagePath="tools/net8.0/any/" Visible="false" Condition="Exists('../Rewriter/bin/$(Configuration)/net8.0/Odin.DesignContracts.Rewriter.runtimeconfig.json')" />
+    <None Include="../Rewriter/bin/$(Configuration)/net8.0/Odin.DesignContracts.Rewriter.deps.json" Pack="true" PackagePath="tools/net8.0/any/" Visible="false" Condition="Exists('../Rewriter/bin/$(Configuration)/net8.0/Odin.DesignContracts.Rewriter.deps.json')" />
+  </ItemGroup>
+</Project>
+

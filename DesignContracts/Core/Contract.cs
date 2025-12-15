@@ -9,7 +9,7 @@ namespace Odin.DesignContracts
     /// <c>System.Diagnostics.Contracts.Contract</c> from the classic .NET Framework,
     /// but it is implemented independently under the <c>Odin.DesignContracts</c> namespace.
     /// </remarks>
-    public static class Contract
+    public static partial class Contract
     {
         /// <summary>
         /// Occurs when a contract fails and before a <see cref="ContractException"/> is thrown.

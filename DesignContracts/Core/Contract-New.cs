@@ -2,7 +2,40 @@ namespace Odin.DesignContracts;
 
 public static partial class Contract
 {
-           
+        /// <summary>
+        /// Represents the return value of the enclosing method for use within postconditions.
+        /// </summary>
+        /// <typeparam name="T">The enclosing method return type.</typeparam>
+        /// <returns>
+        /// The value returned by the enclosing method.
+        /// </returns>
+        /// <remarks>
+        /// This API is intended to be used only inside postconditions expressed via
+        /// <see cref="Ensures"/>.
+        ///
+        /// When postconditions are enabled, it is expected that a build-time rewriter will
+        /// replace calls to this method with the actual method return value.
+        ///
+        /// Without rewriting, this method returns <c>default</c>.
+        /// </remarks>
+        public static T Result<T>()
+        {
+            return default!;
+        }
+
+        /// <summary>
+        /// Marks the end of a contract block at the start of a method.
+        /// </summary>
+        /// <remarks>
+        /// This method exists to support classic Design-by-Contract authoring styles and
+        /// build-time rewriting.
+        ///
+        /// A rewriter may use this as a hint to know where contract declarations end and
+        /// normal method logic begins.
+        /// </remarks>
+        public static void EndContractBlock()
+        {
+        }
 
         /// <summary>
         /// Specifies a postcondition that must hold true when the enclosing method returns.
@@ -31,7 +64,6 @@ public static partial class Contract
                     conditionText);
             }
         }
-
         
         /// <summary>
         /// Specifies an object invariant that must hold true whenever the object is in a valid state.

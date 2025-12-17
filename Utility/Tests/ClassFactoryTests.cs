@@ -38,7 +38,7 @@ namespace Tests.Odin.Utility
             ResultValue<Class3> result = activator.TryCreate<Class3>("Tests.Odin.Utility.Class3");
 
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.IsSuccess, Is.True, result.MessagesToString());
             Assert.That(result.Value, Is.Not.Null);
             Assert.That(result.Value, Is.InstanceOf<Class3>());
         }

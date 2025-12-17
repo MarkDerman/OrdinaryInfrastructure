@@ -117,8 +117,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             ClassFactory activator = new ClassFactory();
             ResultValue<IBackgroundProcessorServiceInjector> serviceInjectorCreation =
-                activator.TryCreate<IBackgroundProcessorServiceInjector>(
-                    $"{providerAssemblyName}ServiceInjector", providerAssemblyName);
+                activator.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector");
 
             if (serviceInjectorCreation.IsSuccess)
             {
@@ -153,8 +152,7 @@ namespace Microsoft.Extensions.DependencyInjection
             ClassFactory activator = new ClassFactory();
             string providerAssemblyName = $"Odin.BackgroundProcessing.{options.Provider}";
             ResultValue<IBackgroundProcessorServiceInjector> serviceInjectorCreation =
-                activator.TryCreate<IBackgroundProcessorServiceInjector>(
-                    $"{providerAssemblyName}ServiceInjector", providerAssemblyName);
+                activator.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector");
 
             if (serviceInjectorCreation.IsSuccess)
             {

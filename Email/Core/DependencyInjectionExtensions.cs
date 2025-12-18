@@ -66,8 +66,7 @@ namespace Microsoft.Extensions.DependencyInjection
             ClassFactory activator = new ClassFactory();
             string providerAssemblyName = $"Odin.Email.{emailOptions.Provider}";
             ResultValue<IEmailSenderServiceInjector> serviceInjectorCreation =
-                activator.TryCreate<IEmailSenderServiceInjector>(
-                    $"{providerAssemblyName}ServiceInjector", providerAssemblyName);
+                activator.TryCreate<IEmailSenderServiceInjector>($"{providerAssemblyName}ServiceInjector");
 
             if (serviceInjectorCreation.IsSuccess)
             {

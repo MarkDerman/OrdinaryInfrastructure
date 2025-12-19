@@ -17,9 +17,9 @@ namespace Odin.Email
         /// <param name="contentType"></param>
         public Attachment(string fileName, Stream data, string contentType)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(fileName));    
-            Contract.Requires(!string.IsNullOrWhiteSpace(contentType));    
-            Contract.RequiresNotNull(data);
+            Precondition.Requires(!string.IsNullOrWhiteSpace(fileName));    
+            Precondition.Requires(!string.IsNullOrWhiteSpace(contentType));    
+            Precondition.RequiresNotNull(data);
             FileName = fileName;
             Data = data;
             ContentType = contentType;

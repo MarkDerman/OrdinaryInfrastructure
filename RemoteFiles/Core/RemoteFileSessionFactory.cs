@@ -17,8 +17,8 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
     /// <param name="remoteFilesOptions"></param>
     public RemoteFileSessionFactory(RemoteFilesOptions remoteFilesOptions)
     {
-        Contract.Requires<ArgumentNullException>(remoteFilesOptions != null, "remoteFileConfiguration cannot be null");
-        Contract.Requires<ArgumentNullException>(remoteFilesOptions.ConnectionStrings != null, "remoteFileConfiguration connection strings cannot null");
+        Precondition.Requires<ArgumentNullException>(remoteFilesOptions != null, "remoteFileConfiguration cannot be null");
+        Precondition.Requires<ArgumentNullException>(remoteFilesOptions.ConnectionStrings != null, "remoteFileConfiguration connection strings cannot null");
         
         _fileSourceConnections = remoteFilesOptions.ConnectionStrings.ToDictionary(
             kv => kv.Key, 
@@ -37,7 +37,7 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
     /// <returns></returns>
     public ResultValue<IRemoteFileSession> CreateRemoteFileSession(string connectionName)
     {
-        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(connectionName), "connectionName cannot be null");
+        Precondition.Requires<ArgumentNullException>(!string.IsNullOrEmpty(connectionName), "connectionName cannot be null");
 
         if (!_fileSourceConnections.ContainsKey(connectionName))
             return ResultValue<IRemoteFileSession>.Failure($"Connection name not supported or configured: {connectionName}");

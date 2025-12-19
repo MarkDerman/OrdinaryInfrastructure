@@ -44,7 +44,7 @@ namespace Tests.Odin.Email.Mailgun
     
         public MailgunEmailSenderTestBuilder WithEmailSendingOptionsFromTestConfiguration(IConfiguration configuration)
         {
-            Contract.RequiresNotNull(configuration);
+            Precondition.RequiresNotNull(configuration);
             string testerEmail = EmailTestConfiguration.GetTestEmailAddressFromConfig(configuration);
             string testerName = EmailTestConfiguration.GetTestFromNameFromConfig(configuration);
             EmailSendingOptions = new EmailSendingOptions()
@@ -67,7 +67,7 @@ namespace Tests.Odin.Email.Mailgun
         
         public static MailgunOptions GetMailgunOptionsFromConfig(IConfiguration config)
         {
-            Contract.RequiresNotNull(config);
+            Precondition.RequiresNotNull(config);
             IConfigurationSection section = config.GetSection("Email-MailgunOptions");
             MailgunOptions options = new MailgunOptions();
             section.Bind(options);

@@ -11,7 +11,7 @@ public class Office365ServiceInjector : IEmailSenderServiceInjector
     /// <inheritdoc />
     public void TryAddEmailSender(IServiceCollection serviceCollection, IConfigurationSection emailConfigurationSection)
     {
-        Contract.RequiresNotNull(emailConfigurationSection);
+        Precondition.RequiresNotNull(emailConfigurationSection);
 
         EmailSendingOptions emailOptions = new();
         emailConfigurationSection.Bind(emailOptions);

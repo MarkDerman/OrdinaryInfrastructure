@@ -43,7 +43,7 @@ namespace Tests.Odin.Email.Office365
     
         public Office365EmailSenderTestBuilder WithEmailSendingOptionsFromTestConfiguration(IConfiguration configuration)
         {
-            Contract.RequiresNotNull(configuration);
+            Precondition.RequiresNotNull(configuration);
             string testerEmail = EmailTestConfiguration.GetTestEmailAddressFromConfig(configuration);
             string testerName = EmailTestConfiguration.GetTestFromNameFromConfig(configuration);
             EmailSendingOptions = new EmailSendingOptions()
@@ -66,7 +66,7 @@ namespace Tests.Odin.Email.Office365
         
         public static Office365Options GetOffice365OptionsFromConfig(IConfiguration config)
         {
-            Contract.RequiresNotNull(config);
+            Precondition.RequiresNotNull(config);
             IConfigurationSection section = config.GetSection("Email-Office365");
             Office365Options options = new Office365Options();
             section.Bind(options);

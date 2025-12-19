@@ -17,8 +17,8 @@ public static class ClassFactory
     /// <returns></returns>
     public static ResultValue<T> TryCreate<T>(string typeName, string assemblyName) where T : class
     {
-        Contract.Requires(!string.IsNullOrWhiteSpace(typeName));
-        Contract.Requires(!string.IsNullOrWhiteSpace(assemblyName));
+        Precondition.Requires(!string.IsNullOrWhiteSpace(typeName));
+        Precondition.Requires(!string.IsNullOrWhiteSpace(assemblyName));
         ObjectHandle? handle;
         try
         {
@@ -51,7 +51,7 @@ public static class ClassFactory
     /// <returns></returns>
     public static ResultValue<T> TryCreate<T>(Type typeToCreate) where T : class
     {
-        Contract.Requires(typeToCreate!=null!);
+        Precondition.Requires(typeToCreate!=null!);
         try
         {
             object? obj = Activator.CreateInstance(typeToCreate);

@@ -7,13 +7,13 @@ public static class EmailTestConfiguration
 {
     public static string GetTestEmailAddressFromConfig(IConfiguration config)
     {
-        Contract.RequiresNotNull(config);
+        Precondition.RequiresNotNull(config);
         return config["Email-TestToAddress"]!;
     }
 
     public static string GetTestFromNameFromConfig(IConfiguration config)
     {
-        Contract.RequiresNotNull(config);
+        Precondition.RequiresNotNull(config);
         return config["Email-TestFromName"]!;
     }
 }

@@ -10,6 +10,6 @@
         <RepositoryType>git</RepositoryType>
         <WarningsAsErrors>8625;8600;8601;8603</WarningsAsErrors>
 <!--     Todo: Add these ones in...   <WarningsAsErrors>8625;8613;8618</WarningsAsErrors>-->
-        <NoWarn>1701;1702;5104;8602;8604;8618;8619</NoWarn>
+        <NoWarn>1701;1702;5104;8602;8604;8618;8619;NU1901</NoWarn>
     </PropertyGroup>
 </Project>

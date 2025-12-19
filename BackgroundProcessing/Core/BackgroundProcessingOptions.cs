@@ -18,7 +18,7 @@ namespace Odin.BackgroundProcessing
             get => _provider;
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Precondition.Requires(!string.IsNullOrWhiteSpace(value));
                 _provider = value.Replace("BackgroundProcessor", "", StringComparison.OrdinalIgnoreCase);   
             }
         }

@@ -21,7 +21,7 @@ namespace Odin.RemoteFiles
         /// <param name="connectionInfo"></param>
         public SftpRemoteFileSession(SftpConnectionSettings connectionInfo)
         {
-            Contract.Requires(connectionInfo!=null!);
+            Precondition.Requires(connectionInfo!=null!);
             _connectionInfo = connectionInfo!;
         }
 
@@ -98,8 +98,8 @@ namespace Odin.RemoteFiles
         /// <returns></returns>
         public void UploadFile(string textFileContents, string fileName)
         {
-            Contract.Requires<ArgumentNullException>(textFileContents != null, nameof(textFileContents));
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(fileName), nameof(fileName));
+            Precondition.Requires<ArgumentNullException>(textFileContents != null, nameof(textFileContents));
+            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(fileName), nameof(fileName));
 
             EnsureConnected();
             MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(textFileContents));
@@ -115,7 +115,7 @@ namespace Odin.RemoteFiles
         /// <returns></returns>
         public void DownloadFile(string fileName, in Stream output)
         {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(fileName), nameof(fileName));
+            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(fileName), nameof(fileName));
 
             EnsureConnected();
             _client!.BufferSize = 4096;
@@ -148,7 +148,7 @@ namespace Odin.RemoteFiles
         /// <param name="path"></param>
         public void ChangeDirectory(string path)
         {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
+            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
             EnsureConnected();
             _client.ChangeDirectory(path);
         }
@@ -159,7 +159,7 @@ namespace Odin.RemoteFiles
         /// <param name="path"></param>
         public void CreateDirectory(string path)
         {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
+            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
             EnsureConnected();
             _client!.CreateDirectory(path);
         }
@@ -170,7 +170,7 @@ namespace Odin.RemoteFiles
         /// <param name="filePath"></param>
         public void Delete(string filePath)
         {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(filePath), nameof(filePath));
+            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(filePath), nameof(filePath));
             EnsureConnected();
             _client!.DeleteFile(filePath);
         }
@@ -183,8 +183,8 @@ namespace Odin.RemoteFiles
         /// <returns></returns>
         public IEnumerable<IRemoteFileInfo> GetFiles(string path, string? searchPattern = null)
         {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
-            Contract.Requires(!(path!.Contains('*') || path.Contains('?')));
+            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
+            Precondition.Requires(!(path!.Contains('*') || path.Contains('?')));
             EnsureConnected();
             //return results
             IEnumerable<ISftpFile> files = _client.ListDirectory(path);
@@ -210,7 +210,7 @@ namespace Odin.RemoteFiles
         /// <returns></returns>
         public bool Exists(string path, int? timeoutInSeconds = null)
         {
-            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
+            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
             EnsureConnected(timeoutInSeconds);
             return _client.Exists(path);
         }

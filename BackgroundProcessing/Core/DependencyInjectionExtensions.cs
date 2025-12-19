@@ -81,7 +81,7 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection serviceCollection, IConfiguration configuration,
             IConfigurationSection configurationSection, Func<IServiceProvider, string>? sqlServerConnectionStringFactory = null)
         {
-            Contract.RequiresNotNull(configurationSection);
+            Precondition.RequiresNotNull(configurationSection);
 
             BackgroundProcessingOptions options = new BackgroundProcessingOptions();
             configurationSection.Bind(options);
@@ -131,8 +131,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="app"></param>
         public static IApplicationBuilder UseBackgroundProcessing(this IApplicationBuilder app, IServiceProvider appServices)
         {
-            Contract.RequiresNotNull(appServices);
-            Contract.RequiresNotNull(app);
+            Precondition.RequiresNotNull(appServices);
+            Precondition.RequiresNotNull(app);
 
             BackgroundProcessingOptions options = appServices.GetRequiredService<BackgroundProcessingOptions>();
             if (options.Provider == BackgroundProcessingProviders.Null)

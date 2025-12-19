@@ -3,7 +3,7 @@
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <UserSecretsId>Tests.Odin</UserSecretsId>
     <ImplicitUsings>true</ImplicitUsings>
-    <NoWarn>1591;</NoWarn>
+    <NoWarn>1591;CS0618</NoWarn>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

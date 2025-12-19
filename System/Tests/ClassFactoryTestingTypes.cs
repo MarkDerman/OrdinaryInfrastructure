@@ -1,4 +1,4 @@
-namespace Tests.Odin.Utility;
+namespace Tests.Odin.System;
 
 public interface Interface1
 {

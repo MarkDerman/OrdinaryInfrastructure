@@ -81,7 +81,7 @@
         /// </summary>
         /// <param name="results"></param>
         /// <returns></returns>
-        public new static Result Combine(params Result[] results)
+        public static Result Combine(params Result[] results)
         {
             foreach (Result result in results)
             {

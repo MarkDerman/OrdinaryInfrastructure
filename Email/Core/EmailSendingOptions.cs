@@ -52,7 +52,7 @@ namespace Odin.Email
             get => _provider;
             init
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Precondition.Requires(!string.IsNullOrWhiteSpace(value));
                 // Ensure MailgunEmailSender is changed to Mailgun for backwards compatibility
                 _provider = value.Replace("EmailSender", "", StringComparison.OrdinalIgnoreCase);   
             }
@@ -66,10 +66,10 @@ namespace Odin.Email
         public Result Validate()
         {
             List<string> errors = new List<string>();
-            if (!EmailSendingProviders.IsProviderSupported(Provider))
+            if (!EmailSendingProviders.HasValue(Provider))
             {
                 errors.Add(
-                    $"{nameof(Provider)}: {Provider} is not supported. Supported providers are {string.Join(",", EmailSendingProviders.GetAllProviders())}");
+                    $"{nameof(Provider)}: {Provider} is not supported. Supported providers are {string.Join(" | ", EmailSendingProviders.Values)}");
             }
             return new Result(!errors.Any(), errors);
         }

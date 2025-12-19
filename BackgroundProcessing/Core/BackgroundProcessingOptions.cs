@@ -8,7 +8,7 @@ namespace Odin.BackgroundProcessing
     /// </summary>
     public sealed class BackgroundProcessingOptions
     {
-        private string _provider = BackgroundProcessingProviders.Fake;
+        private string _provider = BackgroundProcessingProviders.Null;
 
         /// <summary>
         /// Fake or Hangfire
@@ -18,7 +18,7 @@ namespace Odin.BackgroundProcessing
             get => _provider;
             set
             {
-                Contract.Requires(!string.IsNullOrWhiteSpace(value));
+                Precondition.Requires(!string.IsNullOrWhiteSpace(value));
                 _provider = value.Replace("BackgroundProcessor", "", StringComparison.OrdinalIgnoreCase);   
             }
         }
@@ -30,14 +30,13 @@ namespace Odin.BackgroundProcessing
         public Result Validate()
         {
             List<string> errors = new List<string>();
-            List<string> providers = BackgroundProcessingProviders.GetBuiltInProviders();
             if (string.IsNullOrWhiteSpace(Provider))
             {
-                errors.Add($"{nameof(Provider)} has not been specified. Must be 1 of {string.Join(" | ",providers)}");
+                errors.Add($"{nameof(Provider)} has not been specified. Must be 1 of {string.Join(" | ",BackgroundProcessingProviders.Values)}");
             }
-            else if (!providers.Contains(Provider))
+            else if (!BackgroundProcessingProviders.HasValue(Provider))
             {
-                errors.Add($"The {nameof(Provider)} specified ({Provider}) is not one of the supported providers: {string.Join(" | ",providers)}");
+                errors.Add($"The {Constants.ModuleNoun} provider specified ({Provider}) is not one of the supported providers: {string.Join(" | ",BackgroundProcessingProviders.Values)}");
             }
             return new Result(!errors.Any(), errors);
         }

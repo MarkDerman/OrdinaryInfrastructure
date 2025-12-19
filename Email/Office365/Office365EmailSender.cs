@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Graph.Users.Item.SendMail;
+using Odin.DesignContracts;
 using Odin.Logging;
 using Odin.System;
 using Contract = Odin.DesignContracts.Contract;
@@ -27,9 +28,9 @@ public class Office365EmailSender : IEmailSender
     /// <param name="logger">Microsoft UserId</param>
     public Office365EmailSender(Office365Options office365Options, EmailSendingOptions emailSettings , ILoggerWrapper<Office365EmailSender> logger)
     {
-        Contract.RequiresNotNull(office365Options);
-        Contract.RequiresNotNull(emailSettings);
-        Contract.RequiresNotNull(logger);
+        Precondition.RequiresNotNull(office365Options);
+        Precondition.RequiresNotNull(emailSettings);
+        Precondition.RequiresNotNull(logger);
 
         _emailSettings = emailSettings;
         _logger = logger;
@@ -59,7 +60,7 @@ public class Office365EmailSender : IEmailSender
     {
         if (email.From is null)
         {
-            Contract.Requires(!string.IsNullOrWhiteSpace(_emailSettings.DefaultFromAddress), "Cannot fall back to the default from address, since it is missing.");
+            Precondition.Requires(!string.IsNullOrWhiteSpace(_emailSettings.DefaultFromAddress), "Cannot fall back to the default from address, since it is missing.");
             email.From = new EmailAddress(_emailSettings.DefaultFromAddress!, _emailSettings.DefaultFromName);
         }
         email.Subject = string.Concat(_emailSettings.SubjectPrefix, email.Subject,

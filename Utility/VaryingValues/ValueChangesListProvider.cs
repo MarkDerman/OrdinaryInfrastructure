@@ -19,7 +19,7 @@ public class ValueChangesListProvider<TRangeType, TValueType> : IVaryingValuePro
     /// <param name="valuesAcrossRange"></param>
     public ValueChangesListProvider(IEnumerable<ValueChange<TRangeType, TValueType>> valuesAcrossRange)
     {
-        Contract.Requires(valuesAcrossRange!=null!);
+        Precondition.Requires(valuesAcrossRange!=null!);
         InitialiseFrom(valuesAcrossRange.ToList());
     }
     
@@ -29,7 +29,7 @@ public class ValueChangesListProvider<TRangeType, TValueType> : IVaryingValuePro
     /// <param name="singleValue"></param>
     public ValueChangesListProvider(ValueChange<TRangeType, TValueType> singleValue)
     {
-        Contract.Requires(singleValue!=null!);
+        Precondition.Requires(singleValue!=null!);
         InitialiseFrom( new List<ValueChange<TRangeType, TValueType>> { singleValue } );
     }
 
@@ -40,7 +40,7 @@ public class ValueChangesListProvider<TRangeType, TValueType> : IVaryingValuePro
     /// <param name="sectionName">The name of the configuration section, eg 'TaxHistory'</param>
     public ValueChangesListProvider(IConfiguration configuration, string sectionName)
     {
-        Contract.Requires(configuration!=null!);
+        Precondition.Requires(configuration!=null!);
         List<ValueChange<TRangeType, TValueType>> valuesInConfig = new List<ValueChange<TRangeType, TValueType>>();
         configuration.Bind(sectionName, valuesInConfig);
         InitialiseFrom(valuesInConfig);
@@ -52,7 +52,7 @@ public class ValueChangesListProvider<TRangeType, TValueType> : IVaryingValuePro
     /// <param name="valueChangesSection"></param>
     public ValueChangesListProvider(IConfigurationSection valueChangesSection)
     {
-        Contract.Requires(valueChangesSection!=null!);
+        Precondition.Requires(valueChangesSection!=null!);
         List<ValueChange<TRangeType, TValueType>> valuesInConfig = new List<ValueChange<TRangeType, TValueType>>();
         valueChangesSection.Bind(valuesInConfig);
         InitialiseFrom(valuesInConfig);
@@ -60,7 +60,7 @@ public class ValueChangesListProvider<TRangeType, TValueType> : IVaryingValuePro
 
     private void InitialiseFrom(List<ValueChange<TRangeType, TValueType>> valuesAcrossRange)
     {
-        Contract.Requires(valuesAcrossRange!=null!);
+        Precondition.Requires(valuesAcrossRange!=null!);
         _valueChangesInOrder = valuesAcrossRange.OrderBy(c => c.From).ToList();
     }
 

@@ -1,4 +1,6 @@
-﻿namespace Odin.System
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace Odin.System
 {
     /// <summary>
     /// Represents the success or failure of an operation that returns a Value\Result on success,
@@ -11,6 +13,7 @@
         /// <summary>
         /// True if successful
         /// </summary>
+        [MemberNotNullWhen(true, nameof(Value))]
         public bool IsSuccess { get; init; }
         
         /// <summary>

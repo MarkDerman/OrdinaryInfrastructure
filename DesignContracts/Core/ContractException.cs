@@ -42,25 +42,5 @@ namespace Odin.DesignContracts
             ConditionText = conditionText;
         }
 
-        private ContractException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            Kind = (ContractFailureKind) info.GetInt16(nameof(Kind));
-            UserMessage = info.GetString(nameof(UserMessage));
-            ConditionText = info.GetString(nameof(ConditionText));
-        }
-
-        /// <inheritdoc />
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info is null)
-                throw new ArgumentNullException(nameof(info));
-
-            base.GetObjectData(info, context);
-
-            info.AddValue(nameof(Kind), (int)Kind);
-            info.AddValue(nameof(UserMessage), UserMessage);
-            info.AddValue(nameof(ConditionText), ConditionText);
-        }
     }
 }

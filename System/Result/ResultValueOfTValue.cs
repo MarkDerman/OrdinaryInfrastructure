@@ -37,7 +37,7 @@
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
         public ResultValue(bool isSuccess, TValue? value, string? message = null)
         {
-            Assertions.RequiresArgumentPrecondition(!(value == null && isSuccess), "Value is required for a successful result.");
+            Assertions.RequiresArgumentPrecondition(!(value == null && isSuccess), "A value is required for a successful result.");
             IsSuccess = isSuccess;
             Value = value;
             _messages = message != null ? [message] : null;

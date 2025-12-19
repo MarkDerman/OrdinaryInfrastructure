@@ -11,76 +11,70 @@ namespace Tests.Odin.Email
     public sealed class DependencyInjectionExtensionsTests
     {
         [Test]
-        [TestCaseSource(nameof(GetFakeSenderConfigs))]
-        public void AddEmailSending_adds_FakeEmailSender_to_application_from_configuration(string json)
+        public void Add_Null_provider()
         {
             WebApplicationBuilder Builder = WebApplication.CreateBuilder();
-            Builder.Configuration.AddJsonStream(Stream(json));
+            Builder.Configuration.AddJsonStream(Stream(GetNullSenderConfigJson()));
             Builder.Services.AddOdinEmailSending(Builder.Configuration);
             WebApplication sut = Builder.Build();
-            
+
             IEmailSender? mailSender = sut.Services.GetService<IEmailSender>();
             EmailSendingOptions? config = sut.Services.GetService<EmailSendingOptions>();
-            
+
             Assert.That(mailSender, Is.Not.Null);
             Assert.That(mailSender, Is.InstanceOf<NullEmailSender>());
             Assert.That(config, Is.Not.Null);
         }
 
         [Test]
-        [TestCaseSource(nameof(GetMailgunSenderConfigs))]
-        public void AddEmailSending_adds_MailgunEmailSender_to_application_from_configuration(string json)
+        public void Add_Mailgun_provider()
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder();
-            builder.Configuration.AddJsonStream(Stream(json));
+            builder.Configuration.AddJsonStream(Stream(MailgunConfigJson));
             builder.Services.AddOdinEmailSending(builder.Configuration);
             WebApplication sut = builder.Build();
-            
+
             IEmailSender? provider = sut.Services.GetService<IEmailSender>();
             EmailSendingOptions? config = sut.Services.GetService<EmailSendingOptions>();
             MailgunOptions? mailgunConfig = sut.Services.GetService<MailgunOptions>();
-            
+
             Assert.That(provider, Is.Not.Null);
             Assert.That(provider, Is.InstanceOf<MailgunEmailSender>());
-            Assert.That(config, Is.Not.Null);    
-            Assert.That(mailgunConfig, Is.Not.Null);  
-        }
-
-        public static string[] GetFakeSenderConfigs()
-        {
-            return new[] { GetFakeSenderConfigJson(), GetFakeSenderConfigJsonOld() };
+            Assert.That(config, Is.Not.Null);
+            Assert.That(mailgunConfig, Is.Not.Null);
         }
         
-        public static string[] GetMailgunSenderConfigs()
+        [Test]
+        public void Add_Office365_provider()
         {
-            return new[] { GetMailgunConfigJson() };
+            WebApplicationBuilder builder = WebApplication.CreateBuilder();
+            builder.Configuration.AddJsonStream(Stream(Office365ConfigJson));
+            builder.Services.AddOdinEmailSending(builder.Configuration);
+            WebApplication sut = builder.Build();
+
+            IEmailSender? provider = sut.Services.GetService<IEmailSender>();
+            EmailSendingOptions? config = sut.Services.GetService<EmailSendingOptions>();
+            Office365Options? providerConfig = sut.Services.GetService<Office365Options>();
+
+            Assert.That(provider, Is.Not.Null);
+            Assert.That(provider, Is.InstanceOf<Office365EmailSender>());
+            Assert.That(config, Is.Not.Null);
+            Assert.That(providerConfig, Is.Not.Null);
         }
 
-        public static string GetFakeSenderConfigJson()
+
+        public static string GetNullSenderConfigJson()
         {
             return @"{
   ""EmailSending"": {
     ""DefaultFromAddress"": ""rubbish@domain.co.za"",
     ""DefaultFromName"": ""LocalDevelopment"",
-    ""Provider"": ""Fake"",
-  }
-}";
-        }
-        
-        public static string GetFakeSenderConfigJsonOld()
-        {
-            return @"{
-  ""EmailSending"": {
-    ""DefaultFromAddress"": ""noreply@domain.com"",
-    ""DefaultFromName"": ""LocalDevelopment"",
-    ""Provider"": ""FakeEmailSender"",
+    ""Provider"": ""Null"",
   }
 }";
         }
 
-        public static string GetMailgunConfigJson()
-        {
-            return @"{
+        public const string MailgunConfigJson = @"{
   ""EmailSending"": {
     ""DefaultFromAddress"": ""noreply@splendid.bom"",
     ""DefaultFromName"": ""LocalDevelopment"",
@@ -91,8 +85,24 @@ namespace Tests.Odin.Email
     }
   }
 }";
+
+        public const string Office365ConfigJson = @"{
+  ""EmailSending"": {
+    ""DefaultFromAddress"": ""noreply@splendid.bom"",
+    ""DefaultFromName"": ""LocalDevelopment"",
+    ""Provider"": ""Office365"",
+    ""Office365"": {
+        ""SenderUserId"": ""Set-in-user-secrets"",
+        ""MicrosoftGraphClientSecretCredentials"": {
+          ""ClientId"": ""Set-in-user-secrets"",
+          ""TenantId"": ""Set-in-user-secrets"",
+          ""ClientSecret"": ""Set-in-user-secrets""
         }
-        
+    }
+  }
+}";
+   
+
         public static Stream Stream(string input)
         {
             MemoryStream memoryStream = new MemoryStream();
@@ -104,6 +114,5 @@ namespace Tests.Odin.Email
             memoryStream.Position = 0;
             return memoryStream;
         }
-        
     }
 }

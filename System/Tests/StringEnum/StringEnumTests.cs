@@ -14,7 +14,19 @@ namespace Tests.Odin.System.StringEnum
         [TestCase("Elephant",false  )]
         public void HasValue(string? testValue, bool expectedResult)
         {
-            Result sut = FourValsStringEnum.HasValue(testValue);
+            bool sut = FourValsStringEnum.HasValue(testValue);
+
+            Assert.That(sut, Is.EqualTo(expectedResult));
+        }
+        
+        [Test]
+        [TestCase("val1",true )]
+        [TestCase("val1",true )]
+        [TestCase("VAL1",false )]
+        [TestCase("Elephant",false  )]
+        public void ValidateValue(string? testValue, bool expectedResult)
+        {
+            Result sut = FourValsStringEnum.ValidateValue(testValue);
 
             Assert.That(sut.IsSuccess, Is.EqualTo(expectedResult), sut.MessagesToString());
         }

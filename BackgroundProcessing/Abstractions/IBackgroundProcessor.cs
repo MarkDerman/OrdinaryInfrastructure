@@ -4,8 +4,9 @@ using Odin.System;
 namespace Odin.BackgroundProcessing
 {
     /// <summary>
-    /// Interface to abstract out-of-process background job management 
+    /// Now redundant interface to abstract Hangfire's out-of-process background job management (which used to be static). 
     /// </summary>
+    [Obsolete("Rather use Hangfire and it's IBackgroundJobClient directly.")]
     public interface IBackgroundProcessor
     {
         /// <summary>

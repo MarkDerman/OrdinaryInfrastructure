@@ -4,20 +4,20 @@ using Odin.Email;
 namespace Tests.Odin.Email
 {
     [TestFixture]
-    public sealed class ProvidersTests
+    public sealed class EmailSendingProvidersTests
     {
         [Test]
         [TestCase("Mailgun", true)]
-        [TestCase("MailgunEmailSender", true)]
-        [TestCase("FakeEmailSender", true)]
-        [TestCase("Fake", true)]
+        [TestCase("Fake", false)]
+        [TestCase("Null", true)]
         [TestCase(EmailSendingProviders.Mailgun, true)]
-        [TestCase(EmailSendingProviders.Fake, true)]
+        [TestCase(EmailSendingProviders.Null, true)]
         [TestCase(null, false)]
         [TestCase("", false)]
+        [TestCase("Nonsense", false)]
         public void IsProviderSupported(string provider, bool isSupported)
         {
-            Assert.That(EmailSendingProviders.IsProviderSupported(provider), Is.EqualTo(isSupported));
+            Assert.That(EmailSendingProviders.HasValue(provider), Is.EqualTo(isSupported));
         }
     }
 }

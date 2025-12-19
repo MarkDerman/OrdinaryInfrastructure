@@ -2,8 +2,7 @@
 
 /// <summary>
 /// Provides methods for runtime validation and enforcement of preconditions.
-/// These assertions are used to ensure that client callers meet the preconditions
-/// advertised as required for a given method.
+/// ensuring that the calling consumer has met the agreed\advertised requirements.
 /// </summary>
 public static class Precondition
 {
@@ -30,7 +29,7 @@ public static class Precondition
     public static void RequiresNotNull(object? argument, string? userMessage = "Argument must not be null"
         , string? conditionText = null)
     {
-        Requires<ArgumentNullException>(argument != null, userMessage, conditionText);
+        Requires(argument != null, userMessage, conditionText);
     }
 
     /// <summary>

@@ -2,7 +2,6 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <UserSecretsId>Tests.Odin.DesignContracts</UserSecretsId>
     <GenerateProgramFile>true</GenerateProgramFile>
     <ImplicitUsings>true</ImplicitUsings>
     <NoWarn>1591;</NoWarn>
@@ -13,12 +12,10 @@
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="NUnit3TestAdapter" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" /> 
-    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Odin.DesignContracts.csproj" />
-    <ProjectReference Include="..\Rewriter\Odin.DesignContracts.Rewriter.csproj" />
   </ItemGroup>
 
 </Project>

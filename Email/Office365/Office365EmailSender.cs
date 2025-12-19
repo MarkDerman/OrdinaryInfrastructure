@@ -6,7 +6,6 @@ using Microsoft.Graph.Users.Item.SendMail;
 using Odin.DesignContracts;
 using Odin.Logging;
 using Odin.System;
-using Contract = Odin.DesignContracts.Contract;
 
 namespace Odin.Email;
 

@@ -89,7 +89,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Templating", "Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Utility", "Utility\Tests\Tests.Odin.Utility.csproj", "{52AF2C63-2247-42FD-B3DD-4AD2AFCE0C6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.DesignContracts", "DesignContracts\Tests\Tests.Odin.DesignContracts.csproj", "{177EDB52-3174-4037-80DD-235222F9817B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.DesignContracts", "DesignContracts\CoreTests\Tests.Odin.DesignContracts.csproj", "{177EDB52-3174-4037-80DD-235222F9817B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Messaging", "Messaging\Tests\Tests.Odin.Messaging.csproj", "{690312C5-1948-4530-832D-6332625D4E9C}"
 EndProject
@@ -100,6 +100,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DesignContracts.Rewriter", "DesignContracts\Rewriter\Odin.DesignContracts.Rewriter.csproj", "{60A2A141-EAC8-4EAB-850D-AF534ABFE98C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DesignContracts.Tooling", "DesignContracts\Tooling\Odin.DesignContracts.Tooling.csproj", "{B25A8EAA-5FD6-4A47-96A1-2C7108FC4576}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.DesignContracts.Rewriter", "DesignContracts\RewriterTests\Tests.Odin.DesignContracts.Rewriter.csproj", "{320907F6-F4BA-4A1D-AC23-145A5AD06C14}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -235,6 +237,10 @@ Global
 		{B25A8EAA-5FD6-4A47-96A1-2C7108FC4576}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B25A8EAA-5FD6-4A47-96A1-2C7108FC4576}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B25A8EAA-5FD6-4A47-96A1-2C7108FC4576}.Release|Any CPU.Build.0 = Release|Any CPU
+		{320907F6-F4BA-4A1D-AC23-145A5AD06C14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{320907F6-F4BA-4A1D-AC23-145A5AD06C14}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{320907F6-F4BA-4A1D-AC23-145A5AD06C14}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{320907F6-F4BA-4A1D-AC23-145A5AD06C14}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CE323D9C-635B-EFD3-5B3F-7CE371D8A86A} = {BF440C74-E223-3CBF-8FA7-83F7D164F7C3}
@@ -270,5 +276,6 @@ Global
 		{60A2A141-EAC8-4EAB-850D-AF534ABFE98C} = {9E3E1A13-9A74-4895-98A9-D96F4E0ED4B7}
 		{B25A8EAA-5FD6-4A47-96A1-2C7108FC4576} = {9E3E1A13-9A74-4895-98A9-D96F4E0ED4B7}
 		{E450FC74-0DBE-320A-FE7A-87255CB4DFAB} = {73BA62BB-2B41-2DC4-C714-51B3D4C2A215}
+		{320907F6-F4BA-4A1D-AC23-145A5AD06C14} = {9E3E1A13-9A74-4895-98A9-D96F4E0ED4B7}
 	EndGlobalSection
 EndGlobal

@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
@@ -9,14 +5,16 @@ using Mono.Cecil.Rocks;
 namespace Odin.DesignContracts.Rewriter;
 
 /// <summary>
-/// Build-time IL rewriter that injects Design-by-Contract postconditions into method exit paths.
+/// Build-time IL rewriter that injects Design-by-Contract postconditions into method exit paths,
+/// as well as Design-by-Contract class invariant calls at both entry to and exit from all
+/// public members on the API surface, unless marked 'Pure'.
 /// </summary>
-internal static class Program
+internal static class RewriterProgram
 {
     private const string ContractTypeFullName = "Odin.DesignContracts.Contract";
 
-    private const string OdinInvariantAttributeFullName = "Odin.DesignContracts.ContractInvariantMethodAttribute";
-    private const string BclInvariantAttributeFullName  = "System.Diagnostics.Contracts.ContractInvariantMethodAttribute";
+    private const string OdinInvariantAttributeFullName = "Odin.DesignContracts.ClassInvariantMethodAttribute";
+    private const string BclInvariantAttributeFullName  = "System.Diagnostics.Contracts.ClassInvariantMethodAttribute";
     private const string PureAttributeFullName          = "System.Diagnostics.Contracts.PureAttribute";
 
     private static int Main(string[] args)
@@ -98,8 +96,8 @@ internal static class Program
     private static bool TryRewriteMethod(TypeDefinition declaringType, MethodDefinition method, MethodDefinition? invariantMethod)
     {
         // Only handle sync (v1). We rely on analyzers to enforce this, but be defensive.
-        if (method.IsAsync)
-            return false;
+        // if (method.IsAsync)
+        //     return false;
 
         method.Body.SimplifyMacros();
 
@@ -252,7 +250,7 @@ internal static class Program
         {
             string names = string.Join(", ", candidates.Select(m => m.FullName));
             throw new InvalidOperationException(
-                $"Type '{type.FullName}' has multiple invariant methods. Exactly one method may be marked with ContractInvariantMethodAttribute. Candidates: {names}");
+                $"Type '{type.FullName}' has multiple invariant methods. Exactly one method may be marked with ClassInvariantMethodAttribute. Candidates: {names}");
         }
 
         MethodDefinition invariant = candidates[0];

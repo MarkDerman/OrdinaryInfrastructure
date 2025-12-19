@@ -9,7 +9,7 @@ namespace Odin.DesignContracts
     /// <c>System.Diagnostics.Contracts.Contract</c> from the classic .NET Framework,
     /// but it is implemented independently under the <c>Odin.DesignContracts</c> namespace.
     /// </remarks>
-    public static partial class Contract
+    internal static class Contract
     {
         /// <summary>
         /// Occurs when a contract fails and before a <see cref="ContractException"/> is thrown.
@@ -34,26 +34,43 @@ namespace Odin.DesignContracts
             throw new ContractException(kind, message, userMessage, conditionText);
         }
 
+        internal static string GetKindFailedText(ContractFailureKind kind)
+        {
+            switch (kind)
+            {
+                case ContractFailureKind.Precondition:
+                    return "Precondition not met";
+                case ContractFailureKind.Postcondition:
+                    return "Postcondition not honoured";
+                case ContractFailureKind.Invariant:
+                    return "Invariant broken";
+                case ContractFailureKind.Assertion:
+                    return "Assertion failed";
+                case ContractFailureKind.Assumption:
+                    return "Assumption failed";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(kind), kind, null);
+            }
+        }
+        
         internal static string BuildFailureMessage(ContractFailureKind kind, string? userMessage, string? conditionText)
         {
-            string kindText = kind.ToString();
-
             if (!string.IsNullOrWhiteSpace(userMessage) && !string.IsNullOrWhiteSpace(conditionText))
             {
-                return $"{kindText} failed: {userMessage} [Condition: {conditionText}]";
+                return $"{GetKindFailedText(kind)}: {userMessage} [Condition: {conditionText}]";
             }
 
             if (!string.IsNullOrWhiteSpace(userMessage))
             {
-                return $"{kindText} failed: {userMessage}";
+                return $"{GetKindFailedText(kind)}: {userMessage}";
             }
 
             if (!string.IsNullOrWhiteSpace(conditionText))
             {
-                return $"{kindText} failed: {conditionText}";
+                return $"{GetKindFailedText(kind)}: {conditionText}";
             }
 
-            return $"{kindText} failed.";
+            return $"{GetKindFailedText(kind)}.";
         }
     }
 }

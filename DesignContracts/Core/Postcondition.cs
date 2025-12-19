@@ -1,7 +1,12 @@
-namespace Odin.DesignContracts;
-
-public static partial class Contract
+namespace Odin.DesignContracts
 {
+
+    /// <summary>
+    /// Provides methods for runtime validation and enforcement of postconditions, 
+    /// ensuring that the supplier class has met their advertised\agreed obligations.
+    /// </summary>
+    public static class Postcondition
+    {
         /// <summary>
         /// Represents the return value of the enclosing method for use within postconditions.
         /// </summary>
@@ -51,20 +56,20 @@ public static partial class Contract
         /// </remarks>
         public static void Ensures(bool condition, string? userMessage = null, string? conditionText = null)
         {
-            if (!ContractRuntime.PostconditionsEnabled)
+            if (!DesignContractOptions.Current.EnablePostconditions)
             {
                 return;
             }
 
             if (!condition)
             {
-                ReportFailure(
+                Contract.ReportFailure(
                     ContractFailureKind.Postcondition,
                     userMessage,
                     conditionText);
             }
         }
-        
+
         /// <summary>
         /// Specifies an object invariant that must hold true whenever the object is in a valid state.
         /// </summary>
@@ -75,18 +80,18 @@ public static partial class Contract
         /// Invariants are evaluated only when <see cref="ContractRuntime.InvariantsEnabled"/> is <c>true</c>.
         /// Calls to this method become no-ops when invariants are disabled.
         /// It is expected that source-generated code will invoke invariant methods
-        /// (marked with <see cref="ContractInvariantMethodAttribute"/>) at appropriate points.
+        /// (marked with <see cref="ClassInvariantMethodAttribute"/>) at appropriate points.
         /// </remarks>
         public static void Invariant(bool condition, string? userMessage = null, string? conditionText = null)
         {
-            if (!ContractRuntime.InvariantsEnabled)
+            if (!DesignContractOptions.Current.EnableInvariants)
             {
                 return;
             }
 
             if (!condition)
             {
-                ReportFailure(
+                Contract.ReportFailure(
                     ContractFailureKind.Invariant,
                     userMessage,
                     conditionText);
@@ -107,8 +112,8 @@ public static partial class Contract
         {
             if (!condition)
             {
-                ReportFailure(
-                    ContractFailureKind.Assert,
+                Contract.ReportFailure(
+                    ContractFailureKind.Assertion,
                     userMessage,
                     conditionText);
             }
@@ -128,11 +133,11 @@ public static partial class Contract
         {
             if (!condition)
             {
-                ReportFailure(
-                    ContractFailureKind.Assume,
+                Contract.ReportFailure(
+                    ContractFailureKind.Assumption,
                     userMessage,
                     conditionText);
             }
         }
- 
+    }
 }

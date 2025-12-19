@@ -1,8 +1,7 @@
 ﻿using NUnit.Framework;
 using Odin.System;
-using Odin.Utility;
 
-namespace Tests.Odin.Utility
+namespace Tests.Odin.System
 {
     [TestFixture]
     public sealed class ClassFactoryTests
@@ -32,7 +31,7 @@ namespace Tests.Odin.Utility
         [Test]
         public void Create_class_by_typename()
         {
-            ResultValue<Class3> result = ClassFactory.TryCreate<Class3>("Tests.Odin.Utility.Class3","Tests.Odin.Utility");
+            ResultValue<Class3> result = ClassFactory.TryCreate<Class3>("Tests.Odin.System.Class3","Tests.Odin.System");
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsSuccess, Is.True, result.MessagesToString());
@@ -43,7 +42,7 @@ namespace Tests.Odin.Utility
         [Test]
         public void Create_inherited_class_by_typename()
         {
-            ResultValue<Interface1> result = ClassFactory.TryCreate<Interface1>("Tests.Odin.Utility.Inherited2","Tests.Odin.Utility");
+            ResultValue<Interface1> result = ClassFactory.TryCreate<Interface1>("Tests.Odin.System.Inherited2","Tests.Odin.System");
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsSuccess, Is.True);

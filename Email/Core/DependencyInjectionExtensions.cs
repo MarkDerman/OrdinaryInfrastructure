@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Odin.DesignContracts;
 using Odin.Email;
 using Odin.System;
-using Odin.Utility;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection

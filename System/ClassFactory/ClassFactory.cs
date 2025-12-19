@@ -1,8 +1,7 @@
 using System.Runtime.Remoting;
 using Odin.DesignContracts;
-using Odin.System;
 
-namespace Odin.Utility;
+namespace Odin.System;
 
 /// <summary>
 /// 

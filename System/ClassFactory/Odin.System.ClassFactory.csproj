@@ -1,21 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
-    <RootNamespace>Odin.Utility</RootNamespace>
+    <RootNamespace>Odin.System</RootNamespace>
     <ImplicitUsings>true</ImplicitUsings>
-    <RootNamespace>Odin.Utility</RootNamespace>
     <Nullable>enable</Nullable>
     <PackageIcon>icon.png</PackageIcon>
-    <Description>Provides ClassFactory, a utility class for creating types by name.
+    <Description>Provides static methods in ClassFactory that wrap System.Activator.Create...
             
-      
-
         </Description>
     <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />
-    <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
+    <ProjectReference Include="..\Result\Odin.System.Result.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="" />

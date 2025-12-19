@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Odin.BackgroundProcessing;
 using Odin.DesignContracts;
 using Odin.System;
-using Odin.Utility;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection

@@ -193,16 +193,6 @@ as well as a useful StringEnumMemberAttribute.
 |:--------------------------------------------------------------------------------------------------------------|:-------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | [Odin.System.StringEnum](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions) | Exposes StringEnum | [![NuGet](https://img.shields.io/nuget/v/Odin.System.StringEnum.svg)](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.StringEnum) |
 
-## SQL Scripts Execution
-
-## SFTP\FTP\FTPS File Sessions
-
-## Configuration
-
-## Background Jobs
-
-## Messaging - RabbitMQ
-
 
 
 

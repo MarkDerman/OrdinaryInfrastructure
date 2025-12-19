@@ -23,7 +23,6 @@
     <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />
     <ProjectReference Include="..\..\System\ClassFactory\Odin.System.ClassFactory.csproj" />
     <ProjectReference Include="..\..\System\StringEnum\Odin.System.StringEnum.csproj" />
-    <ProjectReference Include="..\..\Utility\ClassFactory\Odin.Utility.ClassFactory.csproj" />
     <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
   </ItemGroup>
   <ItemGroup>

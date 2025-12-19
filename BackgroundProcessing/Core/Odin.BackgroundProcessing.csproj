@@ -25,7 +25,6 @@
       <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />
       <ProjectReference Include="..\..\System\ClassFactory\Odin.System.ClassFactory.csproj" />
       <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
-      <ProjectReference Include="..\..\Utility\ClassFactory\Odin.Utility.ClassFactory.csproj" />
       <ProjectReference Include="..\Abstractions\Odin.BackgroundProcessing.Abstractions.csproj" />
     </ItemGroup>
     <ItemGroup>

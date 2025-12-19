@@ -1,3 +1,4 @@
+using System.Runtime.Remoting;
 using Odin.DesignContracts;
 using Odin.System;
 
@@ -6,46 +7,40 @@ namespace Odin.Utility;
 /// <summary>
 /// 
 /// </summary>
-public class ClassFactory
+public static class ClassFactory
 {
     /// <summary>
-    /// Attempts to create the specified type from the currently loaded application assemblies
+    /// Attempts to create the specified type from the currently loaded application assemblies, from the assembly specified.
     /// </summary>
-    /// <param name="fullTypeName"></param>
-    /// <param name="assemblyToLoadFrom"></param>
+    /// <param name="typeName">The fully qualified name of the type to create an instance of.</param>
+    /// <param name="assemblyName">The name of the assembly where the type named typeName is sought.</param>
     /// <returns></returns>
-    public ResultValue<T> TryCreate<T>(string fullTypeName) where T : class
+    public static ResultValue<T> TryCreate<T>(string typeName, string assemblyName) where T : class
     {
-        Contract.Requires(!string.IsNullOrWhiteSpace(fullTypeName));
-        
-        var types = AppDomain.CurrentDomain.GetAssemblies()
-            .Select(a => a.GetType(fullTypeName, throwOnError: false))
-            .Where(t => t != null)
-            .ToList();
-        
-        if (types.Count < 1)
+        Contract.Requires(!string.IsNullOrWhiteSpace(typeName));
+        Contract.Requires(!string.IsNullOrWhiteSpace(assemblyName));
+        ObjectHandle? handle;
+        try
         {
-            return ResultValue<T>.Failure($"No loaded assembly contains type {fullTypeName}");
+            handle = Activator.CreateInstance(assemblyName, typeName);
         }
-
-        // I would like to keep this check, but it causes NuGet unit tests to fail, seemingly because NuGet loads the same assembly (whose types have the same 
-        // AssemblyQualifiedName) multiple times. Let's hope the lack of this check doesn't cause problems for real systems.
-        
-        // if (types.Count > 1)
-        // {
-        //     return ResultValue<T>.Failure($"Multiple loaded assemblies contain type named {fullTypeName}:\n {string.Join("\n ", types.Select(t => $"[{t.AssemblyQualifiedName}]"))}");
-        // }
-        
-        var type = types[0];
-        
-        object? instance = Activator.CreateInstance(type);
-        if (instance == null) return ResultValue<T>.Failure($"Could not create instance of type {type.FullName}");
+        catch (Exception err)
+        {
+            return CreateInstanceFailure<T>(typeName, assemblyName, err.Message);
+        }
+        if (handle == null) return CreateInstanceFailure<T>(typeName, assemblyName);
+        object? instance = handle.Unwrap();
+        if (instance == null) return CreateInstanceFailure<T>(typeName, assemblyName);
         if (instance is T objT)
         {
             return ResultValue<T>.Success(objT);
         }
+        return ResultValue<T>.Failure($"Type {typeName} is not of type {nameof(T)}");
+    }
 
-        return ResultValue<T>.Failure($"Type {type.FullName} is not of type {nameof(T)}");
+    private static ResultValue<T> CreateInstanceFailure<T>(string typeName, string assemblyName, string? errorMessage = "")
+    {
+        return ResultValue<T>.Failure($"Could not create instance of type {typeName} from assembly {assemblyName}. {errorMessage}");
     }
 
     
@@ -54,7 +49,7 @@ public class ClassFactory
     /// </summary>
     /// <param name="typeToCreate"></param>
     /// <returns></returns>
-    public ResultValue<T> TryCreate<T>(Type typeToCreate) where T : class
+    public static ResultValue<T> TryCreate<T>(Type typeToCreate) where T : class
     {
         Contract.Requires(typeToCreate!=null!);
         try

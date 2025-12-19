@@ -10,11 +10,9 @@ namespace Tests.Odin.Email
     {
         [Test]
         [TestCase("Mailgun", true)]
-        [TestCase("MailgunEmailSender", true)]
-        [TestCase("FakeEmailSender", true)]
-        [TestCase("Fake", true)]
+        [TestCase("Null", true)]
         [TestCase(EmailSendingProviders.Mailgun, true)]
-        [TestCase(EmailSendingProviders.Fake, true)]
+        [TestCase(EmailSendingProviders.Null, true)]
         public void IsConfigurationValid_requires_valid_provider(string provider, bool isValidConfig)
         {
             EmailSendingOptions sut = new EmailSendingOptions()

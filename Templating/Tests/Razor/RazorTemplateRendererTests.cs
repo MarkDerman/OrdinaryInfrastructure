@@ -25,11 +25,6 @@ namespace Tests.Odin.Templating.Razor
         {
             Assembly testsAssembly = typeof(RazorTemplateRendererTests).Assembly;
             RazorTemplateRenderer sut = new RazorTemplateRenderer(testsAssembly, rootNamespace);
-
-            // TemplateCacheLookupResult? templateLookup = sut._razorLightEngine.Handler.Cache.RetrieveTemplate(templateKey);
-            // Assert.That(templateLookup, Is.Not.Null);
-            // Assert.That(templateLookup.Success, Is.EqualTo(shouldSucceed));
-            
             ResultValue<string> result = await sut.RenderAsync(templateKey, new TestViewModel(){ Title = "World"});
 
             Assert.That(result.IsSuccess, Is.EqualTo(shouldSucceed));

@@ -10,8 +10,7 @@ namespace Tests.Odin.Utility
         [Test]
         public void Create_class_by_type()
         {
-            ClassFactory activator = new ClassFactory();
-            ResultValue<Class3> result = activator.TryCreate<Class3>(typeof(Class3));
+            ResultValue<Class3> result = ClassFactory.TryCreate<Class3>(typeof(Class3));
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsSuccess, Is.True);
@@ -22,8 +21,7 @@ namespace Tests.Odin.Utility
         [Test]
         public void Create_inherited_class_by_interface_type()
         {
-            ClassFactory activator = new ClassFactory();
-            ResultValue<Interface1> result = activator.TryCreate<Interface1>(typeof(Inherited2));
+            ResultValue<Interface1> result = ClassFactory.TryCreate<Interface1>(typeof(Inherited2));
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsSuccess, Is.True);
@@ -34,8 +32,7 @@ namespace Tests.Odin.Utility
         [Test]
         public void Create_class_by_typename()
         {
-            ClassFactory activator = new ClassFactory();
-            ResultValue<Class3> result = activator.TryCreate<Class3>("Tests.Odin.Utility.Class3");
+            ResultValue<Class3> result = ClassFactory.TryCreate<Class3>("Tests.Odin.Utility.Class3","Tests.Odin.Utility");
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsSuccess, Is.True, result.MessagesToString());
@@ -46,8 +43,7 @@ namespace Tests.Odin.Utility
         [Test]
         public void Create_inherited_class_by_typename()
         {
-            ClassFactory activator = new ClassFactory();
-            ResultValue<Interface1> result = activator.TryCreate<Interface1>("Tests.Odin.Utility.Inherited2");
+            ResultValue<Interface1> result = ClassFactory.TryCreate<Interface1>("Tests.Odin.Utility.Inherited2","Tests.Odin.Utility");
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsSuccess, Is.True);

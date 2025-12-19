@@ -16,65 +16,57 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class DependencyInjectionExtensions
     {
         /// <summary>
-        /// Adds BackgroundProcessing services (such as Hangfire's server) according to the provided ConfigurationSection
-        /// </summary>
-        /// <param name="serviceCollection"></param>
-        /// <param name="configuration"></param>
-        /// <param name="sectionName">Cryptography by default</param>
-        /// <param name="sqlServerConnectionString"></param>
-        public static void AddOdinBackgroundProcessing(
-            this IServiceCollection serviceCollection, IConfiguration configuration,
-            string sectionName = "BackgroundProcessing", string? sqlServerConnectionString = null)
-        {
-            IConfigurationSection? section = configuration.GetSection(sectionName);
-            if (section == null)
-            {
-                section = configuration.GetSection($"{sectionName}BackgroundProcessor");
-                if (section == null)
-                {
-                    throw new ApplicationException(
-                        $"{nameof(AddOdinBackgroundProcessing)}: Section {sectionName} missing in configuration.");
-                }
-            }
-            serviceCollection.AddOdinBackgroundProcessing(configuration, section, sqlServerConnectionString);
-        }
-        
-        /// <summary>
-        /// Adds BackgroundProcessing services
-        /// </summary>
-        /// <param name="serviceCollection"></param>
-        /// <param name="configuration"></param>
-        /// <param name="sectionName"></param>
-        /// <param name="sqlServerConnectionStringFactory"></param>
-        /// <exception cref="ApplicationException"></exception>
-        public static void AddOdinBackgroundProcessing(
-            this IServiceCollection serviceCollection, IConfiguration configuration,
-            string sectionName, Func<IServiceProvider, string>? sqlServerConnectionStringFactory = null)
-        {
-            IConfigurationSection? section = configuration.GetSection(sectionName);
-            if (section == null)
-            {
-                section = configuration.GetSection($"{sectionName}BackgroundProcessor");
-                if (section == null)
-                {
-                    throw new ApplicationException(
-                        $"{nameof(AddOdinBackgroundProcessing)}: Section {sectionName} missing in configuration.");
-                }
-            }
-            serviceCollection.AddOdinBackgroundProcessing(configuration, section, sqlServerConnectionStringFactory);
-        }
-
-        /// <summary>
         /// Adds BackgroundProcessing services
         /// </summary>
         /// <param name="serviceCollection"></param>
         /// <param name="configuration"></param>
         /// <param name="configurationSection"></param>
         /// <param name="sqlServerConnectionString"></param>
-        public static void AddOdinBackgroundProcessing(this IServiceCollection serviceCollection, IConfiguration configuration, IConfigurationSection configurationSection,
-            string? sqlServerConnectionString = null)
+        public static void AddOdinBackgroundProcessing(this IServiceCollection serviceCollection, 
+            IConfiguration configuration, IConfigurationSection configurationSection, string? sqlServerConnectionString = null)
         {
             AddOdinBackgroundProcessing(serviceCollection, configuration, configurationSection, sqlServerConnectionString is null ? null : _ => sqlServerConnectionString);
+        }
+        
+        /// <summary>
+        /// B - Adds BackgroundProcessing services (such as Hangfire's server) according to the provided ConfigurationSection
+        /// </summary>
+        /// <param name="serviceCollection"></param>
+        /// <param name="configuration"></param>
+        /// <param name="sectionName">Cryptography by default</param>
+        /// <param name="sqlServerConnectionString"></param>
+        public static void AddOdinBackgroundProcessing(this IServiceCollection serviceCollection,
+            IConfiguration configuration, string sectionName = Constants.ModuleNoun, string? sqlServerConnectionString = null)
+        {
+            IConfigurationSection section = configuration.GetSection(sectionName);
+            if (section.Value == null && !section.GetChildren().Any())
+            {
+                throw new ApplicationException(
+                    $"{nameof(AddOdinBackgroundProcessing)}: Section {sectionName} missing in configuration.");
+            }
+        
+            serviceCollection.AddOdinBackgroundProcessing(configuration, section, sqlServerConnectionString);
+        }
+
+        /// <summary>
+        /// A - Adds BackgroundProcessing services
+        /// </summary>
+        /// <param name="serviceCollection"></param>
+        /// <param name="configuration"></param>
+        /// <param name="sectionName"></param>
+        /// <param name="sqlServerConnectionStringFactory"></param>
+        /// <exception cref="ApplicationException"></exception>
+        public static void AddOdinBackgroundProcessing(this IServiceCollection serviceCollection,
+            IConfiguration configuration, string sectionName, Func<IServiceProvider, string>? sqlServerConnectionStringFactory = null)
+        {
+            IConfigurationSection section = configuration.GetSection(sectionName);
+            if (section.Value == null && !section.GetChildren().Any())
+            {
+                throw new ApplicationException(
+                    $"{nameof(AddOdinBackgroundProcessing)}: Section {sectionName} missing in configuration.");
+            }
+
+            serviceCollection.AddOdinBackgroundProcessing(configuration, section, sqlServerConnectionStringFactory);
         }
 
         /// <summary>
@@ -104,20 +96,19 @@ namespace Microsoft.Extensions.DependencyInjection
             serviceCollection.TryAddSingleton(options);
 
 
-            if (options.Provider == BackgroundProcessingProviders.Fake)
+            if (options.Provider == BackgroundProcessingProviders.Null)
             {
-                serviceCollection.AddTransient<IBackgroundProcessor, FakeBackgroundProcessor>();
+                serviceCollection.AddTransient<IBackgroundProcessor, NullBackgroundProcessor>();
                 return;
             }
-            
+
             // Convention currently is that Providers are always located in an assembly called Odin.BackgroundProcessing.ProviderName
             // If not we will can AssemblyName into the config.
-            string providerAssemblyName = $"Odin.BackgroundProcessing.{options.Provider}";
-            string providerName = $"Odin.BackgroundProcessing.{options.Provider}BackgroundProcessor";
+            string providerAssemblyName = $"{Constants.RootNamespace}.{options.Provider}";
+            string providerName = $"{Constants.RootNamespace}.{options.Provider}{Constants.ModuleVerb}";
 
-            ClassFactory activator = new ClassFactory();
             ResultValue<IBackgroundProcessorServiceInjector> serviceInjectorCreation =
-                activator.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector");
+                ClassFactory.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector", providerAssemblyName);
 
             if (serviceInjectorCreation.IsSuccess)
             {
@@ -144,29 +135,28 @@ namespace Microsoft.Extensions.DependencyInjection
             Contract.RequiresNotNull(app);
 
             BackgroundProcessingOptions options = appServices.GetRequiredService<BackgroundProcessingOptions>();
-            if (options.Provider == BackgroundProcessingProviders.Fake)
+            if (options.Provider == BackgroundProcessingProviders.Null)
             {
                 return app;
             }
 
-            ClassFactory activator = new ClassFactory();
-            string providerAssemblyName = $"Odin.BackgroundProcessing.{options.Provider}";
+            string providerAssemblyName = $"{Constants.RootNamespace}.{options.Provider}";
             ResultValue<IBackgroundProcessorServiceInjector> serviceInjectorCreation =
-                activator.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector");
+                ClassFactory.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector",providerAssemblyName);
 
             if (serviceInjectorCreation.IsSuccess)
             {
                 return serviceInjectorCreation.Value.UseBackgroundProcessing(app, appServices);
             }
 
-            string message = $"Unable to load provider Odin.BackgroundProcessing.{options.Provider}.";
-            if (BackgroundProcessingProviders.IsBuiltInProvider(options.Provider))
+            string message = $"Unable to load {Constants.RootNamespace} provider {options.Provider}.";
+            if (BackgroundProcessingProviders.HasValue(options.Provider))
             {
-                message += $"This can occur if the {options.Provider} Nuget package reference is missing.";
+                message += $" Ensure that Nuget package {providerAssemblyName} is referenced.";
             }
             else
             {
-                message += $"{options.Provider} is not a recognised IBackgroundProcessor provider.";
+                message += $" {options.Provider} is not a recognised IBackgroundProcessor provider. Valid providers are {string.Join(" | ", BackgroundProcessingProviders.Values)}";
             }
 
             throw new ApplicationException(message);

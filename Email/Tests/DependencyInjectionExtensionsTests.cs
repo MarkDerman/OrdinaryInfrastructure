@@ -48,7 +48,7 @@ namespace Tests.Odin.Email
 
         public static string[] GetFakeSenderConfigs()
         {
-            return new[] { GetFakeSenderConfigJson(), GetFakeSenderConfigJsonOld() };
+            return new[] { GetNullSenderConfigJson() };
         }
         
         public static string[] GetMailgunSenderConfigs()
@@ -56,28 +56,17 @@ namespace Tests.Odin.Email
             return new[] { GetMailgunConfigJson() };
         }
 
-        public static string GetFakeSenderConfigJson()
+        public static string GetNullSenderConfigJson()
         {
             return @"{
   ""EmailSending"": {
     ""DefaultFromAddress"": ""rubbish@domain.co.za"",
     ""DefaultFromName"": ""LocalDevelopment"",
-    ""Provider"": ""Fake"",
+    ""Provider"": ""Null"",
   }
 }";
         }
         
-        public static string GetFakeSenderConfigJsonOld()
-        {
-            return @"{
-  ""EmailSending"": {
-    ""DefaultFromAddress"": ""noreply@domain.com"",
-    ""DefaultFromName"": ""LocalDevelopment"",
-    ""Provider"": ""FakeEmailSender"",
-  }
-}";
-        }
-
         public static string GetMailgunConfigJson()
         {
             return @"{

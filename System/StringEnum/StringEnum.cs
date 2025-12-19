@@ -55,12 +55,13 @@ public abstract class StringEnum<TEnum> where TEnum: StringEnum<TEnum>
     }
 
     /// <summary>
-    /// Returns true if the value exists as one of the members of Values.
+    /// Returns Success if the value exists as one of the members of Values,
+    /// else returns a Failure with meaningful error messages.
     /// Comparison is case-sensitive.
     /// </summary>
     /// <param name="value"></param>
     /// <returns></returns>
-    public static Result HasValue(string? value)
+    public static Result ValidateValue(string? value)
     {
         StringComparer comparer = StringComparer.FromComparison(StringComparison.Ordinal);
         if (!Values.Contains(value, comparer))
@@ -68,6 +69,22 @@ public abstract class StringEnum<TEnum> where TEnum: StringEnum<TEnum>
             return Result.Failure(NotAMemberMessage(value));
         }
         return Result.Success();
+    }
+    
+    /// <summary>
+    /// Returns true if the value exists as one of the members of Values.
+    /// Comparison is case-sensitive.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
+    public static bool HasValue(string? value)
+    {
+        StringComparer comparer = StringComparer.FromComparison(StringComparison.Ordinal);
+        if (!Values.Contains(value, comparer))
+        {
+            return false;
+        }
+        return true;
     }
 
     private static string NotAMemberMessage(string? value) =>

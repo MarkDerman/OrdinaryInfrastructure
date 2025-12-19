@@ -1,48 +1,26 @@
-﻿namespace Odin.Email
+﻿using Odin.System;
+
+namespace Odin.Email
 {
     /// <summary>
     /// The IEmailSender providers supported
     /// </summary>
-    public static class EmailSendingProviders
+    public class EmailSendingProviders : StringEnum<EmailSendingProviders>
     {
         /// <summary>
-        /// Fake provider for testing...
+        /// Null provider for testing. Does nothing.
         /// </summary>
-        public const string Fake = "Fake";
+        public const string Null = "Null";
         
         /// <summary>
-        /// Mailgun
+        /// Mailgun V3 API
         /// </summary>
         public const string Mailgun = "Mailgun";
 
         /// <summary>
-        /// Office365
+        /// Office365 via Microsoft Graph API.
         /// </summary>
         public const string Office365 = "Office365";
-
-        /// <summary>
-        /// Returns the supported provider names
-        /// </summary>
-        /// <returns></returns>
-        public static string[] GetAllProviders()
-        {
-            return new[] {Mailgun, Office365, Fake};
-        }
-        
-        /// <summary>
-        /// Indicates with the name is a supported 
-        /// </summary>
-        /// <param name="providerName"></param>
-        /// <returns></returns>
-        public static bool IsProviderSupported(string providerName)
-        {
-            if (string.IsNullOrWhiteSpace(providerName)) return false;
-            if (providerName.EndsWith("EmailSender", StringComparison.OrdinalIgnoreCase))
-            {
-                providerName = providerName.Replace("EmailSender", "");
-            }
-            return GetAllProviders().Any(c =>c.Equals(providerName, StringComparison.OrdinalIgnoreCase));
-        }
 
     }
 }

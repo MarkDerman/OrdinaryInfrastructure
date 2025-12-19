@@ -25,7 +25,7 @@ namespace Microsoft.Extensions.DependencyInjection
             string sectionName = EmailSendingOptions.DefaultConfigurationSectionName)
         {
             IConfigurationSection? section = configuration.GetSection(sectionName);
-            if (section == null)
+            if (section.Value == null && !section.GetChildren().Any())
             {
                 throw new ApplicationException(
                     $"{nameof(AddOdinEmailSending)}: Configuration section {sectionName} does not exist.");
@@ -56,17 +56,16 @@ namespace Microsoft.Extensions.DependencyInjection
             serviceCollection.TryAddSingleton(emailOptions);
 
             // Add Sender as per config...
-            if (emailOptions.Provider == EmailSendingProviders.Fake)
+            if (emailOptions.Provider == EmailSendingProviders.Null)
             {
                 // Fake sender is built in...
                 serviceCollection.TryAddTransient<IEmailSender, NullEmailSender>();
                 return;
             }
 
-            ClassFactory activator = new ClassFactory();
-            string providerAssemblyName = $"Odin.Email.{emailOptions.Provider}";
+            string providerAssemblyName = $"{Constants.RootNamespace}.{emailOptions.Provider}";
             ResultValue<IEmailSenderServiceInjector> serviceInjectorCreation =
-                activator.TryCreate<IEmailSenderServiceInjector>($"{providerAssemblyName}ServiceInjector");
+                ClassFactory.TryCreate<IEmailSenderServiceInjector>($"{providerAssemblyName}ServiceInjector", providerAssemblyName);
 
             if (serviceInjectorCreation.IsSuccess)
             {
@@ -74,14 +73,14 @@ namespace Microsoft.Extensions.DependencyInjection
             }
             else
             {
-                string message = $"Unable to load EmailSending provider Odin.Email.{emailOptions.Provider}.";
-                if (EmailSendingProviders.IsProviderSupported(emailOptions.Provider))
+                string message = $"Unable to load EmailSending provider {emailOptions.Provider}.";
+                if (EmailSendingProviders.HasValue(emailOptions.Provider))
                 {
-                    message += $"This can occur if the {emailOptions.Provider} Nuget package reference is missing.";
+                    message += $" Ensure Nuget package {providerAssemblyName} is referenced.";
                 }
                 else
                 {
-                    message += $"{emailOptions.Provider} is not a recognised IEmailSender provider.";
+                    message += $" {emailOptions.Provider} is not a recognised IEmailSender provider. Valid Providers are: {string.Join(" | ", EmailSendingProviders.Values)}";
                 }
 
                 throw new ApplicationException(message);

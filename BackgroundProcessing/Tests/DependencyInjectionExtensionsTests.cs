@@ -14,7 +14,7 @@ namespace Tests.Odin.BackgroundProcessing
         public void AddBackgroundProcessing_adds_FakeBackgroundProcessor_to_application_from_configuration()
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder();
-            builder.Configuration.AddJsonStream(Stream(GetFakeBackgroundProcessorConfigJson()));
+            builder.Configuration.AddJsonStream(Stream(GetNullBackgroundProcessorConfigJson()));
             builder.Services.AddOdinBackgroundProcessing(builder.Configuration);
             WebApplication sut = builder.Build();
             
@@ -22,7 +22,7 @@ namespace Tests.Odin.BackgroundProcessing
             BackgroundProcessingOptions? config = sut.Services.GetService<BackgroundProcessingOptions>();
             
             Assert.That(provider, Is.Not.Null);     
-            Assert.That(provider, Is.InstanceOf<FakeBackgroundProcessor>());
+            Assert.That(provider, Is.InstanceOf<NullBackgroundProcessor>());
             Assert.That(config, Is.Not.Null);    
         }
 
@@ -44,11 +44,11 @@ namespace Tests.Odin.BackgroundProcessing
             Assert.That(config, Is.Not.Null);    
         }
         
-        public static string GetFakeBackgroundProcessorConfigJson()
+        public static string GetNullBackgroundProcessorConfigJson()
         {
             return @"{
   ""BackgroundProcessing"": {
-    ""Provider"": ""Fake"",
+    ""Provider"": ""Null"",
   }
 }";
         }

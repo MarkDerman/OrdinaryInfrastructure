@@ -14,17 +14,19 @@
 
 ## The Odin components
 
-... are a collection born after years of building many many line-of-business applications on .NET, and the result of componentising various recurring ordinary use-cases that we kept repeating in client systems at [Soulv Software](https://soulv.co.za/).
+... are a collection born after years of building many line-of-business applications on .NET, 
+and the result of componentising various recurring ordinary use-cases that we kept repeating in client systems at [Soulv Software](https://soulv.co.za/).
 
 As at Dec 2025, the library is a hodge-podge of miscellaneous useful bits and bobs.
 
-Next up, a Design Contracts library with support for PreConditions, PostConditions, and ClassInvariants.
+Having waited about 10 years now, I am done lamenting that no-one, especially Microsoft, has stepped up to provide support for 
+Design by Contract, so I will be turning my attention to creating runtime support for preconditions, postconditions and class invariants.
 
 <br/><br/>
 
 ## Design Contracts :pencil2:
 
-Coming soon...
+Coming soon... :construction:
 
 <p>&nbsp;</p>
 
@@ -32,7 +34,7 @@ Coming soon...
 
 [Odin.System.Result](https://www.nuget.org/packages/Odin.System.Result) provides Result and ResultValue<TValue> concepts, that encapsulate the outcome of an operation (success or failure), together with a list of Messages.
 
-Flexibility in the type of the Messages is included, with implementations for Result<TMessage> and ResultValue<TValue, TMessage>.
+Flexibility in the type of the Messages is included, with implementations for Result of TMessage and ResultValue of TValue, TMessage.
 
 | Package                                                                     | Description                                              |                                                                                      Latest Version                                                                                      |
 |:----------------------------------------------------------------------------|:---------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
@@ -52,10 +54,7 @@ Flexibility in the type of the Messages is included, with implementations for Re
     "Provider": "Mailgun",
     "DefaultFromAddress": "team@domain.com",
     "DefaultFromName": "MyTeam",
-    "DefaultTags": [
-      "QA",
-      "MyApp"
-    ],
+    "DefaultTags": [ "QA", "MyApp" ],
     "SubjectPrefix": "QA: ",
     "Mailgun": {
       "ApiKey": "XXX",
@@ -68,13 +67,20 @@ Flexibility in the type of the Messages is included, with implementations for Re
 
 2 - Add package references to Odin.Email, and in this case Odin.Email.Mailgun
 
-3 - Add to DI in your startup code...
+3 - Add IEmailSender to DI in your startup code...
 
 ```csharp
     builder.Services.AddOdinEmailSending();
 ```
+4 - Use IEmailSender from DI 
 
-4 - Send email!
+```csharp
+    MyService(IEmailSender emailSender)
+    {
+        _emailSender = emailSender;
+    }
+```
+5 - Send email
 
 ```csharp
     IEmailMessage email = new EmailMessage(to, from, subject, htmlBody);
@@ -84,8 +90,8 @@ Flexibility in the type of the Messages is included, with implementations for Re
 | Package                                                                     | Description                                              |                                                                                      Latest Version                                                                                      |
 |:----------------------------------------------------------------------------|:---------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
 | [Odin.Email](https://www.nuget.org/packages/Odin.Email)                     | IEmailSender and IEmailMessage concepts                  |           [![NuGet](https://img.shields.io/nuget/v/Odin.Email.svg)](https://www.nuget.org/packages/Odin.Email)            ![Nuget](https://img.shields.io/nuget/dt/Odin.Email)           |
-| [Odin.Email.Mailgun](https://www.nuget.org/packages/Odin.Email.Mailgun)     | Mailgun email sending support                            |   [![NuGet](https://img.shields.io/nuget/v/Odin.Email.Mailgun.svg)](https://www.nuget.org/packages/Odin.Email.Mailgun)   ![Nuget](https://img.shields.io/nuget/dt/Odin.Email.Mailgun)    |
-| [Odin.Email.Office365](https://www.nuget.org/packages/Odin.Email.Office365) | Microsoft Office365 email sending support (via MS Graph) | [![NuGet](https://img.shields.io/nuget/v/Odin.Email.Office365.svg)](https://www.nuget.org/packages/Odin.Email.Office365)  ![Nuget](https://img.shields.io/nuget/dt/Odin.Email.Office365) |
+| [Odin.Email.Mailgun](https://www.nuget.org/packages/Odin.Email.Mailgun)     | Mailgun V3 API support                     |   [![NuGet](https://img.shields.io/nuget/v/Odin.Email.Mailgun.svg)](https://www.nuget.org/packages/Odin.Email.Mailgun)   ![Nuget](https://img.shields.io/nuget/dt/Odin.Email.Mailgun)    |
+| [Odin.Email.Office365](https://www.nuget.org/packages/Odin.Email.Office365) | Microsoft Office365 support (via MS Graph) | [![NuGet](https://img.shields.io/nuget/v/Odin.Email.Office365.svg)](https://www.nuget.org/packages/Odin.Email.Office365)  ![Nuget](https://img.shields.io/nuget/dt/Odin.Email.Office365) |
 
 <p>&nbsp;</p>
 
@@ -140,13 +146,58 @@ Provides an IRazorTemplateRenderer for rendering .cshtml Razor files outside of 
 
 <p>&nbsp;</p>
 
+## StringEnum
+
+[Odin.System.StringEnum](https://www.nuget.org/packages/Odin.System.StringEnum) provides enum-like behaviour for a set of string values via StringEnum, 
+as well as a useful StringEnumMemberAttribute.
+
+1 - Define your string 'enum' with public string constants
+
+```csharp
+    public class LoaderTypes : StringEnum<LoaderTypes>
+    {
+        public const string File = "FILE";
+        public const string DynamicSql = "DYNAMIC-SQL";
+    }
+```
+2 - Use like an enum
+
+```csharp
+    if (loaderOptions.LoaderType == LoaderTypes.DynamicSql)
+```
+3 - HasValue
+
+```csharp
+    bool memberExists = LoaderTypes.HasValue("CUSTOM"); // returns false
+```
+
+4 - Values property
+
+```csharp
+    string message = $"Valid members are: {string.Join(" | ", LoaderTypes.Values)}"
+```
+
+5 - Validation attribute
+
+```csharp
+    public record LoaderEditModel : IValidatableObject
+    {
+        [Required(AllowEmptyStrings = false)]
+        [StringEnumMember<LoaderTypes>]
+        public required string Loader { get; set; }
+        ...
+    }
+```
+
+| Package                                                                                                       | Description        |                                                                                                    Latest Version                                                                                                    |
+|:--------------------------------------------------------------------------------------------------------------|:-------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [Odin.System.StringEnum](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions) | Exposes StringEnum | [![NuGet](https://img.shields.io/nuget/v/Odin.System.StringEnum.svg)](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.StringEnum) |
+
 ## SQL Scripts Execution
 
 ## SFTP\FTP\FTPS File Sessions
 
 ## Configuration
-
-## StringEnum
 
 ## Background Jobs
 

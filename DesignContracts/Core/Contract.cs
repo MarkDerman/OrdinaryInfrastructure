@@ -20,7 +20,6 @@ namespace Odin.DesignContracts
         /// </remarks>
         public static event EventHandler<ContractFailedEventArgs>? ContractFailed;
 
-
         internal static void ReportFailure(ContractFailureKind kind, string? userMessage, string? conditionText)
         {
             string message = BuildFailureMessage(kind, userMessage, conditionText);

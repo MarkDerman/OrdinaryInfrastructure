@@ -14,8 +14,11 @@ internal static class RewriterProgram
     private const string ContractTypeFullName = "Odin.DesignContracts.Contract";
 
     private const string OdinInvariantAttributeFullName = "Odin.DesignContracts.ClassInvariantMethodAttribute";
-    private const string BclInvariantAttributeFullName  = "System.Diagnostics.Contracts.ClassInvariantMethodAttribute";
-    private const string PureAttributeFullName          = "System.Diagnostics.Contracts.PureAttribute";
+    private const string OdinPureAttributeFullName = "Odin.DesignContracts.PureAttribute";
+    private const string BclInvariantAttributeFullName = "System.Diagnostics.Contracts.ContractInvariantMethodAttribute";
+    private const string BclPureAttributeFullName = "System.Diagnostics.Contracts.PureAttribute";
+    private static readonly string[] PureAttributeFullNames = [OdinPureAttributeFullName, BclPureAttributeFullName];
+    private static readonly string[] InvariantAttributeFullNames = [OdinInvariantAttributeFullName, BclInvariantAttributeFullName];
 
     private static int Main(string[] args)
     {
@@ -111,13 +114,13 @@ internal static class RewriterProgram
         bool isConstructor = method.IsConstructor && !method.IsStatic;
 
         bool weaveInvariantOnEntry = canWeaveInvariant && !isInvariantMethodItself && !isConstructor;
-        bool weaveInvariantOnExit  = canWeaveInvariant && !isInvariantMethodItself;
+        bool weaveInvariantOnExit = canWeaveInvariant && !isInvariantMethodItself;
 
         // Exclude [Pure] methods and [Pure] properties (for accessors).
         if (!isConstructor && weaveInvariantOnEntry && IsPure(declaringType, method))
         {
             weaveInvariantOnEntry = false;
-            weaveInvariantOnExit  = false;
+            weaveInvariantOnExit = false;
         }
 
         // If we have no invariant weaving and no postconditions, skip quickly.
@@ -220,27 +223,30 @@ internal static class RewriterProgram
 
     private static bool IsPure(TypeDefinition declaringType, MethodDefinition method)
     {
-        if (HasAttribute(method, PureAttributeFullName))
+        if (method.HasAnyAttributeIn(PureAttributeFullNames))
             return true;
 
         // For accessors, also honour [Pure] on the property itself.
         if (method.IsGetter || method.IsSetter)
         {
             PropertyDefinition? prop = declaringType.Properties.FirstOrDefault(p => p.GetMethod == method || p.SetMethod == method);
-            if (prop is not null && HasAttribute(prop, PureAttributeFullName))
+            if (prop is not null && prop.HasAnyAttributeIn(PureAttributeFullNames))
                 return true;
         }
 
         return false;
     }
 
-    private static bool HasAttribute(ICustomAttributeProvider provider, string attributeFullName)
-        => provider.HasCustomAttributes && provider.CustomAttributes.Any(a => a.AttributeType.FullName == attributeFullName);
+    // private static bool HasAttribute(ICustomAttributeProvider provider, string attributeFullName)
+    //      => provider.HasCustomAttributes && provider.CustomAttributes.Any(a => a.AttributeType.FullName == attributeFullName);
+    
+    private static bool HasAnyAttributeIn(this ICustomAttributeProvider provider, string[] attributeFullNames)
+        => provider.HasCustomAttributes && provider.CustomAttributes.Any(a => attributeFullNames.Contains(a.AttributeType.FullName));
 
     private static MethodDefinition? FindInvariantMethodOrThrow(TypeDefinition type)
     {
         List<MethodDefinition> candidates = type.Methods
-            .Where(m => HasAttribute(m, OdinInvariantAttributeFullName) || HasAttribute(m, BclInvariantAttributeFullName))
+            .Where(m => m.HasAnyAttributeIn(InvariantAttributeFullNames))
             .ToList();
 
         if (candidates.Count == 0)

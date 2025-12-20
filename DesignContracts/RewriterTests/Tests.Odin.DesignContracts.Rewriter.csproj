@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Odin.DesignContracts.csproj" />
+    <ProjectReference Include="..\RewriterTestTargets\Tests.Odin.DesignContracts.RewriterTargets.csproj" />
     <ProjectReference Include="..\Rewriter\Odin.DesignContracts.Rewriter.csproj" />
   </ItemGroup>
 

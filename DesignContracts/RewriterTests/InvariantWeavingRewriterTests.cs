@@ -1,10 +1,9 @@
 using System.Reflection;
-using System.Runtime.Loader;
 using Mono.Cecil;
 using NUnit.Framework;
 using Odin.DesignContracts;
 using Odin.DesignContracts.Rewriter;
-using Tests.Odin.DesignContracts.Rewriter.Targets;
+using Tests.Odin.DesignContracts.RewriterTargets;
 
 namespace Tests.Odin.DesignContracts.Rewriter;
 
@@ -31,7 +30,8 @@ public sealed class InvariantWeavingRewriterTests
         
         Type t = context.GetTypeOrThrow(typeof(InvariantTarget).FullName!);
 
-        ContractException ex = Assert.Throws<ContractException>(() =>
+        // 
+        ContractException? ex = Assert.Throws<ContractException>(() =>
         {
             try
             {
@@ -41,12 +41,12 @@ public sealed class InvariantWeavingRewriterTests
             {
                 throw tie.InnerException;
             }
-        })!;
-
-        Assert.That(ex.Kind, Is.EqualTo(ContractFailureKind.Invariant));
+        });
+        Assert.That(ex, Is.Not.Null);
+        Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Invariant));
     }
 
-    [Test]
+    [Test][Description("Increment would only cause an Invariant exception at method entry, as at exit value = 0 would satisfy the invariant.")]
     public void Public_method_runs_invariant_on_entry()
     {
         using var context = new RewrittenAssemblyContext(typeof(InvariantTarget).Assembly);
@@ -60,7 +60,7 @@ public sealed class InvariantWeavingRewriterTests
         Assert.That(ex.Kind, Is.EqualTo(ContractFailureKind.Invariant));
     }
 
-    [Test]
+    [Test][Description("MakeInvalid would only cause an Invariant exception at method exit, not entry.")]
     public void Public_method_runs_invariant_on_exit()
     {
         using var context = new RewrittenAssemblyContext(typeof(InvariantTarget).Assembly);
@@ -137,9 +137,9 @@ public sealed class InvariantWeavingRewriterTests
         string inputPath = Path.Combine(temp.Path, Path.GetFileName(originalPath));
         File.Copy(originalPath, inputPath, overwrite: true);
 
-        using (AssemblyDefinition ad = AssemblyDefinition.ReadAssembly(inputPath, new ReaderParameters { ReadWrite = false }))
+        using (AssemblyDefinition assemblyDefinition = AssemblyDefinition.ReadAssembly(inputPath, new ReaderParameters { ReadWrite = false }))
         {
-            TypeDefinition targetType = ad.MainModule.GetType(typeof(InvariantTarget).FullName!)
+            TypeDefinition targetType = assemblyDefinition.MainModule.GetType(typeof(InvariantTarget).FullName!)
                                         ?? throw new InvalidOperationException("Failed to locate target type in temp assembly.");
 
             MethodDefinition increment = targetType.Methods
@@ -148,15 +148,16 @@ public sealed class InvariantWeavingRewriterTests
             // Add a second invariant attribute to a different method.
             var ctor = typeof(ClassInvariantMethodAttribute).GetConstructor(Type.EmptyTypes)
                        ?? throw new InvalidOperationException("Invariant attribute must have a parameterless ctor.");
-            var ctorRef = ad.MainModule.ImportReference(ctor);
+            var ctorRef = assemblyDefinition.MainModule.ImportReference(ctor);
             increment.CustomAttributes.Add(new CustomAttribute(ctorRef));
 
-            ad.Write(inputPath);
+            assemblyDefinition.Write(inputPath);
         }
 
         // Act + Assert
         string outputPath = Path.Combine(temp.Path, "out.dll");
-        Assert.Throws<InvalidOperationException>(() => RewriterProgram.RewriteAssembly(inputPath, outputPath));
+        InvalidOperationException? expectedError = Assert.Throws<InvalidOperationException>(() => RewriterProgram.RewriteAssembly(inputPath, outputPath));
+        Assert.That(expectedError, Is.Not.Null);
     }
 
     private static void SetPrivateField(Type declaringType, object instance, string fieldName, object? value)

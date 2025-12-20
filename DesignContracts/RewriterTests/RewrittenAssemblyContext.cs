@@ -5,6 +5,9 @@ using Odin.DesignContracts.Rewriter;
 
 namespace Tests.Odin.DesignContracts.Rewriter;
 
+/// <summary>
+/// Encapsulates explicit rewriting of an assembly for testing...
+/// </summary>
 internal sealed class RewrittenAssemblyContext : IDisposable
 {
     private readonly AssemblyLoadContext _alc;
@@ -12,7 +15,7 @@ internal sealed class RewrittenAssemblyContext : IDisposable
 
     public Assembly RewrittenAssembly { get; }
 
-    public RewrittenAssemblyContext(Assembly sourceAssembly, DesignContractOptions? initializeOptions = null)
+    public RewrittenAssemblyContext(Assembly sourceAssembly)
     {
         _tempDir = Path.Combine(Path.GetTempPath(), "rewrite", Guid.NewGuid().ToString("N"));
         Directory.CreateDirectory(_tempDir);
@@ -28,9 +31,6 @@ internal sealed class RewrittenAssemblyContext : IDisposable
 
         _alc = new TestAssemblyLoadContext(outputPath);
         RewrittenAssembly = _alc.LoadFromAssemblyPath(outputPath);
-
-        // if (initializeOptions == null) return;
-        // GetTypeOrThrow("Odin.DesignContracts.")
     }
 
     public Type GetTypeOrThrow(string fullName)

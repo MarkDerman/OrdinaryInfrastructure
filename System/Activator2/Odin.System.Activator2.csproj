@@ -5,7 +5,7 @@
     <ImplicitUsings>true</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageIcon>icon.png</PackageIcon>
-    <Description>Provides static methods in ClassFactory that wrap System.Activator.Create...
+    <Description>Provides static methods in Activator2 that wrap System.Activator2.Create...
             
         </Description>
     <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->

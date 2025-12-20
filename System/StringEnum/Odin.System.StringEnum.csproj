@@ -5,6 +5,7 @@
     <ImplicitUsings>true</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>Provides enum-like behaviour for a set of string values.
       Usage: Inherit from StringEnum and add only public const string members.
       Use the Values static property to work with a list of all the string values.
@@ -20,5 +21,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="icon.png" Pack="true" PackagePath="" />
+    <None Include="README.md" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

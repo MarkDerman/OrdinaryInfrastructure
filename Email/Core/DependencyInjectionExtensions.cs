@@ -64,7 +64,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             string providerAssemblyName = $"{Constants.RootNamespace}.{emailOptions.Provider}";
             ResultValue<IEmailSenderServiceInjector> serviceInjectorCreation =
-                ClassFactory.TryCreate<IEmailSenderServiceInjector>($"{providerAssemblyName}ServiceInjector", providerAssemblyName);
+                Activator2.TryCreate<IEmailSenderServiceInjector>($"{providerAssemblyName}ServiceInjector", providerAssemblyName);
 
             if (serviceInjectorCreation.IsSuccess)
             {

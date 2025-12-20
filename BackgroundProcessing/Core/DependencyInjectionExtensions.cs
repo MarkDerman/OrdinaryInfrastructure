@@ -107,8 +107,9 @@ namespace Microsoft.Extensions.DependencyInjection
             string providerName = $"{Constants.RootNamespace}.{options.Provider}{Constants.ModuleVerb}";
 
             ResultValue<IBackgroundProcessorServiceInjector> serviceInjectorCreation =
-                ClassFactory.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector", providerAssemblyName);
+                Activator2.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector", providerAssemblyName);
 
+            
             if (serviceInjectorCreation.IsSuccess)
             {
                 serviceInjectorCreation.Value.TryAddBackgroundProcessor(serviceCollection, configuration,
@@ -141,7 +142,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             string providerAssemblyName = $"{Constants.RootNamespace}.{options.Provider}";
             ResultValue<IBackgroundProcessorServiceInjector> serviceInjectorCreation =
-                ClassFactory.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector",providerAssemblyName);
+                Odin.System.Activator2.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector",providerAssemblyName);
 
             if (serviceInjectorCreation.IsSuccess)
             {

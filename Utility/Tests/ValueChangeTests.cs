@@ -23,7 +23,7 @@ namespace Tests.Odin.Utility
         //     Type varyingDimensionType = varyingDimensionValue.GetType();
         //     Type valueType = testValue.GetType();
         //     Type closedGenericTypeDefinition = typeof(ValueChange<,>).MakeGenericType(varyingDimensionType, valueType);
-        //     var sutObject = Activator.CreateInstance(closedGenericTypeDefinition, varyingDimensionValue, testValue);
+        //     var sutObject = Activator2.CreateInstance(closedGenericTypeDefinition, varyingDimensionValue, testValue);
         //     var sut = null;// Cast sutObject to ValueChange<,> ? How to instantiate?
         //         
         //     Assert.That(sut, Is.Not.Null);

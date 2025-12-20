@@ -4,9 +4,9 @@ using Odin.DesignContracts;
 namespace Odin.System;
 
 /// <summary>
-/// 
+/// Essentially just an overload or 2 of System.Activator reflection-based object creation methods.
 /// </summary>
-public static class ClassFactory
+public static class Activator2
 {
     /// <summary>
     /// Attempts to create the specified type from the currently loaded application assemblies, from the assembly specified.

@@ -48,7 +48,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4F52FD
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "System", "System", "{73BA62BB-2B41-2DC4-C714-51B3D4C2A215}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.System.ClassFactory", "System\ClassFactory\Odin.System.ClassFactory.csproj", "{E450FC74-0DBE-320A-FE7A-87255CB4DFAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.System.Activator2", "System\Activator2\Odin.System.Activator2.csproj", "{E450FC74-0DBE-320A-FE7A-87255CB4DFAB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templating", "Templating", "{85003D0A-72DB-A487-DC35-85E02D70F0B1}"
 EndProject

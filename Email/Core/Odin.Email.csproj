@@ -21,7 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />
-    <ProjectReference Include="..\..\System\ClassFactory\Odin.System.ClassFactory.csproj" />
+    <ProjectReference Include="..\..\System\Activator2\Odin.System.Activator2.csproj" />
     <ProjectReference Include="..\..\System\StringEnum\Odin.System.StringEnum.csproj" />
     <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
   </ItemGroup>

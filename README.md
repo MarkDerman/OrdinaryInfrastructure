@@ -14,13 +14,13 @@
 
 ## The Odin components
 
-... are a collection born after years of building many line-of-business applications on .NET, 
-and the result of componentising various recurring ordinary use-cases that we kept repeating in client systems at [Soulv Software](https://soulv.co.za/).
+... are a collection born after years of building many line-of-business applications on .NET...  
+The result of componentising various recurring ordinary use-cases that we kept repeating in client systems at [Soulv Software](https://soulv.co.za/).
 
-As at Dec 2025, the library is a hodge-podge of miscellaneous useful bits and bobs.
+As at Dec 2025, the library is a hodge-podge of miscellaneous bits and bobs.
 
-Having waited about 10 years now, I am done lamenting that no-one, especially Microsoft, has stepped up to provide support for 
-Design by Contract, so I will be turning my attention to creating runtime support for preconditions, postconditions and class invariants.
+With .Net Core almost 10 years old now, I am done lamenting that no-one, especially Microsoft, has stepped up to provide support for 
+runtime Design by Contract support, so I am now putting my attention on creating some form of runtime support for postconditions and class invariants.
 
 <br/><br/>
 

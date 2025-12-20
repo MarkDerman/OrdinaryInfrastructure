@@ -6,19 +6,19 @@ namespace Tests.Odin.DesignContracts.RewriterTargets
     /// The rewriter is expected to inject
     /// invariant calls at entry/exit of public methods and properties, except where [Pure] is applied.
     /// </summary>
-    public sealed class InvariantTarget
+    public sealed class BclTarget
     {
         private int _value;
 
-        public InvariantTarget(int value)
+        public BclTarget(int value)
         {
             _value = value;
         }
 
-        [ClassInvariantMethod]
+        [System.Diagnostics.Contracts.ContractInvariantMethod]
         private void ObjectInvariant()
         {
-            Contract.Invariant(_value >= 0, "_value must be >= 0", "_value >= 0");
+            Contract.Invariant(_value >= 0, "_value must be non-negative", "_value >= 0");
         }
 
         public void Increment()
@@ -31,12 +31,12 @@ namespace Tests.Odin.DesignContracts.RewriterTargets
             _value = -1;
         }
 
-        [Pure]
+        [System.Diagnostics.Contracts.Pure]
         public int PureGetValue() => _value;
 
-        [Pure] 
-        public int PureValue => _value;
-
-        public int NonPureValue => _value;
+        [System.Diagnostics.Contracts.Pure]
+        public int PureProperty => _value;
+        
+        public int NonPureProperty => _value;
     }
 }

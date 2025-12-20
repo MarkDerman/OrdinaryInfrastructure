@@ -12,7 +12,6 @@ namespace Odin.DesignContracts.Rewriter;
 internal static class RewriterProgram
 {
     private const string ContractTypeFullName = "Odin.DesignContracts.Contract";
-
     private const string OdinInvariantAttributeFullName = "Odin.DesignContracts.ClassInvariantMethodAttribute";
     private const string OdinPureAttributeFullName = "Odin.DesignContracts.PureAttribute";
     private const string BclInvariantAttributeFullName = "System.Diagnostics.Contracts.ContractInvariantMethodAttribute";

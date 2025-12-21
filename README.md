@@ -148,8 +148,8 @@ Provides an IRazorTemplateRenderer for rendering .cshtml Razor files outside of 
 
 ## StringEnum
 
-[Odin.System.StringEnum](https://www.nuget.org/packages/Odin.System.StringEnum) provides enum-like behaviour for a set of string values via StringEnum, 
-as well as a useful StringEnumMemberAttribute.
+[Odin.System.StringEnum](System/StringEnum/) provides enum-like behaviour for a set of string values via StringEnum, 
+as well as a useful StringEnumMemberAttribute. [Read more...](System/StringEnum)
 
 1 - Define your string 'enum' with public string constants
 

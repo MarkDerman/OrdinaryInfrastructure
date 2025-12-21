@@ -77,7 +77,7 @@ As you normally would in startup code and configuration. Eg...
 Some musings on why I consider validation by unit testing of appropriate logging (of 1000s of out-of-scope to be handled application situations) 
 to be an important contributor towards excellence with respect to **Robustness**. 
 
-Correctness, the prime quality of excellent software, reflects the ability of software to perform its intended exact behaviour. 
+**Correctness**, the prime quality of excellent software, reflects the ability of software to perform its intended exact behaviour. 
 While 'exact behaviour' can range anywhere from a grey area of implicitly agreed-in-conversation functionality, to well-defined 
 clearly written (and usually emerging) specifications (if you are lucky and have excellent product ownership).
 

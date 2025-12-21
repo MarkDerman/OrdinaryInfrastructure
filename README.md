@@ -35,10 +35,34 @@ Coming soon... :construction:
 
 [![NuGet](https://img.shields.io/nuget/v/Odin.System.Result.svg)](https://www.nuget.org/packages/Odin.System.Result)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.Result)
 
-[Odin.System.Result](https://www.nuget.org/packages/Odin.System.Result) provides Result and ResultValue<TValue> concepts, that encapsulate the outcome of an operation (success or failure), together with a list of Messages.
 
-Flexibility in the type of the Messages is included, with implementations for Result of TMessage and ResultValue of TValue, TMessage.
-<p>&nbsp;</p>
+[Odin.System.Result](System/Result), 
+provides several **'Result'** classes, which all encapsulate the success of an operation, together with a list of messages.
+
+**Result** is the simplest concept.
+
+**ResultValue<TValue>** adds a generic **Value** property.
+
+**Result<TMessage>** and **ResultValue<TValue, TMessage>** add support for the **Messages** list to be of any type.
+
+**ResultEx** and **ResultValueEx<TValue>** come with a TMessage type that is aligned with logging failure issues.
+
+[Read more...](System/Result)
+
+## Getting Started
+
+### 1 - Result: Success() and Failure()
+
+```csharp
+    public class HeartOfGoldService
+    {
+        public Result WarpSpeedToMilliways()
+        {
+            if (_eddie.IsOK()) return Result.Success();
+            return Result.Failure(["Zaphod, that is not possible with an Infinite Improbability Drive", "Error 42"])
+        }
+    }
+```
 
 ## Email Sending :email:
 

@@ -3,15 +3,15 @@
 [![NuGet](https://img.shields.io/nuget/v/Odin.System.Result.svg)](https://www.nuget.org/packages/Odin.System.Result)  ![Nuget](https://img.shields.io/nuget/dt/Odin.System.Result)
 
 [Odin.System.Result](https://github.com/MarkDerman/OrdinaryInfrastructure/tree/master/System/Result), part of the [OrDinary INfrastructure](https://github.com/MarkDerman/OrdinaryInfrastructure) 
-libraries, provides several **'Result'** classes, which all encapsulate the outcome of an operation , together with a list of messages.
+libraries, provides several **'Result'** classes, which all encapsulate the outcome of an operation, together with a list of messages.
 
 **Result** is the simplest concept.
 
-**ResultValue<TValue>** adds a generic **Value** property.
+**ResultValue of TValue** adds a generic **Value** property.
 
-**Result<TMessage>** and **ResultValue<TValue, TMessage>** add support for the **Messages** list to be of any type.
+**Result of TMessage** and **ResultValue of TValue, TMessage** add support for the **Messages** list to be of any type.
 
-**ResultEx** and **ResultValueEx<TValue>** come with a TMessage type that is aligned with logging failure issues.
+**ResultEx** and **ResultValueEx of TValue** come with a TMessage type that is aligned with logging failure issues.
 
 ## Getting Started
 

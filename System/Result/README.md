@@ -53,7 +53,7 @@ Adds a generic Value property to Result.
             return ResultValue<IReadonlyList<Transaction>>.Success(results);
 
             // On failure...
-            return Result.Failure("Tampering detected!")
+            return ResultValue<IReadonlyList<Transaction>>.Failure("Tampering detected!")
         }
     }
 ```

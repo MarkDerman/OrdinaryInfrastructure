@@ -5,12 +5,12 @@ using Odin.System;
 namespace Tests.Odin.System
 {
     [TestFixture]
-    public sealed class Result22Tests
+    public sealed class ResultExTests
     {
         [Test]
         public void Success()
         {
-            Result2 sut = Result2.Success();
+            ResultEx sut = ResultEx.Success();
 
             Assert.That(sut.IsSuccess, Is.True);
             Assert.That(sut.MessagesToString(), Is.Empty);
@@ -24,7 +24,7 @@ namespace Tests.Odin.System
         [TestCase("", true)]
         public void Failure(string? message, bool messageExpected)
         {
-            Result2 sut = Result2.Failure(message);
+            ResultEx sut = ResultEx.Failure(message);
 
             Assert.That(sut.IsSuccess, Is.False);
             if (messageExpected)
@@ -44,7 +44,7 @@ namespace Tests.Odin.System
         [Test]
         public void Succeed_with_message()
         {
-            Result2 sut = Result2.Success("lovely");
+            ResultEx sut = ResultEx.Success("lovely");
 
             Assert.That(sut.IsSuccess, Is.True);
             Assert.That(sut.Messages[0].Message, Is.EqualTo("lovely"));
@@ -59,7 +59,7 @@ namespace Tests.Odin.System
         [TestCase(null,false)]
         public void Constructor_with_success_and_failure(string? message, bool isSuccess)
         {
-            Result2 sut = new Result2(isSuccess, new ResultMessage2() { Message = message! });
+            ResultEx sut = new ResultEx(isSuccess, new MessageEx() { Message = message! });
 
             Assert.That(sut.IsSuccess, Is.EqualTo(isSuccess));
         }
@@ -67,16 +67,16 @@ namespace Tests.Odin.System
         [Test]
         public void Default_result_is_a_failure()
         {
-            Result2 sut = new Result2();
+            ResultEx sut = new ResultEx();
 
             Assert.That(sut.IsSuccess, Is.False);
             Assert.That(sut.Messages, Is.Empty);
         }
 
         [Test]
-        public void Result2_serialises_with_system_dot_text_dot_json()
+        public void ResultEx_serialises_with_system_dot_text_dot_json()
         {
-            Result2 sut = Result2.Success("cool man");
+            ResultEx sut = ResultEx.Success("cool man");
 
             string result = JsonSerializer.Serialize(sut);
 
@@ -84,11 +84,11 @@ namespace Tests.Odin.System
         }
 
         [Test]
-        public void Result2_deserialises_with_system_dot_text_dot_json()
+        public void ResultEx_deserialises_with_system_dot_text_dot_json()
         {
             string serialised = "{\"IsSuccess\":true,\"Messages\":[ \"cool man\" ]}";
 
-            Result2 result = JsonSerializer.Deserialize<Result2>(serialised)!;
+            ResultEx result = JsonSerializer.Deserialize<ResultEx>(serialised)!;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsSuccess, Is.True);
@@ -98,11 +98,11 @@ namespace Tests.Odin.System
         [Test]
         public void Combine_with_success_and_failures()
         {
-            Result2 r1 = Result2.Success();
-            Result2 r2 = Result2.Failure("r2");
-            Result2 r3 = Result2.Failure("r3");
+            ResultEx r1 = ResultEx.Success();
+            ResultEx r2 = ResultEx.Failure("r2");
+            ResultEx r3 = ResultEx.Failure("r3");
             
-            Result2 sut = Result2.Combine(r1, r2, r3);
+            ResultEx sut = ResultEx.Combine(r1, r2, r3);
 
             Assert.That(sut.IsSuccess, Is.False);
             // First failure is returned...
@@ -112,11 +112,11 @@ namespace Tests.Odin.System
         [Test]
         public void Combine_with_only_success()
         {
-            Result2 r1 = Result2.Success("r1");
-            Result2 r2 = Result2.Success("r2");
-            Result2 r3 = Result2.Success("r3");
+            ResultEx r1 = ResultEx.Success("r1");
+            ResultEx r2 = ResultEx.Success("r2");
+            ResultEx r3 = ResultEx.Success("r3");
             
-            Result2 sut = Result2.Combine(r1, r2, r3);
+            ResultEx sut = ResultEx.Combine(r1, r2, r3);
 
             Assert.That(sut.IsSuccess, Is.True);
             Assert.That(sut.Messages, Is.Empty);

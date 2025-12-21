@@ -2,16 +2,17 @@
 {
     /// <summary>
     /// Represents the success or failure of an operation that returns a Value\Result on success,
-    /// and list of detailed 'ResultMessage2' Messages
+    /// and list of detailed 'MessageEx' messages also containing a message severity and optionally
+    /// an exception.
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
-    /// <remarks>To be renamed to ResultValue2 of TValue</remarks>
-    public record ResultValue2<TValue> : ResultValue<TValue, ResultMessage2>
+    /// <remarks>To be renamed to ResultValueEx of TValue</remarks>
+    public record ResultValueEx<TValue> : ResultValue<TValue, MessageEx>
     {
         /// <summary>
         /// Parameterless constructor for serialization.
         /// </summary>
-        public ResultValue2()
+        public ResultValueEx()
         {
             IsSuccess = false;
         }
@@ -22,7 +23,7 @@
         /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValue2(bool isSuccess, TValue? value, IEnumerable<ResultMessage2>? messages)
+        public ResultValueEx(bool isSuccess, TValue? value, IEnumerable<MessageEx>? messages)
         {
             Assertions.RequiresArgumentPrecondition(!(value == null && isSuccess), "Value is required for a successful result.");
             Value = value;
@@ -35,7 +36,7 @@
         /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValue2(bool isSuccess, TValue? value, ResultMessage2? message = null)
+        public ResultValueEx(bool isSuccess, TValue? value, MessageEx? message = null)
         {
             Assertions.RequiresArgumentPrecondition(!(value == null && isSuccess), "A value is required for a successful result.");
             IsSuccess = isSuccess;
@@ -49,9 +50,9 @@
         /// <param name="messages">Normally included as best practice for failed operations, but not mandatory.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public new static ResultValue2<TValue> Failure(IEnumerable<ResultMessage2> messages, TValue? value = default(TValue) )
+        public new static ResultValueEx<TValue> Failure(IEnumerable<MessageEx> messages, TValue? value = default(TValue) )
         {
-            return new ResultValue2<TValue>(false, value, messages);
+            return new ResultValueEx<TValue>(false, value, messages);
         }
 
         /// <summary>
@@ -60,9 +61,9 @@
         /// <param name="message">Required for failed operations.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public new static ResultValue2<TValue> Failure(ResultMessage2 message, TValue? value = default(TValue) )
+        public new static ResultValueEx<TValue> Failure(MessageEx message, TValue? value = default(TValue) )
         {
-            return new ResultValue2<TValue>(false, value, new List<ResultMessage2>() { message });
+            return new ResultValueEx<TValue>(false, value, new List<MessageEx>() { message });
         }
         
         /// <summary>
@@ -70,9 +71,9 @@
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public new static ResultValue2<TValue> Success(TValue value)
+        public new static ResultValueEx<TValue> Success(TValue value)
         {
-            return new ResultValue2<TValue>(true, value, null as ResultMessage2);
+            return new ResultValueEx<TValue>(true, value, null as MessageEx);
         }
         
         /// <summary>
@@ -81,9 +82,9 @@
         /// <param name="value"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public new static ResultValue2<TValue> Success(TValue value, ResultMessage2? message)
+        public new static ResultValueEx<TValue> Success(TValue value, MessageEx? message)
         {
-            return new ResultValue2<TValue>(true, value, message);
+            return new ResultValueEx<TValue>(true, value, message);
         }
         
         /// <summary>
@@ -92,9 +93,9 @@
         /// <param name="value"></param>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public new static ResultValue2<TValue> Success(TValue value, IEnumerable<ResultMessage2> messages)
+        public new static ResultValueEx<TValue> Success(TValue value, IEnumerable<MessageEx> messages)
         {
-            return new ResultValue2<TValue>(true, value, messages);
+            return new ResultValueEx<TValue>(true, value, messages);
         }
     }
 }

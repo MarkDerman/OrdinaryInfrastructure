@@ -8,7 +8,7 @@ namespace Tests.Odin.System
     public sealed class ResultTests
     {
         [Test]
-        public void Success()
+        public void Simple_Success()
         {
             Result sut = Result.Success();
 
@@ -18,27 +18,25 @@ namespace Tests.Odin.System
         }
 
         [Test]
-        [TestCase("Reason", true)]
-        [TestCase(null, false)]
+        [TestCase("Reason", false)]
+        [TestCase(null, true)]
         [TestCase(" ", true)]
         [TestCase("", true)]
-        public void Failure(string? message, bool messageExpected)
+        public void Failure_requires_a_non_whitespace_message(string? message, bool shouldThrow)
         {
-            Result sut = Result.Failure(message);
-
-            Assert.That(sut.IsSuccess, Is.False);
-            if (messageExpected)
+            if (shouldThrow)
             {
+                ArgumentException? error = Assert.Throws<ArgumentException>(() => Result.Failure(message!));
+                Assert.That(error, Is.Not.Null);
+            }
+            else
+            {
+                Result sut = Result.Failure(message!);
+                Assert.That(sut.IsSuccess, Is.False);
                 Assert.That(sut.MessagesToString(), Is.EqualTo(message));
                 Assert.That(sut.Messages[0], Is.EqualTo(message));
                 Assert.That(sut.Messages.Count, Is.EqualTo(1));
             }
-            else
-            {
-                Assert.That(sut.MessagesToString(), Is.EqualTo(string.Empty));
-                Assert.That(sut.Messages.Count, Is.EqualTo(0));
-            }
-                
         }
 
         [Test]
@@ -47,17 +45,17 @@ namespace Tests.Odin.System
             Result sut = Result.Success("lovely");
 
             Assert.That(sut.IsSuccess, Is.True);
-            Assert.That("lovely", Is.EqualTo(sut.MessagesToString()));
-            Assert.That("lovely", Is.EqualTo(sut.Messages[0]));
-            Assert.That(1, Is.EqualTo(sut.Messages.Count));
+            Assert.That(sut.MessagesToString(), Is.EqualTo("lovely"));
+            Assert.That(sut.Messages[0], Is.EqualTo("lovely"));
+            Assert.That(sut.Messages.Count, Is.EqualTo(1));
         }
 
         [Test]
-        [TestCase("message",true)]
-        [TestCase("message",false)]
-        [TestCase("",false)]
-        [TestCase(null,false)]
-        public void Constructor_with_success_and_failure(string?  message, bool isSuccess)
+        [TestCase("message", true)]
+        [TestCase("message", false)]
+        [TestCase("", false)]
+        [TestCase(null, false)]
+        public void Constructor_with_success_and_failure(string? message, bool isSuccess)
         {
             Result sut = new Result(isSuccess, message);
 
@@ -74,34 +72,61 @@ namespace Tests.Odin.System
         }
 
         [Test]
-        public void Result_serialises_with_system_dot_text_dot_json()
+        public void Result_serialises([Values] bool success, 
+            [Values("ABC","","  ")] string message, [Values("Newton", "System")] string serializer)
         {
-            Result sut = Result.Success("cool man");
+            if (!success && string.IsNullOrWhiteSpace(message))
+            {
+                Assert.Pass();
+                return;
+            }
+            Result sut = new Result(success, message);
+            string result;
+            if (serializer == "Newton")
+            {
+                result = Newtonsoft.Json.JsonConvert.SerializeObject(sut);
+            }
+            else
+            {
+                result = JsonSerializer.Serialize(sut);
+            }
 
-            string result = JsonSerializer.Serialize(sut);
-
-            Assert.That(result, Is.EqualTo("""{"IsSuccess":true,"Messages":["cool man"]}"""));
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.EqualTo(ResultJsonFor(success, message)));
         }
 
         [Test]
-        public void Result_deserialises_with_system_dot_text_dot_json()
+        public void Result_deserialises([Values] bool success, 
+            [Values("ABC","","  ")] string message, [Values("Newton", "System")] string serializer)
         {
-            string serialised = """{"IsSuccess":true,"Messages":["cool man"]}""";
+            if (!success && string.IsNullOrWhiteSpace(message))
+            {
+                Assert.Pass();
+                return;
+            }
+            string json = ResultJsonFor(success, message);
+            Result sut;
+            if (serializer == "Newton")
+            {
+                sut = Newtonsoft.Json.JsonConvert.DeserializeObject<Result>(json)!;
+            }
+            else
+            {
+                sut = JsonSerializer.Deserialize<Result>(json)!;
+            }
 
-            Result result = JsonSerializer.Deserialize<Result>(serialised)!;
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.Messages[0], Is.EqualTo("cool man"));
+            Assert.That(sut, Is.Not.Null);
+            Assert.That(sut.IsSuccess, Is.EqualTo(success));
+            Assert.That(sut.Messages[0], Is.EqualTo(message));
         }
-        
+
         [Test]
         public void Combine_with_success_and_failures()
         {
             Result r1 = Result.Success();
             Result r2 = Result.Failure("r2");
             Result r3 = Result.Failure("r3");
-            
+
             Result sut = Result.Combine(r1, r2, r3);
 
             Assert.That(sut.IsSuccess, Is.False);
@@ -115,13 +140,16 @@ namespace Tests.Odin.System
             Result r1 = Result.Success("r1");
             Result r2 = Result.Success("r2");
             Result r3 = Result.Success("r3");
-            
+
             Result sut = Result.Combine(r1, r2, r3);
 
             Assert.That(sut.IsSuccess, Is.True);
             Assert.That(sut.Messages, Is.Empty);
         }
 
-        
+        internal string ResultJsonFor(bool isSuccess, string? message)
+        {
+            return $"{{\"IsSuccess\":{isSuccess.ToString().ToLower()},\"Messages\":[\"{message}\"]}}";
+        }
     }
 }

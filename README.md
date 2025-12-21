@@ -32,14 +32,11 @@ Coming soon... :construction:
 
 ## Result Pattern: Result and ResultValue
 
+[![NuGet](https://img.shields.io/nuget/v/Odin.System.Result.svg)](https://www.nuget.org/packages/Odin.System.Result)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.Result)
+
 [Odin.System.Result](https://www.nuget.org/packages/Odin.System.Result) provides Result and ResultValue<TValue> concepts, that encapsulate the outcome of an operation (success or failure), together with a list of Messages.
 
 Flexibility in the type of the Messages is included, with implementations for Result of TMessage and ResultValue of TValue, TMessage.
-
-| Package                                                                     | Description                                              |                                                                                      Latest Version                                                                                      |
-|:----------------------------------------------------------------------------|:---------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| [Odin.System.Result](https://www.nuget.org/packages/Odin.System.Result)                          | Result and ResultValue<TValue>                 |           [![NuGet](https://img.shields.io/nuget/v/Odin.System.Result.svg)](https://www.nuget.org/packages/Odin.System.Result)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.Result)           |
-
 <p>&nbsp;</p>
 
 ## Email Sending :email:
@@ -139,14 +136,16 @@ Provides an IRazorTemplateRenderer for rendering .cshtml Razor files outside of 
     myEmail.Body = result.Value;
 ```
 
-| Package                                                                                     | Description                    |                                                                                                          Latest Version                                                                                                          |
-|:--------------------------------------------------------------------------------------------|:-------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| [Odin.Templating.Razor.Abstractions](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions) | Exposes IRazorTemplateRenderer | [![NuGet](https://img.shields.io/nuget/v/Odin.Templating.Razor.Abstractions.svg)](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions)            ![Nuget](https://img.shields.io/nuget/dt/Odin.Templating.Razor.Abstractions) |
-| [Odin.Templating.Razor](https://www.nuget.org/packages/Odin.Templating.Razor)               |                                |              [![NuGet](https://img.shields.io/nuget/v/Odin.Templating.Razor.svg)](https://www.nuget.org/packages/Odin.Templating.Razor)            ![Nuget](https://img.shields.io/nuget/dt/Odin.Templating.Razor)               |
+| Package                                                                                     |                                                                                                        Latest Version                                                                                                          |
+|:--------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [Odin.Templating.Razor.Abstractions](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions) | [![NuGet](https://img.shields.io/nuget/v/Odin.Templating.Razor.Abstractions.svg)](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions)            ![Nuget](https://img.shields.io/nuget/dt/Odin.Templating.Razor.Abstractions) |
+| [Odin.Templating.Razor](https://www.nuget.org/packages/Odin.Templating.Razor)               |              [![NuGet](https://img.shields.io/nuget/v/Odin.Templating.Razor.svg)](https://www.nuget.org/packages/Odin.Templating.Razor)            ![Nuget](https://img.shields.io/nuget/dt/Odin.Templating.Razor)               |
 
 <p>&nbsp;</p>
 
 ## StringEnum
+
+[![NuGet](https://img.shields.io/nuget/v/Odin.System.StringEnum.svg)](https://www.nuget.org/packages/Odin.System.StringEnum)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.StringEnum)
 
 [Odin.System.StringEnum](System/StringEnum/) provides enum-like behaviour for a set of string values via StringEnum, 
 as well as a useful StringEnumMemberAttribute. [Read more...](System/StringEnum)
@@ -189,15 +188,16 @@ as well as a useful StringEnumMemberAttribute. [Read more...](System/StringEnum)
     }
 ```
 
-| Package                                                                                                       | Description        |                                                                                                    Latest Version                                                                                                    |
-|:--------------------------------------------------------------------------------------------------------------|:-------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| [Odin.System.StringEnum](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions) | Exposes StringEnum | [![NuGet](https://img.shields.io/nuget/v/Odin.System.StringEnum.svg)](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.StringEnum) |
+## Other Libraries
 
+| Library              | Description             | Status     |                                                                                                                                                                                                                                                                                     Packages                                                                                                                                                                                                                                                                                     |
+|:---------------------|:------------------------|------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| BackgroundProcessing | Wrapper around Hangfire | Deprecated |         Odin.BackgroundProcessing.Abstractions [![NuGet](https://img.shields.io/nuget/v/Odin.BackgroundProcessing.Abstractions.svg)](https://www.nuget.org/packages/Odin.BackgroundProcessing.Abstractions)<br/>Odin.BackgroundProcessing [![NuGet](https://img.shields.io/nuget/v/Odin.BackgroundProcessing.svg)](https://www.nuget.org/packages/Odin.BackgroundProcessing)<br/>Odin.BackgroundProcessing.Hangfire [![NuGet](https://img.shields.io/nuget/v/Odin.BackgroundProcessing.Hangfire.svg)](https://www.nuget.org/packages/Odin.BackgroundProcessing.Hangfire)         |
+| Notifications        | Messaging               | Incubator  |                                                                                                                                                                                                                     Odin.Notifications [![NuGet](https://img.shields.io/nuget/v/Odin.Notifications.svg)](https://www.nuget.org/packages/Odin.Notifications)                                                                                                                                                                                                                      |
 
+## Deprecated Libraries
 
-
-
-
+## In Incubation...
 
 
 

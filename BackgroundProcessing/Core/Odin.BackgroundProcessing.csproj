@@ -28,6 +28,6 @@
       <ProjectReference Include="..\Abstractions\Odin.BackgroundProcessing.Abstractions.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <None Include="icon.png" Pack="true" PackagePath="" />
+        <None Include="..\..\Assets\icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
 </Project>

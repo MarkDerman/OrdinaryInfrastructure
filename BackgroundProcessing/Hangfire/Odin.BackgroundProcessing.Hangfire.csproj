@@ -23,6 +23,6 @@
     <ProjectReference Include="..\Core\Odin.BackgroundProcessing.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="icon.png" Pack="true" PackagePath="" />
+    <None Include="../../Assets/icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
 </Project>

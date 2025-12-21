@@ -4,14 +4,6 @@
 
 Odin.Logging, part of the [OrDinary INfrastructure](https://github.com/MarkDerman/OrdinaryInfrastructure) libraries,  provides an **ILoggerWrapper of T** that extends .NET's ILogger of T with all the LogXXX(...) calls as provided by the .NET LoggerExtensions extension methods (and a few more), for simpler logging assertion verifications.
 
-## On Robustness...
-
-Correctness, the prime quality of great software, is complemented by robustness. Robustness is a reflection of how well (or badly) software behaves outside of it's intended specification \ use cases. 
-
-Highly robust software very accurately communicates arising issues outside of the specification through telemetry (logging). 
-
-A best practice to achieve and continuously maintain a high level of robustness in large applications it to assert all logging and telemetry scenarios in automated tests, which is the reason for the creation of ILoggerWrapper, namely far less onerous verification of logging calls.
-
 ## Getting Started
 
 ### 1 - Add package
@@ -79,3 +71,23 @@ As you normally would in startup code and configuration. Eg...
             It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
         Times.Once);
 ```
+
+## On Robustness and assert logging behaviour...
+
+Some musings on why I consider validation by unit testing of appropriate logging (of 1000s of out-of-scope to be handled application situations) 
+to be an important contributor towards excellence with respect to **Robustness**. 
+
+Correctness, the prime quality of excellent software, reflects the ability of software to perform its intended exact behaviour. 
+While 'exact behaviour' can range anywhere from a grey area of implicitly agreed-in-conversation functionality, to well-defined 
+clearly written (and usually emerging) specifications (if you are lucky and have excellent product ownership).
+
+**Robustness**, although a rather fuzzy notion, is a reflection of how appropriately software reacts and behaves outside of it's 
+intended specification \ use cases, what the industry terms an 'abnormal case'. It is important to note that 'normal' in this sense 
+means 'within specification', not 'desirable' or 'ideal' which are subjective notions. When an abnormal case emerges, where 
+there is no specification or agreement on what the software must do, does the software communicate the matter timeously, 
+fail gracefully if necessary, and not cause any damage? This is **Robustness**.
+
+Timely communication of abnormal cases is generally handled at least through logging and telemetry.
+
+A best practice to achieve and continuously maintain a high level of robustness in large applications it to assert all logging 
+scenarios in automated tests, which is the only reason for the creation of ILoggerWrapper, namely less onerous verification of logging calls.

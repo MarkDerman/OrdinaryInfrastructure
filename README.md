@@ -1,6 +1,6 @@
 <div align="center">
 
-![Odin logo](Assets/icon256.png)
+![Odin logo](Assets/icon320.png)
 
 # OrDinary INfrastructure
 

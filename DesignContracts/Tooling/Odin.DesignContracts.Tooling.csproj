@@ -6,19 +6,17 @@
 
     <IsPackable>true</IsPackable>
     <PackageId>Odin.DesignContracts.Tooling</PackageId>
-    <Description>Design-by-Contract tooling for Odin.DesignContracts: analyzers + IL rewriter integration.</Description>
+    <Description>Design-by-Contract tooling for Odin.DesignContracts: Analyzers + IL rewriter integration.</Description>
     <PackageIcon>icon.png</PackageIcon>
     <WarningsAsErrors>1591;1573;</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Core/Odin.DesignContracts.csproj" />
-    <ProjectReference Include="../Analyzers/Odin.DesignContracts.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
     <ProjectReference Include="../Rewriter/Odin.DesignContracts.Rewriter.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="../Core/icon.png" Pack="true" PackagePath="/" />
+    <None Include="../../Assets/icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
 
   <!-- Pack MSBuild integration -->

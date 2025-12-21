@@ -2,7 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Odin.System.Result.svg)](https://www.nuget.org/packages/Odin.System.Result)  ![Nuget](https://img.shields.io/nuget/dt/Odin.System.Result)
 
-[Odin.System.Result](https://www.nuget.org/packages/Odin.System.Result), part of the [OrDinary INfrastructure](https://github.com/MarkDerman/OrdinaryInfrastructure) 
+[Odin.System.Result](https://github.com/MarkDerman/OrdinaryInfrastructure/tree/master/System/Result), part of the [OrDinary INfrastructure](https://github.com/MarkDerman/OrdinaryInfrastructure) 
 libraries, provides several **'Result'** classes, which all encapsulate the outcome of an operation , together with a list of messages.
 
 **Result** is the simplest concept.
@@ -23,7 +23,7 @@ libraries, provides several **'Result'** classes, which all encapsulate the outc
         public Result WarpSpeedToMilliways()
         {
             if (_eddie.IsOK()) return Result.Success();
-            return Result.Failure(["Zaphod, that is not possible with an Infinite Improbability Drive", "Error 42"])
+            return Result.Failure(["Zaphod, that is not possible...", "Error 42"])
         }
     }
 ```
@@ -45,7 +45,8 @@ Adds a generic Value property to Result.
 ```csharp
     public class ZaphodMemoryFetcherService
     {
-        public ResultValue<IReadonlyList<MemSnippet>> FetchMemoriesFor(Source source, DateOnly day)
+        public ResultValue<IReadonlyList<MemSnippet>> 
+            FetchMemoriesFor(Source source, DateOnly day)
         {
             List<MemSnippet> results; 
             ...
@@ -60,7 +61,8 @@ Adds a generic Value property to Result.
 ### 4 - ResultValue: IsSuccess, Value and Messages properties
 
 ```csharp
-    ResultValue<IReadonlyList<MemSnippet>> outcome = _zaphod.FetchMemoriesFor(_milliwaysDinner, DateOnly.MaxValue)
+    ResultValue<IReadonlyList<MemSnippet>> outcome = 
+        _zaphod.FetchMemoriesFor(_milliwaysDinner, DateOnly.MaxValue)
     if (outcome.IsSuccess)
     {
         var memories = outcome.Value;
@@ -75,7 +77,8 @@ Adds a generic Value property to Result.
 
 ```csharp
     public record MyMessage(int EventId, string Message)
-    Result<MyMessage> result = Result<MyMessage>.Failure(new MyMessage(134, "Some message"));
+    Result<MyMessage> result = Result<MyMessage>.Failure(
+        new MyMessage(134, "Some message"));
     ...
     result.Messages.ForEach(m => _logger.LogWarning(m.EventId, m.Message));
 ```
@@ -85,8 +88,8 @@ Adds a generic Value property to Result.
 Uses a message type that is aligned with logging failure issues...
 
 ```csharp
-    ResultEx result = ResultEx.Failure(LogLevel.Critical, "Zaphod has broken the improbability drive", 
-        new UnhandledWarpExeption());
+    ResultEx result = ResultEx.Failure(LogLevel.Critical, 
+        "Zaphod has broken the improbability drive", new UnhandledWarpException());
     ...
     MessageEx message =  result.Messages[0];
     _logger.Log(message.Severity, message.Error, message.Message);    

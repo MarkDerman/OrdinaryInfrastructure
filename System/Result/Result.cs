@@ -30,21 +30,25 @@
         /// <summary>
         /// Failure
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">Must be not null or whitespace</param>
         /// <returns></returns>
-        public new static Result Failure(string? message)
+        public new static Result Failure(string message)
         {
+            Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
             return new Result(false, message);
         }
         
         /// <summary>
         /// Failure
         /// </summary>
-        /// <param name="messages"></param>
+        /// <param name="messages">Requires at least 1 not null or whitespace message</param>
         /// <returns></returns>
         public new static Result Failure(IEnumerable<string> messages)
         {
-            return new Result(false, messages);
+            Precondition.RequiresNotNull(messages);
+            List<string> list = messages.ToList();
+            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
+            return new Result(false, list);
         }
         
         /// <summary>

@@ -3,19 +3,19 @@ using Microsoft.Extensions.Logging;
 namespace Odin.System;
 
 /// <summary>
-/// Perfect for logging
+/// Extended 'Message' including a Severity, and optional Exception. 
 /// </summary>
-public record ResultMessage2
+public record MessageEx
 {
+    /// <summary>
+    /// Message content. Can be null.
+    /// </summary>
+    public string? Message { get; init; }
+    
     /// <summary>
     /// Message severity: Error, Warning, Information, etc...
     /// </summary>
     public LogLevel Severity { get; init; } = LogLevel.Information;
-    
-    /// <summary>
-    /// Message content.
-    /// </summary>
-    public string? Message { get; init; }
     
     /// <summary>
     /// Exception, if present.

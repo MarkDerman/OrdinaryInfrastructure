@@ -1,13 +1,13 @@
 namespace Odin.System;
 
-internal static class Assertions
+internal static class Precondition
 {
-    internal static void RequiresArgumentPrecondition(bool requirement, string argumentRequirementMessage)
+    internal static void Requires(bool requirement, string argumentRequirementMessage)
     {
         if (!requirement) throw new ArgumentException(argumentRequirementMessage);
     }
 
-    internal static void RequiresArgumentNotNull(object? argument, string? argumentIsRequiredMessage = null)
+    internal static void RequiresNotNull(object? argument, string? argumentIsRequiredMessage = null)
     {
         if (argument != null) return;
         if (string.IsNullOrWhiteSpace(argumentIsRequiredMessage))

@@ -24,7 +24,7 @@
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
         public ResultValue(bool isSuccess, TValue? value, IEnumerable<string>? messages)
         {
-            Assertions.RequiresArgumentPrecondition(!(value == null && isSuccess), "Value is required for a successful result.");
+            Precondition.Requires(!(value == null && isSuccess), "Value is required for a successful result.");
             Value = value;
             _messages = messages?.ToList();
         }
@@ -37,7 +37,7 @@
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
         public ResultValue(bool isSuccess, TValue? value, string? message = null)
         {
-            Assertions.RequiresArgumentPrecondition(!(value == null && isSuccess), "A value is required for a successful result.");
+            Precondition.Requires(!(value == null && isSuccess), "A value is required for a successful result.");
             IsSuccess = isSuccess;
             Value = value;
             _messages = message != null ? [message] : null;
@@ -51,7 +51,10 @@
         /// <returns></returns>
         public new static ResultValue<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue) )
         {
-            return new ResultValue<TValue>(false, value, messages);
+            Precondition.RequiresNotNull(messages);
+            List<string> list = messages.ToList();
+            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
+            return new ResultValue<TValue>(false, value, list);
         }
 
         /// <summary>
@@ -62,6 +65,7 @@
         /// <returns></returns>
         public new static ResultValue<TValue> Failure(string message, TValue? value = default(TValue) )
         {
+            Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
             return new ResultValue<TValue>(false, value, new List<string>() { message });
         }
         

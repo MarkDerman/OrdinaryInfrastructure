@@ -7,10 +7,10 @@ namespace Odin.System
     /// Like Result, but with a list of Messages of type ResultMessage2
     /// which includes a Severity, a Message and optionally an Exception.
     /// </summary>
-    public record Result2 : Result<ResultMessage2>
+    public record ResultEx : Result<MessageEx>
     {
         /// <inheritdoc />
-        public Result2() 
+        public ResultEx() 
         {
         }
         
@@ -20,12 +20,12 @@ namespace Odin.System
         /// </summary>
         /// <param name="isSuccess"></param>
         /// <param name="message"></param>
-        public Result2(bool isSuccess, ResultMessage2? message = null) : base(isSuccess, message)
+        public ResultEx(bool isSuccess, MessageEx? message = null) : base(isSuccess, message)
         {
         }
 
         /// <inheritdoc />
-        public Result2(bool isSuccess, IEnumerable<ResultMessage2>? messages = null) : base(isSuccess, messages)
+        public ResultEx(bool isSuccess, IEnumerable<MessageEx>? messages = null) : base(isSuccess, messages)
         {
         }
 
@@ -34,9 +34,9 @@ namespace Odin.System
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public new static Result2 Failure(ResultMessage2 message)
+        public new static ResultEx Failure(MessageEx message)
         {
-            return new Result2(false, message);
+            return new ResultEx(false, message);
         }
         
         /// <summary>
@@ -46,9 +46,10 @@ namespace Odin.System
         /// <param name="severity"></param>
         /// <param name="error"></param>
         /// <returns></returns>
-        public static Result2 Failure(string? message, LogLevel severity = LogLevel.Error, Exception? error = null)
+        public static ResultEx Failure(string? message, LogLevel severity = LogLevel.Error, Exception? error = null)
         {
-            return new Result2(false, new ResultMessage2() { Message = message, Severity = severity, Error = error });
+            Precondition.Requires(!string.IsNullOrWhiteSpace(message) || error != null, "Either a message or an error is required.");
+            return new ResultEx(false, new MessageEx() { Message = message, Severity = severity, Error = error });
         }
         
         /// <summary>
@@ -56,28 +57,21 @@ namespace Odin.System
         /// </summary>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public new static Result2 Failure(IEnumerable<ResultMessage2> messages)
+        public new static ResultEx Failure(IEnumerable<MessageEx> messages)
         {
-            return new Result2(false, messages);
+            Precondition.RequiresNotNull(messages);
+            List<MessageEx> list = messages.ToList();
+            Precondition.Requires(list.Any(s => s.Error!=null || !string.IsNullOrWhiteSpace(s.Message)),"At least 1 message with an Error or a Message is required.");
+            return new ResultEx(false, list);
         }
         
         /// <summary>
         /// Success
         /// </summary>
         /// <returns></returns>
-        public new static Result2 Success()
+        public new static ResultEx Success()
         {
-            return new Result2(true, null as ResultMessage2);
-        }
-        
-        /// <summary>
-        /// Success
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public new static Result2 Success(ResultMessage2? message)
-        {
-            return new Result2(true, message);
+            return new ResultEx(true, null as MessageEx);
         }
         
         /// <summary>
@@ -85,9 +79,20 @@ namespace Odin.System
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public static Result2 Success(string message)
+        public new static ResultEx Success(MessageEx? message)
         {
-            return new Result2(true, new ResultMessage2(){Message = message,  Severity = LogLevel.Information});
+            return new ResultEx(true, message);
+        }
+        
+        /// <summary>
+        /// Success
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="severity"></param>
+        /// <returns></returns>
+        public static ResultEx Success(string message, LogLevel severity = LogLevel.Information)
+        {
+            return new ResultEx(true, new MessageEx(){Message = message,  Severity = severity});
         }
         
         /// <summary>
@@ -95,9 +100,9 @@ namespace Odin.System
         /// </summary>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public new static Result2 Success(IEnumerable<ResultMessage2> messages)
+        public new static ResultEx Success(IEnumerable<MessageEx> messages)
         {
-            return new Result2(true, messages);
+            return new ResultEx(true, messages);
         }
         
         /// <summary>
@@ -105,9 +110,9 @@ namespace Odin.System
         /// </summary>
         /// <param name="results"></param>
         /// <returns></returns>
-        public static Result2 Combine(params Result2[] results)
+        public static ResultEx Combine(params ResultEx[] results)
         {
-            foreach (Result2 result in results)
+            foreach (ResultEx result in results)
             {
                 if (!result.IsSuccess)
                     return result;

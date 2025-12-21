@@ -12,10 +12,10 @@
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
     <ItemGroup>
-        <None Include="icon.png" Pack="true" PackagePath=""/>
-    </ItemGroup>
-    <ItemGroup>
         <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="5.0.0"/>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="../../Assets/icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
 </Project>

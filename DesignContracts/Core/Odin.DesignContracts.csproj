@@ -10,8 +10,7 @@
         </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
-
     <ItemGroup>
-        <None Include="icon.png" Pack="true" PackagePath=""/>
+        <None Include="../../Assets/icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
 </Project>

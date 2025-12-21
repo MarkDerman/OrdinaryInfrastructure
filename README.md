@@ -1,6 +1,6 @@
 <div align="center">
 
-![Odin logo](Assets/icon256.png)
+![Odin logo](Assets/icon320.png)
 
 # OrDinary INfrastructure
 
@@ -19,8 +19,9 @@ The result of componentising various recurring ordinary use-cases that we kept r
 
 As at Dec 2025, the library is a hodge-podge of miscellaneous bits and bobs.
 
-With .Net Core almost 10 years old now, I am done lamenting that no-one, especially Microsoft, has stepped up to provide support for 
-runtime Design by Contract support, so I am now putting my attention on creating some form of runtime support for postconditions and class invariants.
+With .Net Core almost 10 years old now, I have never stopped missing using invariants on my domain entities with 
+the old Code Contracts from .NET Framework days, so I am now putting my attention to creating some form of runtime 
+support for preconditions, postconditions and class invariants for .NET 8 and up.
 
 <br/><br/>
 
@@ -32,14 +33,11 @@ Coming soon... :construction:
 
 ## Result Pattern: Result and ResultValue
 
+[![NuGet](https://img.shields.io/nuget/v/Odin.System.Result.svg)](https://www.nuget.org/packages/Odin.System.Result)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.Result)
+
 [Odin.System.Result](https://www.nuget.org/packages/Odin.System.Result) provides Result and ResultValue<TValue> concepts, that encapsulate the outcome of an operation (success or failure), together with a list of Messages.
 
 Flexibility in the type of the Messages is included, with implementations for Result of TMessage and ResultValue of TValue, TMessage.
-
-| Package                                                                     | Description                                              |                                                                                      Latest Version                                                                                      |
-|:----------------------------------------------------------------------------|:---------------------------------------------------------|:----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| [Odin.System.Result](https://www.nuget.org/packages/Odin.System.Result)                          | Result and ResultValue<TValue>                 |           [![NuGet](https://img.shields.io/nuget/v/Odin.System.Result.svg)](https://www.nuget.org/packages/Odin.System.Result)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.Result)           |
-
 <p>&nbsp;</p>
 
 ## Email Sending :email:
@@ -139,17 +137,19 @@ Provides an IRazorTemplateRenderer for rendering .cshtml Razor files outside of 
     myEmail.Body = result.Value;
 ```
 
-| Package                                                                                     | Description                    |                                                                                                          Latest Version                                                                                                          |
-|:--------------------------------------------------------------------------------------------|:-------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| [Odin.Templating.Razor.Abstractions](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions) | Exposes IRazorTemplateRenderer | [![NuGet](https://img.shields.io/nuget/v/Odin.Templating.Razor.Abstractions.svg)](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions)            ![Nuget](https://img.shields.io/nuget/dt/Odin.Templating.Razor.Abstractions) |
-| [Odin.Templating.Razor](https://www.nuget.org/packages/Odin.Templating.Razor)               |                                |              [![NuGet](https://img.shields.io/nuget/v/Odin.Templating.Razor.svg)](https://www.nuget.org/packages/Odin.Templating.Razor)            ![Nuget](https://img.shields.io/nuget/dt/Odin.Templating.Razor)               |
+| Package                                                                                     |                                                                                                        Latest Version                                                                                                          |
+|:--------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [Odin.Templating.Razor.Abstractions](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions) | [![NuGet](https://img.shields.io/nuget/v/Odin.Templating.Razor.Abstractions.svg)](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions)            ![Nuget](https://img.shields.io/nuget/dt/Odin.Templating.Razor.Abstractions) |
+| [Odin.Templating.Razor](https://www.nuget.org/packages/Odin.Templating.Razor)               |              [![NuGet](https://img.shields.io/nuget/v/Odin.Templating.Razor.svg)](https://www.nuget.org/packages/Odin.Templating.Razor)            ![Nuget](https://img.shields.io/nuget/dt/Odin.Templating.Razor)               |
 
 <p>&nbsp;</p>
 
 ## StringEnum
 
-[Odin.System.StringEnum](https://www.nuget.org/packages/Odin.System.StringEnum) provides enum-like behaviour for a set of string values via StringEnum, 
-as well as a useful StringEnumMemberAttribute.
+[![NuGet](https://img.shields.io/nuget/v/Odin.System.StringEnum.svg)](https://www.nuget.org/packages/Odin.System.StringEnum)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.StringEnum)
+
+[Odin.System.StringEnum](System/StringEnum/) provides enum-like behaviour for a set of string values via StringEnum, 
+as well as a useful StringEnumMemberAttribute. [Read more...](System/StringEnum)
 
 1 - Define your string 'enum' with public string constants
 
@@ -189,14 +189,18 @@ as well as a useful StringEnumMemberAttribute.
     }
 ```
 
-| Package                                                                                                       | Description        |                                                                                                    Latest Version                                                                                                    |
-|:--------------------------------------------------------------------------------------------------------------|:-------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:|
-| [Odin.System.StringEnum](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions) | Exposes StringEnum | [![NuGet](https://img.shields.io/nuget/v/Odin.System.StringEnum.svg)](https://www.nuget.org/packages/Odin.Templating.Razor.Abstractions)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.StringEnum) |
+## Other Libraries
 
+In various states of incubation, deprecation or neglect...
 
-
-
-
+| Area                                                                               | Description                                                                                                                    | Status          |                                                               Version                                                                |
+|:-----------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------|-----------------|:------------------------------------------------------------------------------------------------------------------------------------:|
+| [Remote files \ SFTP \ FTPS](https://www.nuget.org/packages?q=Odin.RemoteFiles)    | An abstraction of SFTP and FTPS file operations.                                                                               | Needs attention |           [![NuGet](https://img.shields.io/nuget/v/Odin.RemoteFiles.svg)](https://www.nuget.org/packages/Odin.RemoteFiles)           |
+| [SQL scripts runner](https://www.nuget.org/packages?q=Odin.Data)                   | Useful for running database migration scripts at application deployment time.                                                  |                 | [![NuGet](https://img.shields.io/nuget/v/Odin.Data.SQLScriptsRunner.svg)](https://www.nuget.org/packages/Odin.Data.SQLScriptsRunner) |
+| [Utility - Tax](https://www.nuget.org/packages?q=Odin.Utility.Tax)                 | Simple support for storing tax rate changes over time in application configuration, and then getting tax rates as at any date. | No docs         |           [![NuGet](https://img.shields.io/nuget/v/Odin.Utility.Tax.svg)](https://www.nuget.org/packages/Odin.Utility.Tax)           |
+| [BackgroundProcessing](https://www.nuget.org/packages?q=Odin.BackgroundProcessing) | Wrapper around Hangfire                                                                                                        | Deprecated      |  [![NuGet](https://img.shields.io/nuget/v/Odin.BackgroundProcessing.svg)](https://www.nuget.org/packages/Odin.BackgroundProcessing)  |
+| [Notifications](https://www.nuget.org/packages?q=Odin.Notifications)               | Messaging                                                                                                                      | Incubator       |         [![NuGet](https://img.shields.io/nuget/v/Odin.Notifications.svg)](https://www.nuget.org/packages/Odin.Notifications)         |
+| [Cryptography](https://www.nuget.org/packages?q=Odin.Cryptography)                 | Wrapper around IDataProtector                                                                                                  | Deprecated      |          [![NuGet](https://img.shields.io/nuget/v/Odin.Cryptography.svg)](https://www.nuget.org/packages/Odin.Cryptography)           |
 
 
 

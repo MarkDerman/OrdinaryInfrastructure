@@ -25,7 +25,7 @@
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
         public ResultValueEx(bool isSuccess, TValue? value, IEnumerable<MessageEx>? messages)
         {
-            Assertions.RequiresArgumentPrecondition(!(value == null && isSuccess), "Value is required for a successful result.");
+            Precondition.Requires(!(value == null && isSuccess), "Value is required for a successful result.");
             Value = value;
             _messages = messages?.ToList();
         }
@@ -38,7 +38,7 @@
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
         public ResultValueEx(bool isSuccess, TValue? value, MessageEx? message = null)
         {
-            Assertions.RequiresArgumentPrecondition(!(value == null && isSuccess), "A value is required for a successful result.");
+            Precondition.Requires(!(value == null && isSuccess), "A value is required for a successful result.");
             IsSuccess = isSuccess;
             Value = value;
             _messages = message != null ? [message] : null;

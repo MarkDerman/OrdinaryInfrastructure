@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using NUnit.Framework;
 using Odin.System;
 
@@ -18,27 +19,28 @@ namespace Tests.Odin.System
         }
 
         [Test]
-        [TestCase("Reason", true)]
-        [TestCase(null, false)]
-        [TestCase(" ", true)]
-        [TestCase("", true)]
-        public void Failure(string? message, bool messageExpected)
+        [TestCase("Reason", true,false)]
+        [TestCase("Reason", false,false)]
+        [TestCase(null, true, false)]
+        [TestCase(null, false, true)]
+        [TestCase(" ", true, false)]
+        [TestCase("", true, false)]
+        [TestCase(" ", false, true)]
+        [TestCase("", false, true)]
+        public void Failure_requires_a_non_whitespace_message_or_an_error(string? message, bool passAnException, bool shouldThrow)
         {
-            ResultEx sut = ResultEx.Failure(message);
+            Exception? exception = passAnException ? new Exception("ABC") : null;
 
-            Assert.That(sut.IsSuccess, Is.False);
-            if (messageExpected)
+            if (shouldThrow)
             {
-                Assert.That(sut.MessagesToString(), Is.EqualTo(message));
-                Assert.That(sut.Messages[0], Is.EqualTo(message));
-                Assert.That(sut.Messages.Count, Is.EqualTo(1));
+                Assert.Throws<ArgumentException>(() => ResultEx.Failure(message,LogLevel.Error,exception));
             }
             else
             {
-                Assert.That(sut.MessagesToString(), Is.EqualTo(string.Empty));
-                Assert.That(sut.Messages.Count, Is.EqualTo(0));
+                ResultEx sut = ResultEx.Failure(message,LogLevel.Error,exception);
+                Assert.That(sut.IsSuccess, Is.False);
+                Assert.That(sut.Messages.Count, Is.EqualTo(1));
             }
-                
         }
 
         [Test]
@@ -76,7 +78,7 @@ namespace Tests.Odin.System
         [Test]
         public void ResultEx_serialises_with_system_dot_text_dot_json()
         {
-            ResultEx sut = ResultEx.Success("cool man");
+            ResultEx sut = ResultEx.Success("cool man",LogLevel.Trace);
 
             string result = JsonSerializer.Serialize(sut);
 
@@ -84,29 +86,34 @@ namespace Tests.Odin.System
         }
 
         [Test]
-        public void ResultEx_deserialises_with_system_dot_text_dot_json()
+        public void ResultEx_deserialises_with_system_dot_text_dot_json([Values] LogLevel severity)
         {
-            string serialised = "{\"IsSuccess\":true,\"Messages\":[ \"cool man\" ]}";
+            string level = ((short) severity).ToString();
+            string serialised = """{"IsSuccess":true,"Messages":[{"Message":"cool man","Severity":""" + level + ""","Error":null}]}""";
 
             ResultEx result = JsonSerializer.Deserialize<ResultEx>(serialised)!;
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.Messages[0], Is.EqualTo("cool man"));
+            Assert.That(result.Messages[0].Message, Is.EqualTo("cool man"));
+            Assert.That(result.Messages[0].Severity, Is.EqualTo(severity));
+            Assert.That(result.Messages[0].Error, Is.Null);
         }
         
         [Test]
         public void Combine_with_success_and_failures()
         {
             ResultEx r1 = ResultEx.Success();
-            ResultEx r2 = ResultEx.Failure("r2");
-            ResultEx r3 = ResultEx.Failure("r3");
+            ResultEx r2 = ResultEx.Failure("r2",LogLevel.Critical);
+            ResultEx r3 = ResultEx.Failure("r3",LogLevel.Warning);
             
             ResultEx sut = ResultEx.Combine(r1, r2, r3);
 
             Assert.That(sut.IsSuccess, Is.False);
             // First failure is returned...
-            Assert.That(sut.Messages[0], Is.EqualTo("r2"));
+            Assert.That(sut.Messages.Count, Is.EqualTo(1));
+            Assert.That(sut.Messages[0].Message, Is.EqualTo("r2"));
+            Assert.That(sut.Messages[0].Severity, Is.EqualTo(LogLevel.Critical));
         }
 
         [Test]

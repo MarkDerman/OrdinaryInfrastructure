@@ -85,7 +85,8 @@ Adds a generic Value property to Result.
 Uses a message type that is aligned with logging failure issues...
 
 ```csharp
-    ResultEx result = ResultEx.Failure(LogLevel.Critical, "Zaphod has broken the improbability drive", new UnhandledWarpExeption());
+    ResultEx result = ResultEx.Failure(LogLevel.Critical, "Zaphod has broken the improbability drive", 
+        new UnhandledWarpExeption());
     ...
     MessageEx message =  result.Messages[0];
     _logger.Log(message.Severity, message.Error, message.Message);    

@@ -80,13 +80,13 @@ namespace Tests.Odin.System
 
             string result = JsonSerializer.Serialize(sut);
 
-            Assert.That(result, Contains.Substring("cool man"));
+            Assert.That(result, Is.EqualTo("""{"IsSuccess":true,"Messages":["cool man"]}"""));
         }
 
         [Test]
         public void Result_deserialises_with_system_dot_text_dot_json()
         {
-            string serialised = "{\"IsSuccess\":true,\"Messages\":[\"cool man\"]}";
+            string serialised = """{"IsSuccess":true,"Messages":["cool man"]}""";
 
             Result result = JsonSerializer.Deserialize<Result>(serialised)!;
 

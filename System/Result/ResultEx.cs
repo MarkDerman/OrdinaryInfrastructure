@@ -48,6 +48,7 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultEx Failure(string? message, LogLevel severity = LogLevel.Error, Exception? error = null)
         {
+            Precondition.Requires(!string.IsNullOrWhiteSpace(message) || error != null, "Either a message or an error is required.");
             return new ResultEx(false, new MessageEx() { Message = message, Severity = severity, Error = error });
         }
         
@@ -58,7 +59,10 @@ namespace Odin.System
         /// <returns></returns>
         public new static ResultEx Failure(IEnumerable<MessageEx> messages)
         {
-            return new ResultEx(false, messages);
+            Precondition.RequiresNotNull(messages);
+            List<MessageEx> list = messages.ToList();
+            Precondition.Requires(list.Any(s => s.Error!=null || !string.IsNullOrWhiteSpace(s.Message)),"At least 1 message with an Error or a Message is required.");
+            return new ResultEx(false, list);
         }
         
         /// <summary>
@@ -84,10 +88,11 @@ namespace Odin.System
         /// Success
         /// </summary>
         /// <param name="message"></param>
+        /// <param name="severity"></param>
         /// <returns></returns>
-        public static ResultEx Success(string message)
+        public static ResultEx Success(string message, LogLevel severity = LogLevel.Information)
         {
-            return new ResultEx(true, new MessageEx(){Message = message,  Severity = LogLevel.Information});
+            return new ResultEx(true, new MessageEx(){Message = message,  Severity = severity});
         }
         
         /// <summary>

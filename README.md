@@ -19,8 +19,9 @@ The result of componentising various recurring ordinary use-cases that we kept r
 
 As at Dec 2025, the library is a hodge-podge of miscellaneous bits and bobs.
 
-With .Net Core almost 10 years old now, I am done lamenting that no-one, especially Microsoft, has stepped up to provide support for 
-runtime Design by Contract support, so I am now putting my attention on creating some form of runtime support for postconditions and class invariants.
+With .Net Core almost 10 years old now, I have never stopped missing using invariants on my domain entities with 
+the old Code Contracts from .NET Framework days, so I am now putting my attention to creating some form of runtime 
+support for preconditions, postconditions and class invariants for .NET 8 and up.
 
 <br/><br/>
 

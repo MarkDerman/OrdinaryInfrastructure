@@ -7,17 +7,24 @@
     <OdinDesignContractsWeaveEnabled Condition="'$(OdinDesignContractsWeaveEnabled)'==''">true</OdinDesignContractsWeaveEnabled>
   </PropertyGroup>
 
-  <Target Name="OdinDesignContracts_WeavePostconditions"
+  <Target Name="OdinDesignContracts_Weaving"
           AfterTargets="CoreCompile"
           Condition="'$(OdinDesignContractsWeaveEnabled)'=='true' and '$(TargetPath)'!=''">
 
     <PropertyGroup>
-      <_OdinDcRewriterPath>$(MSBuildThisFileDirectory)..\tools\net8.0\any\Odin.DesignContracts.Rewriter.dll</_OdinDcRewriterPath>
+      <_OdinNetVersion>$(TargetFramework.Substring(3))</_OdinNetVersion>
+      <_OdinDcRewriterPathCandidate>$(MSBuildThisFileDirectory)..\tools\net$(_OdinNetVersion)\any\Odin.DesignContracts.Rewriter.dll</_OdinDcRewriterPathCandidate>
+      <_OdinDcRewriterPath Condition="Exists('$(_OdinDcRewriterPathCandidate)')">$(_OdinDcRewriterPathCandidate)</_OdinDcRewriterPath>
+      <_OdinDcRewriterPath Condition="'$(_OdinDcRewriterPath)'==''">$(MSBuildThisFileDirectory)..\tools\net10.0\any\Odin.DesignContracts.Rewriter.dll</_OdinDcRewriterPath>
       <_OdinDcWeavedAssembly>$(IntermediateOutputPath)$(AssemblyName).odindc.weaved$(TargetExt)</_OdinDcWeavedAssembly>
       <_OdinDcWeavedPdb>$(IntermediateOutputPath)$(AssemblyName).odindc.weaved.pdb</_OdinDcWeavedPdb>
     </PropertyGroup>
 
-    <Message Importance="High" Text="Odin DesignContracts: weaving postconditions into $(TargetPath)" />
+    <Message Importance="High" Text="Odin DesignContracts: Weaving invariants and postconditions into $(TargetPath)" />
+    <Message Importance="High" Text="MSBuildThisFileDirectory: &quot;$(MSBuildThisFileDirectory)&quot;" />
+    <Message Importance="High" Text="_OdinDcRewriterPath: &quot;$(_OdinDcRewriterPath)&quot;" />
+    <Message Importance="High" Text="TargetPath: &quot;$(TargetPath)&quot;" />
+    <Message Importance="High" Text="_OdinDcWeavedAssembly: &quot;$(_OdinDcWeavedAssembly)&quot;" />
 
     <Exec Command="dotnet &quot;$(_OdinDcRewriterPath)&quot; &quot;$(TargetPath)&quot; &quot;$(_OdinDcWeavedAssembly)&quot;" />
 

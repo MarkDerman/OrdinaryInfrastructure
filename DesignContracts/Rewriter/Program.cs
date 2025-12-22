@@ -9,7 +9,7 @@ namespace Odin.DesignContracts.Rewriter;
 /// as well as Design-by-Contract class invariant calls at both entry to and exit from all
 /// public members on the API surface, unless marked 'Pure'.
 /// </summary>
-internal static class RewriterProgram
+internal static class Program
 {
     private const string ContractTypeFullName = "Odin.DesignContracts.Contract";
     private const string OdinInvariantAttributeFullName = "Odin.DesignContracts.ClassInvariantMethodAttribute";

@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <ImplicitUsings>true</ImplicitUsings>
     <Nullable>enable</Nullable>
 
@@ -15,6 +15,16 @@
     <ProjectReference Include="../Rewriter/Odin.DesignContracts.Rewriter.csproj" ReferenceOutputAssembly="false" />
   </ItemGroup>
 
+  <!-- Mimic inclusion of Rewriter at pack time as part of compile process for local development -->
+  <Target Name="CopyRewriterToOutput" AfterTargets="Build">
+    <ItemGroup>
+      <_RewriterFiles Include="../Rewriter/bin/$(Configuration)/$(TargetFramework)/**/*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_RewriterFiles)"
+          DestinationFolder="$(OutputPath)/%(RecursiveDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
   <ItemGroup>
     <None Include="../../Assets/icon.png" Pack="true" PackagePath="" />
   </ItemGroup>
@@ -24,14 +34,23 @@
     <None Include="buildTransitive/Odin.DesignContracts.Tooling.targets" Pack="true" PackagePath="buildTransitive/" />
   </ItemGroup>
 
-  <!--
-    Note: the rewriter tool binary needs to be packed under tools/ and invoked by the .targets.
-    This will be produced by building the Rewriter project before packing this project.
-  -->
-  <ItemGroup>
-    <None Include="../Rewriter/bin/$(Configuration)/net8.0/Odin.DesignContracts.Rewriter.dll" Pack="true" PackagePath="tools/net8.0/any/" Visible="false" />
-    <None Include="../Rewriter/bin/$(Configuration)/net8.0/Odin.DesignContracts.Rewriter.runtimeconfig.json" Pack="true" PackagePath="tools/net8.0/any/" Visible="false" Condition="Exists('../Rewriter/bin/$(Configuration)/net8.0/Odin.DesignContracts.Rewriter.runtimeconfig.json')" />
-    <None Include="../Rewriter/bin/$(Configuration)/net8.0/Odin.DesignContracts.Rewriter.deps.json" Pack="true" PackagePath="tools/net8.0/any/" Visible="false" Condition="Exists('../Rewriter/bin/$(Configuration)/net8.0/Odin.DesignContracts.Rewriter.deps.json')" />
-  </ItemGroup>
+  <!-- Dynamic Packing: Include Rewriter for all TFMs in the NuGet package -->
+  <Target Name="AddRewriterToPackage" BeforeTargets="GenerateNuspec">
+    <ItemGroup>
+      <_Tfms ToLower="true" Include="$(TargetFrameworks)" />
+      <_PackageFiles Include="../Rewriter/bin/$(Configuration)/%(_Tfms.Identity)/Odin.DesignContracts.Rewriter.dll">
+        <PackagePath>tools/%(_Tfms.Identity)/any/</PackagePath>
+      </_PackageFiles>
+      <_PackageFiles Include="../Rewriter/bin/$(Configuration)/%(_Tfms.Identity)/Odin.DesignContracts.Rewriter.runtimeconfig.json">
+        <PackagePath>tools/%(_Tfms.Identity)/any/</PackagePath>
+      </_PackageFiles>
+      <_PackageFiles Include="../Rewriter/bin/$(Configuration)/%(_Tfms.Identity)/Odin.DesignContracts.Rewriter.deps.json">
+        <PackagePath>tools/%(_Tfms.Identity)/any/</PackagePath>
+      </_PackageFiles>
+    </ItemGroup>
+    <ItemGroup>
+      <None Include="@(_PackageFiles)" Pack="true" Visible="false" />
+    </ItemGroup>
+  </Target>
 </Project>
 

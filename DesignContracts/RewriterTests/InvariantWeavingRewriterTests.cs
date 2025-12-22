@@ -4,7 +4,7 @@ using Mono.Cecil;
 using NUnit.Framework;
 using Odin.DesignContracts;
 using Odin.DesignContracts.Rewriter;
-using Tests.Odin.DesignContracts.RewriterTargets;
+using TargetsUntooled;
 using ContractFailureKind = Odin.DesignContracts.ContractFailureKind;
 
 namespace Tests.Odin.DesignContracts.Rewriter;
@@ -23,32 +23,6 @@ public sealed class InvariantWeavingRewriterTests
         });
     }
 
-    private Type GetTargetTestTypeFor(AttributeFlavour testCase)
-    {
-        if (testCase == AttributeFlavour.Odin)
-        {
-            return typeof(InvariantTarget);
-        }
-        if (testCase == AttributeFlavour.BaseClassLibrary)
-        {
-            return typeof(BclTarget);
-        }
-        throw new NotSupportedException(testCase.ToString());
-    }
-    
-    private Type GetClassInvariantAttributeTypeFor(AttributeFlavour testCase)
-    {
-        if (testCase == AttributeFlavour.Odin)
-        {
-            return typeof(ClassInvariantMethodAttribute);
-        }
-        if (testCase == AttributeFlavour.BaseClassLibrary)
-        {
-            return typeof(ContractInvariantMethodAttribute);
-        }
-        throw new NotSupportedException(testCase.ToString());
-    }
-    
     [Test]
     public void Public_constructor_runs_invariant_on_exit([Values] AttributeFlavour testCase)
     {
@@ -86,7 +60,7 @@ public sealed class InvariantWeavingRewriterTests
         object instance = Activator.CreateInstance(t, 1)!;
         SetPrivateField(t, instance, "_value", -1);
 
-        ContractException ex = Assert.Throws<ContractException>(() => { Invoke(t, instance, nameof(InvariantTarget.Increment)); })!;
+        ContractException ex = Assert.Throws<ContractException>(() => { Invoke(t, instance, nameof(OdinInvariantTarget.Increment)); })!;
 
         Assert.That(ex.Kind, Is.EqualTo(ContractFailureKind.Invariant));
     }
@@ -101,7 +75,7 @@ public sealed class InvariantWeavingRewriterTests
 
         object instance = Activator.CreateInstance(t, 1)!;
 
-        ContractException ex = Assert.Throws<ContractException>(() => { Invoke(t, instance, nameof(InvariantTarget.MakeInvalid)); })!;
+        ContractException ex = Assert.Throws<ContractException>(() => { Invoke(t, instance, nameof(OdinInvariantTarget.MakeInvalid)); })!;
 
         Assert.That(ex.Kind, Is.EqualTo(ContractFailureKind.Invariant));
     }
@@ -184,7 +158,7 @@ public sealed class InvariantWeavingRewriterTests
                                         ?? throw new InvalidOperationException("Failed to locate target type in temp assembly.");
 
             MethodDefinition increment = targetType.Methods
-                .First(m => m.Name == nameof(InvariantTarget.Increment));
+                .First(m => m.Name == nameof(OdinInvariantTarget.Increment));
 
             // Add a second invariant attribute to a different method.
             var ctor = invariantAttributeTestCaseType.GetConstructor(Type.EmptyTypes)
@@ -197,7 +171,7 @@ public sealed class InvariantWeavingRewriterTests
 
         // Act + Assert
         string outputPath = Path.Combine(temp.Path, "out.dll");
-        InvalidOperationException? expectedError = Assert.Throws<InvalidOperationException>(() => RewriterProgram.RewriteAssembly(inputPath, outputPath));
+        InvalidOperationException? expectedError = Assert.Throws<InvalidOperationException>(() => Program.RewriteAssembly(inputPath, outputPath));
         Assert.That(expectedError, Is.Not.Null);
     }
 
@@ -221,5 +195,31 @@ public sealed class InvariantWeavingRewriterTests
         {
             throw tie.InnerException;
         }
+    }
+    
+    private Type GetTargetTestTypeFor(AttributeFlavour testCase)
+    {
+        if (testCase == AttributeFlavour.Odin)
+        {
+            return typeof(OdinInvariantTarget);
+        }
+        if (testCase == AttributeFlavour.BaseClassLibrary)
+        {
+            return typeof(BclInvariantTarget);
+        }
+        throw new NotSupportedException(testCase.ToString());
+    }
+    
+    private Type GetClassInvariantAttributeTypeFor(AttributeFlavour testCase)
+    {
+        if (testCase == AttributeFlavour.Odin)
+        {
+            return typeof(ClassInvariantMethodAttribute);
+        }
+        if (testCase == AttributeFlavour.BaseClassLibrary)
+        {
+            return typeof(ContractInvariantMethodAttribute);
+        }
+        throw new NotSupportedException(testCase.ToString());
     }
 }

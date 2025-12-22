@@ -27,7 +27,7 @@ internal sealed class RewrittenAssemblyContext : IDisposable
         CopyIfExists(Path.ChangeExtension(sourceAssembly.Location, ".deps.json"), Path.Combine(_tempDir, Path.GetFileName(Path.ChangeExtension(sourceAssembly.Location, ".deps.json"))));
 
         string outputPath = Path.Combine(_tempDir, "rewritten.dll");
-        RewriterProgram.RewriteAssembly(inputPath, outputPath);
+        Program.RewriteAssembly(inputPath, outputPath);
 
         _alc = new TestAssemblyLoadContext(outputPath);
         RewrittenAssembly = _alc.LoadFromAssemblyPath(outputPath);

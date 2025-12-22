@@ -1,21 +1,21 @@
 using Odin.DesignContracts;
 
-namespace Tests.Odin.DesignContracts.RewriterTargets
+namespace TargetsTooled
 {
     /// <summary>
     /// The rewriter is expected to inject
     /// invariant calls at entry/exit of public methods and properties, except where [Pure] is applied.
     /// </summary>
-    public sealed class BclTarget
+    public sealed class OdinInvariantTarget
     {
         private int _value;
 
-        public BclTarget(int value)
+        public OdinInvariantTarget(int value)
         {
             _value = value;
         }
 
-        [System.Diagnostics.Contracts.ContractInvariantMethod]
+        [global::Odin.DesignContracts.ClassInvariantMethod]
         private void ObjectInvariant()
         {
             Contract.Invariant(_value >= 0, "_value must be non-negative", "_value >= 0");
@@ -31,12 +31,12 @@ namespace Tests.Odin.DesignContracts.RewriterTargets
             _value = -1;
         }
 
-        [System.Diagnostics.Contracts.Pure]
+        [global::Odin.DesignContracts.Pure]
         public int PureGetValue() => _value;
 
-        [System.Diagnostics.Contracts.Pure]
+        [global::Odin.DesignContracts.Pure]
         public int PureProperty => _value;
-        
+
         public int NonPureProperty => _value;
     }
 }

@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <ImplicitUsings>true</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <Description>Target classes for the Design Contract rewriter to rewrite
+        </Description>
+        <NoWarn>1591;1573;</NoWarn> 
+    </PropertyGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Core\Odin.DesignContracts.csproj" />
+      <ProjectReference Include="..\Tooling\Odin.DesignContracts.Tooling.csproj" />
+    </ItemGroup>
+    <Import Project="..\Tooling\buildTransitive\Odin.DesignContracts.Tooling.targets" />
+</Project>

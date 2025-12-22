@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
+    <Description>Tests where the target classes under test HAVE been weaved in post build
+      by the Design-by-Contract tooling.</Description>
     <GenerateProgramFile>true</GenerateProgramFile>
     <ImplicitUsings>true</ImplicitUsings>
     <NoWarn>1591;</NoWarn>
@@ -16,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Odin.DesignContracts.csproj" />
+    <ProjectReference Include="..\TargetsTooled\TargetsTooled.csproj" />
   </ItemGroup>
 
 </Project>

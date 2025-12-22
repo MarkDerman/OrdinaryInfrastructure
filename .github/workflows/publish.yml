@@ -58,6 +58,7 @@ jobs:
         dotnet pack ./Configuration/AzureBlobJson/Odin.Configuration.AzureBlobJson.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Data/SqlScriptsRunner/Odin.Data.SqlScriptsRunner.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./DesignContracts/Core/Odin.DesignContracts.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
+        dotnet pack ./DesignContracts/Tooling/Odin.DesignContracts.Tooling.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Email/Mailgun/Odin.Email.Mailgun.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Email/Office365/Odin.Email.Office365.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Email/Core/Odin.Email.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR

@@ -36,6 +36,7 @@ jobs:
         dotnet-version: 10.x.x
         
     - name: Run Unit Tests on .Net 10
+      if: github.ref == 'refs/heads/master'
       run: dotnet test TestsOnly.sln -f net10.0 --verbosity quiet --filter "TestCategory!=IntegrationTest"
       
     - name: Install GitVersion

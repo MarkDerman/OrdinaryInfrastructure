@@ -69,8 +69,5 @@ namespace Odin.DesignContracts
                     conditionText);
             }
         }
-
-
- 
     }
 }

@@ -1,15 +1,32 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <TargetFramework>net10.0</TargetFramework>
         <ImplicitUsings>true</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Description>Target classes for the Design Contract rewriter to rewrite
         </Description>
-        <NoWarn>1591;1573;</NoWarn> 
+        <NoWarn>1591;1573;</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Core\Odin.DesignContracts.csproj" />
-      <ProjectReference Include="..\Tooling\Odin.DesignContracts.Tooling.csproj" />
+        <Compile Include="..\TargetsUntooled\BclInvariantTarget.cs">
+            <Link>BclInvariantTarget.cs</Link>
+        </Compile>
+        <Compile Include="..\TargetsUntooled\OdinInvariantTarget.cs">
+            <Link>OdinInvariantTarget.cs</Link>
+        </Compile>
     </ItemGroup>
-    <Import Project="..\Tooling\buildTransitive\Odin.DesignContracts.Tooling.targets" />
+    
+    <!--  For working against Nuget
+    <ItemGroup>
+        <PackageReference Include="Odin.DesignContracts" Version="0.9.36-designcontractsv0019"/>
+        <PackageReference Include="Odin.DesignContracts.Tooling" Version="0.9.36-designcontractsv0019"/>
+    </ItemGroup>
+    -->
+    <!--  For working locally -->
+    <ItemGroup>
+        <ProjectReference Include="../Core/Odin.DesignContracts.csproj"/>
+        <ProjectReference Include="../Tooling/Odin.DesignContracts.Tooling.csproj"/>
+    </ItemGroup>
+    <Import Project="../Tooling/buildTransitive/Odin.DesignContracts.Tooling.targets"/>
+    
 </Project>

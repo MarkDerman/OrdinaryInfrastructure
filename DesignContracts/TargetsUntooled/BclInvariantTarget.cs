@@ -1,6 +1,6 @@
 using Odin.DesignContracts;
 
-namespace TargetsUntooled
+namespace Targets
 {
     /// <summary>
     /// The rewriter is expected to inject
@@ -25,10 +25,22 @@ namespace TargetsUntooled
         {
             _value++;
         }
+        
+        public async Task<int> AsyncIncrement()
+        {
+            _value++;
+            return await Task.FromResult(_value);
+        }
 
         public void MakeInvalid()
         {
             _value = -1;
+        }
+        
+        public async Task<int> AsyncMakeInvalid()
+        {
+            _value = -1;
+            return await Task.FromResult(_value);
         }
 
         [System.Diagnostics.Contracts.Pure]
@@ -38,5 +50,6 @@ namespace TargetsUntooled
         public int PureProperty => _value;
         
         public int NonPureProperty => _value;
+        
     }
 }

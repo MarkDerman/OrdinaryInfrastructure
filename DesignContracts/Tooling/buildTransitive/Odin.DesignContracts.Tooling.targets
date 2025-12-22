@@ -9,6 +9,8 @@
 
   <Target Name="OdinDesignContracts_Weaving"
           AfterTargets="CoreCompile"
+          Inputs="$(IntermediateOutputPath)$(TargetFileName)"
+          Outputs="$(IntermediateOutputPath)$(TargetName).odin-design-contracts-weaved.dll"
           Condition="'$(OdinDesignContractsWeaveEnabled)'=='true' and '$(TargetPath)'!=''">
 
     <PropertyGroup>
@@ -16,17 +18,22 @@
       <_OdinDcRewriterPathCandidate>$(MSBuildThisFileDirectory)..\tools\net$(_OdinNetVersion)\any\Odin.DesignContracts.Rewriter.dll</_OdinDcRewriterPathCandidate>
       <_OdinDcRewriterPath Condition="Exists('$(_OdinDcRewriterPathCandidate)')">$(_OdinDcRewriterPathCandidate)</_OdinDcRewriterPath>
       <_OdinDcRewriterPath Condition="'$(_OdinDcRewriterPath)'==''">$(MSBuildThisFileDirectory)..\tools\net10.0\any\Odin.DesignContracts.Rewriter.dll</_OdinDcRewriterPath>
-      <_OdinDcWeavedAssembly>$(IntermediateOutputPath)$(AssemblyName).odindc.weaved$(TargetExt)</_OdinDcWeavedAssembly>
-      <_OdinDcWeavedPdb>$(IntermediateOutputPath)$(AssemblyName).odindc.weaved.pdb</_OdinDcWeavedPdb>
+      <_OdinDcWeavedAssembly>$(IntermediateOutputPath)$(AssemblyName).odin-design-contracts-weaved$(TargetExt)</_OdinDcWeavedAssembly>
+      <_OdinDcWeavedPdb>$(IntermediateOutputPath)$(AssemblyName).odin-design-contracts-weaved.pdb</_OdinDcWeavedPdb>
     </PropertyGroup>
 
     <Message Importance="High" Text="Odin DesignContracts: Weaving invariants and postconditions into $(TargetPath)" />
     <Message Importance="High" Text="MSBuildThisFileDirectory: &quot;$(MSBuildThisFileDirectory)&quot;" />
-    <Message Importance="High" Text="_OdinDcRewriterPath: &quot;$(_OdinDcRewriterPath)&quot;" />
+    <Message Importance="High" Text="AssemblyName: &quot;$(AssemblyName)&quot;" />
+    <Message Importance="High" Text="TargetName: &quot;$(TargetName)&quot;" />
+    <Message Importance="High" Text="TargetFileName: &quot;$(TargetFileName)&quot;" />
     <Message Importance="High" Text="TargetPath: &quot;$(TargetPath)&quot;" />
+    <Message Importance="High" Text="IntermediateOutputPath: &quot;$(IntermediateOutputPath)&quot;" />
+    <Message Importance="High" Text="InputFile (IntermediateOutputPath+TargetFileName): &quot;$(IntermediateOutputPath)$(TargetFileName)&quot;" />
+    <Message Importance="High" Text="_OdinDcRewriterPath: &quot;$(_OdinDcRewriterPath)&quot;" />
     <Message Importance="High" Text="_OdinDcWeavedAssembly: &quot;$(_OdinDcWeavedAssembly)&quot;" />
 
-    <Exec Command="dotnet &quot;$(_OdinDcRewriterPath)&quot; &quot;$(TargetPath)&quot; &quot;$(_OdinDcWeavedAssembly)&quot;" />
+    <Exec Command="dotnet &quot;$(_OdinDcRewriterPath)&quot; &quot;$(IntermediateOutputPath)$(TargetFileName)&quot; &quot;$(_OdinDcWeavedAssembly)&quot;" />
 
     <!-- Replace the compiled assembly with the weaved one -->
     <Copy SourceFiles="$(_OdinDcWeavedAssembly)" DestinationFiles="$(TargetPath)" OverwriteReadOnlyFiles="true" />

@@ -4,7 +4,7 @@ using Mono.Cecil;
 using NUnit.Framework;
 using Odin.DesignContracts;
 using Odin.DesignContracts.Rewriter;
-using TargetsUntooled;
+using Targets;
 using ContractFailureKind = Odin.DesignContracts.ContractFailureKind;
 
 namespace Tests.Odin.DesignContracts.Rewriter;
@@ -27,7 +27,7 @@ public sealed class InvariantWeavingRewriterTests
     public void Public_constructor_runs_invariant_on_exit([Values] AttributeFlavour testCase)
     {
         Type targetType = GetTargetTestTypeFor(testCase);
-        using var context = new RewrittenAssemblyContext(targetType.Assembly);
+        using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetType.Assembly);
         Assert.That(DesignContractOptions.Current.EnableInvariants, Is.True);
         Assert.That(DesignContractOptions.Current.EnablePostconditions, Is.True);
 
@@ -54,7 +54,7 @@ public sealed class InvariantWeavingRewriterTests
     public void Public_method_runs_invariant_on_entry([Values] AttributeFlavour testCase)
     {
         Type targetType = GetTargetTestTypeFor(testCase);
-        using var context = new RewrittenAssemblyContext(targetType.Assembly);
+        using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetType.Assembly);
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
         object instance = Activator.CreateInstance(t, 1)!;
@@ -70,7 +70,7 @@ public sealed class InvariantWeavingRewriterTests
     public void Public_method_runs_invariant_on_exit([Values] AttributeFlavour testCase)
     {
         Type targetType = GetTargetTestTypeFor(testCase);
-        using var context = new RewrittenAssemblyContext(targetType.Assembly);
+        using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetType.Assembly);
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
         object instance = Activator.CreateInstance(t, 1)!;
@@ -84,7 +84,7 @@ public sealed class InvariantWeavingRewriterTests
     public void Pure_method_is_excluded_from_invariant_weaving([Values] AttributeFlavour testCase)
     {
         Type targetType = GetTargetTestTypeFor(testCase);
-        using var context = new RewrittenAssemblyContext(targetType.Assembly);
+        using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetType.Assembly);
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
         object instance = Activator.CreateInstance(t, 1)!;
@@ -100,7 +100,7 @@ public sealed class InvariantWeavingRewriterTests
     public void Pure_property_is_excluded_from_invariant_weaving([Values] AttributeFlavour testCase)
     {
         Type targetType = GetTargetTestTypeFor(testCase);
-        using var context = new RewrittenAssemblyContext(targetType.Assembly);
+        using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetType.Assembly);
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
         object instance = Activator.CreateInstance(t, 1)!;
@@ -115,7 +115,7 @@ public sealed class InvariantWeavingRewriterTests
     public void Non_pure_property_is_woven_and_checks_invariants([Values] AttributeFlavour testCase)
     {
         Type targetType = GetTargetTestTypeFor(testCase);
-        using var context = new RewrittenAssemblyContext(targetType.Assembly);
+        using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetType.Assembly);
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
         object instance = Activator.CreateInstance(t, 1)!;
@@ -147,7 +147,7 @@ public sealed class InvariantWeavingRewriterTests
         Type invariantAttributeTestCaseType = GetClassInvariantAttributeTypeFor(firstInvariantFlavour);
         
         string originalPath = firstType.Assembly.Location;
-        using var temp = new TempDirectory();
+        using TempDirectory temp = new TempDirectory();
 
         string inputPath = Path.Combine(temp.Path, Path.GetFileName(originalPath));
         File.Copy(originalPath, inputPath, overwrite: true);
@@ -161,9 +161,9 @@ public sealed class InvariantWeavingRewriterTests
                 .First(m => m.Name == nameof(OdinInvariantTarget.Increment));
 
             // Add a second invariant attribute to a different method.
-            var ctor = invariantAttributeTestCaseType.GetConstructor(Type.EmptyTypes)
-                       ?? throw new InvalidOperationException("Invariant attribute must have a parameterless ctor.");
-            var ctorRef = assemblyDefinition.MainModule.ImportReference(ctor);
+            ConstructorInfo ctor = invariantAttributeTestCaseType.GetConstructor(Type.EmptyTypes)
+                                   ?? throw new InvalidOperationException("Invariant attribute must have a parameterless ctor.");
+            MethodReference? ctorRef = assemblyDefinition.MainModule.ImportReference(ctor);
             increment.CustomAttributes.Add(new CustomAttribute(ctorRef));
 
             assemblyDefinition.Write(inputPath);

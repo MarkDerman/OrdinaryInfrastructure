@@ -48,13 +48,14 @@ Adds a generic Value property to Result.
         public ResultValue<IReadonlyList<MemSnippet>> 
             FetchMemoriesFor(Source source, DateOnly day)
         {
-            List<MemSnippet> results; 
+            var results = new List<MemSnippet>();
+            ...
             ...
             // On success...
-            return ResultValue<IReadonlyList<Transaction>>.Success(results);
+            return ResultValue<IReadonlyList<MemSnippet>>.Success(results);
 
             // On failure...
-            return ResultValue<IReadonlyList<Transaction>>.Failure("Tampering detected!")
+            return ResultValue<IReadonlyList<MemSnippet>>.Failure("Tampering detected!")
         }
     }
 ```
@@ -85,11 +86,11 @@ Adds a generic Value property to Result.
 
 ### 6 - ResultEx & ResultValueEx 
 
-Uses a message type that is aligned with logging failure issues...
+Uses a message type that is aligned with logging...
 
 ```csharp
     ResultEx result = ResultEx.Failure(LogLevel.Critical, 
-        "Zaphod has broken the improbability drive", new UnhandledWarpException());
+        "Zaphod has broken the improbability drive", unhandledWarpExceptionCaught);
     ...
     MessageEx message =  result.Messages[0];
     _logger.Log(message.Severity, message.Error, message.Message);    

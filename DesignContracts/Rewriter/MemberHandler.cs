@@ -154,8 +154,9 @@ internal class MemberHandler
    
     public ResultValue<List<Instruction>> TryExtractPostconditions()
     {
-        // v1: contract block must be explicitly terminated by Contract.EndContractBlock().
-        // This makes extraction deterministic without needing sequence points.
+        // For V1 we will simply attempt to extract any Postcondition.Ensures()
+        // calls from the method body if they exist. MD.
+        // 
         List<Instruction> postconditions = new List<Instruction>();
 
         IList<Instruction> instructions = Method.Body.Instructions;
@@ -195,17 +196,14 @@ internal class MemberHandler
     }
 
     
-    public bool IsEnsuresCall(Instruction inst)
-        => IsStaticCallToContractMethod(inst, "Ensures");
-
-    public bool IsEndContractBlockCall(Instruction inst)
-        => IsStaticCallToContractMethod(inst, "EndContractBlock");
+    public bool IsPostconditionEnsuresCall(Instruction inst)
+        => IsStaticCallToPostconditionMethod(inst, "Ensures");
 
     public bool IsResultCall(Instruction inst)
-        => IsStaticCallToContractMethod(inst, "Result");
+        => IsStaticCallToPostconditionMethod(inst, "Result");
     
     
-    private static bool IsStaticCallToContractMethod(Instruction inst, string methodName)
+    public static bool IsStaticCallToPostconditionMethod(Instruction inst, string methodName)
     {
         if (inst.OpCode != OpCodes.Call)
             return false;
@@ -218,7 +216,7 @@ internal class MemberHandler
 
         // Handle generic instance method as well.
         string declaringType = mr.DeclaringType.FullName;
-        return declaringType == Names.OdinContractTypeFullName;
+        return declaringType == Names.OdinPreconditionEnsuresTypeFullName;
     }
     
     /// <summary>

@@ -58,5 +58,15 @@ namespace Targets
         public int PureProperty => _value;
 
         public int NonPureProperty => _value;
+
+        public void RequiresYGreaterThan10(int y)
+        {
+            Contract.Requires(y > 10, "y must be greater than 10");
+            Console.WriteLine("Instruction 1");
+            Console.WriteLine("Instruction 2");
+            Console.WriteLine("Instruction 2");
+        }
+        
+        
     }
 }

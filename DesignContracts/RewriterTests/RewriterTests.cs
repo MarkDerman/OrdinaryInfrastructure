@@ -5,6 +5,7 @@ using NUnit.Framework;
 using Odin.DesignContracts;
 using Odin.DesignContracts.Rewriter;
 using Targets;
+using ContractFailureKind = Odin.DesignContracts.ContractFailureKind;
 
 namespace Tests.Odin.DesignContracts.Rewriter;
 
@@ -183,6 +184,28 @@ public sealed class RewriterTests
         string outputPath = Path.Combine(temp.Path, "out.dll");
         InvalidOperationException? expectedError = Assert.Throws<InvalidOperationException>(() => Program.RewriteAssembly(inputPath, outputPath));
         Assert.That(expectedError, Is.Not.Null);
+    }
+
+    [Test]
+    [TestCase(3, true)]
+    [TestCase(13, false)]
+    public void Requires_throws_if_condition_broken(int testValue, bool shouldThrow)
+    {
+        OdinInvariantTarget sut = new OdinInvariantTarget(1);
+
+        if (shouldThrow)
+        {
+            Exception? exception = Assert.Catch(() => sut.RequiresYGreaterThan10(testValue)); 
+            Assert.That(exception, Is.Not.Null);
+            Assert.That(exception, Is.InstanceOf<ContractException>());
+            ContractException ex = (ContractException)exception!;
+            Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Precondition));
+            Assert.That(ex.Message, Is.EqualTo("Precondition not met: y must be greater than 10"));
+        }
+        else
+        {
+            Assert.DoesNotThrow(() => sut.RequiresYGreaterThan10(testValue));
+        }
     }
 
     private static void SetPrivateField(Type declaringType, object instance, string fieldName, object? value)

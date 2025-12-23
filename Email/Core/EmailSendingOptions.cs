@@ -52,7 +52,7 @@ namespace Odin.Email
             get => _provider;
             init
             {
-                Precondition.Requires(!string.IsNullOrWhiteSpace(value));
+                Contract.Requires(!string.IsNullOrWhiteSpace(value));
                 // Ensure MailgunEmailSender is changed to Mailgun for backwards compatibility
                 _provider = value.Replace("EmailSender", "", StringComparison.OrdinalIgnoreCase);   
             }

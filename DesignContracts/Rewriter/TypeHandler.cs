@@ -17,6 +17,7 @@ internal class TypeHandler
     /// <param name="target"></param>
     public TypeHandler(TypeDefinition target)
     {
+        if (target == null!) throw new ArgumentNullException(nameof(target));
         _target = target;
     }
 
@@ -42,13 +43,14 @@ internal class TypeHandler
         }
     }
 
-    internal IReadOnlyList<MemberHandler> GetMembersToTryRewrite()
+    internal IReadOnlyList<MethodHandler> GetMembersToTryRewrite()
     {
-        return _target.Methods.Select(c => new MemberHandler(c,this)).ToList();
+        return _target.Methods.Select(c => new MethodHandler(c,this)).ToList();
     }
 
     internal void FindInvariantMethodOrThrow()
     {
+        var allAttributes = _target.Methods.SelectMany(m => m.CustomAttributes).ToList();
         List<MethodDefinition> candidates = _target.Methods
             .Where(m => m.HasAnyAttributeIn(Names.InvariantAttributeFullNames))
             .ToList();
@@ -81,4 +83,5 @@ internal class TypeHandler
         
         _invariant = invariant;
     }
+    
 }

@@ -41,7 +41,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static void AddOdinEmailSending(
             this IServiceCollection serviceCollection, IConfigurationSection configurationSection)
         {
-            Precondition.RequiresNotNull(configurationSection);
+            Contract.RequiresNotNull(configurationSection);
 
             EmailSendingOptions emailOptions = new EmailSendingOptions();
             configurationSection.Bind(emailOptions);

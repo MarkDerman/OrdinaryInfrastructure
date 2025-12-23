@@ -42,9 +42,9 @@ namespace Odin.Email
         public MailgunEmailSender(MailgunOptions mailgunSettings,
             EmailSendingOptions emailSettings, ILoggerWrapper<MailgunEmailSender> logger)
         {
-            Precondition.RequiresNotNull(mailgunSettings);
-            Precondition.RequiresNotNull(emailSettings);
-            Precondition.RequiresNotNull(logger);
+            Contract.RequiresNotNull(mailgunSettings);
+            Contract.RequiresNotNull(emailSettings);
+            Contract.RequiresNotNull(logger);
             _mailgunSettings = mailgunSettings;
             _emailSettings = emailSettings;
             _logger = logger;
@@ -59,7 +59,7 @@ namespace Odin.Email
                 endPoint += "/";
             }
 
-            Precondition.Requires(!string.IsNullOrWhiteSpace(_mailgunSettings.Domain), "Domain missing in MailgunOptions");
+            Contract.Requires(!string.IsNullOrWhiteSpace(_mailgunSettings.Domain), "Domain missing in MailgunOptions");
             string subPath = $"{_mailgunSettings.Domain}/messages";
             // Leading slash will replace the /v3
             if (subPath[0] == '/')
@@ -68,7 +68,7 @@ namespace Odin.Email
             }
             _httpClient.BaseAddress = new Uri(new Uri(endPoint), subPath);
             
-            Precondition.Requires(!string.IsNullOrWhiteSpace(_mailgunSettings.ApiKey), "ApiKey missing in MailgunOptions");
+            Contract.Requires(!string.IsNullOrWhiteSpace(_mailgunSettings.ApiKey), "ApiKey missing in MailgunOptions");
             
             byte[] byteArray = Encoding.ASCII.GetBytes($"api:{_mailgunSettings.ApiKey}");
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -85,9 +85,9 @@ namespace Odin.Email
 
         private static ByteArrayContent ToByteArrayContent(Stream stream)
         {
-            Precondition.RequiresNotNull(stream);
-            Precondition.Requires(stream.CanRead, "Stream.CanRead must be true");
-            Precondition.Requires(stream.CanSeek, "Stream.CanSeek must be true");
+            Contract.RequiresNotNull(stream);
+            Contract.Requires(stream.CanRead, "Stream.CanRead must be true");
+            Contract.Requires(stream.CanSeek, "Stream.CanSeek must be true");
 
             try
             {
@@ -112,9 +112,9 @@ namespace Odin.Email
         /// <exception cref="HttpRequestException"></exception>
         public async Task<ResultValue<string?>> SendEmail(IEmailMessage email)
         {
-            Precondition.RequiresNotNull(email);
-            Precondition.Requires(email.To.Any(), "Mailgun requires one or more to addresses.");
-            Precondition.Requires(!string.IsNullOrWhiteSpace(email.Subject), "Mailgun requires an email subject");
+            Contract.RequiresNotNull(email);
+            Contract.Requires(email.To.Any(), "Mailgun requires one or more to addresses.");
+            Contract.Requires(!string.IsNullOrWhiteSpace(email.Subject), "Mailgun requires an email subject");
             
             try
             {

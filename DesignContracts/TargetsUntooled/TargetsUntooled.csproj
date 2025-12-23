@@ -5,7 +5,8 @@
         <Nullable>enable</Nullable>
         <Description>Target classes for the Design Contract rewriter to rewrite
         </Description>
-        <NoWarn>1591;1573;</NoWarn> 
+        <NoWarn>1591;1573;</NoWarn>
+        <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
       <ProjectReference Include="..\Core\Odin.DesignContracts.csproj" />

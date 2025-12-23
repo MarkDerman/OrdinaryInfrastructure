@@ -16,8 +16,8 @@ public static class Activator2
     /// <returns></returns>
     public static ResultValue<T> TryCreate<T>(string typeName, string assemblyName) where T : class
     {
-        Precondition.Requires(!string.IsNullOrWhiteSpace(typeName));
-        Precondition.Requires(!string.IsNullOrWhiteSpace(assemblyName));
+        Contract.Requires(!string.IsNullOrWhiteSpace(typeName));
+        Contract.Requires(!string.IsNullOrWhiteSpace(assemblyName));
         ObjectHandle? handle;
         try
         {
@@ -50,7 +50,7 @@ public static class Activator2
     /// <returns></returns>
     public static ResultValue<T> TryCreate<T>(Type typeToCreate) where T : class
     {
-        Precondition.Requires(typeToCreate!=null!);
+        Contract.Requires(typeToCreate!=null!);
         try
         {
             object? obj = Activator.CreateInstance(typeToCreate);

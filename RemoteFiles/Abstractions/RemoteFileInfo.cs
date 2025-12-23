@@ -15,8 +15,8 @@ public sealed class RemoteFileInfo : IRemoteFileInfo
     /// <param name="lastWriteTimeUtc"></param>
     public RemoteFileInfo(string fullName, string name, DateTime lastWriteTimeUtc)
     {
-        Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(name), nameof(name));
-        Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(fullName), nameof(fullName));
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(name), nameof(name));
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(fullName), nameof(fullName));
         FullName = fullName;
         Name = name;
         // Use overload for DateTimeOffset set from DateTime

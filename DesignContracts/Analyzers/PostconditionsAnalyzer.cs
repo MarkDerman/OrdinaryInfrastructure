@@ -173,7 +173,7 @@ public sealed class PostconditionsAnalyzer : DiagnosticAnalyzer
         if (context.Options.AnalyzerConfigOptionsProvider.GlobalOptions
             .TryGetValue("build_property.OdinDesignContractsRewriterEnabled", out string? enabledText))
         {
-            return string.Equals(enabledText?.Trim(), "true", System.StringComparison.OrdinalIgnoreCase);
+            return string.Equals(enabledText?.Trim(), "true", StringComparison.OrdinalIgnoreCase);
         }
 
         return false;

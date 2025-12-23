@@ -5,7 +5,7 @@ namespace Odin.DesignContracts
     /// </summary>
     /// <remarks>
     /// Methods marked with this attribute are expected to be private, parameterless,
-    /// and to invoke <see cref="Contract.Invariant"/> for each invariant.
+    /// and to invoke <see cref="Odin.DesignContracts.Contract.Invariant"/> for each invariant.
     /// Source generators can use this attribute to discover and invoke invariant methods
     /// at appropriate points (for example, at the end of constructors and public methods).
     /// </remarks>

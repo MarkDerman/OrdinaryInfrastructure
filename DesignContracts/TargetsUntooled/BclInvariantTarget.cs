@@ -3,8 +3,9 @@ using Odin.DesignContracts;
 namespace Targets
 {
     /// <summary>
-    /// The rewriter is expected to inject
-    /// invariant calls at entry/exit of public methods and properties, except where [Pure] is applied.
+    /// IMPORTANT: 'CONTRACTS_FULL' needs to be defined as a preprocessor symbol
+    /// if one wishes to use the Bcl System.Diagnostics.Contracts attributes...
+    /// They are conditional.
     /// </summary>
     public sealed class BclInvariantTarget
     {
@@ -16,7 +17,7 @@ namespace Targets
         }
 
         [System.Diagnostics.Contracts.ContractInvariantMethod]
-        private void ObjectInvariant()
+        public void ObjectInvariant()
         {
             Contract.Invariant(_value >= 0, "_value must be non-negative", "_value >= 0");
         }
@@ -43,6 +44,12 @@ namespace Targets
             return await Task.FromResult(_value);
         }
 
+        [System.Diagnostics.Contracts.Pure]
+        public void PureCommand()
+        {
+            
+        }
+        
         [System.Diagnostics.Contracts.Pure]
         public int PureGetValue() => _value;
 

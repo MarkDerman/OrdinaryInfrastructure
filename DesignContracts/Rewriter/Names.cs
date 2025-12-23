@@ -7,7 +7,7 @@ internal static class Names
 {
     internal const string BclContractNamespace = "System.Diagnostics.Contracts";
     internal const string OdinContractNamespace = "Odin.DesignContracts";
-    internal const string OdinPreconditionEnsuresTypeFullName = OdinContractNamespace + ".Precondition";
+    internal const string OdinPostconditionEnsuresTypeFullName = OdinContractNamespace + ".Contract";
     internal const string OdinInvariantAttributeFullName = OdinContractNamespace + ".ClassInvariantMethodAttribute";
     internal const string BclInvariantAttributeFullName = BclContractNamespace + ".ContractInvariantMethodAttribute";
     internal const string OdinPureAttributeFullName = OdinContractNamespace + ".PureAttribute";

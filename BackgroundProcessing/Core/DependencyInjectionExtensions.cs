@@ -80,7 +80,7 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection serviceCollection, IConfiguration configuration,
             IConfigurationSection configurationSection, Func<IServiceProvider, string>? sqlServerConnectionStringFactory = null)
         {
-            Precondition.RequiresNotNull(configurationSection);
+            Contract.RequiresNotNull(configurationSection);
 
             BackgroundProcessingOptions options = new BackgroundProcessingOptions();
             configurationSection.Bind(options);
@@ -131,8 +131,8 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="app"></param>
         public static IApplicationBuilder UseBackgroundProcessing(this IApplicationBuilder app, IServiceProvider appServices)
         {
-            Precondition.RequiresNotNull(appServices);
-            Precondition.RequiresNotNull(app);
+            Contract.RequiresNotNull(appServices);
+            Contract.RequiresNotNull(app);
 
             BackgroundProcessingOptions options = appServices.GetRequiredService<BackgroundProcessingOptions>();
             if (options.Provider == BackgroundProcessingProviders.Null)
@@ -142,7 +142,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             string providerAssemblyName = $"{Constants.RootNamespace}.{options.Provider}";
             ResultValue<IBackgroundProcessorServiceInjector> serviceInjectorCreation =
-                Odin.System.Activator2.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector",providerAssemblyName);
+                Activator2.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector",providerAssemblyName);
 
             if (serviceInjectorCreation.IsSuccess)
             {

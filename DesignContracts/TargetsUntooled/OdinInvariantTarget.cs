@@ -15,8 +15,8 @@ namespace Targets
             _value = value;
         }
 
-        [global::Odin.DesignContracts.ClassInvariantMethod]
-        private void ObjectInvariant()
+        [ClassInvariantMethod]
+        public void ObjectInvariant()
         {
             Contract.Invariant(_value >= 0, "_value must be non-negative", "_value >= 0");
         }
@@ -44,10 +44,17 @@ namespace Targets
             return await Task.FromResult(_value);
         }
 
-        [global::Odin.DesignContracts.Pure]
+        [Pure]
+        public void PureCommand()
+        {
+            
+        }
+
+        
+        [Pure]
         public int PureGetValue() => _value;
 
-        [global::Odin.DesignContracts.Pure]
+        [Pure]
         public int PureProperty => _value;
 
         public int NonPureProperty => _value;

@@ -12,6 +12,105 @@ namespace Odin.DesignContracts
     public static class Contract
     {
         /// <summary>
+        /// Specifies a precondition that must hold true when the enclosing method is called.
+        /// </summary>
+        /// <param name="precondition">The precondition that is required to be <c>true</c>.</param>
+        /// <param name="userMessage">Optional English description of what the precondition is.</param>
+        /// <param name="conditionText">Optional pseudo-code representation of the condition expression.</param>
+        /// <exception cref="ContractException">
+        /// Thrown when <paramref name="precondition"/> is <c>false</c>.
+        /// </exception>
+        public static void Requires(bool precondition, string? userMessage = null, string? conditionText = null)
+        {
+            if (!precondition) ReportFailure(ContractFailureKind.Precondition, userMessage, conditionText);
+        }
+
+        /// <summary>
+        /// Specifies a precondition that must hold true when the enclosing method is called
+        /// and throws a specific exception type when the precondition fails.
+        /// </summary>
+        /// <typeparam name="TException">
+        /// The type of exception to throw when the precondition fails.
+        /// The type must have a public constructor that accepts a single <see cref="string"/> parameter.
+        /// </typeparam>
+        /// <param name="precondition">The condition that must be <c>true</c>.</param>
+        /// <param name="userMessage">Optional user readable message describing the precondition.</param>
+        /// <param name="conditionText">Optional user readable message describing the precondition.</param>
+        /// <exception cref="ContractException">
+        /// Thrown when the specified exception type cannot be constructed.
+        /// </exception>
+        /// <exception cref="Exception">
+        /// An instance of <typeparamref name="TException"/> when <paramref name="precondition"/> is <c>false</c>.
+        /// </exception>
+        public static void Requires<TException>(bool precondition, string? userMessage = null,
+            string? conditionText = null)
+            where TException : Exception
+        {
+            if (precondition) return;
+
+            // Try to honor the requested exception type first.
+            string message = BuildFailureMessage(ContractFailureKind.Precondition, userMessage, conditionText);
+
+            Exception? exception = null;
+            try
+            {
+                exception = (Exception?)Activator.CreateInstance(typeof(TException), message);
+            }
+            catch
+            {
+                // Swallow and fall back to ContractException.
+            }
+
+            if (exception is not null)
+            {
+                throw exception;
+            }
+
+            // Fall back to standard handling if we cannot construct TException.
+            ReportFailure(ContractFailureKind.Precondition, userMessage, conditionText: null);
+        }
+
+        /// <summary>
+        /// Requires that argument be not null. If it is, raises an ArgumentNullException.
+        /// </summary>
+        /// <param name="argument"></param>
+        /// <param name="userMessage">Defaults to 'Argument must not be null'</param>
+        /// <param name="conditionText">Optional pseudo-code representation of the not null expression.</param>
+        public static void RequiresNotNull(object? argument, string? userMessage = "Argument must not be null"
+            , string? conditionText = null)
+        {
+            Requires(argument != null, userMessage, conditionText);
+        }
+        
+        /// <summary>
+        /// Specifies a postcondition that must hold true when the enclosing method returns.
+        /// </summary>
+        /// <param name="condition">The condition that must be <c>true</c>.</param>
+        /// <param name="userMessage">An optional message describing the postcondition.</param>
+        /// <param name="conditionText">An optional text representation of the condition expression.</param>
+        /// <remarks>
+        /// Postconditions are evaluated only when <see cref="ContractRuntime.PostconditionsEnabled"/> is <c>true</c>.
+        /// Calls to this method become no-ops when postconditions are disabled.
+        /// It is expected that source-generated code will invoke this method at
+        /// appropriate points (typically immediately before method exit).
+        /// </remarks>
+        public static void Ensures(bool condition, string? userMessage = null, string? conditionText = null)
+        {
+            if (!ContractOptions.Current.EnablePostconditions)
+            {
+                return;
+            }
+
+            if (!condition)
+            {
+                ReportFailure(
+                    ContractFailureKind.Postcondition,
+                    userMessage,
+                    conditionText);
+            }
+        }
+        
+        /// <summary>
         /// Occurs when a contract fails and before a <see cref="ContractException"/> is thrown.
         /// </summary>
         /// <remarks>
@@ -27,7 +126,7 @@ namespace Odin.DesignContracts
             ContractFailed?.Invoke(null, args);
             if (args.Handled)
             {
-                // A handler chose to manage the failure; do not throw by default.
+                // A handler chose to manage the failure; do not throw in this case...
                 return;
             }
 
@@ -87,14 +186,14 @@ namespace Odin.DesignContracts
         /// </remarks>
         public static void Invariant(bool condition, string? userMessage = null, string? conditionText = null)
         {
-            if (!DesignContractOptions.Current.EnableInvariants)
+            if (!ContractOptions.Current.EnableInvariants)
             {
                 return;
             }
 
             if (!condition)
             {
-                Contract.ReportFailure(
+                ReportFailure(
                     ContractFailureKind.Invariant,
                     userMessage,
                     conditionText);
@@ -114,7 +213,7 @@ namespace Odin.DesignContracts
         {
             if (!condition)
             {
-                Contract.ReportFailure(
+                ReportFailure(
                     ContractFailureKind.Assertion,
                     userMessage,
                     conditionText);
@@ -135,11 +234,32 @@ namespace Odin.DesignContracts
         {
             if (!condition)
             {
-                Contract.ReportFailure(
+                ReportFailure(
                     ContractFailureKind.Assumption,
                     userMessage,
                     conditionText);
             }
+        }
+
+        /// <summary>
+        /// Represents the return value of the enclosing method for use within postconditions.
+        /// </summary>
+        /// <typeparam name="T">The enclosing method return type.</typeparam>
+        /// <returns>
+        /// The value returned by the enclosing method.
+        /// </returns>
+        /// <remarks>
+        /// This API is intended to be used only inside postconditions expressed via
+        /// <see cref="Odin.DesignContracts.Contract.Ensures(bool,string?,string?)"/>.
+        ///
+        /// When postconditions are enabled, it is expected that a build-time rewriter will
+        /// replace calls to this method with the actual method return value.
+        ///
+        /// Without rewriting, this method returns <c>default</c>.
+        /// </remarks>
+        public static T Result<T>()
+        {
+            return default!;
         }
     }
 }

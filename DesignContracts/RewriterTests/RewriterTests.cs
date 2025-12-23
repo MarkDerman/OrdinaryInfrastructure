@@ -5,18 +5,17 @@ using NUnit.Framework;
 using Odin.DesignContracts;
 using Odin.DesignContracts.Rewriter;
 using Targets;
-using ContractFailureKind = Odin.DesignContracts.ContractFailureKind;
 
 namespace Tests.Odin.DesignContracts.Rewriter;
 
 [TestFixture]
-public sealed class InvariantWeavingRewriterTests
+public sealed class RewriterTests
 {
     [SetUp]
     public void SetUp()
     {
         // Ensure invariants are enabled even if the test environment sets env vars.
-        DesignContractOptions.Initialize(new DesignContractOptions
+        ContractOptions.Initialize(new ContractOptions
         {
             EnableInvariants = true,
             EnablePostconditions = true
@@ -28,13 +27,13 @@ public sealed class InvariantWeavingRewriterTests
     {
         Type targetType = GetTargetTestTypeFor(testCase);
         using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetType.Assembly);
-        Assert.That(DesignContractOptions.Current.EnableInvariants, Is.True);
-        Assert.That(DesignContractOptions.Current.EnablePostconditions, Is.True);
+        Assert.That(ContractOptions.Current.EnableInvariants, Is.True);
+        Assert.That(ContractOptions.Current.EnablePostconditions, Is.True);
 
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
         // 
-        ContractException? ex = Assert.Throws<ContractException>(() =>
+        Exception? exception = Assert.Catch(() =>
         {
             try
             {
@@ -45,8 +44,13 @@ public sealed class InvariantWeavingRewriterTests
                 throw tie.InnerException;
             }
         });
-        Assert.That(ex, Is.Not.Null);
-        Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Invariant));
+        Assert.That(exception, Is.Not.Null);
+        Assert.That(exception!.Message, Is.EqualTo("Invariant broken: _value must be non-negative [Condition: _value >= 0]"));
+        // Because the ContractException thrown is from the dynamically loaded RewrittenAssemblyContext
+        // it does not seem castable to ContractException....
+        // Assert.That(exception, Is.InstanceOf<ContractException>());
+        // ContractException ex = (ContractException)exception!;
+        // Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Invariant));
     }
 
     [Test]
@@ -60,9 +64,10 @@ public sealed class InvariantWeavingRewriterTests
         object instance = Activator.CreateInstance(t, 1)!;
         SetPrivateField(t, instance, "_value", -1);
 
-        ContractException ex = Assert.Throws<ContractException>(() => { Invoke(t, instance, nameof(OdinInvariantTarget.Increment)); })!;
+        Exception? ex = Assert.Catch(() => { Invoke(t, instance, nameof(OdinInvariantTarget.Increment)); })!;
 
-        Assert.That(ex.Kind, Is.EqualTo(ContractFailureKind.Invariant));
+        Assert.That(ex, Is.Not.Null);
+        Assert.That(ex.Message, Contains.Substring("Invariant broken:"));
     }
 
     [Test]
@@ -75,9 +80,10 @@ public sealed class InvariantWeavingRewriterTests
 
         object instance = Activator.CreateInstance(t, 1)!;
 
-        ContractException ex = Assert.Throws<ContractException>(() => { Invoke(t, instance, nameof(OdinInvariantTarget.MakeInvalid)); })!;
+        Exception? ex = Assert.Catch(() => { Invoke(t, instance, nameof(OdinInvariantTarget.MakeInvalid)); })!;
 
-        Assert.That(ex.Kind, Is.EqualTo(ContractFailureKind.Invariant));
+        Assert.That(ex, Is.Not.Null);
+        Assert.That(ex.Message, Contains.Substring("Invariant broken:"));
     }
 
     [Test]
@@ -106,7 +112,7 @@ public sealed class InvariantWeavingRewriterTests
         object instance = Activator.CreateInstance(t, 1)!;
         SetPrivateField(t, instance, "_value", -1);
 
-        object? value = Invoke(t, instance, "PureProperty");
+        object? value = Invoke(t, instance, "get_PureProperty");
 
         Assert.That(value, Is.EqualTo(-1));
     }
@@ -123,7 +129,7 @@ public sealed class InvariantWeavingRewriterTests
 
         PropertyInfo p = t.GetProperty("NonPureProperty")!;
 
-        ContractException ex = Assert.Throws<ContractException>(() =>
+        Exception? ex = Assert.Catch(() =>
         {
             try
             {
@@ -134,11 +140,11 @@ public sealed class InvariantWeavingRewriterTests
                 throw tie.InnerException;
             }
         })!;
-
-        Assert.That(ex.Kind, Is.EqualTo(ContractFailureKind.Invariant));
+        Assert.That(ex, Is.Not.Null);
+        Assert.That(ex.Message, Contains.Substring("Invariant broken:"));
     }
 
-    [Test][Description("Test all combinations of having 2 Invariant methods")]
+    [Test]
     public void Multiple_invariant_methods_causes_rewrite_to_fail([Values] AttributeFlavour firstInvariantFlavour, 
         [Values] AttributeFlavour secondInvariantFlavour)
     {
@@ -152,7 +158,11 @@ public sealed class InvariantWeavingRewriterTests
         string inputPath = Path.Combine(temp.Path, Path.GetFileName(originalPath));
         File.Copy(originalPath, inputPath, overwrite: true);
 
-        using (AssemblyDefinition assemblyDefinition = AssemblyDefinition.ReadAssembly(inputPath, new ReaderParameters { ReadWrite = false }))
+        // Read the bytes into memory first to fully decouple the reader from the file on disk.
+        byte[] assemblyBytes = File.ReadAllBytes(inputPath);
+        using (MemoryStream ms = new MemoryStream(assemblyBytes))
+        using (AssemblyDefinition assemblyDefinition = AssemblyDefinition.ReadAssembly(ms, 
+                   new ReaderParameters { ReadWrite = false, ReadingMode = ReadingMode.Immediate }))
         {
             TypeDefinition targetType = assemblyDefinition.MainModule.GetType(firstType.FullName!)
                                         ?? throw new InvalidOperationException("Failed to locate target type in temp assembly.");

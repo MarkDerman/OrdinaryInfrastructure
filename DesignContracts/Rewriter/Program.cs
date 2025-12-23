@@ -54,7 +54,8 @@ internal static class Program
         ReaderParameters readerParameters = new()
         {
             AssemblyResolver = resolver,
-            ReadSymbols = File.Exists(Path.ChangeExtension(assemblyPath, ".pdb"))
+            ReadSymbols = File.Exists(Path.ChangeExtension(assemblyPath, ".pdb")),
+            ReadingMode = ReadingMode.Immediate
         };
 
         using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(assemblyPath, readerParameters);

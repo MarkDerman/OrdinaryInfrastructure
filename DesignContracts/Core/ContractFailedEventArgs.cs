@@ -1,7 +1,7 @@
 namespace Odin.DesignContracts
 {
     /// <summary>
-    /// Provides data for the <see cref="Postcondition.ContractFailed"/> event.
+    /// Provides data for the <see cref="Odin.DesignContracts.Contract.ContractFailed"/> event.
     /// </summary>
     public sealed class ContractFailedEventArgs : EventArgs
     {

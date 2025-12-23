@@ -10,7 +10,7 @@ namespace Tests.Odin.DesignContracts
         [SetUp]
         public void SetUp()
         {
-            DesignContractOptions.Initialize(new DesignContractOptions
+            ContractOptions.Initialize(new ContractOptions
             {
                 EnableInvariants = true,
                 EnablePostconditions = true
@@ -20,8 +20,8 @@ namespace Tests.Odin.DesignContracts
         [Test]
         public void Public_constructor_runs_invariant_on_exit([Values] AttributeFlavour testCase)
         {
-            Assert.That(DesignContractOptions.Current.EnableInvariants, Is.True);
-            Assert.That(DesignContractOptions.Current.EnablePostconditions, Is.True);
+            Assert.That(ContractOptions.Current.EnableInvariants, Is.True);
+            Assert.That(ContractOptions.Current.EnablePostconditions, Is.True);
 
             ContractException? ex = Assert.Throws<ContractException>(() =>
             {

@@ -29,9 +29,9 @@ namespace Odin.Email
         public EmailMessage(string toEmailAddress, string fromEmailAddress, string? subject, string? body,
             bool isHtml = false)
         {
-            Precondition.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(toEmailAddress),
+            Contract.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(toEmailAddress),
                 $"{nameof(toEmailAddress)} is required");
-            Precondition.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(fromEmailAddress),
+            Contract.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(fromEmailAddress),
                 $"{nameof(fromEmailAddress)} is required");
             if (string.IsNullOrWhiteSpace(subject))
             {
@@ -207,7 +207,7 @@ namespace Odin.Email
         /// <param name="attachment"></param>
         public void Attach(Attachment attachment)
         {
-            Precondition.RequiresNotNull(attachment);
+            Contract.RequiresNotNull(attachment);
             Attachments.Add(attachment);
         }
     }

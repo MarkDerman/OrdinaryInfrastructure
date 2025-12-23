@@ -9,11 +9,11 @@ namespace Odin.DesignContracts.Rewriter;
 /// Handles member-specific matters with respect to design contract rewriting.
 /// Note: MemberHandler includes methods AND property accessors...
 /// </summary>
-internal class MemberHandler
+internal class MethodHandler
 {
     private readonly TypeHandler _parentHandler;
 
-    public MemberHandler(MethodDefinition method, TypeHandler parentHandler)
+    public MethodHandler(MethodDefinition method, TypeHandler parentHandler)
     {
         Method = method;
         _parentHandler = parentHandler;
@@ -35,7 +35,7 @@ internal class MemberHandler
         InvariantWeavingRequirement invariantsToDo = IsInvariantToBeWeaved();
 
         ResultValue<List<Instruction>> postconditionsExtracted = 
-            TryExtractPostconditions();
+            TryExtractPostconditionCalls();
         
         if (!postconditionsExtracted.IsSuccess && 
             !invariantsToDo.OnEntry && !invariantsToDo.OnExit)
@@ -95,9 +95,6 @@ internal class MemberHandler
                 {
                     foreach (Instruction inst in postconditionsExtracted.Value)
                     {
-                        if (IsEndContractBlockCall(inst))
-                            continue;
-
                         Instruction cloned = inst.CloneInstruction();
 
                         if (!isVoid && IsResultCall(cloned))
@@ -152,12 +149,18 @@ internal class MemberHandler
         };
     }
    
-    public ResultValue<List<Instruction>> TryExtractPostconditions()
+    /// <summary>
+    /// Returns success if 1 or more postcondition Ensures() calls were found.
+    /// </summary>
+    /// <returns></returns>
+    public ResultValue<List<Instruction>> TryExtractPostconditionCalls()
     {
-        // For V1 we will simply attempt to extract any Postcondition.Ensures()
-        // calls from the method body if they exist. MD.
-        // 
-        List<Instruction> postconditions = new List<Instruction>();
+        // For V1 we will attempt to simply extract any Postcondition.Ensures()
+        // calls from the method body if they exist. I am a total noob at IL so have no clue
+        // about finding and moving postcondition calls inside conditionals.
+        // Another v1 option would be to require all postconditions to be before a postcondition contract block,
+        // and then preconditions after that.
+        List<Instruction> postconditionEnsuresCalls = new List<Instruction>();
 
         IList<Instruction> instructions = Method.Body.Instructions;
         if (instructions.Count == 0)
@@ -167,41 +170,25 @@ internal class MemberHandler
         for (int i = 0; i < instructions.Count; i++)
         {
             Instruction inst = instructions[i];
-            postconditions.Add(inst);
-
-            if (IsEndContractBlockCall(inst))
+            if (IsPostconditionEnsuresCall(inst))
             {
-                endIndex = i;
-                break;
+                postconditionEnsuresCalls.Add(inst);
             }
         }
 
-        if (endIndex < 0)
+        if (postconditionEnsuresCalls.Count ==0)
         {
-            // No explicit contract block end.
-            postconditions.Clear();
-            return false;
+            return ResultValue<List<Instruction>>.Failure("No Ensures() calls.");
         }
 
-        // Also include trailing nops immediately after EndContractBlock, as they often belong
-        // to the same source statement / sequence point.
-        for (int i = endIndex + 1; i < instructions.Count; i++)
-        {
-            if (instructions[i].OpCode != OpCodes.Nop)
-                break;
-            postconditions.Add(instructions[i]);
-        }
-
-        return true;
+        return ResultValue<List<Instruction>>.Success(postconditionEnsuresCalls);;
     }
-
     
-    public bool IsPostconditionEnsuresCall(Instruction inst)
+    public static bool IsPostconditionEnsuresCall(Instruction inst)
         => IsStaticCallToPostconditionMethod(inst, "Ensures");
 
-    public bool IsResultCall(Instruction inst)
+    public static bool IsResultCall(Instruction inst)
         => IsStaticCallToPostconditionMethod(inst, "Result");
-    
     
     public static bool IsStaticCallToPostconditionMethod(Instruction inst, string methodName)
     {
@@ -216,7 +203,7 @@ internal class MemberHandler
 
         // Handle generic instance method as well.
         string declaringType = mr.DeclaringType.FullName;
-        return declaringType == Names.OdinPreconditionEnsuresTypeFullName;
+        return declaringType == Names.OdinPostconditionEnsuresTypeFullName;
     }
     
     /// <summary>

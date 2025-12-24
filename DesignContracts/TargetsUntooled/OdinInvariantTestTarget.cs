@@ -6,11 +6,11 @@ namespace Targets
     /// The rewriter is expected to inject
     /// invariant calls at entry/exit of public methods and properties, except where [Pure] is applied.
     /// </summary>
-    public sealed class OdinInvariantTestTarget
+    public sealed class OdinInvariantTarget
     {
         private int _value;
 
-        public OdinInvariantTestTarget(int value)
+        public OdinInvariantTarget(int value)
         {
             _value = value;
         }

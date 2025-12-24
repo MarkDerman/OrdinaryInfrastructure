@@ -65,7 +65,7 @@ public sealed class RewriterTests
         object instance = Activator.CreateInstance(t, 1)!;
         SetPrivateField(t, instance, "_value", -1);
 
-        Exception? ex = Assert.Catch(() => { Invoke(t, instance, nameof(OdinInvariantTarget.Increment)); })!;
+        Exception? ex = Assert.Catch(() => { Invoke(t, instance, nameof(OdinInvariantTestTarget.Increment)); })!;
 
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex.Message, Contains.Substring("Invariant broken:"));
@@ -81,7 +81,7 @@ public sealed class RewriterTests
 
         object instance = Activator.CreateInstance(t, 1)!;
 
-        Exception? ex = Assert.Catch(() => { Invoke(t, instance, nameof(OdinInvariantTarget.MakeInvalid)); })!;
+        Exception? ex = Assert.Catch(() => { Invoke(t, instance, nameof(OdinInvariantTestTarget.MakeInvalid)); })!;
 
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex.Message, Contains.Substring("Invariant broken:"));
@@ -169,7 +169,7 @@ public sealed class RewriterTests
                                         ?? throw new InvalidOperationException("Failed to locate target type in temp assembly.");
 
             MethodDefinition increment = targetType.Methods
-                .First(m => m.Name == nameof(OdinInvariantTarget.Increment));
+                .First(m => m.Name == nameof(OdinInvariantTestTarget.Increment));
 
             // Add a second invariant attribute to a different method.
             ConstructorInfo ctor = invariantAttributeTestCaseType.GetConstructor(Type.EmptyTypes)
@@ -191,7 +191,7 @@ public sealed class RewriterTests
     [TestCase(13, false)]
     public void Requires_throws_if_condition_broken(int testValue, bool shouldThrow)
     {
-        OdinInvariantTarget sut = new OdinInvariantTarget(1);
+        OdinInvariantTestTarget sut = new OdinInvariantTestTarget(1);
 
         if (shouldThrow)
         {
@@ -234,11 +234,11 @@ public sealed class RewriterTests
     {
         if (testCase == AttributeFlavour.Odin)
         {
-            return typeof(OdinInvariantTarget);
+            return typeof(OdinInvariantTestTarget);
         }
         if (testCase == AttributeFlavour.BaseClassLibrary)
         {
-            return typeof(BclInvariantTarget);
+            return typeof(BclInvariantTestTarget);
         }
         throw new NotSupportedException(testCase.ToString());
     }

@@ -13,7 +13,7 @@ internal sealed class CecilAssemblyContext : IDisposable
     
     public static CecilAssemblyContext GetTargetsUntooledAssemblyContext()
     {
-        return new CecilAssemblyContext(typeof(OdinInvariantTarget).Assembly);
+        return new CecilAssemblyContext(typeof(OdinInvariantTestTarget).Assembly);
     }
     
     public CecilAssemblyContext(Assembly sourceAssembly)

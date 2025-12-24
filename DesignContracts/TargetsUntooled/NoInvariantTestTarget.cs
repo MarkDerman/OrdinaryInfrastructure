@@ -6,11 +6,11 @@ namespace Targets
     /// The rewriter is expected to inject
     /// invariant calls at entry/exit of public methods and properties, except where [Pure] is applied.
     /// </summary>
-    public sealed class NoInvariantTarget
+    public sealed class NoInvariantTestTarget
     {
         private int _value;
 
-        public NoInvariantTarget(int value)
+        public NoInvariantTestTarget(int value)
         {
             _value = value;
         }

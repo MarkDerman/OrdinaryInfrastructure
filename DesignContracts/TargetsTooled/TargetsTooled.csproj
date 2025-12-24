@@ -6,6 +6,7 @@
         <Description>Target classes for the Design Contract rewriter to rewrite
         </Description>
         <NoWarn>1591;1573;</NoWarn>
+        <RootNamespace>Targets</RootNamespace>
         <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants> <!-- Othwerwise System.Diagnostics.Contracts attributes are not compiled in to the IL. -->
     </PropertyGroup>
     <ItemGroup>
@@ -17,17 +18,17 @@
         </Compile>
     </ItemGroup>
     
-    <!--  For working against Nuget  -->
+    <!--  For working against Nuget  
     <ItemGroup>
         <PackageReference Include="Odin.DesignContracts" Version="0.9.36-designcontractsv0019"/>
         <PackageReference Include="Odin.DesignContracts.Tooling" Version="0.9.36-designcontractsv0019"/>
-    </ItemGroup>
+    </ItemGroup> -->
    
-    <!--  For working locally 
+    <!--  For working locally  -->
     <ItemGroup>
         <ProjectReference Include="../Core/Odin.DesignContracts.csproj"/>
         <ProjectReference Include="../Tooling/Odin.DesignContracts.Tooling.csproj"/>
     </ItemGroup>
     <Import Project="../Tooling/buildTransitive/Odin.DesignContracts.Tooling.targets"/>
-    -->
+    
 </Project>

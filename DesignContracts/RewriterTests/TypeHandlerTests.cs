@@ -9,9 +9,9 @@ namespace Tests.Odin.DesignContracts.Rewriter;
 public sealed class TypeHandlerTests
 {
     [Test]
-    [TestCase(typeof(OdinInvariantTarget), true)]
-    [TestCase(typeof(BclInvariantTarget), true)]
-    [TestCase(typeof(NoInvariantTarget), false)]
+    [TestCase(typeof(OdinInvariantTestTarget), true)]
+    [TestCase(typeof(BclInvariantTestTarget), true)]
+    [TestCase(typeof(NoInvariantTestTarget), false)]
     public void Invariant_method_is_found(Type type, bool invariantExpected)
     {
         CecilAssemblyContext context = CecilAssemblyContext.GetTargetsUntooledAssemblyContext();

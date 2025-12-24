@@ -9,10 +9,10 @@ namespace Tests.Odin.DesignContracts.Rewriter;
 public sealed class MethodHandlerTests
 {
     [Test]
-    [TestCase(typeof(OdinInvariantTarget),"get_" + nameof(OdinInvariantTarget.PureProperty), true)]
-    [TestCase(typeof(BclInvariantTarget), "get_" + nameof(BclInvariantTarget.PureProperty),true)]
-    [TestCase(typeof(BclInvariantTarget), nameof(BclInvariantTarget.PureGetValue),true)]
-    [TestCase(typeof(BclInvariantTarget), "get_" + nameof(BclInvariantTarget.NonPureProperty),false)]
+    [TestCase(typeof(OdinInvariantTestTarget),"get_" + nameof(OdinInvariantTestTarget.PureProperty), true)]
+    [TestCase(typeof(BclInvariantTestTarget), "get_" + nameof(BclInvariantTestTarget.PureProperty),true)]
+    [TestCase(typeof(BclInvariantTestTarget), nameof(BclInvariantTestTarget.PureGetValue),true)]
+    [TestCase(typeof(BclInvariantTestTarget), "get_" + nameof(BclInvariantTestTarget.NonPureProperty),false)]
     public void Pure_methods_are_recognised(Type type, string methodName, bool isPure)
     {
         CecilAssemblyContext context = CecilAssemblyContext.GetTargetsUntooledAssemblyContext();

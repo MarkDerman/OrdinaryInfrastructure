@@ -7,11 +7,11 @@ namespace Targets
     /// if one wishes to use the Bcl System.Diagnostics.Contracts attributes...
     /// They are conditional.
     /// </summary>
-    public sealed class BclInvariantTarget
+    public sealed class BclInvariantTestTarget
     {
         private int _value;
 
-        public BclInvariantTarget(int value)
+        public BclInvariantTestTarget(int value)
         {
             _value = value;
         }

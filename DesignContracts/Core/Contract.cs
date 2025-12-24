@@ -2,7 +2,7 @@ namespace Odin.DesignContracts
 {
     /// <summary>
     /// Provides design-time contracts for runtime validation of preconditions,
-    /// postconditions, and object invariants.
+    /// postconditions, class invariants, assertions and assumptions.
     /// </summary>
     /// <remarks>
     /// This class is intentionally similar in surface area to
@@ -22,7 +22,7 @@ namespace Odin.DesignContracts
         /// </exception>
         public static void Requires(bool precondition, string? userMessage = null, string? conditionText = null)
         {
-            if (!precondition) ReportFailure(ContractFailureKind.Precondition, userMessage, conditionText);
+            HandleContractCondition(ContractKind.Precondition, precondition, userMessage, conditionText);
         }
 
         /// <summary>
@@ -46,10 +46,17 @@ namespace Odin.DesignContracts
             string? conditionText = null)
             where TException : Exception
         {
+            ContractHandlingBehaviour behaviour = ContractOptions.Current.Preconditions;
+            if (behaviour == ContractHandlingBehaviour.Bypass)
+            {
+                return;
+            }
+
             if (precondition) return;
 
             // Try to honor the requested exception type first.
-            string message = BuildFailureMessage(ContractFailureKind.Precondition, userMessage, conditionText);
+            // Todo: Obey behaviour. Throw specific Exception only after event handling...
+            string message = BuildFailureMessage(ContractKind.Precondition, userMessage, conditionText);
 
             Exception? exception = null;
             try
@@ -67,7 +74,7 @@ namespace Odin.DesignContracts
             }
 
             // Fall back to standard handling if we cannot construct TException.
-            ReportFailure(ContractFailureKind.Precondition, userMessage, conditionText: null);
+            ReportFailure(behaviour, ContractKind.Precondition, userMessage, conditionText: null);
         }
 
         /// <summary>
@@ -81,7 +88,7 @@ namespace Odin.DesignContracts
         {
             Requires(argument != null, userMessage, conditionText);
         }
-        
+
         /// <summary>
         /// Specifies a postcondition that must hold true when the enclosing method returns.
         /// </summary>
@@ -89,29 +96,56 @@ namespace Odin.DesignContracts
         /// <param name="userMessage">An optional message describing the postcondition.</param>
         /// <param name="conditionText">An optional text representation of the condition expression.</param>
         /// <remarks>
-        /// Postconditions are evaluated only when <see cref="ContractOptions.EnablePostconditions"/> is <c>true</c>.
-        /// Calls to this method are no-ops when postconditions are disabled.
-        /// It is expected that source-generated code will invoke this method at
-        /// appropriate points (typically immediately before method exit).
+        /// Postconditions are evaluated only when <see cref="ContractOptions.Postconditions"/> are not set to <c>Bypass</c>.
+        /// This method acts as a marker method for the Contracts Rewriter to instead insert calls to
+        /// ContractImplementation.Ensures() before the method return.
         /// </remarks>
         public static void Ensures(bool condition, string? userMessage = null, string? conditionText = null)
         {
-            // For V1 Ensures calls are the only calls that will be rewritten
-            // Because this method is a merely no-op marker
-            if (!ContractOptions.Current.EnablePostconditions)
-            {
-                return;
-            }
-
-            if (!condition)
-            {
-                ReportFailure(
-                    ContractFailureKind.Postcondition,
-                    userMessage,
-                    conditionText);
-            }
+            // See ContractImplementation.cs for implementation.
         }
-        
+
+        /// <summary>
+        /// Specifies a condition of the class that must hold true for the class to be in a valid state.
+        /// </summary>
+        /// <param name="condition">The condition that must be <c>true</c>.</param>
+        /// <param name="userMessage">An optional message describing the invariant.</param>
+        /// <param name="conditionText">An optional text representation of the condition expression.</param>
+        public static void Invariant(bool condition, string? userMessage = null, string? conditionText = null)
+        {
+            HandleContractCondition(ContractKind.Invariant, condition, userMessage, conditionText);
+        }
+
+        /// <summary>
+        /// Specifies an assertion that must hold true at the given point in the code.
+        /// Only evaluated if ContractOptions.EnableAssertions is <c>true</c>.
+        /// </summary>
+        /// <param name="condition">The condition that must be <c>true</c>.</param>
+        /// <param name="userMessage">An optional message describing the assertion.</param>
+        /// <param name="conditionText">An optional text representation of the condition expression.</param>
+        /// <remarks>
+        /// Assertions are always evaluated at runtime.
+        /// </remarks>
+        public static void Assert(bool condition, string? userMessage = null, string? conditionText = null)
+        {
+            HandleContractCondition(ContractKind.Assertion, condition, userMessage, conditionText);
+        }
+
+        /// <summary>
+        /// Specifies an assumption that the analysis environment may rely on.
+        /// </summary>
+        /// <param name="condition">The condition that is assumed to be <c>true</c>.</param>
+        /// <param name="userMessage">An optional message describing the assumption.</param>
+        /// <param name="conditionText">An optional text representation of the condition expression.</param>
+        /// <remarks>
+        /// At runtime, <see cref="Assume"/> behaves identically to <see cref="Assert"/>,
+        /// but analyzers may interpret assumptions differently.
+        /// </remarks>
+        public static void Assume(bool condition, string? userMessage = null, string? conditionText = null)
+        {
+            HandleContractCondition(ContractKind.Assumption, condition, userMessage, conditionText);
+        }
+
         /// <summary>
         /// Occurs when a contract fails and before a <see cref="ContractException"/> is thrown.
         /// </summary>
@@ -121,40 +155,44 @@ namespace Odin.DesignContracts
         /// </remarks>
         public static event EventHandler<ContractFailedEventArgs>? ContractFailed;
 
-        internal static void ReportFailure(ContractFailureKind kind, string? userMessage, string? conditionText)
+        internal static void ReportFailure(ContractHandlingBehaviour handling, ContractKind kind,
+            string? userMessage, string? conditionText)
         {
             string message = BuildFailureMessage(kind, userMessage, conditionText);
-            ContractFailedEventArgs args = new ContractFailedEventArgs(kind, message, userMessage, conditionText);
-            ContractFailed?.Invoke(null, args);
-            if (args.Handled)
+            if (ContractFailed is not null)
             {
-                // A handler chose to manage the failure; do not throw in this case...
-                return;
+                ContractFailedEventArgs args = new
+                    ContractFailedEventArgs(kind, message, userMessage, conditionText);
+                ContractFailed.Invoke(null, args);
+                if (args.Handled)
+                {
+                    return; // A handler chose to manage the failure; do not throw in this case...
+                }
             }
 
             throw new ContractException(kind, message, userMessage, conditionText);
         }
 
-        internal static string GetKindFailedText(ContractFailureKind kind)
+        internal static string GetKindFailedText(ContractKind kind)
         {
             switch (kind)
             {
-                case ContractFailureKind.Precondition:
+                case ContractKind.Precondition:
                     return "Precondition not met";
-                case ContractFailureKind.Postcondition:
+                case ContractKind.Postcondition:
                     return "Postcondition not honoured";
-                case ContractFailureKind.Invariant:
+                case ContractKind.Invariant:
                     return "Invariant broken";
-                case ContractFailureKind.Assertion:
+                case ContractKind.Assertion:
                     return "Assertion failed";
-                case ContractFailureKind.Assumption:
+                case ContractKind.Assumption:
                     return "Assumption failed";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(kind), kind, null);
             }
         }
-        
-        internal static string BuildFailureMessage(ContractFailureKind kind, string? userMessage, string? conditionText)
+
+        internal static string BuildFailureMessage(ContractKind kind, string? userMessage, string? conditionText)
         {
             if (!string.IsNullOrWhiteSpace(userMessage) && !string.IsNullOrWhiteSpace(conditionText))
             {
@@ -174,80 +212,16 @@ namespace Odin.DesignContracts
             return $"{GetKindFailedText(kind)}.";
         }
 
-        /// <summary>
-        /// Specifies an object invariant that must hold true whenever the object is in a valid state.
-        /// </summary>
-        /// <param name="condition">The condition that must be <c>true</c>.</param>
-        /// <param name="userMessage">An optional message describing the invariant.</param>
-        /// <param name="conditionText">An optional text representation of the condition expression.</param>
-        /// <remarks>
-        /// Invariants are evaluated only when <see cref="ContractRuntime.InvariantsEnabled"/> is <c>true</c>.
-        /// Calls to this method become no-ops when invariants are disabled.
-        /// It is expected that source-generated code will invoke invariant methods
-        /// (marked with <see cref="ClassInvariantMethodAttribute"/>) at appropriate points.
-        /// </remarks>
-        public static void Invariant(bool condition, string? userMessage = null, string? conditionText = null)
+        internal static void HandleContractCondition(ContractKind kind, bool condition, string? userMessage = null, string? conditionText = null)
         {
-            if (!ContractOptions.Current.EnableInvariants)
-            {
+            ContractHandlingBehaviour behaviour = ContractOptions.Current.GetBehaviourFor(kind);
+            if (behaviour == ContractHandlingBehaviour.Bypass)
                 return;
-            }
-
             if (!condition)
-            {
-                ReportFailure(
-                    ContractFailureKind.Invariant,
-                    userMessage,
-                    conditionText);
-            }
-        }
-        
-        /// <summary>
-        /// Specifies an assertion that must hold true at the given point in the code.
-        /// Only evaluated if ContractOptions.EnableAssertions is <c>true</c>.
-        /// </summary>
-        /// <param name="condition">The condition that must be <c>true</c>.</param>
-        /// <param name="userMessage">An optional message describing the assertion.</param>
-        /// <param name="conditionText">An optional text representation of the condition expression.</param>
-        /// <remarks>
-        /// Assertions are always evaluated at runtime.
-        /// </remarks>
-        public static void Assert(bool condition, string? userMessage = null, string? conditionText = null)
-        {
-            if (!ContractOptions.Current.EnableAssertions)
-            {
-                return;
-            }
-
-            if (!condition)
-            {
-                ReportFailure(
-                    ContractFailureKind.Assertion,
-                    userMessage,
-                    conditionText);
-            }
+                ReportFailure(behaviour, kind,
+                    userMessage, conditionText);
         }
 
-        /// <summary>
-        /// Specifies an assumption that the analysis environment may rely on.
-        /// </summary>
-        /// <param name="condition">The condition that is assumed to be <c>true</c>.</param>
-        /// <param name="userMessage">An optional message describing the assumption.</param>
-        /// <param name="conditionText">An optional text representation of the condition expression.</param>
-        /// <remarks>
-        /// At runtime, <see cref="Assume"/> behaves identically to <see cref="Assert"/>,
-        /// but analyzers may interpret assumptions differently.
-        /// </remarks>
-        public static void Assume(bool condition, string? userMessage = null, string? conditionText = null)
-        {
-            if (!condition)
-            {
-                ReportFailure(
-                    ContractFailureKind.Assumption,
-                    userMessage,
-                    conditionText);
-            }
-        }
 
         /// <summary>
         /// Represents the return value of the enclosing method for use within postconditions.

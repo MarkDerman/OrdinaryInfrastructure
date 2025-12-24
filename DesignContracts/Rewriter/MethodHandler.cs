@@ -34,10 +34,10 @@ internal class MethodHandler
         
         InvariantWeavingRequirement invariantsToDo = IsInvariantToBeWeaved();
 
-        ResultValue<List<Instruction>> postconditionsExtracted = 
-            TryExtractPostconditionCalls();
+        ResultValue<List<Instruction>> postconditionsFound = 
+            TryFindPostconditionCalls();
         
-        if (!postconditionsExtracted.IsSuccess && 
+        if (!postconditionsFound.IsSuccess && 
             !invariantsToDo.OnEntry && !invariantsToDo.OnExit)
         {
             // Nothing to do.
@@ -57,10 +57,11 @@ internal class MethodHandler
             InsertInvariantCallBefore(il, first, _parentHandler.InvariantMethod!);
         }
 
-        // Remove the postconditions from the method entry when postconditions are present.
-        if (postconditionsExtracted.IsSuccess)
+        // Remove the postconditions from the method when postconditions are present.
+        // We could skip this as Contract.Ensures are all simply no-ops...?
+        if (postconditionsFound.IsSuccess)
         {
-            foreach (Instruction instruction in postconditionsExtracted.Value)
+            foreach (Instruction instruction in postconditionsFound.Value)
             {
                 // If the instruction was already removed as part of a previous remove, skip.
                 if (Method.Body.Instructions.Contains(instruction))
@@ -71,7 +72,7 @@ internal class MethodHandler
         // If we need to inject postconditions and/or invariant calls at exit, do it per-return.
         // Todo: If there are multiple returns, create a shadow method to execute the
         // invariant and\or postconditions, calling it from each return.
-        if (postconditionsExtracted.IsSuccess || invariantsToDo.OnExit)
+        if (postconditionsFound.IsSuccess || invariantsToDo.OnExit)
         {
             VariableDefinition? resultVar = null;
             bool isVoid = IsVoidReturnType();
@@ -91,9 +92,9 @@ internal class MethodHandler
                     il.InsertBefore(returnInst, Instruction.Create(OpCodes.Stloc, resultVar!));
                 }
 
-                if (postconditionsExtracted.IsSuccess)
+                if (postconditionsFound.IsSuccess)
                 {
-                    foreach (Instruction inst in postconditionsExtracted.Value)
+                    foreach (Instruction inst in postconditionsFound.Value)
                     {
                         Instruction cloned = inst.CloneInstruction();
 
@@ -153,7 +154,7 @@ internal class MethodHandler
     /// Returns success if 1 or more postcondition Ensures() calls were found.
     /// </summary>
     /// <returns></returns>
-    public ResultValue<List<Instruction>> TryExtractPostconditionCalls()
+    public ResultValue<List<Instruction>> TryFindPostconditionCalls()
     {
         // For V1 we will attempt to simply extract any Postcondition.Ensures()
         // calls from the method body if they exist. I am a total noob at IL so have no clue
@@ -178,7 +179,7 @@ internal class MethodHandler
 
         if (postconditionEnsuresCalls.Count ==0)
         {
-            return ResultValue<List<Instruction>>.Failure("No Ensures() calls.");
+            return ResultValue<List<Instruction>>.Failure("No Ensures calls.");
         }
 
         return ResultValue<List<Instruction>>.Success(postconditionEnsuresCalls);;

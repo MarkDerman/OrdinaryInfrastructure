@@ -13,7 +13,7 @@ namespace Odin.DesignContracts
         /// <param name="userMessage">The user-visible message associated with the contract, if any.</param>
         /// <param name="conditionText">The text representation of the condition that failed, if provided.</param>
         public ContractFailedEventArgs(
-            ContractFailureKind kind,
+            ContractKind kind,
             string message,
             string? userMessage,
             string? conditionText)
@@ -27,7 +27,7 @@ namespace Odin.DesignContracts
         /// <summary>
         /// Gets the category of the contract failure.
         /// </summary>
-        public ContractFailureKind Kind { get; }
+        public ContractKind Kind { get; }
 
         /// <summary>
         /// Gets the fully formatted failure message.

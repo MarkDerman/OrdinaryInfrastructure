@@ -12,16 +12,16 @@ namespace Tests.Odin.DesignContracts
         {
             ContractOptions.Initialize(new ContractOptions
             {
-                EnableInvariants = true,
-                EnablePostconditions = true
+                Invariants = true,
+                Postconditions = true
             });
         }
         
         [Test]
         public void Public_constructor_runs_invariant_on_exit([Values] AttributeFlavour testCase)
         {
-            Assert.That(ContractOptions.Current.EnableInvariants, Is.True);
-            Assert.That(ContractOptions.Current.EnablePostconditions, Is.True);
+            Assert.That(ContractOptions.Current.Invariants, Is.True);
+            Assert.That(ContractOptions.Current.Postconditions, Is.True);
 
             ContractException? ex = Assert.Throws<ContractException>(() =>
             {
@@ -35,7 +35,7 @@ namespace Tests.Odin.DesignContracts
                 }
             });
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Invariant));
+            Assert.That(ex!.Kind, Is.EqualTo(ContractKind.Invariant));
         }
     }
 }

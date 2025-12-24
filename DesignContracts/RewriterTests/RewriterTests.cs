@@ -5,7 +5,6 @@ using NUnit.Framework;
 using Odin.DesignContracts;
 using Odin.DesignContracts.Rewriter;
 using Targets;
-using ContractFailureKind = Odin.DesignContracts.ContractFailureKind;
 
 namespace Tests.Odin.DesignContracts.Rewriter;
 
@@ -16,13 +15,7 @@ public sealed class RewriterTests
     public void SetUp()
     {
         // Ensure invariants are enabled even if the test environment sets env vars.
-        ContractOptions.Initialize(new ContractOptions
-        {
-            EnableInvariants = true,
-            EnablePostconditions = true,
-            EnableAssertions = true,
-            EnableAssumptions = true
-        });
+        ContractOptions.Initialize(ContractOptions.DefaultOn());
     }
 
     [Test]
@@ -30,8 +23,8 @@ public sealed class RewriterTests
     {
         Type targetType = GetTargetTestTypeFor(testCase);
         using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetType.Assembly);
-        Assert.That(ContractOptions.Current.EnableInvariants, Is.True);
-        Assert.That(ContractOptions.Current.EnablePostconditions, Is.True);
+        Assert.That(ContractOptions.Current.Invariants, Is.EqualTo(ContractHandlingBehaviour.EventHandlersAndEscalation));
+        Assert.That(ContractOptions.Current.Postconditions, Is.EqualTo(ContractHandlingBehaviour.EventHandlersAndEscalation));
 
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
@@ -201,7 +194,7 @@ public sealed class RewriterTests
             Assert.That(exception, Is.Not.Null);
             Assert.That(exception, Is.InstanceOf<ContractException>());
             ContractException ex = (ContractException)exception!;
-            Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Precondition));
+            Assert.That(ex!.Kind, Is.EqualTo(ContractKind.Precondition));
             Assert.That(ex.Message, Is.EqualTo("Precondition not met: y must be greater than 10"));
         }
         else
@@ -223,7 +216,7 @@ public sealed class RewriterTests
             Assert.That(exception, Is.Not.Null);
             Assert.That(exception, Is.InstanceOf<ContractException>());
             ContractException ex = (ContractException)exception!;
-            Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Assertion));
+            Assert.That(ex!.Kind, Is.EqualTo(ContractKind.Assertion));
             Assert.That(ex.Message, Is.EqualTo("Assertion failed: y must be greater than 10"));
         }
         else
@@ -245,7 +238,7 @@ public sealed class RewriterTests
             Assert.That(exception, Is.Not.Null);
             Assert.That(exception, Is.InstanceOf<ContractException>());
             ContractException ex = (ContractException)exception!;
-            Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Assumption));
+            Assert.That(ex!.Kind, Is.EqualTo(ContractKind.Assumption));
             Assert.That(ex.Message, Is.EqualTo("Assumption failed: y must be greater than 10"));
         }
         else
@@ -280,7 +273,7 @@ public sealed class RewriterTests
                 }
             });
             Assert.That(ex, Is.Not.Null);
-            Assert.That(ex.Message, Contains.Substring("Postcondition not honoured"));
+            Assert.That(ex!.Message, Contains.Substring("Postcondition not honoured"));
         }
         else
         {

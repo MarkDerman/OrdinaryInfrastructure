@@ -89,13 +89,15 @@ namespace Odin.DesignContracts
         /// <param name="userMessage">An optional message describing the postcondition.</param>
         /// <param name="conditionText">An optional text representation of the condition expression.</param>
         /// <remarks>
-        /// Postconditions are evaluated only when <see cref="ContractRuntime.PostconditionsEnabled"/> is <c>true</c>.
-        /// Calls to this method become no-ops when postconditions are disabled.
+        /// Postconditions are evaluated only when <see cref="ContractOptions.EnablePostconditions"/> is <c>true</c>.
+        /// Calls to this method are no-ops when postconditions are disabled.
         /// It is expected that source-generated code will invoke this method at
         /// appropriate points (typically immediately before method exit).
         /// </remarks>
         public static void Ensures(bool condition, string? userMessage = null, string? conditionText = null)
         {
+            // For V1 Ensures calls are the only calls that will be rewritten
+            // Because this method is a merely no-op marker
             if (!ContractOptions.Current.EnablePostconditions)
             {
                 return;
@@ -202,6 +204,7 @@ namespace Odin.DesignContracts
         
         /// <summary>
         /// Specifies an assertion that must hold true at the given point in the code.
+        /// Only evaluated if ContractOptions.EnableAssertions is <c>true</c>.
         /// </summary>
         /// <param name="condition">The condition that must be <c>true</c>.</param>
         /// <param name="userMessage">An optional message describing the assertion.</param>
@@ -211,6 +214,11 @@ namespace Odin.DesignContracts
         /// </remarks>
         public static void Assert(bool condition, string? userMessage = null, string? conditionText = null)
         {
+            if (!ContractOptions.Current.EnableAssertions)
+            {
+                return;
+            }
+
             if (!condition)
             {
                 ReportFailure(

@@ -19,7 +19,9 @@ public sealed class RewriterTests
         ContractOptions.Initialize(new ContractOptions
         {
             EnableInvariants = true,
-            EnablePostconditions = true
+            EnablePostconditions = true,
+            EnableAssertions = true,
+            EnableAssumptions = true
         });
     }
 
@@ -207,12 +209,97 @@ public sealed class RewriterTests
             Assert.DoesNotThrow(() => sut.RequiresYGreaterThan10(testValue));
         }
     }
+    
+    [Test]
+    [TestCase(3, true)]
+    [TestCase(13, false)]
+    public void Assert_throws_if_condition_broken(int testValue, bool shouldThrow)
+    {
+        OdinInvariantTestTarget sut = new OdinInvariantTestTarget(1);
+
+        if (shouldThrow)
+        {
+            Exception? exception = Assert.Catch(() => sut.AssertYGreaterThan10(testValue)); 
+            Assert.That(exception, Is.Not.Null);
+            Assert.That(exception, Is.InstanceOf<ContractException>());
+            ContractException ex = (ContractException)exception!;
+            Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Assertion));
+            Assert.That(ex.Message, Is.EqualTo("Assertion failed: y must be greater than 10"));
+        }
+        else
+        {
+            Assert.DoesNotThrow(() => sut.AssertYGreaterThan10(testValue));
+        }
+    }
+    
+    [Test]
+    [TestCase(3, true)]
+    [TestCase(13, false)]
+    public void Assume_throws_if_condition_broken(int testValue, bool shouldThrow)
+    {
+        OdinInvariantTestTarget sut = new OdinInvariantTestTarget(1);
+
+        if (shouldThrow)
+        {
+            Exception? exception = Assert.Catch(() => sut.AssumeYGreaterThan10(testValue)); 
+            Assert.That(exception, Is.Not.Null);
+            Assert.That(exception, Is.InstanceOf<ContractException>());
+            ContractException ex = (ContractException)exception!;
+            Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Assumption));
+            Assert.That(ex.Message, Is.EqualTo("Assumption failed: y must be greater than 10"));
+        }
+        else
+        {
+            Assert.DoesNotThrow(() => sut.AssumeYGreaterThan10(testValue));
+        }
+    }
+    
+    
+    [Test]
+    public void Single_postcondition_is_woven([Values("EnsuresPlus5A", "EnsuresPlus5B")] string methodName,
+        [Values(3, 130)] int testValue)
+    {
+        bool exceptionExpected = testValue > 100;
+        Type targetUnwrittenType = typeof(EnsuresTestTarget);
+        using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetUnwrittenType.Assembly);
+        Type targetWrittenType = context.GetTypeOrThrow(targetUnwrittenType.FullName!);
+
+        object ensuresTestTarget = Activator.CreateInstance(targetWrittenType)!;
+
+        if (exceptionExpected)
+        {
+            Exception? ex = Assert.Catch(() =>
+            {
+                try
+                {
+                    CallMethod(targetWrittenType, ensuresTestTarget, methodName, [testValue]);
+                }
+                catch (TargetInvocationException tie) when (tie.InnerException is not null)
+                {
+                    throw tie.InnerException;
+                }
+            });
+            Assert.That(ex, Is.Not.Null);
+            Assert.That(ex.Message, Contains.Substring("Postcondition not honoured"));
+        }
+        else
+        {
+            Assert.DoesNotThrow(() => CallMethod(targetWrittenType, ensuresTestTarget, methodName, [testValue]));
+        }
+    }
 
     private static void SetPrivateField(Type declaringType, object instance, string fieldName, object? value)
     {
         FieldInfo f = declaringType.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic)
                       ?? throw new InvalidOperationException($"Missing field '{fieldName}'.");
         f.SetValue(instance, value);
+    }
+    
+    private static void CallMethod(Type declaringType, object instance, string methodName, object[] parameters)
+    {
+        MethodInfo method = declaringType.GetMethods().FirstOrDefault(m => m.Name == methodName)
+                      ?? throw new InvalidOperationException($"Missing method '{methodName}'.");
+        method.Invoke(instance, parameters);
     }
 
     private static object? Invoke(Type declaringType, object instance, string methodName)

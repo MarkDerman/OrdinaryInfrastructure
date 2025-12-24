@@ -67,12 +67,14 @@ namespace Targets
             Console.WriteLine("Instruction 2");
         }
         
-        public void EnsuresResultIsZero(int y)
+        public void AssertYGreaterThan10(int y)
         {
-            Contract.Requires(y > 10, "y must be greater than 10");
-            Console.WriteLine("Instruction 1");
-            Console.WriteLine("Instruction 2");
-            Console.WriteLine("Instruction 2");
+            Contract.Assert(y > 10, "y must be greater than 10");
+        }
+        
+        public void AssumeYGreaterThan10(int y) 
+        {
+            Contract.Assume(y > 10, "y must be greater than 10");
         }
         
         

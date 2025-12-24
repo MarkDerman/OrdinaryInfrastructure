@@ -28,9 +28,11 @@ namespace Odin.DesignContracts
     // }
     
     /// <summary>
-    /// Identifies a method, property or field that does not change any state in the class.
+    /// Methods and classes marked with this attribute can be used within calls to Contract methods. Such methods do not make any state changes.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field, Inherited = false)]
+    [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | 
+                    AttributeTargets.Event | AttributeTargets.Delegate | AttributeTargets.Class | 
+                    AttributeTargets.Parameter, AllowMultiple = false, Inherited = true)]
     public sealed class PureAttribute : Attribute
     {
     }

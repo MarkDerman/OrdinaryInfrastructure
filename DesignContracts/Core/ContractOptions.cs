@@ -29,30 +29,34 @@ namespace Odin.DesignContracts
             }
         }
         
-        // Unable to understand how to get around initializing 1 static instance of Current in NUnit test runs.
-        // throw new InvalidOperationException("Current DesignContractOptions not initialized.");
-        
         /// <summary>
-        /// 
+        /// Unable to understand how to get around initializing 1 static instance of Current in NUnit test runs.
+        /// throw new InvalidOperationException("Current DesignContractOptions not initialized.");
         /// </summary>
         /// <param name="options"></param>
         public static void Initialize(ContractOptions options)
             => _current = options;
         
         /// <summary>
-        /// Gets or sets a value indicating whether postconditions should be evaluated at runtime.
+        /// Configures whether method Ensures calls weaved into the class by the Contracts Rewriter
+        /// before each method return evaluate their conditions or are bypassed.
         /// </summary>
-        /// <remarks>
-        /// When <c>false</c>, calls to <see cref="Odin.DesignContracts.Contract.Ensures(bool, string?, string?)"/> become no-ops.
-        /// </remarks>
         public bool EnablePostconditions { get; init; } = true;
 
         /// <summary>
-        /// Gets or sets a value indicating whether object invariants should be evaluated at runtime.
+        /// Configures whether calls to the class invariant method weaved into the class
+        /// by the Contracts Rewriter are either executed or bypassed.
         /// </summary>
-        /// <remarks>
-        /// When <c>false</c>, calls to <see cref="Odin.DesignContracts.Contract.Invariant(bool, string?, string?)"/> become no-ops.
-        /// </remarks>
         public bool EnableInvariants { get; init; } = true;
+
+        /// <summary>
+        /// Configures whether <see cref="Contract.Assume"/> calls evaluate their conditions or are bypassed.
+        /// </summary>
+        public bool EnableAssumptions { get; set; } = true;
+        
+        /// <summary>
+        /// Configures whether <see cref="Contract.Assert"/> calls evaluate their conditions or are bypassed.
+        /// </summary>
+        public bool EnableAssertions { get; set; } = true;
     }
 }

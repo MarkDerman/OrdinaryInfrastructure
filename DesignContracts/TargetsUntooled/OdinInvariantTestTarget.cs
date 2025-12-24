@@ -66,15 +66,5 @@ namespace Targets
             Console.WriteLine("Instruction 2");
             Console.WriteLine("Instruction 2");
         }
-        
-        public void EnsuresResultIsZero(int y)
-        {
-            Contract.Requires(y > 10, "y must be greater than 10");
-            Console.WriteLine("Instruction 1");
-            Console.WriteLine("Instruction 2");
-            Console.WriteLine("Instruction 2");
-        }
-        
-        
     }
 }

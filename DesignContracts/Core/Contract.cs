@@ -166,6 +166,10 @@ namespace Odin.DesignContracts
         /// </remarks>
         public static event EventHandler<ContractFailedEventArgs>? ContractFailed;
 
+        internal static void ResetContractFailedEventHandlers()
+        {
+            ContractFailed = null;
+        }
         
         internal static void ReportFailure(ContractHandlingBehaviour handling, ContractKind kind,
             string? userMessage, string? conditionText)

@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
         <ImplicitUsings>true</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Description>Target classes for the Design Contract rewriter to rewrite
+            at compile time.
         </Description>
         <NoWarn>1591;1573;</NoWarn>
         <RootNamespace>Targets</RootNamespace>
-        <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants> <!-- Othwerwise System.Diagnostics.Contracts attributes are not compiled in to the IL. -->
+        <!-- Othwerwise System.Diagnostics.Contracts attributes are not compiled in to the IL. -->
+        <DefineConstants>$(DefineConstants);CONTRACTS_FULL</DefineConstants>
     </PropertyGroup>
     
     <!--  For working against Nuget  
@@ -19,25 +21,19 @@
     <!--  For working locally  -->
     <ItemGroup>
         <ProjectReference Include="../Core/Odin.DesignContracts.csproj"/>
-        <ProjectReference Include="../Tooling/Odin.DesignContracts.Tooling.csproj"/>
     </ItemGroup>
     <ItemGroup>
-      <Compile Include="..\TargetsUntooled\BclInvariantTestTarget.cs">
+      <Compile Include="..\TargetsUnrewritten\BclInvariantTestTarget.cs">
         <Link>BclInvariantTestTarget.cs</Link>
       </Compile>
-      <Compile Include="..\TargetsUntooled\EnsuresTestTarget.cs">
-        <Link>EnsuresTestTarget.cs</Link>
-      </Compile>
-      <Compile Include="..\TargetsUntooled\NoInvariantTestTarget.cs">
+      <Compile Include="..\TargetsUnrewritten\NoInvariantTestTarget.cs">
         <Link>NoInvariantTestTarget.cs</Link>
       </Compile>
-      <Compile Include="..\TargetsUntooled\OdinInvariantTarget.cs">
-        <Link>OdinInvariantTarget.cs</Link>
-      </Compile>
-      <Compile Include="..\TargetsUntooled\OdinInvariantTestTarget.cs">
+      <Compile Include="..\TargetsUnrewritten\OdinInvariantTestTarget.cs">
         <Link>OdinInvariantTestTarget.cs</Link>
       </Compile>
+      <Compile Include="..\TargetsUnrewritten\PostconditionsTestTarget.cs">
+        <Link>PostconditionsTestTarget.cs</Link>
+      </Compile>
     </ItemGroup>
-    <Import Project="../Tooling/buildTransitive/Odin.DesignContracts.Tooling.targets"/>
-    
 </Project>

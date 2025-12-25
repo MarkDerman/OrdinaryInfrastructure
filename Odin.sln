@@ -103,9 +103,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DesignContracts.Toolin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.DesignContracts.Rewriter", "DesignContracts\RewriterTests\Tests.Odin.DesignContracts.Rewriter.csproj", "{320907F6-F4BA-4A1D-AC23-145A5AD06C14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TargetsUntooled", "DesignContracts\TargetsUntooled\TargetsUntooled.csproj", "{7BC62DE2-D0F7-4CD9-83D0-C47BE760F33D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TargetsUnrewritten", "DesignContracts\TargetsUnrewritten\TargetsUnrewritten.csproj", "{7BC62DE2-D0F7-4CD9-83D0-C47BE760F33D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TargetsTooled", "DesignContracts\TargetsTooled\TargetsTooled.csproj", "{8138E8B4-E90D-45A3-BEB0-31F048948A91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TargetsRewritten", "DesignContracts\TargetsRewritten\TargetsRewritten.csproj", "{8138E8B4-E90D-45A3-BEB0-31F048948A91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

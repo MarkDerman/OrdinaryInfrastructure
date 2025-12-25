@@ -5,33 +5,34 @@ namespace Odin.DesignContracts
     /// provisionally exposed statically via ContractOptions.Current.
     /// </summary>
     /// <remarks>
-    /// Preconditions are always evaluated. This configuration controls whether runtime
-    /// evaluation of postconditions, invariants, assertions and assumptions are entirely skipped,
+    /// NOTE: Preconditions are NOT always evaluated, they can also be bypassed.
+    /// ContractOptions configuration controls the ContractHandlingBehaviour of calls 
+    /// to preconditions, postconditions, invariants, assertions, and assumptions.
     /// </remarks>
     public sealed record ContractOptions
     {
         /// <summary>
         /// Configures runtime behaviour for individual precondition Requires calls.
         /// </summary>
-        public ContractHandlingBehaviour Preconditions { get; init; } = ContractHandlingBehaviour.EventHandlersAndEscalation;
-        
+        public required ContractHandlingBehaviour Preconditions { get; init; }
+
         /// <summary>
         /// Configures runtime behaviour for individual postcondition Ensures calls weaved into the class by the Contracts Rewriter
         /// before each method return.
         /// </summary>
-        public required ContractHandlingBehaviour Postconditions { get; init; } 
+        public required ContractHandlingBehaviour Postconditions { get; init; }
 
         /// <summary>
         /// Configures runtime behaviour for individual Invariant calls in the class invariant method. In future, the intention for
         /// setting to ByPass is that this will also bypass calling of the class invariant method entirely from every weaved invocation.
         /// </summary>
-        public required ContractHandlingBehaviour Invariants { get; init; } 
+        public required ContractHandlingBehaviour Invariants { get; init; }
 
         /// <summary>
         /// Configures runtime behaviour for individual <see cref="Contract.Assume"/> calls.
         /// </summary>
-        public required ContractHandlingBehaviour Assumptions { get; init; } 
-        
+        public required ContractHandlingBehaviour Assumptions { get; init; }
+
         /// <summary>
         /// Configures runtime behaviour for individual <see cref="Contract.Assert"/> calls.
         /// </summary>
@@ -55,7 +56,7 @@ namespace Odin.DesignContracts
                 _ => throw new ArgumentOutOfRangeException(nameof(kind), kind, "Unknown contract kind")
             };
         }
-        
+
         private static ContractOptions? _current;
 
         /// <summary>
@@ -69,40 +70,84 @@ namespace Odin.DesignContracts
             get
             {
                 // Temporary hack so I can continue with testing the actual rewriting...
+                // Todo: Remove and resolve configuration initialization issues.
                 if (_current is null)
                 {
-                    _current = DefaultOn();
+                    _current = On();
                 }
+
                 return _current;
             }
         }
-        
+
         /// <summary>
-        /// Everything on.
+        /// Creates options with all Contract operations set to EventHandlersAndEscalation
         /// </summary>
+        /// <param name="enableEscalation">Enables escalation of contract violations, normally by throwing ContractExceptions.</param>
+        /// <param name="enableEventHandling">Enables event handlers to handle contract violations.</param>
         /// <returns></returns>
-        public static ContractOptions DefaultOn(ContractHandlingBehaviour behaviour = ContractHandlingBehaviour.EventHandlersAndEscalation)
+        /// <exception cref="ArgumentException"></exception>
+        public static ContractOptions On(bool enableEscalation = true,
+            bool enableEventHandling = true)
         {
-            return new ContractOptions() { Invariants = behaviour,
+            if (!enableEscalation && !enableEventHandling)
+            {
+                throw new ArgumentException(
+                    $"{nameof(On)} requires enabling of either {nameof(enableEscalation)} or {nameof(enableEscalation)}.");
+            }
+
+            ContractHandlingBehaviour behaviour;
+            if (enableEscalation && enableEventHandling)
+            {
+                behaviour = ContractHandlingBehaviour.EventHandlersAndEscalation;
+            }
+            else if (enableEscalation)
+            {
+                behaviour = ContractHandlingBehaviour.EscalationOnly;
+            }
+            else
+            {
+                behaviour = ContractHandlingBehaviour.EventHandlersOnly;
+            }
+
+            return All(behaviour);
+        }
+
+
+        /// <summary>
+        /// Creates options with all Contract operations set the passed behaviour handling.
+        /// </summary>
+        /// <param name="behaviour">The handling for all Contract operations.</param>
+        /// <returns></returns>
+        public static ContractOptions All(ContractHandlingBehaviour behaviour)
+        {
+            return new ContractOptions()
+            {
+                Invariants = behaviour,
                 Postconditions = behaviour,
                 Assertions = behaviour,
-                Assumptions = behaviour
+                Assumptions = behaviour,
+                Preconditions = behaviour
             };
         }
-        
+
         /// <summary>
-        /// Preconditions EventHandlersAndEscalation and everything else Bypass.
+        /// Creates options with all Contract operations set to Bypass,
+        /// EXCLUDING Preconditions which are handled with EventHandlersAndEscalation.
         /// </summary>
         /// <returns></returns>
-        public static ContractOptions DefaultOff()
+        public static ContractOptions Off()
         {
-            return new ContractOptions() { Invariants = ContractHandlingBehaviour.Bypass,  
+            return new ContractOptions()
+            {
+                Invariants = ContractHandlingBehaviour.Bypass,
                 Postconditions = ContractHandlingBehaviour.Bypass,
                 Assertions = ContractHandlingBehaviour.Bypass,
-                Assumptions = ContractHandlingBehaviour.Bypass
+                Assumptions = ContractHandlingBehaviour.Bypass,
+                Preconditions = ContractHandlingBehaviour.EventHandlersAndEscalation
             };
         }
-        
+
         /// <summary>
         /// Unable to understand how to get around initializing 1 static instance of Current in NUnit test runs.
         /// throw new InvalidOperationException("Current DesignContractOptions not initialized.");
@@ -110,6 +155,7 @@ namespace Odin.DesignContracts
         /// <param name="options"></param>
         public static void Initialize(ContractOptions options)
             => _current = options;
+            
     }
 
     /// <summary>
@@ -123,7 +169,7 @@ namespace Odin.DesignContracts
         /// continuing program execution.
         /// </summary>
         Bypass,
-        
+
         /// <summary>
         /// Evaluate the contract condition. If it fails,
         /// allow any registered event handlers to handle the failure.
@@ -131,13 +177,13 @@ namespace Odin.DesignContracts
         /// escalation is triggered, typically as the throwing of a ContractException.
         /// </summary>
         EventHandlersAndEscalation,
-        
+
         /// <summary>
         /// Evaluate the contract condition. If it fails,
         /// trigger escalation, typically as the throwing of a ContractException.
         /// </summary>
         EscalationOnly,
-        
+
         /// <summary>
         /// Evaluate the contract condition. If it fails,
         /// allow any registered event handlers to handle the failure.

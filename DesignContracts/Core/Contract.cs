@@ -16,7 +16,7 @@ namespace Odin.DesignContracts
         /// </summary>
         /// <param name="precondition">The precondition that is required to be <c>true</c>.</param>
         /// <param name="userMessage">Optional English description of what the precondition is.</param>
-        /// <param name="conditionText">Optional pseudo-code representation of the condition expression.</param>
+        /// <param name="conditionText">Optional pseudocode representation of the condition expression.</param>
         /// <exception cref="ContractException">
         /// Thrown when <paramref name="precondition"/> is <c>false</c>.
         /// </exception>
@@ -98,13 +98,24 @@ namespace Odin.DesignContracts
         /// <remarks>
         /// Postconditions are evaluated only when <see cref="ContractOptions.Postconditions"/> are not set to <c>Bypass</c>.
         /// This method acts as a marker method for the Contracts Rewriter to instead insert calls to
-        /// ContractImplementation.Ensures() before the method return.
+        /// ContractImplementation.Ensures() at all method returns.
         /// </remarks>
         public static void Ensures(bool condition, string? userMessage = null, string? conditionText = null)
         {
-            // See ContractImplementation.cs for implementation.
         }
 
+        
+        /// <summary>
+        /// Implementation of <see cref="Contract.Ensures"/>
+        /// </summary>
+        /// <param name="condition">The condition that must be <c>true</c>.</param>
+        /// <param name="userMessage">An optional message describing the postcondition.</param>
+        /// <param name="conditionText">An optional text representation of the condition expression.</param>
+        internal static void EnsuresImplementation(bool condition, string? userMessage = null, string? conditionText = null)
+        {
+            HandleContractCondition(ContractKind.Postcondition, condition, userMessage, conditionText);
+        }
+        
         /// <summary>
         /// Specifies a condition of the class that must hold true for the class to be in a valid state.
         /// </summary>
@@ -155,22 +166,33 @@ namespace Odin.DesignContracts
         /// </remarks>
         public static event EventHandler<ContractFailedEventArgs>? ContractFailed;
 
+        
         internal static void ReportFailure(ContractHandlingBehaviour handling, ContractKind kind,
             string? userMessage, string? conditionText)
         {
+            // Note that if handling is inappropriately set to ByPass, then ReportFailure
+            // does nothing which is fine.
             string message = BuildFailureMessage(kind, userMessage, conditionText);
-            if (ContractFailed is not null)
+            if (handling == ContractHandlingBehaviour.EventHandlersAndEscalation ||
+                handling == ContractHandlingBehaviour.EventHandlersOnly)
             {
-                ContractFailedEventArgs args = new
-                    ContractFailedEventArgs(kind, message, userMessage, conditionText);
-                ContractFailed.Invoke(null, args);
-                if (args.Handled)
+                if (ContractFailed is not null)
                 {
-                    return; // A handler chose to manage the failure; do not throw in this case...
+                    ContractFailedEventArgs args = new
+                        ContractFailedEventArgs(kind, message, userMessage, conditionText);
+                    ContractFailed.Invoke(null, args);
+                    if (args.Handled)
+                    {
+                        return; // A handler chose to manage the failure; do not throw in this case...
+                    }
                 }
             }
 
-            throw new ContractException(kind, message, userMessage, conditionText);
+            if (handling == ContractHandlingBehaviour.EventHandlersAndEscalation ||
+                handling == ContractHandlingBehaviour.EscalationOnly)
+            {
+                throw new ContractException(kind, message, userMessage, conditionText);
+            }
         }
 
         internal static string GetKindFailedText(ContractKind kind)
@@ -194,20 +216,17 @@ namespace Odin.DesignContracts
 
         internal static string BuildFailureMessage(ContractKind kind, string? userMessage, string? conditionText)
         {
-            if (!string.IsNullOrWhiteSpace(userMessage) && !string.IsNullOrWhiteSpace(conditionText))
-            {
+            bool blankUserMessage = string.IsNullOrWhiteSpace(userMessage); 
+            bool blankConditionText = string.IsNullOrWhiteSpace(conditionText); 
+
+            if (!blankUserMessage && !blankConditionText)
                 return $"{GetKindFailedText(kind)}: {userMessage} [Condition: {conditionText}]";
-            }
 
-            if (!string.IsNullOrWhiteSpace(userMessage))
-            {
+            if (!blankUserMessage)
                 return $"{GetKindFailedText(kind)}: {userMessage}";
-            }
 
-            if (!string.IsNullOrWhiteSpace(conditionText))
-            {
+            if (!blankConditionText)
                 return $"{GetKindFailedText(kind)}: {conditionText}";
-            }
 
             return $"{GetKindFailedText(kind)}.";
         }
@@ -218,8 +237,7 @@ namespace Odin.DesignContracts
             if (behaviour == ContractHandlingBehaviour.Bypass)
                 return;
             if (!condition)
-                ReportFailure(behaviour, kind,
-                    userMessage, conditionText);
+                ReportFailure(behaviour, kind, userMessage, conditionText);
         }
 
 

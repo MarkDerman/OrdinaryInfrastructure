@@ -6,11 +6,11 @@ namespace Targets
     /// The rewriter is expected to inject
     /// invariant calls at entry/exit of public methods and properties, except where [Pure] is applied.
     /// </summary>
-    public sealed class OdinInvariantTarget
+    public sealed class OdinInvariantTestTarget
     {
         private int _value;
 
-        public OdinInvariantTarget(int value)
+        public OdinInvariantTestTarget(int value)
         {
             _value = value;
         }
@@ -65,6 +65,16 @@ namespace Targets
             Console.WriteLine("Instruction 1");
             Console.WriteLine("Instruction 2");
             Console.WriteLine("Instruction 2");
+        }
+        
+        public void AssertYGreaterThan10(int y)
+        {
+            Contract.Assert(y > 10, "y must be greater than 10");
+        }
+        
+        public void AssumeYGreaterThan10(int y) 
+        {
+            Contract.Assume(y > 10, "y must be greater than 10");
         }
     }
 }

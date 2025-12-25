@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TargetsTooled\TargetsTooled.csproj" />
+    <ProjectReference Include="..\TargetsRewritten\TargetsRewritten.csproj" />
   </ItemGroup>
 
 </Project>

@@ -15,7 +15,7 @@ public sealed class RewriterTests
     public void SetUp()
     {
         // Ensure invariants are enabled even if the test environment sets env vars.
-        ContractOptions.Initialize(ContractOptions.DefaultOn());
+        ContractOptions.Initialize(ContractOptions.On());
     }
 
     [Test]
@@ -253,7 +253,7 @@ public sealed class RewriterTests
         [Values(3, 130)] int testValue)
     {
         bool exceptionExpected = testValue > 100;
-        Type targetUnwrittenType = typeof(EnsuresTestTarget);
+        Type targetUnwrittenType = typeof(PostconditionsTestTarget);
         using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetUnwrittenType.Assembly);
         Type targetWrittenType = context.GetTypeOrThrow(targetUnwrittenType.FullName!);
 

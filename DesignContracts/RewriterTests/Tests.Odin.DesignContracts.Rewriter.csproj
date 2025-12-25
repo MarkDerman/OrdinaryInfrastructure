@@ -21,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Odin.DesignContracts.csproj" />
     <ProjectReference Include="..\Rewriter\Odin.DesignContracts.Rewriter.csproj" />
-    <ProjectReference Include="..\TargetsUntooled\TargetsUntooled.csproj" />
+    <ProjectReference Include="..\TargetsUnrewritten\TargetsUnrewritten.csproj" />
   </ItemGroup>
 
 </Project>

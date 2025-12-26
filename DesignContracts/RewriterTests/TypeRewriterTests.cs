@@ -6,7 +6,7 @@ using Targets;
 namespace Tests.Odin.DesignContracts.Rewriter;
 
 [TestFixture]
-public sealed class TypeHandlerTests
+public sealed class TypeRewriterTests
 {
     [Test]
     [TestCase(typeof(OdinInvariantTestTarget), true)]
@@ -16,7 +16,7 @@ public sealed class TypeHandlerTests
     {
         CecilAssemblyContext context = CecilAssemblyContext.GetTargetsUntooledAssemblyContext();
         TypeDefinition? typeDef = context.FindType(type.FullName!);
-        TypeHandler sut = new TypeHandler(typeDef!);
+        TypeRewriter sut = new TypeRewriter(typeDef!);
         
         Assert.That(sut.HasInvariant, Is.EqualTo(invariantExpected));
         if (invariantExpected) Assert.That(sut.InvariantMethod, Is.Not.Null);

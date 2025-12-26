@@ -3,9 +3,9 @@ using Mono.Cecil;
 namespace Odin.DesignContracts.Rewriter;
 
 /// <summary>
-/// Handles type-specific matters with respect to design contract rewriting.
+/// Handles Design-by-Contract rewriting of a given type.
 /// </summary>
-internal class TypeHandler
+internal class TypeRewriter
 {
     private readonly TypeDefinition _target;
     private MethodDefinition? _invariant;
@@ -15,7 +15,7 @@ internal class TypeHandler
     /// Constructor
     /// </summary>
     /// <param name="target"></param>
-    public TypeHandler(TypeDefinition target)
+    public TypeRewriter(TypeDefinition target)
     {
         if (target == null!) throw new ArgumentNullException(nameof(target));
         _target = target;
@@ -59,9 +59,9 @@ internal class TypeHandler
         return rewritten;
     }
 
-    internal IReadOnlyList<MethodHandler> GetMembersToTryRewrite()
+    internal IReadOnlyList<MethodRewriter> GetMembersToTryRewrite()
     {
-        return _target.Methods.Select(c => new MethodHandler(c,this)).ToList();
+        return _target.Methods.Select(c => new MethodRewriter(c,this)).ToList();
     }
 
     internal void FindInvariantMethodOrThrow()

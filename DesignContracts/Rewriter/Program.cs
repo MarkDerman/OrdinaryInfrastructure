@@ -1,7 +1,3 @@
-using Mono.Cecil;
-using Mono.Cecil.Cil;
-using Mono.Cecil.Rocks;
-
 namespace Odin.DesignContracts.Rewriter;
 
 /// <summary>
@@ -15,14 +11,18 @@ internal static class Program
 
     private static int Main(string[] args)
     {
-        if (args.Length < 2)
+        if (args.Length < 1)
         {
-            Console.Error.WriteLine($"{Rewriter}: Usage 'Odin.DesignContracts.Rewriter <assemblyPath> <outputAssemblyPath>'");
+            Console.Error.WriteLine($"{Rewriter}: Usage 'dotnet {Rewriter}.dll <assemblyPath> <optional:outputAssemblyPath>'");
             return 3;
         }
 
         string assemblyPath = args[0];
-        string outputPath = args[1];
+        string? outputPath = null;
+        if (args.Length >= 2)
+        {
+            outputPath = args[1];
+        }
 
         if (!File.Exists(assemblyPath))
         {
@@ -32,7 +32,8 @@ internal static class Program
 
         try
         {
-            RewriteAssembly(assemblyPath, outputPath);
+            AssemblyRewriter contractsRewriter = new AssemblyRewriter(assemblyPath, outputPath);
+            contractsRewriter.Rewrite();
             return 0;
         }
         catch (Exception ex)
@@ -43,49 +44,7 @@ internal static class Program
         }
     }
 
-    internal static void RewriteAssembly(string assemblyPath, string outputPath)
-    {
-        string assemblyDir = Path.GetDirectoryName(Path.GetFullPath(assemblyPath))!;
 
-        DefaultAssemblyResolver resolver = new();
-        resolver.AddSearchDirectory(assemblyDir);
-
-        // Portable PDBs are optional. If present, Cecil will pick them up with ReadSymbols = true.
-        ReaderParameters readerParameters = new()
-        {
-            AssemblyResolver = resolver,
-            ReadSymbols = File.Exists(Path.ChangeExtension(assemblyPath, ".pdb")),
-            ReadingMode = ReadingMode.Immediate
-        };
-
-        using AssemblyDefinition assembly = AssemblyDefinition.ReadAssembly(assemblyPath, readerParameters);
-
-        int rewritten = 0;
-        foreach (ModuleDefinition module in assembly.Modules)
-        {
-            foreach (TypeDefinition type in module.GetTypes())
-            {
-                TypeHandler currentType = new(type);
-
-                foreach (var member in currentType.GetMembersToTryRewrite())
-                {
-                    if (!member.Rewrite())
-                        continue;
-                    rewritten++;
-                }
-            }
-        }
-
-        Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(outputPath))!);
-
-        WriterParameters writerParameters = new()
-        {
-            WriteSymbols = readerParameters.ReadSymbols
-        };
-
-        assembly.Write(outputPath, writerParameters);
-        Console.WriteLine($"Rewriter: rewritten methods: {rewritten}");
-    }
 
    
   

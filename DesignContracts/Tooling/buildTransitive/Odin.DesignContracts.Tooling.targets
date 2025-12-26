@@ -1,46 +1,31 @@
 <Project>
-  <PropertyGroup>
-    <!-- Used by analyzers via build_property.* to detect that rewriting is enabled. -->
-    <OdinDesignContractsRewriterEnabled>true</OdinDesignContractsRewriterEnabled>
-
-    <!-- Allow consumers to disable weaving explicitly. -->
-    <OdinDesignContractsWeaveEnabled Condition="'$(OdinDesignContractsWeaveEnabled)'==''">true</OdinDesignContractsWeaveEnabled>
-  </PropertyGroup>
-
-  <Target Name="OdinDesignContracts_Weaving"
-          AfterTargets="CoreCompile"
-          Inputs="$(IntermediateOutputPath)$(TargetFileName)"
-          Outputs="$(IntermediateOutputPath)$(TargetName).odin-design-contracts-weaved$(TargetExt)"
-          Condition="'$(OdinDesignContractsWeaveEnabled)'=='true' and '$(TargetPath)'!=''">
 
     <PropertyGroup>
-      <_OdinNetVersion>$(TargetFramework.Substring(3))</_OdinNetVersion>
-      <_OdinDcRewriterPathCandidate>$(MSBuildThisFileDirectory)..\tools\net$(_OdinNetVersion)\any\Odin.DesignContracts.Rewriter.dll</_OdinDcRewriterPathCandidate>
-      <_OdinDcRewriterPath Condition="Exists('$(_OdinDcRewriterPathCandidate)')">$(_OdinDcRewriterPathCandidate)</_OdinDcRewriterPath>
-      <!-- Default to .Net 10 -->
-      <_OdinDcRewriterPath Condition="'$(_OdinDcRewriterPath)'==''">$(MSBuildThisFileDirectory)..\tools\net10.0\any\Odin.DesignContracts.Rewriter.dll</_OdinDcRewriterPath> 
-      <_OdinDcWeavedAssembly>$(IntermediateOutputPath)$(AssemblyName).odin-design-contracts-weaved$(TargetExt)</_OdinDcWeavedAssembly>
-      <_OdinDcWeavedPdb>$(IntermediateOutputPath)$(AssemblyName).odin-design-contracts-weaved.pdb</_OdinDcWeavedPdb>
+        <!-- Used by analyzers via build_property.* to detect that rewriting is enabled. -->
+        <OdinDesignContractsRewriterEnabled>true</OdinDesignContractsRewriterEnabled>
+
+        <!-- Allow consumers to disable weaving explicitly. -->
+        <OdinDesignContractsWeaveEnabled Condition="'$(OdinDesignContractsWeaveEnabled)'==''">true</OdinDesignContractsWeaveEnabled>
     </PropertyGroup>
 
-    <Message Importance="High" Text="Odin DesignContracts: Weaving invariants and postconditions into $(TargetPath)" />
-    <Message Importance="High" Text="MSBuildThisFileDirectory: &quot;$(MSBuildThisFileDirectory)&quot;" />
-    <Message Importance="High" Text="AssemblyName: &quot;$(AssemblyName)&quot;" />
-    <Message Importance="High" Text="TargetName: &quot;$(TargetName)&quot;" />
-    <Message Importance="High" Text="TargetFileName: &quot;$(TargetFileName)&quot;" />
-    <Message Importance="High" Text="TargetPath: &quot;$(TargetPath)&quot;" />
-    <Message Importance="High" Text="IntermediateOutputPath: &quot;$(IntermediateOutputPath)&quot;" />
-    <Message Importance="High" Text="InputFile (IntermediateOutputPath+TargetFileName): &quot;$(IntermediateOutputPath)$(TargetFileName)&quot;" />
-    <Message Importance="High" Text="_OdinDcRewriterPath: &quot;$(_OdinDcRewriterPath)&quot;" />
-    <Message Importance="High" Text="_OdinDcWeavedAssembly: &quot;$(_OdinDcWeavedAssembly)&quot;" />
+    <!-- Define the task location based on the same logic used for the executable -->
+    <UsingTask TaskName="Odin.DesignContracts.Rewriter.WeaveDesignContracts"
+               AssemblyFile="$(MSBuildThisFileDirectory)..\tools\$(TargetFramework)\any\Odin.DesignContracts.Rewriter.dll"/>
 
-    <Exec Command="dotnet &quot;$(_OdinDcRewriterPath)&quot; &quot;$(IntermediateOutputPath)$(TargetFileName)&quot; &quot;$(_OdinDcWeavedAssembly)&quot;" />
+    <Target Name="OdinDesignContractsRewrite"
+            AfterTargets="CoreCompile"
+            BeforeTargets="CopyFilesToOutputDirectory"
+            Inputs="@(IntermediateAssembly);@(Compile);$(MSBuildProjectFullPath);$(Configuration);$(TargetFramework)"
+            Outputs="$(IntermediateOutputPath)WeaveDesignContracts.stamp"
+            Condition="'$(OdinDesignContractsWeaveEnabled)'=='true' and '$(TargetPath)'!=''">
+        
+        
+        <Message Text="Odin.DesignContracts: $(MSBuildProjectDirectory)/$(IntermediateOutputPath)$(TargetFileName)"/>
 
-    <!-- Replace the compiled assembly with the weaved one -->
-    <Copy SourceFiles="$(_OdinDcWeavedAssembly)" DestinationFiles="$(TargetPath)" OverwriteReadOnlyFiles="true" />
+        <!-- Weave postconditions and invariants into the intermediary target. -->
+        <!-- Debug symbols in the .pdb file are also handled -->
+        <WeaveDesignContracts AssemblyToRewritePath="$(MSBuildProjectDirectory)/$(IntermediateOutputPath)$(TargetFileName)" />
 
-    <!-- Replace PDB if present -->
-    <Copy SourceFiles="$(_OdinDcWeavedPdb)" DestinationFiles="$(TargetDir)$(TargetName).pdb" OverwriteReadOnlyFiles="true"
-          Condition="Exists('$(_OdinDcWeavedPdb)') and '$(DebugSymbols)'=='true'" />
-  </Target>
+        <Touch Files="$(IntermediateOutputPath)WeaveDesignContracts.stamp" AlwaysCreate="true" />
+    </Target>
 </Project>

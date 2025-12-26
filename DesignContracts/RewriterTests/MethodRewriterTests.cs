@@ -6,7 +6,7 @@ using Targets;
 namespace Tests.Odin.DesignContracts.Rewriter;
 
 [TestFixture]
-public sealed class MethodHandlerTests
+public sealed class MethodRewriterTests
 {
     [Test]
     [TestCase(typeof(OdinInvariantTestTarget),"get_" + nameof(OdinInvariantTestTarget.PureProperty), true)]
@@ -16,18 +16,18 @@ public sealed class MethodHandlerTests
     public void Pure_methods_are_recognised(Type type, string methodName, bool isPure)
     {
         CecilAssemblyContext context = CecilAssemblyContext.GetTargetsUntooledAssemblyContext();
-        MethodHandler? sut = GetMethodHandlerFor(context, type, methodName);
+        MethodRewriter? sut = GetMethodHandlerFor(context, type, methodName);
             
         Assert.That(sut, Is.Not.Null);
         Assert.That(sut!.IsPure, Is.EqualTo(isPure));
     }
 
-    private MethodHandler? GetMethodHandlerFor(CecilAssemblyContext context, Type type, string methodName)
+    private MethodRewriter? GetMethodHandlerFor(CecilAssemblyContext context, Type type, string methodName)
     {
         TypeDefinition? typeDef = context.FindType(type.FullName!);
-        TypeHandler handler = new TypeHandler(typeDef!);
-        MethodDefinition? def = handler.Type.Methods.FirstOrDefault(n => n.Name == methodName);
-        return new MethodHandler(def!, handler);
+        TypeRewriter rewriter = new TypeRewriter(typeDef!);
+        MethodDefinition? def = rewriter.Type.Methods.FirstOrDefault(n => n.Name == methodName);
+        return new MethodRewriter(def!, rewriter);
     }
 
 }

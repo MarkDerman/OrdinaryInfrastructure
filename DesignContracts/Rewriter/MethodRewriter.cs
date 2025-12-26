@@ -6,17 +6,17 @@ using Odin.System;
 namespace Odin.DesignContracts.Rewriter;
 
 /// <summary>
-/// Handles member-specific matters with respect to design contract rewriting.
-/// Note: MemberHandler includes methods AND property accessors...
+/// Handles Design-by-Contract rewriting of a given type member, 
+/// including methods, property accessors and constructors.
 /// </summary>
-internal class MethodHandler
+internal class MethodRewriter
 {
-    private readonly TypeHandler _parentHandler;
+    private readonly TypeRewriter _parentRewriter;
 
-    public MethodHandler(MethodDefinition method, TypeHandler parentHandler)
+    public MethodRewriter(MethodDefinition method, TypeRewriter parentRewriter)
     {
         Method = method;
-        _parentHandler = parentHandler;
+        _parentRewriter = parentRewriter;
     }
     
     public MethodDefinition Method { get; }
@@ -60,7 +60,7 @@ internal class MethodHandler
             if (Method.Body.Instructions.Count == 0)
                 il.Append(first);
 
-            InsertInvariantCallBefore(il, first, _parentHandler.InvariantMethod!);
+            InsertInvariantCallBefore(il, first, _parentRewriter.InvariantMethod!);
         }
 
         // Remove the postconditions from the method when postconditions are present.
@@ -115,7 +115,7 @@ internal class MethodHandler
 
                 if (invariantsToDo.OnExit)
                 {
-                    InsertInvariantCallBefore(il, returnInst, _parentHandler.InvariantMethod!);
+                    InsertInvariantCallBefore(il, returnInst, _parentRewriter.InvariantMethod!);
                 }
 
                 if (!isVoid)
@@ -131,8 +131,8 @@ internal class MethodHandler
 
     public InvariantWeavingRequirement IsInvariantToBeWeaved()
     {
-        bool canWeaveInvariant = _parentHandler.HasInvariant && IsPublicInstanceMethod();
-        bool isInvariantMethodItself = _parentHandler.InvariantMethod is not null && Method == _parentHandler.InvariantMethod;
+        bool canWeaveInvariant = _parentRewriter.HasInvariant && IsPublicInstanceMethod();
+        bool isInvariantMethodItself = _parentRewriter.InvariantMethod is not null && Method == _parentRewriter.InvariantMethod;
 
         // Per requirements:
         // - Constructors: invariants at exit only
@@ -234,7 +234,7 @@ internal class MethodHandler
         // For accessors, also honour [Pure] on the property itself.
         if (Method.IsGetter || Method.IsSetter)
         {
-            PropertyDefinition? prop = _parentHandler.Type.Properties.
+            PropertyDefinition? prop = _parentRewriter.Type.Properties.
                 FirstOrDefault(p => p.GetMethod == Method || p.SetMethod == Method);
             if (prop is not null && prop.HasAnyAttributeIn(Names.PureAttributeFullNames))
                 return true;
@@ -262,5 +262,10 @@ internal class MethodHandler
         il.InsertBefore(before, Instruction.Create(OpCodes.Ldarg_0));
         il.InsertBefore(before, Instruction.Create(OpCodes.Call, invariantMethod));
     }
-
+    
+    internal record InvariantWeavingRequirement
+    {
+        public required bool OnEntry { get; init; }
+        public required bool OnExit { get; init; }
+    }
 }

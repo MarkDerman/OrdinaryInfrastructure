@@ -177,7 +177,8 @@ public sealed class RewriterTests
 
         // Act + Assert
         string outputPath = Path.Combine(temp.Path, "out.dll");
-        InvalidOperationException? expectedError = Assert.Throws<InvalidOperationException>(() => Program.RewriteAssembly(inputPath, outputPath));
+        InvalidOperationException? expectedError = Assert.Throws<InvalidOperationException>(() => 
+            new AssemblyRewriter(inputPath, outputPath).Rewrite());
         Assert.That(expectedError, Is.Not.Null);
     }
 

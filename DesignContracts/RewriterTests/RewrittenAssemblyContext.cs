@@ -1,6 +1,5 @@
 using System.Reflection;
 using System.Runtime.Loader;
-using Odin.DesignContracts;
 using Odin.DesignContracts.Rewriter;
 
 namespace Tests.Odin.DesignContracts.Rewriter;
@@ -25,12 +24,12 @@ internal sealed class RewrittenAssemblyContext : IDisposable
 
         CopyIfExists(Path.ChangeExtension(sourceAssembly.Location, ".pdb"), Path.Combine(_tempDir, Path.GetFileName(Path.ChangeExtension(sourceAssembly.Location, ".pdb"))));
         CopyIfExists(Path.ChangeExtension(sourceAssembly.Location, ".deps.json"), Path.Combine(_tempDir, Path.GetFileName(Path.ChangeExtension(sourceAssembly.Location, ".deps.json"))));
+        
+        var rewriter = new AssemblyRewriter(inputPath);
+        rewriter.Rewrite();
 
-        string outputPath = Path.Combine(_tempDir, "rewritten.dll");
-        Program.RewriteAssembly(inputPath, outputPath);
-
-        _alc = new TestAssemblyLoadContext(outputPath);
-        RewrittenAssembly = _alc.LoadFromAssemblyPath(outputPath);
+        _alc = new TestAssemblyLoadContext(rewriter.OutputPath);
+        RewrittenAssembly = _alc.LoadFromAssemblyPath(rewriter.OutputPath);
     }
 
     public Type GetTypeOrThrow(string fullName)

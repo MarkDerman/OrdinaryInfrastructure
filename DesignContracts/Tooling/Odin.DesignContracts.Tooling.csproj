@@ -9,6 +9,7 @@
     <Description>Design-by-Contract tooling for Odin.DesignContracts: Analyzers + IL rewriter integration.</Description>
     <PackageIcon>icon.png</PackageIcon>
     <WarningsAsErrors>1591;1573;</WarningsAsErrors>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
   </PropertyGroup>
 
   <ItemGroup>

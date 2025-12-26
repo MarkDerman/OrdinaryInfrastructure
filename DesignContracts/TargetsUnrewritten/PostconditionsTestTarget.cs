@@ -10,7 +10,8 @@ namespace Targets
         public string String { get; set; } = "";
         
         /// <summary>
-        /// 1
+        /// number = -1 -> failure
+        /// number = 1 -> fine
         /// </summary>
         /// <param name="number"></param>
         public void VoidSingleConditionSingleReturn(int number)
@@ -26,7 +27,7 @@ namespace Targets
         public void VoidSingleConditionMultipleReturn(int number)
         {
             Contract.Ensures(Number > 0);
-            if (number > 100)
+            if (number > 50)
             {
                 Number = -100;
                 return;

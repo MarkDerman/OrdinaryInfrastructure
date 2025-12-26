@@ -7,9 +7,8 @@ namespace Tests.Odin.DesignContracts
     [TestFixture][Ignore("Get tooling working first...")]
     public sealed class ContractInvariantTests
     {
-
         [Test]
-        public void Public_constructor_runs_invariant_on_exit([Values] AttributeFlavour testCase)
+        public void Public_constructor_has_invariant_weaved_on_exit([Values] AttributeFlavour testCase)
         {
             Assert.That(ContractOptions.Current.Invariants, 
                 Is.EqualTo(ContractHandlingBehaviour.EventHandlersAndEscalation));

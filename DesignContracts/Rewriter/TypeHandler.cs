@@ -43,6 +43,22 @@ internal class TypeHandler
         }
     }
 
+    /// <summary>
+    /// Rewrites the type returning the number of members rewritten.
+    /// </summary>
+    /// <returns></returns>
+    public int Rewrite()
+    {
+        int rewritten = 0;
+        foreach (var member in GetMembersToTryRewrite())
+        {
+            if (!member.Rewrite())
+                continue;
+            rewritten++;
+        }
+        return rewritten;
+    }
+
     internal IReadOnlyList<MethodHandler> GetMembersToTryRewrite()
     {
         return _target.Methods.Select(c => new MethodHandler(c,this)).ToList();

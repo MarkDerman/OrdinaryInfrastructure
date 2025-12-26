@@ -21,7 +21,12 @@ internal class MethodHandler
     
     public MethodDefinition Method { get; }
     
-    public bool TryRewrite()
+    /// <summary>
+    /// Rewrites the type member returning true if any contract rewrites
+    /// were needed, and false if none were required.
+    /// </summary>
+    /// <returns></returns>
+    public bool Rewrite()
     {
         // Only handle sync (v1). We rely on analyzers to enforce this, but be defensive.
         // if (method.IsAsync)
@@ -50,6 +55,7 @@ internal class MethodHandler
         // Inject invariant call at entry (before any user code).
         if (invariantsToDo.OnEntry)
         {
+            // An instructionless member body is possible don't understand how or why 
             Instruction first = Method.Body.Instructions.FirstOrDefault() ?? Instruction.Create(OpCodes.Nop);
             if (Method.Body.Instructions.Count == 0)
                 il.Append(first);

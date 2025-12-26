@@ -21,6 +21,7 @@
     <!--  For working locally  -->
     <ItemGroup>
         <ProjectReference Include="../Core/Odin.DesignContracts.csproj"/>
+        <ProjectReference Include="../Tooling/Odin.DesignContracts.Tooling.csproj"/>
     </ItemGroup>
     <ItemGroup>
       <Compile Include="..\TargetsUnrewritten\BclInvariantTestTarget.cs">
@@ -36,4 +37,5 @@
         <Link>PostconditionsTestTarget.cs</Link>
       </Compile>
     </ItemGroup>
+    <Import Project="../Tooling/buildTransitive/Odin.DesignContracts.Tooling.targets"/>
 </Project>

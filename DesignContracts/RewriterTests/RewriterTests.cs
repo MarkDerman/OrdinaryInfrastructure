@@ -249,10 +249,10 @@ public sealed class RewriterTests
     
     
     [Test]
-    public void Single_postcondition_is_woven([Values("EnsuresPlus5A", "EnsuresPlus5B")] string methodName,
-        [Values(3, 130)] int testValue)
+    public void Single_postcondition_is_woven([Values("VoidSingleConditionSingleReturn")] string methodName,
+        [Values(-1, 1)] int testNumber)
     {
-        bool exceptionExpected = testValue > 100;
+        bool exceptionExpected = testNumber < 0;
         Type targetUnwrittenType = typeof(PostconditionsTestTarget);
         using RewrittenAssemblyContext context = new RewrittenAssemblyContext(targetUnwrittenType.Assembly);
         Type targetWrittenType = context.GetTypeOrThrow(targetUnwrittenType.FullName!);
@@ -265,7 +265,7 @@ public sealed class RewriterTests
             {
                 try
                 {
-                    CallMethod(targetWrittenType, ensuresTestTarget, methodName, [testValue]);
+                    CallMethod(targetWrittenType, ensuresTestTarget, methodName, [testNumber]);
                 }
                 catch (TargetInvocationException tie) when (tie.InnerException is not null)
                 {
@@ -277,7 +277,7 @@ public sealed class RewriterTests
         }
         else
         {
-            Assert.DoesNotThrow(() => CallMethod(targetWrittenType, ensuresTestTarget, methodName, [testValue]));
+            Assert.DoesNotThrow(() => CallMethod(targetWrittenType, ensuresTestTarget, methodName, [testNumber]));
         }
     }
 

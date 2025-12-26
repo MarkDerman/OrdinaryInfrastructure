@@ -69,7 +69,7 @@ internal static class Program
 
                 foreach (var member in currentType.GetMembersToTryRewrite())
                 {
-                    if (!member.TryRewrite())
+                    if (!member.Rewrite())
                         continue;
                     rewritten++;
                 }

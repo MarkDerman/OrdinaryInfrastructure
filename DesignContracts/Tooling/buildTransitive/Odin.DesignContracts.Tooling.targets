@@ -10,14 +10,15 @@
   <Target Name="OdinDesignContracts_Weaving"
           AfterTargets="CoreCompile"
           Inputs="$(IntermediateOutputPath)$(TargetFileName)"
-          Outputs="$(IntermediateOutputPath)$(TargetName).odin-design-contracts-weaved.dll"
+          Outputs="$(IntermediateOutputPath)$(TargetName).odin-design-contracts-weaved$(TargetExt)"
           Condition="'$(OdinDesignContractsWeaveEnabled)'=='true' and '$(TargetPath)'!=''">
 
     <PropertyGroup>
       <_OdinNetVersion>$(TargetFramework.Substring(3))</_OdinNetVersion>
       <_OdinDcRewriterPathCandidate>$(MSBuildThisFileDirectory)..\tools\net$(_OdinNetVersion)\any\Odin.DesignContracts.Rewriter.dll</_OdinDcRewriterPathCandidate>
       <_OdinDcRewriterPath Condition="Exists('$(_OdinDcRewriterPathCandidate)')">$(_OdinDcRewriterPathCandidate)</_OdinDcRewriterPath>
-      <_OdinDcRewriterPath Condition="'$(_OdinDcRewriterPath)'==''">$(MSBuildThisFileDirectory)..\tools\net10.0\any\Odin.DesignContracts.Rewriter.dll</_OdinDcRewriterPath>
+      <!-- Default to .Net 10 -->
+      <_OdinDcRewriterPath Condition="'$(_OdinDcRewriterPath)'==''">$(MSBuildThisFileDirectory)..\tools\net10.0\any\Odin.DesignContracts.Rewriter.dll</_OdinDcRewriterPath> 
       <_OdinDcWeavedAssembly>$(IntermediateOutputPath)$(AssemblyName).odin-design-contracts-weaved$(TargetExt)</_OdinDcWeavedAssembly>
       <_OdinDcWeavedPdb>$(IntermediateOutputPath)$(AssemblyName).odin-design-contracts-weaved.pdb</_OdinDcWeavedPdb>
     </PropertyGroup>

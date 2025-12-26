@@ -25,7 +25,7 @@ internal sealed class CecilAssemblyContext : IDisposable
         ReaderParameters readerParameters = new()
         {
             AssemblyResolver = resolver,
-            ReadSymbols = File.Exists(Path.ChangeExtension(assemblyPath, ".pdb"))
+            ReadSymbols = File.Exists(Path.ChangeExtension(assemblyPath, ".pdb")),
         };
 
         Assembly = AssemblyDefinition.ReadAssembly(assemblyPath, readerParameters);

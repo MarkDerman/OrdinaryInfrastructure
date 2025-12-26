@@ -1,7 +1,6 @@
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
-using Odin.System;
 
 namespace Odin.DesignContracts.Rewriter;
 
@@ -18,9 +17,9 @@ internal class MethodRewriter
         Method = method;
         _parentRewriter = parentRewriter;
     }
-    
+
     public MethodDefinition Method { get; }
-    
+
     /// <summary>
     /// Rewrites the type member returning true if any contract rewrites
     /// were needed, and false if none were required.
@@ -31,18 +30,18 @@ internal class MethodRewriter
         // Only handle sync (v1). We rely on analyzers to enforce this, but be defensive.
         // if (method.IsAsync)
         //     return false;
-        
+
         // What about properties? Surely these can have no body?
         if (!Method.HasBody) return false;
 
         Method.Body.SimplifyMacros();
-        
+
         InvariantWeavingRequirement invariantsToDo = IsInvariantToBeWeaved();
 
-        ResultValue<List<Instruction>> postconditionsFound = 
-            TryFindPostconditionCalls();
-        
-        if (!postconditionsFound.IsSuccess && 
+        List<Instruction> postconditionsFound =
+            TryFindPostconditionInstructions();
+
+        if (!postconditionsFound.Any() &&
             !invariantsToDo.OnEntry && !invariantsToDo.OnExit)
         {
             // Nothing to do.
@@ -65,20 +64,17 @@ internal class MethodRewriter
 
         // Remove the postconditions from the method when postconditions are present.
         // We could skip this as Contract.Ensures are all simply no-ops...?
-        if (postconditionsFound.IsSuccess)
+        foreach (Instruction instruction in postconditionsFound)
         {
-            foreach (Instruction instruction in postconditionsFound.Value)
-            {
-                // If the instruction was already removed as part of a previous remove, skip.
-                if (Method.Body.Instructions.Contains(instruction))
-                    il.Remove(instruction);
-            }
+            // If the instruction was already removed as part of a previous remove, skip.
+            if (Method.Body.Instructions.Contains(instruction))
+                il.Remove(instruction);
         }
 
         // If we need to inject postconditions and/or invariant calls at exit, do it per-return.
         // Todo: If there are multiple returns, create a shadow method to execute the
         // invariant and\or postconditions, calling it from each return.
-        if (postconditionsFound.IsSuccess || invariantsToDo.OnExit)
+        if (postconditionsFound.Any() || invariantsToDo.OnExit)
         {
             VariableDefinition? resultVar = null;
             bool isVoid = IsVoidReturnType();
@@ -98,19 +94,18 @@ internal class MethodRewriter
                     il.InsertBefore(returnInst, Instruction.Create(OpCodes.Stloc, resultVar!));
                 }
 
-                if (postconditionsFound.IsSuccess)
-                {
-                    foreach (Instruction inst in postconditionsFound.Value)
-                    {
-                        Instruction cloned = inst.CloneInstruction();
 
-                        if (!isVoid && IsResultCall(cloned))
-                        {
-                            // Replace call Contract.Result<T>() with ldloc resultVar.
-                            cloned = Instruction.Create(OpCodes.Ldloc, resultVar!);
-                        }
-                        il.InsertBefore(returnInst, cloned);
+                foreach (Instruction inst in postconditionsFound)
+                {
+                    Instruction cloned = inst.CloneInstruction();
+
+                    if (!isVoid && IsResultCall(cloned))
+                    {
+                        // Replace call Contract.Result<T>() with ldloc resultVar.
+                        cloned = Instruction.Create(OpCodes.Ldloc, resultVar!);
                     }
+
+                    il.InsertBefore(returnInst, cloned);
                 }
 
                 if (invariantsToDo.OnExit)
@@ -155,12 +150,12 @@ internal class MethodRewriter
             OnExit = weaveInvariantOnExit
         };
     }
-   
+
     /// <summary>
-    /// Returns success if 1 or more postcondition Ensures() calls were found.
+    /// Returns any postcondition Ensures() instruction calls found.
     /// </summary>
     /// <returns></returns>
-    public ResultValue<List<Instruction>> TryFindPostconditionCalls()
+    public List<Instruction> TryFindPostconditionInstructions()
     {
         // For V1 we will attempt to simply extract any Postcondition.Ensures()
         // calls from the method body if they exist. I am a total noob at IL so have no clue
@@ -171,7 +166,7 @@ internal class MethodRewriter
 
         IList<Instruction> instructions = Method.Body.Instructions;
         if (instructions.Count == 0)
-            return ResultValue<List<Instruction>>.Failure("Method has no instructions.");
+            return postconditionEnsuresCalls;
 
         int endIndex = -1;
         for (int i = 0; i < instructions.Count; i++)
@@ -183,20 +178,15 @@ internal class MethodRewriter
             }
         }
 
-        if (postconditionEnsuresCalls.Count ==0)
-        {
-            return ResultValue<List<Instruction>>.Failure("No Ensures calls.");
-        }
-
-        return ResultValue<List<Instruction>>.Success(postconditionEnsuresCalls);;
+        return postconditionEnsuresCalls;
     }
-    
+
     public static bool IsPostconditionEnsuresCall(Instruction inst)
         => IsStaticCallToPostconditionMethod(inst, "Ensures");
 
     public static bool IsResultCall(Instruction inst)
         => IsStaticCallToPostconditionMethod(inst, "Result");
-    
+
     public static bool IsStaticCallToPostconditionMethod(Instruction inst, string methodName)
     {
         if (inst.OpCode != OpCodes.Call)
@@ -212,7 +202,7 @@ internal class MethodRewriter
         string declaringType = mr.DeclaringType.FullName;
         return declaringType == Names.OdinPostconditionEnsuresTypeFullName;
     }
-    
+
     /// <summary>
     /// True if Method is a public instance method.
     /// </summary>
@@ -221,7 +211,7 @@ internal class MethodRewriter
     {
         return Method is { IsPublic: true, IsStatic: false };
     }
-    
+
     /// <summary>
     /// True if Method is marked as [Pure] or if it is a property accessor of a [Pure] property.
     /// </summary>
@@ -234,11 +224,11 @@ internal class MethodRewriter
         // For accessors, also honour [Pure] on the property itself.
         if (Method.IsGetter || Method.IsSetter)
         {
-            PropertyDefinition? prop = _parentRewriter.Type.Properties.
-                FirstOrDefault(p => p.GetMethod == Method || p.SetMethod == Method);
+            PropertyDefinition? prop = _parentRewriter.Type.Properties.FirstOrDefault(p => p.GetMethod == Method || p.SetMethod == Method);
             if (prop is not null && prop.HasAnyAttributeIn(Names.PureAttributeFullNames))
                 return true;
         }
+
         return false;
     }
 
@@ -248,21 +238,21 @@ internal class MethodRewriter
     /// <returns></returns>
     public bool IsVoidReturnType()
     {
-        return Method.ReturnType.MetadataType == MetadataType.Void;   
+        return Method.ReturnType.MetadataType == MetadataType.Void;
     }
 
     public bool IsInstanceConstructor()
     {
         return Method.IsConstructor && !Method.IsStatic;
     }
-    
+
     private void InsertInvariantCallBefore(ILProcessor il, Instruction before, MethodDefinition invariantMethod)
     {
         // instance.Invariant();
         il.InsertBefore(before, Instruction.Create(OpCodes.Ldarg_0));
         il.InsertBefore(before, Instruction.Create(OpCodes.Call, invariantMethod));
     }
-    
+
     internal record InvariantWeavingRequirement
     {
         public required bool OnEntry { get; init; }

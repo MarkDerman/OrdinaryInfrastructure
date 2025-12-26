@@ -20,6 +20,7 @@ public class AssemblyRewriter
     {
         TargetAssemblyPath = targetAssemblyPath;
         OutputPath = outputPath;
+
         if (!File.Exists(TargetAssemblyPath))
         {
             throw new FileNotFoundException($"Assembly not found: {TargetAssemblyPath}");
@@ -32,9 +33,9 @@ public class AssemblyRewriter
     /// as TargetPath is overwritten after a call to Rewrite()
     /// </summary>
     public string TargetAssemblyPath { get; }
-
-    internal bool DoesTargetAssemblyHaveDebugSymbols() 
-        => File.Exists(Path.ChangeExtension(TargetAssemblyPath, ".pdb"));
+    
+    internal string TargetAssemblyPdbPath 
+        => Path.ChangeExtension(TargetAssemblyPath, ".pdb"); 
 
     /// <summary>
     /// Optional path that the rewritten assembly should be written to, else TargetPath is overwritten.
@@ -54,13 +55,29 @@ public class AssemblyRewriter
         DefaultAssemblyResolver resolver = new();
         resolver.AddSearchDirectory(assemblyDir);
 
-        // Portable PDBs are optional. If present, Cecil will pick them up with ReadSymbols = true.
-        ReaderParameters readerParameters = new()
+        // Debug symbols in a .pdb file may or may not be present.
+        // We'll read them via a stream if present to ensure no issues when
+        ReaderParameters readerParameters;
+        bool symbolsPresent = File.Exists(TargetAssemblyPdbPath);
+        if (symbolsPresent)
+        { 
+            MemoryStream symbolStream = new MemoryStream(File.ReadAllBytes(TargetAssemblyPdbPath));
+            symbolStream.Seek(0, SeekOrigin.Begin);
+            readerParameters = new()
+            {
+                AssemblyResolver = resolver,
+                ReadSymbols = true,
+                SymbolStream = symbolStream
+            };
+        }
+        else
         {
-            AssemblyResolver = resolver,
-            ReadSymbols = DoesTargetAssemblyHaveDebugSymbols(),
-            ReadingMode = ReadingMode.Immediate
-        };
+            readerParameters = new()
+            {
+                AssemblyResolver = resolver,
+                ReadSymbols = false
+            };
+        }
 
         // Read the bytes into memory first to fully decouple the reader from the file on disk.
         using MemoryStream ms = new MemoryStream(File.ReadAllBytes(TargetAssemblyPath));
@@ -76,9 +93,8 @@ public class AssemblyRewriter
         }
         WriterParameters writerParameters = new()
         {
-            WriteSymbols = readerParameters.ReadSymbols
+            WriteSymbols = symbolsPresent
         };
         assembly.Write(GetOutputPath(), writerParameters);
-        Console.WriteLine($"Rewriter: {rewritten} methods rewritten.");
     }
 }

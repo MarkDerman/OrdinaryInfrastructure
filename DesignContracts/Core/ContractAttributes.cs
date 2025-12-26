@@ -14,19 +14,6 @@ namespace Odin.DesignContracts
     {
     }
     
-    // /// <summary>
-    // /// Indicates that the decorated method is intended to be used only by
-    // /// generated code for contract injection purposes.
-    // /// </summary>
-    // /// <remarks>
-    // /// This attribute is provided primarily as a hint to analyzers and code
-    // /// generation tooling. It has no effect at runtime.
-    // /// </remarks>
-    // [AttributeUsage(AttributeTargets.Method, Inherited = false)]
-    // public sealed class ContractGeneratedMethodAttribute : Attribute
-    // {
-    // }
-    
     /// <summary>
     /// Methods and classes marked with this attribute can be used within calls to Contract methods. Such methods do not make any state changes.
     /// </summary>

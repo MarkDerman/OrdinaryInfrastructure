@@ -16,16 +16,19 @@
             AfterTargets="CoreCompile"
             BeforeTargets="CopyFilesToOutputDirectory"
             Inputs="@(IntermediateAssembly);@(Compile);$(MSBuildProjectFullPath);$(Configuration);$(TargetFramework)"
-            Outputs="$(IntermediateOutputPath)WeaveDesignContracts.stamp"
+            Outputs="$(IntermediateOutputPath)OdinDesignContracts.stamp"
             Condition="'$(OdinDesignContractsWeaveEnabled)'=='true' and '$(TargetPath)'!=''">
+
+        <PropertyGroup>
+            <OdinDesignContractsAssemblyToRewritePath>$(MSBuildProjectDirectory)/$(IntermediateOutputPath)$(TargetFileName)</OdinDesignContractsAssemblyToRewritePath>
+        </PropertyGroup>
         
-        
-        <Message Text="Odin.DesignContracts: $(MSBuildProjectDirectory)/$(IntermediateOutputPath)$(TargetFileName)"/>
+        <Message Text="Odin.DesignContracts: Weaving design contracts into: $(OdinDesignContractsAssemblyToRewritePath)"/>
 
         <!-- Weave postconditions and invariants into the intermediary target. -->
         <!-- Debug symbols in the .pdb file are also handled -->
-        <WeaveDesignContracts AssemblyToRewritePath="$(MSBuildProjectDirectory)/$(IntermediateOutputPath)$(TargetFileName)" />
+        <WeaveDesignContracts AssemblyToRewritePath="$(OdinDesignContractsAssemblyToRewritePath)" />
 
-        <Touch Files="$(IntermediateOutputPath)WeaveDesignContracts.stamp" AlwaysCreate="true" />
+        <Touch Files="$(IntermediateOutputPath)OdinDesignContracts.stamp" AlwaysCreate="true" />
     </Target>
 </Project>

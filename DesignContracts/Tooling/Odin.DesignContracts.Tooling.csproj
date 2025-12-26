@@ -18,15 +18,18 @@
 
     <!-- Mimic inclusion of Rewriter at pack time in the tools folder as part of compile process for local development -->
     <Target Name="CopyRewriterOutputToTools" AfterTargets="Build">
-        <ItemGroup>
-
-        </ItemGroup>
-        <Copy SourceFiles="$(MSBuildProjectDirectory)/../Rewriter/bin/$(Configuration)/$(TargetFramework)/Odin.DesignContracts.Rewriter.dll"
-              DestinationFolder="$(MSBuildProjectDirectory)/tools/$(TargetFramework)/any/"/>
-        <Copy SourceFiles="$(MSBuildProjectDirectory)/../Rewriter/bin/$(Configuration)/$(TargetFramework)/Odin.DesignContracts.Rewriter.runtimeconfig.json"
-              DestinationFolder="$(MSBuildProjectDirectory)/tools/$(TargetFramework)/any/"/>
-        <Copy SourceFiles="$(MSBuildProjectDirectory)/../Rewriter/bin/$(Configuration)/$(TargetFramework)/Odin.DesignContracts.Rewriter.deps.json"
-              DestinationFolder="$(MSBuildProjectDirectory)/tools/$(TargetFramework)/any/"/>
+        <PropertyGroup>
+            <RewriterBinDirectory>$(MSBuildProjectDirectory)/../Rewriter/bin/$(Configuration)/$(TargetFramework)/</RewriterBinDirectory>
+            <LocalToolsDirectory>$(MSBuildProjectDirectory)/tools/$(TargetFramework)/any/</LocalToolsDirectory>
+        </PropertyGroup>
+        <Copy SourceFiles="$(RewriterBinDirectory)Mono.Cecil.dll;$(RewriterBinDirectory)Mono.Cecil.mdb.dll;$(RewriterBinDirectory)Mono.Cecil.Pdb.dll;$(RewriterBinDirectory)Mono.Cecil.Rocks.dll"
+              DestinationFolder="$(LocalToolsDirectory)"/>
+        <Copy SourceFiles="$(RewriterBinDirectory)Odin.DesignContracts.Rewriter.dll"
+              DestinationFolder="$(LocalToolsDirectory)"/>
+        <Copy SourceFiles="$(RewriterBinDirectory)Odin.DesignContracts.Rewriter.runtimeconfig.json"
+              DestinationFolder="$(LocalToolsDirectory)"/>
+        <Copy SourceFiles="$(RewriterBinDirectory)Odin.DesignContracts.Rewriter.deps.json"
+              DestinationFolder="$(LocalToolsDirectory)"/>
     </Target>
 
     <ItemGroup>

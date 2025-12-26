@@ -58,9 +58,9 @@ public sealed class RewriterTests
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
         object instance = Activator.CreateInstance(t, 1)!;
-        SetPrivateField(t, instance, "_value", -1);
+        TestSupport.SetPrivateField(t, instance, "_value", -1);
 
-        Exception? ex = Assert.Catch(() => { Invoke(t, instance, nameof(OdinInvariantTestTarget.Increment)); })!;
+        Exception? ex = Assert.Catch(() => { TestSupport.Invoke(t, instance, nameof(OdinInvariantTestTarget.Increment)); })!;
 
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex.Message, Contains.Substring("Invariant broken:"));
@@ -76,7 +76,7 @@ public sealed class RewriterTests
 
         object instance = Activator.CreateInstance(t, 1)!;
 
-        Exception? ex = Assert.Catch(() => { Invoke(t, instance, nameof(OdinInvariantTestTarget.MakeInvalid)); })!;
+        Exception? ex = Assert.Catch(() => { TestSupport.Invoke(t, instance, nameof(OdinInvariantTestTarget.MakeInvalid)); })!;
 
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex.Message, Contains.Substring("Invariant broken:"));
@@ -90,10 +90,10 @@ public sealed class RewriterTests
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
         object instance = Activator.CreateInstance(t, 1)!;
-        SetPrivateField(t, instance, "_value", -1);
+        TestSupport.SetPrivateField(t, instance, "_value", -1);
 
         // If [Pure] is honoured, this returns the invalid value without invariant checks throwing.
-        object? result = Invoke(t, instance, "PureGetValue");
+        object? result = TestSupport.Invoke(t, instance, "PureGetValue");
 
         Assert.That(result, Is.EqualTo(-1));
     }
@@ -106,9 +106,9 @@ public sealed class RewriterTests
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
         object instance = Activator.CreateInstance(t, 1)!;
-        SetPrivateField(t, instance, "_value", -1);
+        TestSupport.SetPrivateField(t, instance, "_value", -1);
 
-        object? value = Invoke(t, instance, "get_PureProperty");
+        object? value = TestSupport.Invoke(t, instance, "get_PureProperty");
 
         Assert.That(value, Is.EqualTo(-1));
     }
@@ -121,7 +121,7 @@ public sealed class RewriterTests
         Type t = context.GetTypeOrThrow(targetType.FullName!);
 
         object instance = Activator.CreateInstance(t, 1)!;
-        SetPrivateField(t, instance, "_value", -1);
+        TestSupport.SetPrivateField(t, instance, "_value", -1);
 
         PropertyInfo p = t.GetProperty("NonPureProperty")!;
 
@@ -281,34 +281,12 @@ public sealed class RewriterTests
             Assert.DoesNotThrow(() => CallMethod(targetWrittenType, ensuresTestTarget, methodName, [testNumber]));
         }
     }
-
-    private static void SetPrivateField(Type declaringType, object instance, string fieldName, object? value)
-    {
-        FieldInfo f = declaringType.GetField(fieldName, BindingFlags.Instance | BindingFlags.NonPublic)
-                      ?? throw new InvalidOperationException($"Missing field '{fieldName}'.");
-        f.SetValue(instance, value);
-    }
     
     private static void CallMethod(Type declaringType, object instance, string methodName, object[] parameters)
     {
         MethodInfo method = declaringType.GetMethods().FirstOrDefault(m => m.Name == methodName)
                       ?? throw new InvalidOperationException($"Missing method '{methodName}'.");
         method.Invoke(instance, parameters);
-    }
-
-    private static object? Invoke(Type declaringType, object instance, string methodName)
-    {
-        MethodInfo m = declaringType.GetMethod(methodName, BindingFlags.Instance | BindingFlags.Public)
-                       ?? throw new InvalidOperationException($"Missing method '{methodName}'.");
-
-        try
-        {
-            return m.Invoke(instance, null);
-        }
-        catch (TargetInvocationException tie) when (tie.InnerException is not null)
-        {
-            throw tie.InnerException;
-        }
     }
     
     private Type GetTargetTestTypeFor(AttributeFlavour testCase)

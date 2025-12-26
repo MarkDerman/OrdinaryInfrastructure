@@ -24,4 +24,10 @@
     <ProjectReference Include="..\TargetsUnrewritten\TargetsUnrewritten.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Include="..\CoreTests\TestSupport.cs">
+      <Link>TestSupport.cs</Link>
+    </Compile>
+  </ItemGroup>
+
 </Project>

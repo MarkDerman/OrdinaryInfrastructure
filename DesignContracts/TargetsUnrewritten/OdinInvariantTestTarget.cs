@@ -18,7 +18,7 @@ namespace Targets
         [ClassInvariantMethod]
         public void ObjectInvariant()
         {
-            Contract.Invariant(_value >= 0, "_value must be non-negative", "_value >= 0");
+            Contract.Invariant(_value >= 0, "value must be non-negative");
         }
 
         public void Increment()

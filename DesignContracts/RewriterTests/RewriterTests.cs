@@ -41,12 +41,7 @@ public sealed class RewriterTests
             }
         });
         Assert.That(exception, Is.Not.Null);
-        Assert.That(exception!.Message, Is.EqualTo("Invariant broken: _value must be non-negative [Condition: _value >= 0]"));
-        // Because the ContractException thrown is from the dynamically loaded RewrittenAssemblyContext
-        // it does not seem castable to ContractException....
-        // Assert.That(exception, Is.InstanceOf<ContractException>());
-        // ContractException ex = (ContractException)exception!;
-        // Assert.That(ex!.Kind, Is.EqualTo(ContractFailureKind.Invariant));
+        Assert.That(exception!.Message, Is.EqualTo("Invariant broken: value must be non-negative"));
     }
 
     [Test]

@@ -19,7 +19,8 @@ public sealed class TypeRewriterTests
         TypeRewriter sut = new TypeRewriter(typeDef!);
         
         Assert.That(sut.HasInvariant, Is.EqualTo(invariantExpected));
-        if (invariantExpected) Assert.That(sut.InvariantMethod, Is.Not.Null);
+        if (invariantExpected) 
+            Assert.That(sut.InvariantMethod, Is.Not.Null);
     }
 
 }

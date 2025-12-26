@@ -25,11 +25,12 @@ internal sealed class RewrittenAssemblyContext : IDisposable
         CopyIfExists(Path.ChangeExtension(sourceAssembly.Location, ".pdb"), Path.Combine(_tempDir, Path.GetFileName(Path.ChangeExtension(sourceAssembly.Location, ".pdb"))));
         CopyIfExists(Path.ChangeExtension(sourceAssembly.Location, ".deps.json"), Path.Combine(_tempDir, Path.GetFileName(Path.ChangeExtension(sourceAssembly.Location, ".deps.json"))));
         
-        var rewriter = new AssemblyRewriter(inputPath);
+        string outputPath = Path.Combine(_tempDir, "rewritten.dll");
+        var rewriter = new AssemblyRewriter(inputPath,outputPath);
         rewriter.Rewrite();
 
-        _alc = new TestAssemblyLoadContext(rewriter.OutputPath);
-        RewrittenAssembly = _alc.LoadFromAssemblyPath(rewriter.OutputPath);
+        _alc = new TestAssemblyLoadContext(outputPath);
+        RewrittenAssembly = _alc.LoadFromAssemblyPath(outputPath);
     }
 
     public Type GetTypeOrThrow(string fullName)

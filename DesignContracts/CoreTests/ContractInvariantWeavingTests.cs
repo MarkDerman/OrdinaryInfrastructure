@@ -53,6 +53,7 @@ namespace Tests.Odin.DesignContracts
             Assert.That(contractException.Kind, Is.EqualTo(ContractKind.Invariant));
             Assert.That(contractException.UserMessage, Is.EqualTo("value must be non-negative"));
             Assert.That(contractException.ConditionText, Is.Null);
+            Assert.That(contractException.Message, Is.EqualTo("Invariant broken: value must be non-negative"));
         }
     }
 }

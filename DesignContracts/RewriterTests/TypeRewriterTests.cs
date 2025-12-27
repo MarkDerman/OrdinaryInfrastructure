@@ -1,4 +1,5 @@
 using Mono.Cecil;
+using Moq;
 using NUnit.Framework;
 using Odin.DesignContracts.Rewriter;
 using Targets;
@@ -16,7 +17,7 @@ public sealed class TypeRewriterTests
     {
         CecilAssemblyContext context = CecilAssemblyContext.GetTargetsUntooledAssemblyContext();
         TypeDefinition? typeDef = context.FindType(type.FullName!);
-        TypeRewriter sut = new TypeRewriter(typeDef!);
+        TypeRewriter sut = new TypeRewriter(typeDef!, new Mock<ILoggingAdaptor>().Object);
         
         Assert.That(sut.HasInvariant, Is.EqualTo(invariantExpected));
         if (invariantExpected) 

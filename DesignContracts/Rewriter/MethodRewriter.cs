@@ -1,3 +1,4 @@
+using Microsoft.Build.Framework;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Rocks;
@@ -36,13 +37,9 @@ internal class MethodRewriter
 
         Method.Body.SimplifyMacros();
 
-        InvariantWeavingRequirement invariantsToDo = IsInvariantToBeWeaved();
+        MethodWeavingResult weaving = new MethodWeavingResult(IsInvariantToBeWeaved(), TryFindPostconditionInstructions());
 
-        List<Instruction> postconditionsFound =
-            TryFindPostconditionInstructions();
-
-        if (!postconditionsFound.Any() &&
-            !invariantsToDo.OnEntry && !invariantsToDo.OnExit)
+        if (weaving.NothingToWeave)
         {
             // Nothing to do.
             Method.Body.OptimizeMacros();
@@ -52,19 +49,19 @@ internal class MethodRewriter
         ILProcessor il = Method.Body.GetILProcessor();
 
         // Inject invariant call at entry (before any user code).
-        if (invariantsToDo.OnEntry)
+        if (weaving.Invariant.OnEntry)
         {
-            // An instructionless member body is possible don't understand how or why 
+            // An instructionless member body is possible... I suppose the member could have been stubbed. 
             Instruction first = Method.Body.Instructions.FirstOrDefault() ?? Instruction.Create(OpCodes.Nop);
             if (Method.Body.Instructions.Count == 0)
                 il.Append(first);
-
+            
             InsertInvariantCallBefore(il, first, _parentRewriter.InvariantMethod!);
         }
 
         // Remove the postconditions from the method when postconditions are present.
         // We could skip this as Contract.Ensures are all simply no-ops...?
-        foreach (Instruction instruction in postconditionsFound)
+        foreach (Instruction instruction in weaving.PostconditionsToWeave)
         {
             // If the instruction was already removed as part of a previous remove, skip.
             if (Method.Body.Instructions.Contains(instruction))
@@ -74,7 +71,7 @@ internal class MethodRewriter
         // If we need to inject postconditions and/or invariant calls at exit, do it per-return.
         // Todo: If there are multiple returns, create a shadow method to execute the
         // invariant and\or postconditions, calling it from each return.
-        if (postconditionsFound.Any() || invariantsToDo.OnExit)
+        if (weaving.OnExitWeavingRequired)
         {
             VariableDefinition? resultVar = null;
             bool isVoid = IsVoidReturnType();
@@ -95,7 +92,7 @@ internal class MethodRewriter
                 }
 
 
-                foreach (Instruction inst in postconditionsFound)
+                foreach (Instruction inst in weaving.PostconditionsToWeave)
                 {
                     Instruction cloned = inst.CloneInstruction();
 
@@ -108,7 +105,7 @@ internal class MethodRewriter
                     il.InsertBefore(returnInst, cloned);
                 }
 
-                if (invariantsToDo.OnExit)
+                if (weaving.Invariant.OnExit)
                 {
                     InsertInvariantCallBefore(il, returnInst, _parentRewriter.InvariantMethod!);
                 }
@@ -119,12 +116,29 @@ internal class MethodRewriter
                 }
             }
         }
-
         Method.Body.OptimizeMacros();
+
+        string invariantResult;
+        if (weaving.Invariant.BothEntryAndExit)
+        {
+            invariantResult = " invariant calls (entry & exit)";
+        }
+        else if (weaving.Invariant.NeitherEntryNorExit)
+        {
+            invariantResult = "";
+        }
+        else
+        {
+            invariantResult = weaving.Invariant.OnEntry ? " invariant call (on entry)" : " invariant call (on exit)";
+        }
+        string postconditionResult = weaving.PostconditionsToWeave.Any() ? " postcondition calls" : "";
+        if (invariantResult!="" && postconditionResult!="") postconditionResult=" and " + postconditionResult;
+        string message = $"Weaved{invariantResult}{postconditionResult} into {Method.Name} of type {_parentRewriter.Type.FullName}.";
+        _parentRewriter.Logger.LogMessage(LogImportance.Low, message);
         return true;
     }
 
-    public InvariantWeavingRequirement IsInvariantToBeWeaved()
+    public InvariantWeavingResult IsInvariantToBeWeaved()
     {
         bool canWeaveInvariant = _parentRewriter.HasInvariant && IsPublicInstanceMethod();
         bool isInvariantMethodItself = _parentRewriter.InvariantMethod is not null && Method == _parentRewriter.InvariantMethod;
@@ -144,7 +158,7 @@ internal class MethodRewriter
             weaveInvariantOnExit = false;
         }
 
-        return new InvariantWeavingRequirement()
+        return new InvariantWeavingResult()
         {
             OnEntry = weaveInvariantOnEntry,
             OnExit = weaveInvariantOnExit
@@ -167,8 +181,7 @@ internal class MethodRewriter
         IList<Instruction> instructions = Method.Body.Instructions;
         if (instructions.Count == 0)
             return postconditionEnsuresCalls;
-
-        int endIndex = -1;
+        
         for (int i = 0; i < instructions.Count; i++)
         {
             Instruction inst = instructions[i];
@@ -253,9 +266,25 @@ internal class MethodRewriter
         il.InsertBefore(before, Instruction.Create(OpCodes.Call, invariantMethod));
     }
 
-    internal record InvariantWeavingRequirement
+    internal record InvariantWeavingResult
     {
         public required bool OnEntry { get; init; }
         public required bool OnExit { get; init; }
+        public bool BothEntryAndExit => OnEntry && OnExit;
+        public bool NeitherEntryNorExit => !OnEntry && !OnExit;
     }
+    
+    internal record MethodWeavingResult
+    {
+        public MethodWeavingResult(InvariantWeavingResult invariant, List<Instruction> postconditionsFound)
+        {
+            Invariant = invariant;
+            PostconditionsToWeave = postconditionsFound;
+        }
+        public InvariantWeavingResult Invariant { get; }
+        public List<Instruction> PostconditionsToWeave { get; }
+        public bool NothingToWeave => !PostconditionsToWeave.Any() && !Invariant.OnEntry && !Invariant.OnExit;
+        public bool OnExitWeavingRequired => PostconditionsToWeave.Any() || Invariant.OnExit;
+    }
+    
 }

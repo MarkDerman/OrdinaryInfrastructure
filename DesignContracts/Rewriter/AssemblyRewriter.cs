@@ -1,3 +1,4 @@
+using Microsoft.Build.Framework;
 using Mono.Cecil;
 
 namespace Odin.DesignContracts.Rewriter;
@@ -5,51 +6,58 @@ namespace Odin.DesignContracts.Rewriter;
 /// <summary>
 /// Handles Design-by-Contract rewriting of a given assembly.
 /// </summary>
-public class AssemblyRewriter
+internal class AssemblyRewriter
 {
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="targetAssemblyPath">The input assembly path,
     /// typically in the 'intermediate build output' under the 'obj' folder.</param>
-    /// <param name="outputPath">If omitted, defaults to 'InputAssembly.odin-design-contracts-weaved.dll'
+    /// <param name="logger"></param>
+    /// <param name="alternativeOutputPath">If omitted, defaults to 'InputAssembly.odin-design-contracts-weaved.dll'
     /// in the same folder as the input assembly.</param>
     /// <exception cref="FileNotFoundException">Thrown if the assembly to rewrite does not exist.</exception>
-    public AssemblyRewriter(string targetAssemblyPath,
-        string? outputPath = null)
+    internal AssemblyRewriter(string targetAssemblyPath, ILoggingAdaptor logger,
+        string? alternativeOutputPath = null)
     {
         TargetAssemblyPath = targetAssemblyPath;
-        OutputPath = outputPath;
+        _logger = logger;
+        AlternativeOutputPath = alternativeOutputPath;
 
         if (!File.Exists(TargetAssemblyPath))
         {
-            throw new FileNotFoundException($"Assembly not found: {TargetAssemblyPath}");
+            var msg = $"Assembly not found: {TargetAssemblyPath}";
+            _logger.LogMessage(LogImportance.High,msg);
+            throw new FileNotFoundException(msg);
         }
     }
+
+    private readonly ILoggingAdaptor _logger;
     
     /// <summary>
     /// The assembly to rewrite. Note that if OutputPath is specified,
     /// the rewritten assembly is saved to OutputPath, else the assembly located
     /// as TargetPath is overwritten after a call to Rewrite()
     /// </summary>
-    public string TargetAssemblyPath { get; }
+    internal string TargetAssemblyPath { get; }
     
     internal string TargetAssemblyPdbPath 
         => Path.ChangeExtension(TargetAssemblyPath, ".pdb"); 
 
     /// <summary>
-    /// Optional path that the rewritten assembly should be written to, else TargetPath is overwritten.
+    /// Optional alternative path that the rewritten assembly should be written to,
+    /// else TargetAssemblyPath is overwritten by default.
     /// </summary>
-    public string? OutputPath { get; }
+    internal string? AlternativeOutputPath { get; }
     
-    internal string GetOutputPath()
-        => OutputPath ?? TargetAssemblyPath;
+    private string GetOutputPath()
+        => AlternativeOutputPath ?? TargetAssemblyPath;
     
     /// <summary>
     /// Writes invariants and postconditions into the assembly at TargetPath,
     /// or OutputPath if specified.
     /// </summary>
-    public void Rewrite()
+    internal void Rewrite()
     {
         string assemblyDir = Path.GetDirectoryName(Path.GetFullPath(TargetAssemblyPath))!;
         DefaultAssemblyResolver resolver = new();
@@ -87,7 +95,7 @@ public class AssemblyRewriter
         {
             foreach (TypeDefinition type in module.GetTypes())
             {
-                TypeRewriter currentType = new(type);
+                TypeRewriter currentType = new(type, _logger);
                 rewritten += currentType.Rewrite();
             }
         }

@@ -1,3 +1,4 @@
+using Microsoft.Build.Framework;
 using Mono.Cecil;
 
 namespace Odin.DesignContracts.Rewriter;
@@ -10,28 +11,33 @@ internal class TypeRewriter
     private readonly TypeDefinition _target;
     private MethodDefinition? _invariant;
     private bool _invariantSearched = false;
-    
+    private ILoggingAdaptor _logger;
+
     /// <summary>
     /// Constructor
     /// </summary>
     /// <param name="target"></param>
-    public TypeRewriter(TypeDefinition target)
+    /// <param name="logger"></param>
+    internal TypeRewriter(TypeDefinition target, ILoggingAdaptor logger)
     {
         if (target == null!) throw new ArgumentNullException(nameof(target));
         _target = target;
+        _logger = logger;
     }
 
     /// <summary>
     /// The enclosed Type being handled.
     /// </summary>
-    public TypeDefinition Type => _target;
+    internal TypeDefinition Type => _target;
     
-    public bool HasInvariant => InvariantMethod!=null;
+    internal ILoggingAdaptor Logger => _logger;
+    
+    internal bool HasInvariant => InvariantMethod!=null;
 
     /// <summary>
     /// Null if none was found.
     /// </summary>
-    public MethodDefinition? InvariantMethod
+    internal MethodDefinition? InvariantMethod
     {
         get
         {
@@ -47,7 +53,7 @@ internal class TypeRewriter
     /// Rewrites the type returning the number of members rewritten.
     /// </summary>
     /// <returns></returns>
-    public int Rewrite()
+    internal int Rewrite()
     {
         int rewritten = 0;
         foreach (var member in GetMembersToTryRewrite())
@@ -66,7 +72,6 @@ internal class TypeRewriter
 
     internal void FindInvariantMethodOrThrow()
     {
-        var allAttributes = _target.Methods.SelectMany(m => m.CustomAttributes).ToList();
         List<MethodDefinition> candidates = _target.Methods
             .Where(m => m.HasAnyAttributeIn(Names.InvariantAttributeFullNames))
             .ToList();
@@ -97,6 +102,7 @@ internal class TypeRewriter
         if (!invariant.HasBody)
             throw new InvalidOperationException($"Invariant method must have a body: {invariant.FullName}");
         
+        _logger.LogMessage(LogImportance.Low, $"Found invariant method: {invariant.FullName} to weave for type {_target.FullName}.");
         _invariant = invariant;
     }
     

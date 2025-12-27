@@ -1,4 +1,5 @@
 using Mono.Cecil;
+using Moq;
 using NUnit.Framework;
 using Odin.DesignContracts.Rewriter;
 using Targets;
@@ -25,7 +26,7 @@ public sealed class MethodRewriterTests
     private MethodRewriter? GetMethodHandlerFor(CecilAssemblyContext context, Type type, string methodName)
     {
         TypeDefinition? typeDef = context.FindType(type.FullName!);
-        TypeRewriter rewriter = new TypeRewriter(typeDef!);
+        TypeRewriter rewriter = new TypeRewriter(typeDef!, new Mock<ILoggingAdaptor>().Object);
         MethodDefinition? def = rewriter.Type.Methods.FirstOrDefault(n => n.Name == methodName);
         return new MethodRewriter(def!, rewriter);
     }

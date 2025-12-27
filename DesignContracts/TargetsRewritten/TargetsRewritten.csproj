@@ -21,7 +21,7 @@
     <!--  For working locally  -->
     <ItemGroup>
         <ProjectReference Include="../Core/Odin.DesignContracts.csproj"/>
-        <ProjectReference Include="../Tooling/Odin.DesignContracts.Tooling.csproj"/>
+        <ProjectReference Include="../Tooling/Odin.DesignContracts.Tooling.csproj" ReferenceOutputAssembly="false"/>
     </ItemGroup>
     <ItemGroup>
       <Compile Include="..\TargetsUnrewritten\BclInvariantTestTarget.cs">

@@ -1,6 +1,7 @@
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using Mono.Cecil;
+using Moq;
 using NUnit.Framework;
 using Odin.DesignContracts;
 using Odin.DesignContracts.Rewriter;
@@ -173,7 +174,7 @@ public sealed class RewriterTests
         // Act + Assert
         string outputPath = Path.Combine(temp.Path, "out.dll");
         InvalidOperationException? expectedError = Assert.Throws<InvalidOperationException>(() => 
-            new AssemblyRewriter(inputPath, outputPath).Rewrite());
+            new AssemblyRewriter(inputPath, new Mock<ILoggingAdaptor>().Object, outputPath).Rewrite());
         Assert.That(expectedError, Is.Not.Null);
     }
 

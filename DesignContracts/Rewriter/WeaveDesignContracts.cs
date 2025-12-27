@@ -13,15 +13,16 @@ public class WeaveDesignContracts : Microsoft.Build.Utilities.Task
     /// <returns></returns>
     public override bool Execute()
     {
+        var logger = new MsBuildLoggingAdaptor(Log);
         try
         {
-            AssemblyRewriter contractsRewriter = new AssemblyRewriter(AssemblyToRewritePath);
+            AssemblyRewriter contractsRewriter = new AssemblyRewriter(AssemblyToRewritePath, logger);
             contractsRewriter.Rewrite();
             return true;
         }
         catch (Exception err)
         {
-            Log.LogError($"{Names.OdinDesignContractsNamespace}: Unexpected error while rewriting assembly {AssemblyToRewritePath}.");
+            Log.LogMessage(MessageImportance.High,$"{Names.OdinDesignContractsNamespace}: Unhandled error while rewriting assembly {AssemblyToRewritePath}.");
             Log.LogErrorFromException(err,true,true,AssemblyToRewritePath);
             return false;
         }

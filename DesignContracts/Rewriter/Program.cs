@@ -1,3 +1,5 @@
+using Microsoft.Build.Framework;
+
 namespace Odin.DesignContracts.Rewriter;
 
 /// <summary>
@@ -7,13 +9,11 @@ namespace Odin.DesignContracts.Rewriter;
 /// </summary>
 internal static class Program
 {
-    private const string Rewriter = "Odin.DesignContracts.Rewriter";
-
     private static int Main(string[] args)
     {
         if (args.Length < 1)
         {
-            Console.Error.WriteLine($"{Rewriter}: Usage 'dotnet {Rewriter}.dll <assemblyPath> <optional:outputAssemblyPath>'");
+            Console.Error.WriteLine($"{Names.OdinDesignContractsRewriter}: Usage 'dotnet {Names.OdinDesignContractsRewriter}.dll <assemblyPath> <optional:outputAssemblyPath>'");
             return 3;
         }
 
@@ -26,20 +26,21 @@ internal static class Program
 
         if (!File.Exists(assemblyPath))
         {
-            Console.Error.WriteLine($"{Rewriter}: Input assembly not found: {assemblyPath}");
+            Console.Error.WriteLine($"{Names.OdinDesignContractsRewriter}: Input assembly not found: {assemblyPath}");
             return 2;
         }
 
+        var logger = new ConsoleLoggingAdaptor();
         try
         {
-            AssemblyRewriter contractsRewriter = new AssemblyRewriter(assemblyPath, outputPath);
+            AssemblyRewriter contractsRewriter = new AssemblyRewriter(assemblyPath, logger,outputPath);
             contractsRewriter.Rewrite();
             return 0;
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"{Rewriter}: Unexpected error while rewriting assembly...");
-            Console.Error.WriteLine($"{Rewriter}: {ex.Message}");
+            logger.LogMessage(LogImportance.High,$"{Names.OdinDesignContractsRewriter}: Unexpected error while rewriting assembly..." );
+            logger.LogErrorFromException(ex, true, true,assemblyPath);
             return 1;
         }
     }

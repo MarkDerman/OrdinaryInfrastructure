@@ -47,11 +47,9 @@ provides several **'Result'** classes, which all encapsulate the success of an o
 
 **ResultEx** and **ResultValueEx<TValue>** come with a TMessage type that is aligned with logging failure issues.
 
-[Read more...](System/Result)
+[Getting starting with Result, ResultValue<TValue>, and more...](System/Result)
 
-## Getting Started
-
-### 1 - Result: Success() and Failure()
+1 - Success() and Failure()
 
 ```csharp
     public class HeartOfGoldService
@@ -59,10 +57,11 @@ provides several **'Result'** classes, which all encapsulate the success of an o
         public Result WarpSpeedToMilliways()
         {
             if (_eddie.IsOK()) return Result.Success();
-            return Result.Failure(["Zaphod, that is not possible with an Infinite Improbability Drive", "Error 42"])
+            return Result.Failure(["Zaphod, that is not possible...", "Error 42"])
         }
     }
 ```
+[Result documentation...](System/Result)
 
 ## Email Sending :email:
 
@@ -217,14 +216,15 @@ as well as a useful StringEnumMemberAttribute. [Read more...](System/StringEnum)
 
 In various states of incubation, deprecation or neglect...
 
-| Area                                                                               | Description                                                                                                                    | Status          |                                                               Version                                                                |
-|:-----------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------|-----------------|:------------------------------------------------------------------------------------------------------------------------------------:|
-| [Remote files \ SFTP \ FTPS](https://www.nuget.org/packages?q=Odin.RemoteFiles)    | An abstraction of SFTP and FTPS file operations.                                                                               | Needs attention |           [![NuGet](https://img.shields.io/nuget/v/Odin.RemoteFiles.svg)](https://www.nuget.org/packages/Odin.RemoteFiles)           |
-| [SQL scripts runner](https://www.nuget.org/packages?q=Odin.Data)                   | Useful for running database migration scripts at application deployment time.                                                  |                 | [![NuGet](https://img.shields.io/nuget/v/Odin.Data.SQLScriptsRunner.svg)](https://www.nuget.org/packages/Odin.Data.SQLScriptsRunner) |
-| [Utility - Tax](https://www.nuget.org/packages?q=Odin.Utility.Tax)                 | Simple support for storing tax rate changes over time in application configuration, and then getting tax rates as at any date. | No docs         |           [![NuGet](https://img.shields.io/nuget/v/Odin.Utility.Tax.svg)](https://www.nuget.org/packages/Odin.Utility.Tax)           |
-| [BackgroundProcessing](https://www.nuget.org/packages?q=Odin.BackgroundProcessing) | Wrapper around Hangfire                                                                                                        | Deprecated      |  [![NuGet](https://img.shields.io/nuget/v/Odin.BackgroundProcessing.svg)](https://www.nuget.org/packages/Odin.BackgroundProcessing)  |
-| [Notifications](https://www.nuget.org/packages?q=Odin.Notifications)               | Messaging                                                                                                                      | Incubator       |         [![NuGet](https://img.shields.io/nuget/v/Odin.Notifications.svg)](https://www.nuget.org/packages/Odin.Notifications)         |
-| [Cryptography](https://www.nuget.org/packages?q=Odin.Cryptography)                 | Wrapper around IDataProtector                                                                                                  | Deprecated      |          [![NuGet](https://img.shields.io/nuget/v/Odin.Cryptography.svg)](https://www.nuget.org/packages/Odin.Cryptography)           |
+| Area                                                                                                | Description                                                                                                                    | Status          |                                                                      Version                                                                      |
+|:----------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------|-----------------|:-------------------------------------------------------------------------------------------------------------------------------------------------:|
+| [Remote files \ SFTP \ FTPS](https://www.nuget.org/packages?q=Odin.RemoteFiles)                     | An abstraction of SFTP and FTPS file operations.                                                                               | Needs attention |                 [![NuGet](https://img.shields.io/nuget/v/Odin.RemoteFiles.svg)](https://www.nuget.org/packages/Odin.RemoteFiles)                  |
+| [Configuration - AzureBlobJson ](https://www.nuget.org/packages?q=Odin.Configuration.AzureBlobJson) | Support for json configuration source in Azure Blob Storage                                                                    |                 | [![NuGet](https://img.shields.io/nuget/v/Odin.Configuration.AzureBlobJson.svg)](https://www.nuget.org/packages/Odin.Configuration.AzureBlobJson ) |
+| [SQL scripts runner](https://www.nuget.org/packages?q=Odin.Data)                                    | Useful for running database migration scripts at application deployment time.                                                  |                 |       [![NuGet](https://img.shields.io/nuget/v/Odin.Data.SQLScriptsRunner.svg)](https://www.nuget.org/packages/Odin.Data.SQLScriptsRunner)        |
+| [Utility - Tax](https://www.nuget.org/packages?q=Odin.Utility.Tax)                                  | Simple support for storing tax rate changes over time in application configuration, and then getting tax rates as at any date. | No docs         |                 [![NuGet](https://img.shields.io/nuget/v/Odin.Utility.Tax.svg)](https://www.nuget.org/packages/Odin.Utility.Tax)                  |
+| [BackgroundProcessing](https://www.nuget.org/packages?q=Odin.BackgroundProcessing)                  | Wrapper around Hangfire                                                                                                        | Deprecated      |        [![NuGet](https://img.shields.io/nuget/v/Odin.BackgroundProcessing.svg)](https://www.nuget.org/packages/Odin.BackgroundProcessing)         |
+| [Notifications](https://www.nuget.org/packages?q=Odin.Notifications)                                | Messaging                                                                                                                      | Incubator       |               [![NuGet](https://img.shields.io/nuget/v/Odin.Notifications.svg)](https://www.nuget.org/packages/Odin.Notifications)                |
+| [Cryptography](https://www.nuget.org/packages?q=Odin.Cryptography)                                  | Wrapper around IDataProtector                                                                                                  | Deprecated      |                [![NuGet](https://img.shields.io/nuget/v/Odin.Cryptography.svg)](https://www.nuget.org/packages/Odin.Cryptography)                 |
 
 
 

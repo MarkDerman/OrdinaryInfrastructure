@@ -6,7 +6,7 @@
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <remarks>To be renamed to ResultValue of TValue</remarks>
-    public record ResultValue<TValue> : ResultValue<TValue, string>
+    public record ResultValue<TValue> : ResultValue<TValue, string> where TValue : notnull
     {
         /// <summary>
         /// Parameterless constructor for serialization.
@@ -99,6 +99,23 @@
         public new static ResultValue<TValue> Success(TValue value, IEnumerable<string> messages)
         {
             return new ResultValue<TValue>(true, value, messages);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TOtherValue"></typeparam>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public override ResultValue<TOtherValue> ToFailedResult<TOtherValue>()
+        {
+            if (IsSuccess)
+            {
+                throw new ArgumentException($"Cannot convert a successful result of type {GetType().FullName} " +
+                                            $"to a failed result of type {typeof(ResultValue<TOtherValue>).FullName}.");
+            }
+            
+            return ResultValue<TOtherValue>.Failure(Messages);
         }
     }
 }

@@ -11,7 +11,7 @@
         /// True if successful
         /// </summary>
         public bool IsSuccess { get; init; }
-        
+
         /// <summary>
         /// Messages list
         /// </summary>
@@ -28,12 +28,12 @@
                 _messages ??= new List<TMessage>();
                 return _messages;
             }
-            init  // For deserialisation
+            init // For deserialisation
             {
                 _messages = value.ToList();
             }
         }
-        
+
         /// <summary>
         /// All messages flattened into 1 message.
         /// Assumes a decent implementation of TMessage.ToString()
@@ -44,6 +44,7 @@
             {
                 return string.Empty;
             }
+
             return string.Join(separator, _messages.Select(c => c.ToString()));
         }
 
@@ -55,7 +56,7 @@
         {
             IsSuccess = false;
         }
-        
+
         /// <summary>
         /// Result constructor.
         /// </summary>
@@ -104,7 +105,7 @@
         {
             return new Result<TMessage>(false, messages);
         }
-        
+
         /// <summary>
         /// Success.
         /// </summary>
@@ -113,7 +114,7 @@
         {
             return new Result<TMessage>(true);
         }
-        
+
         /// <summary>
         /// Success, optionally including a message
         /// </summary>

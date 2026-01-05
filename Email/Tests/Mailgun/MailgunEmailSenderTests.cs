@@ -115,7 +115,7 @@ namespace Tests.Odin.Email.Mailgun
             VerifySuccessfulSendAndLogging(scenario, message, result);
         }
 
-        private void VerifySuccessfulSendAndLogging(MailgunEmailSenderTestBuilder scenario,EmailMessage message, ResultValue<string?> result)
+        private void VerifySuccessfulSendAndLogging(MailgunEmailSenderTestBuilder scenario,EmailMessage message, ResultValue<string> result)
         {
             // Result
             Assert.That(result.IsSuccess, Is.True, result.MessagesToString());

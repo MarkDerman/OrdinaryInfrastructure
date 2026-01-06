@@ -5,7 +5,7 @@
     /// Represents the outcome of an operation that was successful or failed,
     /// together with a list of Messages.
     /// </summary>
-    public record Result : Result<string>
+    public class Result : Result<string>
     {
         /// <inheritdoc />
         public Result() 

@@ -7,7 +7,7 @@
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <remarks>To be renamed to ResultValueEx of TValue</remarks>
-    public record ResultValueEx<TValue> : ResultValue<TValue, MessageEx>
+    public class ResultValueEx<TValue> : ResultValue<TValue, MessageEx> where TValue : notnull
     {
         /// <summary>
         /// Parameterless constructor for serialization.
@@ -26,6 +26,7 @@
         public ResultValueEx(bool isSuccess, TValue? value, IEnumerable<MessageEx>? messages)
         {
             Precondition.Requires(!(value == null && isSuccess), "Value is required for a successful result.");
+            IsSuccess = isSuccess;
             Value = value;
             _messages = messages?.ToList();
         }

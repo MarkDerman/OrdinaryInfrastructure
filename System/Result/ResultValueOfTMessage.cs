@@ -8,20 +8,20 @@ namespace Odin.System
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
-    public record ResultValue<TValue, TMessage> where TMessage : class
+    public class ResultValue<TValue, TMessage> where TMessage : class where TValue : notnull
     {
         /// <summary>
         /// True if successful
         /// </summary>
         [MemberNotNullWhen(true, nameof(Value))]
         public bool IsSuccess { get; init; }
-        
+
         /// <summary>
-        /// Value is typically set when Success is True.
+        /// Value is always set when Success is True.
         /// Value is null when Success is false.
         /// </summary>
         public TValue? Value { get; init; }
-        
+
         /// <summary>
         /// Messages list
         /// </summary>
@@ -38,12 +38,12 @@ namespace Odin.System
                 _messages ??= new List<TMessage>();
                 return _messages;
             }
-            init  // For deserialisation
+            init // For deserialisation
             {
                 _messages = value.ToList();
             }
         }
-        
+
         /// <summary>
         /// All messages flattened into 1 message.
         /// Assumes a decent implementation of TMessage.ToString()
@@ -54,6 +54,7 @@ namespace Odin.System
             {
                 return string.Empty;
             }
+
             return string.Join(separator, _messages.Select(c => c.ToString()));
         }
 
@@ -75,6 +76,7 @@ namespace Odin.System
         protected ResultValue(bool success, TValue? value, IEnumerable<TMessage>? messages)
         {
             Precondition.Requires(!(value == null && success), "Value is required for a successful result.");
+            IsSuccess = success;
             Value = value;
             _messages = messages?.ToList();
         }
@@ -88,6 +90,7 @@ namespace Odin.System
         protected ResultValue(bool success, TValue? value, TMessage? message = null)
         {
             Precondition.Requires(!(value == null && success), "Value is required for a successful result.");
+            IsSuccess = success;
             Value = value;
             _messages = message != null ? [message] : null;
         }
@@ -101,7 +104,7 @@ namespace Odin.System
         public static ResultValue<TValue, TMessage> Success(TValue value, IEnumerable<TMessage>? messages)
         {
             Precondition.RequiresNotNull(value);
-            return new ResultValue<TValue, TMessage>(true, value, messages);    
+            return new ResultValue<TValue, TMessage>(true, value, messages);
         }
 
         /// <summary>
@@ -114,7 +117,7 @@ namespace Odin.System
             Precondition.RequiresNotNull(value);
             return new ResultValue<TValue, TMessage>(true, value, null as TMessage);
         }
-        
+
         /// <summary>
         /// Creates a successful Result with Value set, and 1 Message item.
         /// </summary>
@@ -133,7 +136,7 @@ namespace Odin.System
         /// <param name="messages">At least 1 not null message is required.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public static ResultValue<TValue, TMessage> Failure(IEnumerable<TMessage> messages, TValue? value = default(TValue) )
+        public static ResultValue<TValue, TMessage> Failure(IEnumerable<TMessage> messages, TValue? value = default(TValue))
         {
             Precondition.RequiresNotNull(messages);
             List<TMessage> messagesList = messages.ToList();
@@ -147,10 +150,42 @@ namespace Odin.System
         /// <param name="message">Required for failed operations.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public static ResultValue<TValue, TMessage> Failure(TMessage message, TValue? value = default(TValue) )
+        public static ResultValue<TValue, TMessage> Failure(TMessage message, TValue? value = default(TValue))
         {
             Precondition.RequiresNotNull(message);
             return new ResultValue<TValue, TMessage>(false, value, new List<TMessage>() { message });
         }
+        
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Result ToResult()
+        {
+            return IsSuccess
+                ? Result.Success()
+                : Result.Failure(Messages.Select(m =>
+                    m.ToString()
+                    ?? $"No string representation of message of type {typeof(TMessage).FullName}"));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TOtherValue"></typeparam>
+        /// <returns></returns>
+        public virtual ResultValue<TOtherValue, TMessage> ToFailedResult<TOtherValue>() where TOtherValue : notnull
+        {
+            if (IsSuccess)
+            {
+                throw new ArgumentException($"Cannot convert a successful result of type {GetType().FullName} " +
+                                            $"to a failed result of type {typeof(ResultValue<TOtherValue, TMessage>).FullName}.");
+            }
+            
+            return ResultValue<TOtherValue, TMessage>.Failure(Messages);
+        }
+        
+        
     }
 }

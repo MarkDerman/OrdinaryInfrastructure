@@ -12,7 +12,7 @@ namespace Odin.Email
         /// </summary>
         /// <param name="email"></param>
         /// <returns>Success and the Mailgun messageId populated in the Value of the Outcome if available.</returns>
-        Task<ResultValue<string?>> SendEmail(IEmailMessage email);
+        Task<ResultValue<string>> SendEmail(IEmailMessage email);
         
     }
 }

@@ -5,7 +5,7 @@ namespace Odin.System;
 /// <summary>
 /// Extended 'Message' including a Severity, and optional Exception. 
 /// </summary>
-public record MessageEx
+public class MessageEx
 {
     /// <summary>
     /// Message content. Can be null.

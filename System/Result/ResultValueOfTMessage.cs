@@ -17,7 +17,7 @@ namespace Odin.System
         public bool IsSuccess { get; init; }
 
         /// <summary>
-        /// Value is typically set when Success is True.
+        /// Value is always set when Success is True.
         /// Value is null when Success is false.
         /// </summary>
         public TValue? Value { get; init; }

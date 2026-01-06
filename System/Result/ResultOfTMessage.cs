@@ -5,7 +5,7 @@
     /// with a list of messages of type TMessage.
     /// </summary>
     /// <typeparam name="TMessage"></typeparam>
-    public record Result<TMessage> where TMessage : class
+    public class Result<TMessage> where TMessage : class
     {
         /// <summary>
         /// True if successful

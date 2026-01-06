@@ -7,7 +7,7 @@ namespace Odin.System
     /// Like Result, but with a list of Messages of type ResultMessage2
     /// which includes a Severity, a Message and optionally an Exception.
     /// </summary>
-    public record ResultEx : Result<MessageEx>
+    public class ResultEx : Result<MessageEx>
     {
         /// <inheritdoc />
         public ResultEx() 

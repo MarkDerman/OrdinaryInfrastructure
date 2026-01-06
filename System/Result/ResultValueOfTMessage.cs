@@ -8,7 +8,7 @@ namespace Odin.System
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <typeparam name="TMessage"></typeparam>
-    public record ResultValue<TValue, TMessage> where TMessage : class where TValue : notnull
+    public class ResultValue<TValue, TMessage> where TMessage : class where TValue : notnull
     {
         /// <summary>
         /// True if successful

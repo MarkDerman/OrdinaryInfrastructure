@@ -6,7 +6,7 @@
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <remarks>To be renamed to ResultValue of TValue</remarks>
-    public record ResultValue<TValue> : ResultValue<TValue, string> where TValue : notnull
+    public class ResultValue<TValue> : ResultValue<TValue, string> where TValue : notnull
     {
         /// <summary>
         /// Parameterless constructor for serialization.

@@ -25,6 +25,7 @@
         public ResultValue(bool isSuccess, TValue? value, IEnumerable<string>? messages)
         {
             Precondition.Requires(!(value == null && isSuccess), "Value is required for a successful result.");
+            IsSuccess = isSuccess;
             Value = value;
             _messages = messages?.ToList();
         }

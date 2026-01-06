@@ -76,6 +76,7 @@ namespace Odin.System
         protected ResultValue(bool success, TValue? value, IEnumerable<TMessage>? messages)
         {
             Precondition.Requires(!(value == null && success), "Value is required for a successful result.");
+            IsSuccess = success;
             Value = value;
             _messages = messages?.ToList();
         }
@@ -89,6 +90,7 @@ namespace Odin.System
         protected ResultValue(bool success, TValue? value, TMessage? message = null)
         {
             Precondition.Requires(!(value == null && success), "Value is required for a successful result.");
+            IsSuccess = success;
             Value = value;
             _messages = message != null ? [message] : null;
         }

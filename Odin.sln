@@ -44,6 +44,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4F52FD
 		LICENSE.TXT = LICENSE.TXT
 		README.md = README.md
 		GitVersion.yml = GitVersion.yml
+		.gitignore = .gitignore
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "System", "System", "{73BA62BB-2B41-2DC4-C714-51B3D4C2A215}"

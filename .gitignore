@@ -27,7 +27,7 @@ bld/
 [Oo]bj/
 [Ll]og/
 
-# Locally provisioned build output to tools/ under DesignContracts
+# Locally provisioned tools
 tools/
 
 # Visual Studio 2015 cache/options directory

@@ -10,8 +10,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Templating", "Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Utility", "Utility\Tests\Tests.Odin.Utility.csproj", "{52AF2C63-2247-42FD-B3DD-4AD2AFCE0C6D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.DesignContracts", "DesignContracts\Tests\Tests.Odin.DesignContracts.csproj", "{177EDB52-3174-4037-80DD-235222F9817B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Messaging", "Messaging\Tests\Tests.Odin.Messaging.csproj", "{690312C5-1948-4530-832D-6332625D4E9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.System", "System\Tests\Tests.Odin.System.csproj", "{957966BC-FE0E-4206-BDD8-F04591AB836E}"
@@ -23,8 +21,6 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B091589D-960C-40F6-822F-522D099828E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B091589D-960C-40F6-822F-522D099828E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{177EDB52-3174-4037-80DD-235222F9817B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{177EDB52-3174-4037-80DD-235222F9817B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EAD2138A-1553-43A9-B51F-55FC2A2CEFFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAD2138A-1553-43A9-B51F-55FC2A2CEFFD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{690312C5-1948-4530-832D-6332625D4E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -24,7 +24,7 @@ namespace Odin.Email
         /// <param name="displayName"></param>
         public EmailAddress(string emailAddress, string? displayName = null)
         {
-            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(emailAddress), $"{nameof(emailAddress)} is required");
+            Contract.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(emailAddress), $"{nameof(emailAddress)} is required");
             if (string.IsNullOrWhiteSpace(displayName))
             {
                 DisplayName = null;

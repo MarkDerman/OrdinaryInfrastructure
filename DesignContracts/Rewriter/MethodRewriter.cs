@@ -1,0 +1,290 @@
+using Microsoft.Build.Framework;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
+using Mono.Cecil.Rocks;
+
+namespace Odin.DesignContracts.Rewriter;
+
+/// <summary>
+/// Handles Design-by-Contract rewriting of a given type member, 
+/// including methods, property accessors and constructors.
+/// </summary>
+internal class MethodRewriter
+{
+    private readonly TypeRewriter _parentRewriter;
+
+    public MethodRewriter(MethodDefinition method, TypeRewriter parentRewriter)
+    {
+        Method = method;
+        _parentRewriter = parentRewriter;
+    }
+
+    public MethodDefinition Method { get; }
+
+    /// <summary>
+    /// Rewrites the type member returning true if any contract rewrites
+    /// were needed, and false if none were required.
+    /// </summary>
+    /// <returns></returns>
+    public bool Rewrite()
+    {
+        // Only handle sync (v1). We rely on analyzers to enforce this, but be defensive.
+        // if (method.IsAsync)
+        //     return false;
+
+        // What about properties? Surely these can have no body?
+        if (!Method.HasBody) return false;
+
+        Method.Body.SimplifyMacros();
+
+        MethodWeavingResult weaving = new MethodWeavingResult(IsInvariantToBeWeaved(), TryFindPostconditionInstructions());
+
+        if (weaving.NothingToWeave)
+        {
+            // Nothing to do.
+            Method.Body.OptimizeMacros();
+            return false;
+        }
+
+        ILProcessor il = Method.Body.GetILProcessor();
+
+        // Inject invariant call at entry (before any user code).
+        if (weaving.Invariant.OnEntry)
+        {
+            // An instructionless member body is possible... I suppose the member could have been stubbed. 
+            Instruction first = Method.Body.Instructions.FirstOrDefault() ?? Instruction.Create(OpCodes.Nop);
+            if (Method.Body.Instructions.Count == 0)
+                il.Append(first);
+            
+            InsertInvariantCallBefore(il, first, _parentRewriter.InvariantMethod!);
+        }
+
+        // Remove the postconditions from the method when postconditions are present.
+        // We could skip this as Contract.Ensures are all simply no-ops...?
+        foreach (Instruction instruction in weaving.PostconditionsToWeave)
+        {
+            // If the instruction was already removed as part of a previous remove, skip.
+            if (Method.Body.Instructions.Contains(instruction))
+                il.Remove(instruction);
+        }
+
+        // If we need to inject postconditions and/or invariant calls at exit, do it per-return.
+        // Todo: If there are multiple returns, create a shadow method to execute the
+        // invariant and\or postconditions, calling it from each return.
+        if (weaving.OnExitWeavingRequired)
+        {
+            VariableDefinition? resultVar = null;
+            bool isVoid = IsVoidReturnType();
+            if (!isVoid)
+            {
+                resultVar = new VariableDefinition(Method.ReturnType);
+                Method.Body.Variables.Add(resultVar);
+                Method.Body.InitLocals = true;
+            }
+
+            List<Instruction> returns = Method.Body.Instructions.Where(i => i.OpCode == OpCodes.Ret).ToList();
+            foreach (Instruction returnInst in returns)
+            {
+                // For non-void methods we must preserve the return value while we call extra code.
+                if (!isVoid)
+                {
+                    il.InsertBefore(returnInst, Instruction.Create(OpCodes.Stloc, resultVar!));
+                }
+
+
+                foreach (Instruction inst in weaving.PostconditionsToWeave)
+                {
+                    Instruction cloned = inst.CloneInstruction();
+
+                    if (!isVoid && IsResultCall(cloned))
+                    {
+                        // Replace call Contract.Result<T>() with ldloc resultVar.
+                        cloned = Instruction.Create(OpCodes.Ldloc, resultVar!);
+                    }
+
+                    il.InsertBefore(returnInst, cloned);
+                }
+
+                if (weaving.Invariant.OnExit)
+                {
+                    InsertInvariantCallBefore(il, returnInst, _parentRewriter.InvariantMethod!);
+                }
+
+                if (!isVoid)
+                {
+                    il.InsertBefore(returnInst, Instruction.Create(OpCodes.Ldloc, resultVar!));
+                }
+            }
+        }
+        Method.Body.OptimizeMacros();
+
+        string invariantResult;
+        if (weaving.Invariant.BothEntryAndExit)
+        {
+            invariantResult = " invariant calls (entry & exit)";
+        }
+        else if (weaving.Invariant.NeitherEntryNorExit)
+        {
+            invariantResult = "";
+        }
+        else
+        {
+            invariantResult = weaving.Invariant.OnEntry ? " invariant call (on entry)" : " invariant call (on exit)";
+        }
+        string postconditionResult = weaving.PostconditionsToWeave.Any() ? " postcondition calls" : "";
+        if (invariantResult!="" && postconditionResult!="") postconditionResult=" and " + postconditionResult;
+        string message = $"Weaved{invariantResult}{postconditionResult} into {Method.Name} of type {_parentRewriter.Type.FullName}.";
+        _parentRewriter.Logger.LogMessage(LogImportance.Low, message);
+        return true;
+    }
+
+    public InvariantWeavingResult IsInvariantToBeWeaved()
+    {
+        bool canWeaveInvariant = _parentRewriter.HasInvariant && IsPublicInstanceMethod();
+        bool isInvariantMethodItself = _parentRewriter.InvariantMethod is not null && Method == _parentRewriter.InvariantMethod;
+
+        // Per requirements:
+        // - Constructors: invariants at exit only
+        // - Other public instance methods + public instance property accessors: invariants at entry and exit
+
+        bool weaveInvariantOnEntry = canWeaveInvariant && !isInvariantMethodItself && !IsInstanceConstructor();
+        bool weaveInvariantOnExit = canWeaveInvariant && !isInvariantMethodItself;
+
+        // Exclude [Pure] methods and [Pure] properties (for accessors).
+        // Ignore [Pure] on constructors...
+        if (!IsInstanceConstructor() && weaveInvariantOnEntry && IsPure())
+        {
+            weaveInvariantOnEntry = false;
+            weaveInvariantOnExit = false;
+        }
+
+        return new InvariantWeavingResult()
+        {
+            OnEntry = weaveInvariantOnEntry,
+            OnExit = weaveInvariantOnExit
+        };
+    }
+
+    /// <summary>
+    /// Returns any postcondition Ensures() instruction calls found.
+    /// </summary>
+    /// <returns></returns>
+    public List<Instruction> TryFindPostconditionInstructions()
+    {
+        // For V1 we will attempt to simply extract any Postcondition.Ensures()
+        // calls from the method body if they exist. I am a total noob at IL so have no clue
+        // about finding and moving postcondition calls inside conditionals.
+        // Another v1 option would be to require all postconditions to be before a postcondition contract block,
+        // and then preconditions after that.
+        List<Instruction> postconditionEnsuresCalls = new List<Instruction>();
+
+        IList<Instruction> instructions = Method.Body.Instructions;
+        if (instructions.Count == 0)
+            return postconditionEnsuresCalls;
+        
+        for (int i = 0; i < instructions.Count; i++)
+        {
+            Instruction inst = instructions[i];
+            if (IsPostconditionEnsuresCall(inst))
+            {
+                postconditionEnsuresCalls.Add(inst);
+            }
+        }
+
+        return postconditionEnsuresCalls;
+    }
+
+    public static bool IsPostconditionEnsuresCall(Instruction inst)
+        => IsStaticCallToPostconditionMethod(inst, "Ensures");
+
+    public static bool IsResultCall(Instruction inst)
+        => IsStaticCallToPostconditionMethod(inst, "Result");
+
+    public static bool IsStaticCallToPostconditionMethod(Instruction inst, string methodName)
+    {
+        if (inst.OpCode != OpCodes.Call)
+            return false;
+
+        if (inst.Operand is not MethodReference mr)
+            return false;
+
+        if (mr.Name != methodName)
+            return false;
+
+        // Handle generic instance method as well.
+        string declaringType = mr.DeclaringType.FullName;
+        return declaringType == Names.OdinPostconditionEnsuresTypeFullName;
+    }
+
+    /// <summary>
+    /// True if Method is a public instance method.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPublicInstanceMethod()
+    {
+        return Method is { IsPublic: true, IsStatic: false };
+    }
+
+    /// <summary>
+    /// True if Method is marked as [Pure] or if it is a property accessor of a [Pure] property.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsPure()
+    {
+        if (Method.HasAnyAttributeIn(Names.PureAttributeFullNames))
+            return true;
+
+        // For accessors, also honour [Pure] on the property itself.
+        if (Method.IsGetter || Method.IsSetter)
+        {
+            PropertyDefinition? prop = _parentRewriter.Type.Properties.FirstOrDefault(p => p.GetMethod == Method || p.SetMethod == Method);
+            if (prop is not null && prop.HasAnyAttributeIn(Names.PureAttributeFullNames))
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// True if Method returns void.
+    /// </summary>
+    /// <returns></returns>
+    public bool IsVoidReturnType()
+    {
+        return Method.ReturnType.MetadataType == MetadataType.Void;
+    }
+
+    public bool IsInstanceConstructor()
+    {
+        return Method.IsConstructor && !Method.IsStatic;
+    }
+
+    private void InsertInvariantCallBefore(ILProcessor il, Instruction before, MethodDefinition invariantMethod)
+    {
+        // instance.Invariant();
+        il.InsertBefore(before, Instruction.Create(OpCodes.Ldarg_0));
+        il.InsertBefore(before, Instruction.Create(OpCodes.Call, invariantMethod));
+    }
+
+    internal record InvariantWeavingResult
+    {
+        public required bool OnEntry { get; init; }
+        public required bool OnExit { get; init; }
+        public bool BothEntryAndExit => OnEntry && OnExit;
+        public bool NeitherEntryNorExit => !OnEntry && !OnExit;
+    }
+    
+    internal record MethodWeavingResult
+    {
+        public MethodWeavingResult(InvariantWeavingResult invariant, List<Instruction> postconditionsFound)
+        {
+            Invariant = invariant;
+            PostconditionsToWeave = postconditionsFound;
+        }
+        public InvariantWeavingResult Invariant { get; }
+        public List<Instruction> PostconditionsToWeave { get; }
+        public bool NothingToWeave => !PostconditionsToWeave.Any() && !Invariant.OnEntry && !Invariant.OnExit;
+        public bool OnExitWeavingRequired => PostconditionsToWeave.Any() || Invariant.OnExit;
+    }
+    
+}

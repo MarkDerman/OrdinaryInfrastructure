@@ -2,9 +2,11 @@
   <PropertyGroup>
     <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <Nullable>enable</Nullable>
-    <UserSecretsId>Tests.Odin.DesignContracts</UserSecretsId>
     <GenerateProgramFile>true</GenerateProgramFile>
     <ImplicitUsings>true</ImplicitUsings>
+    <Description>Tests where the target classes under test have not been weaved in post build 
+      by the Design-by-Contract tooling. The Rewriter is explicitly run on a target assembly 
+      for each test, and the types under test dynamically loaded.</Description>
     <NoWarn>1591;</NoWarn>
   </PropertyGroup>
 
@@ -13,10 +15,19 @@
     <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="NUnit3TestAdapter" Version="6.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" /> 
+    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Core\Odin.DesignContracts.csproj" />
+    <ProjectReference Include="..\Rewriter\Odin.DesignContracts.Rewriter.csproj" />
+    <ProjectReference Include="..\TargetsUnrewritten\TargetsUnrewritten.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CoreTests\TestSupport.cs">
+      <Link>TestSupport.cs</Link>
+    </Compile>
   </ItemGroup>
 
 </Project>

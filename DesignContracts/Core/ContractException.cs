@@ -1,5 +1,3 @@
-using System.Runtime.Serialization;
-
 namespace Odin.DesignContracts
 {
     /// <summary>
@@ -11,7 +9,7 @@ namespace Odin.DesignContracts
         /// <summary>
         /// Precondition, Postcondition, Invariant, Assertion or Assumption
         /// </summary>
-        public ContractFailureKind Kind { get; }
+        public ContractKind Kind { get; }
 
         /// <summary>
         /// Gets the text representation of the condition that failed, if supplied.
@@ -31,7 +29,7 @@ namespace Odin.DesignContracts
         /// <param name="userMessage">The user-visible message associated with the contract, if any.</param>
         /// <param name="conditionText">The text representation of the condition that failed, if provided.</param>
         public ContractException(
-            ContractFailureKind kind,
+            ContractKind kind,
             string message,
             string? userMessage = null,
             string? conditionText = null)

@@ -27,7 +27,7 @@ public static class ConnectionSettingsHelper
     /// <returns></returns>
     public static Dictionary<string, string> ParseConnectionString(string connectionString, char delimiter)
     {
-        Precondition.Requires<ArgumentNullException>(!string.IsNullOrEmpty(connectionString), "connectionString cannot be null.");
+        Contract.Requires<ArgumentNullException>(!string.IsNullOrEmpty(connectionString), "connectionString cannot be null.");
 
         Dictionary<string, string> result = new Dictionary<string, string>();
         string[] keyValuePairs = connectionString.Trim(delimiter).Split(delimiter)

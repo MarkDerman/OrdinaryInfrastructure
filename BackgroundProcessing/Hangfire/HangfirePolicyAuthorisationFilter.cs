@@ -20,7 +20,7 @@ namespace Odin.BackgroundProcessing
         /// <param name="policyName"></param>
         public HangfirePolicyAuthorisationFilter(string policyName)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(policyName));
+            Contract.Requires(!string.IsNullOrWhiteSpace(policyName));
             _policyName = policyName.Trim();
         }
 

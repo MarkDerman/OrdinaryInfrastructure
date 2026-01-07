@@ -25,7 +25,7 @@ public class TaxUtility : ITaxUtility
     /// <param name="taxRatesAsPercentageHistory">Note that tax rates must be expressed as a percentage number, not a fraction.</param>
     public TaxUtility(IEnumerable<ValueChange<DateOnly, decimal>> taxRatesAsPercentageHistory)
     {
-        Precondition.Requires(taxRatesAsPercentageHistory!=null!);
+        Contract.Requires(taxRatesAsPercentageHistory!=null!);
         _taxValues = new ValueChangesListProvider<DateOnly, decimal>(taxRatesAsPercentageHistory);
     }
 

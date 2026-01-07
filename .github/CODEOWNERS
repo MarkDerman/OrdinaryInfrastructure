@@ -1,1 +1,6 @@
-master @MarkDerman
+# Default owner
+* @MarkDerman
+
+
+# Ensure CODEOWNERS is protected 
+/.github/CODEOWNERS @MarkDerman

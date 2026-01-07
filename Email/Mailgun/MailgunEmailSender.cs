@@ -110,7 +110,7 @@ namespace Odin.Email
         /// <param name="email"></param>
         /// <returns>An Outcome containing the Mailgun messageId.</returns>
         /// <exception cref="HttpRequestException"></exception>
-        public async Task<ResultValue<string?>> SendEmail(IEmailMessage email)
+        public async Task<ResultValue<string>> SendEmail(IEmailMessage email)
         {
             Contract.RequiresNotNull(email);
             Contract.Requires(email.To.Any(), "Mailgun requires one or more to addresses.");
@@ -182,11 +182,11 @@ namespace Odin.Email
 
                 MailgunSendResponse? response = await responseMessage.Content.ReadFromJsonAsync<MailgunSendResponse>();
                 LogSendEmailResult(email, true, LogLevel.Information, $"Sent with Mailgun reference {response?.Id}.");
-                return ResultValue<string?>.Success(response?.Id);
+                return ResultValue<string>.Success(response?.Id ?? "");
             }
             catch (Exception e)
             {
-                return ResultValue<string?>.Failure(e.ToString());
+                return ResultValue<string>.Failure(e.ToString());
             }
 
         }

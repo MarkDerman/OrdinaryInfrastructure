@@ -55,7 +55,7 @@ public class Office365EmailSender : IEmailSender
     const string MicrosoftGraphFileAttachmentOdataType = "#microsoft.graph.fileAttachment";
     
     /// <inheritdoc />
-    public async Task<ResultValue<string?>> SendEmail(IEmailMessage email)
+    public async Task<ResultValue<string>> SendEmail(IEmailMessage email)
     {
         if (email.From is null)
         {
@@ -121,12 +121,12 @@ public class Office365EmailSender : IEmailSender
 
             await _graphClient.Users[_senderUserId].SendMail.PostAsync(requestBody);
             LogSendEmailResult(email, true, LogLevel.Information, $"Sent with Office365 via user {_senderUserId}");
-            return ResultValue<string?>.Success("Success");
+            return ResultValue<string>.Success("Success");
         }
         catch (Exception ex)
         {
             LogSendEmailResult(email, false, LogLevel.Error, $"Failed to send with Office365 via user {_senderUserId}", ex);
-            return ResultValue<string?>.Failure("Fail: " + ex.Message);
+            return ResultValue<string>.Failure("Fail: " + ex.Message);
         }
     }
 

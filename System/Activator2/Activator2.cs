@@ -37,7 +37,7 @@ public static class Activator2
         return ResultValue<T>.Failure($"Type {typeName} is not of type {nameof(T)}");
     }
 
-    private static ResultValue<T> CreateInstanceFailure<T>(string typeName, string assemblyName, string? errorMessage = "")
+    private static ResultValue<T> CreateInstanceFailure<T>(string typeName, string assemblyName, string? errorMessage = "") where T : notnull
     {
         return ResultValue<T>.Failure($"Could not create instance of type {typeName} from assembly {assemblyName}. {errorMessage}");
     }

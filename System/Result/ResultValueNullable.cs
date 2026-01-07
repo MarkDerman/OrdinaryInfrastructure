@@ -1,17 +1,16 @@
-﻿namespace Odin.System
+namespace Odin.System;
+
+/// <summary>
+/// Represents the success or failure of an operation that returns a possibly null Value\Result on success,
+/// and list of string messages.
+/// </summary>
+/// <typeparam name="TValue"></typeparam>
+public class ResultValueNullable<TValue> : ResultValueNullable<TValue, string>
 {
-    /// <summary>
-    /// Represents the success or failure of an operation that returns a non-null Value\Result on success,
-    /// and list of string messages.
-    /// </summary>
-    /// <typeparam name="TValue"></typeparam>
-    /// <remarks>To be renamed to ResultValue of TValue</remarks>
-    public class ResultValue<TValue> : ResultValue<TValue, string> where TValue : notnull
-    {
-        /// <summary>
+            /// <summary>
         /// Parameterless constructor for serialization.
         /// </summary>
-        public ResultValue()
+        public ResultValueNullable()
         {
             IsSuccess = false;
         }
@@ -22,9 +21,8 @@
         /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValue(bool isSuccess, TValue? value, IEnumerable<string>? messages)
+        public ResultValueNullable(bool isSuccess, TValue? value, IEnumerable<string>? messages)
         {
-            Precondition.Requires(!(value == null && isSuccess), "Value is required for a successful result.");
             IsSuccess = isSuccess;
             Value = value;
             _messages = messages?.ToList();
@@ -36,9 +34,8 @@
         /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValue(bool isSuccess, TValue? value, string? message = null)
+        public ResultValueNullable(bool isSuccess, TValue? value, string? message = null)
         {
-            Precondition.Requires(!(value == null && isSuccess), "A value is required for a successful result.");
             IsSuccess = isSuccess;
             Value = value;
             _messages = message != null ? [message] : null;
@@ -50,12 +47,12 @@
         /// <param name="messages">Normally included as best practice for failed operations, but not mandatory.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public new static ResultValue<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue) )
+        public new static ResultValueNullable<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue) )
         {
             Precondition.RequiresNotNull(messages);
             List<string> list = messages.ToList();
             Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
-            return new ResultValue<TValue>(false, value, list);
+            return new ResultValueNullable<TValue>(false, value, list);
         }
 
         /// <summary>
@@ -64,10 +61,10 @@
         /// <param name="message">Required for failed operations.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public new static ResultValue<TValue> Failure(string message, TValue? value = default(TValue) )
+        public new static ResultValueNullable<TValue> Failure(string message, TValue? value = default(TValue) )
         {
             Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
-            return new ResultValue<TValue>(false, value, new List<string>() { message });
+            return new ResultValueNullable<TValue>(false, value, new List<string>() { message });
         }
         
         /// <summary>
@@ -75,9 +72,9 @@
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public new static ResultValue<TValue> Success(TValue value)
+        public new static ResultValueNullable<TValue> Success(TValue value)
         {
-            return new ResultValue<TValue>(true, value, null as string);
+            return new ResultValueNullable<TValue>(true, value, null as string);
         }
         
         /// <summary>
@@ -86,9 +83,9 @@
         /// <param name="value"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public new static ResultValue<TValue> Success(TValue value, string? message)
+        public new static ResultValueNullable<TValue> Success(TValue value, string? message)
         {
-            return new ResultValue<TValue>(true, value, message);
+            return new ResultValueNullable<TValue>(true, value, message);
         }
         
         /// <summary>
@@ -97,9 +94,9 @@
         /// <param name="value"></param>
         /// <param name="messages"></param>
         /// <returns></returns>
-        public new static ResultValue<TValue> Success(TValue value, IEnumerable<string> messages)
+        public new static ResultValueNullable<TValue> Success(TValue value, IEnumerable<string> messages)
         {
-            return new ResultValue<TValue>(true, value, messages);
+            return new ResultValueNullable<TValue>(true, value, messages);
         }
 
         /// <summary>
@@ -108,7 +105,7 @@
         /// <typeparam name="TOtherValue"></typeparam>
         /// <returns></returns>
         /// <exception cref="ArgumentException"></exception>
-        public override ResultValue<TOtherValue> ToFailedResult<TOtherValue>()
+        public override ResultValueNullable<TOtherValue> ToFailedResult<TOtherValue>()
         {
             if (IsSuccess)
             {
@@ -116,7 +113,8 @@
                                             $"to a failed result of type {typeof(ResultValue<TOtherValue>).FullName}.");
             }
             
-            return ResultValue<TOtherValue>.Failure(Messages);
+            return ResultValueNullable<TOtherValue>.Failure(Messages);
         }
-    }
+
+    
 }

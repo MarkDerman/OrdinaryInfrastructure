@@ -1,4 +1,4 @@
-namespace Odin.Patterns.CommandHandler;
+namespace Odin.Patterns;
 
 /// <summary>
 /// Defines a command request that doesn't return a value

@@ -20,6 +20,12 @@ public interface ICommand<out TResult> { }
 public interface ICommandHandler<in TCommand> 
     where TCommand : ICommand
 {
+    /// <summary>
+    /// Handles the command request
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="ct"></param>
+    /// <returns></returns>
     Task HandleAsync(TCommand command, CancellationToken ct = default);
 }
 
@@ -31,5 +37,11 @@ public interface ICommandHandler<in TCommand>
 public interface ICommandHandler<in TCommand, TResult> 
     where TCommand : ICommand<TResult>
 {
+    /// <summary>
+    /// Handles the command request and returns a result.
+    /// </summary>
+    /// <param name="command"></param>
+    /// <param name="ct"></param>
+    /// <returns></returns>
     Task<TResult> HandleAsync(TCommand command, CancellationToken ct = default);
 }

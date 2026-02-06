@@ -45,6 +45,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{4F52FD
 		README.md = README.md
 		GitVersion.yml = GitVersion.yml
 		.gitignore = .gitignore
+		TestsOnly.sln = TestsOnly.sln
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "System", "System", "{73BA62BB-2B41-2DC4-C714-51B3D4C2A215}"
@@ -97,6 +98,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.System", "System\Tests\Tests.Odin.System.csproj", "{957966BC-FE0E-4206-BDD8-F04591AB836E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DesignContracts.Analyzers", "DesignContracts\Analyzers\Odin.DesignContracts.Analyzers.csproj", "{12C40512-CA83-4209-9318-6CBCABF8C798}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.CommandHandler", "Patterns\CommandHandler\Odin.Patterns.CommandHandler.csproj", "{382C1CC0-F981-4682-9EFD-4471955327C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patterns", "Patterns", "{605A7674-8EA4-458D-9FEB-A86C927AC0F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -224,6 +229,10 @@ Global
 		{12C40512-CA83-4209-9318-6CBCABF8C798}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12C40512-CA83-4209-9318-6CBCABF8C798}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12C40512-CA83-4209-9318-6CBCABF8C798}.Release|Any CPU.Build.0 = Release|Any CPU
+		{382C1CC0-F981-4682-9EFD-4471955327C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{382C1CC0-F981-4682-9EFD-4471955327C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{382C1CC0-F981-4682-9EFD-4471955327C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{382C1CC0-F981-4682-9EFD-4471955327C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CE323D9C-635B-EFD3-5B3F-7CE371D8A86A} = {BF440C74-E223-3CBF-8FA7-83F7D164F7C3}
@@ -256,5 +265,6 @@ Global
 		{957966BC-FE0E-4206-BDD8-F04591AB836E} = {73BA62BB-2B41-2DC4-C714-51B3D4C2A215}
 		{12C40512-CA83-4209-9318-6CBCABF8C798} = {9E3E1A13-9A74-4895-98A9-D96F4E0ED4B7}
 		{E450FC74-0DBE-320A-FE7A-87255CB4DFAB} = {73BA62BB-2B41-2DC4-C714-51B3D4C2A215}
+		{382C1CC0-F981-4682-9EFD-4471955327C3} = {605A7674-8EA4-458D-9FEB-A86C927AC0F0}
 	EndGlobalSection
 EndGlobal

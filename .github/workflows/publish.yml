@@ -63,6 +63,7 @@ jobs:
         dotnet pack ./Email/Core/Odin.Email.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Logging/Core/Odin.Logging.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Messaging/RabbitMq/Odin.Messaging.RabbitMq.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
+        dotnet pack ./Patterns/CommandHandler/Odin.Patterns.CommandHandler.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./RemoteFiles/Abstractions/Odin.RemoteFiles.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./RemoteFiles/SFTP/Odin.RemoteFiles.SFTP.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./RemoteFiles/Core/Odin.RemoteFiles.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR

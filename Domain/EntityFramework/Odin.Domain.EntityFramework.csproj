@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <ImplicitUsings>true</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Description>
+
+        </Description>
+        <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="../../Assets/icon.png" Pack="true" PackagePath=""/>
+        <None Include="..\README.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Core\Odin.Domain.csproj" />
+    </ItemGroup>
+</Project>

@@ -4,10 +4,11 @@ namespace Odin.Domain;
 
 /// <summary>
 /// Represents a specification for filter criteria, preloading includes,
-/// ordering and paginating for a repository query.
+/// ordering and pagination for a repository query.
 /// </summary>
 /// <typeparam name="TAggregateRoot"></typeparam>
 public interface IQuerySpecification<TAggregateRoot>
+    where TAggregateRoot : class, IAggregateRoot
 {
     /// <summary>
     /// The filter criteria (Where clause)

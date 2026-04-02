@@ -1,6 +1,6 @@
 ﻿// Portions of this file are derived from the .NET runtime project.
 // Copyright (c) .NET Foundation and Contributors
-// Licensed under the MIT license. See the LICENSE.TXT file in this repository for full license information.
+// Licensed under the MIT license. See the LICENSE.md file in this repository for full license information.
 
 using Microsoft.Extensions.Logging;
 

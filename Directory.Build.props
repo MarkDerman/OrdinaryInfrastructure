@@ -4,6 +4,7 @@
         <Company>Soulv Software (Pty) Ltd</Company>
         <Copyright>Copyright (c) Soulv Software 2025</Copyright>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <LangVersion>13</LangVersion>
         <PackageProjectUrl>https://github.com/MarkDerman/OrdinaryInfrastructure</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/MarkDerman/OrdinaryInfrastructure</RepositoryUrl>

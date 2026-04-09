@@ -13,12 +13,12 @@ public interface IQuerySpecification<TAggregateRoot>
     /// <summary>
     /// The filter criteria (Where clause)
     /// </summary>
-    Expression<Func<TAggregateRoot, bool>> Criteria { get; }
+    Expression<Func<TAggregateRoot, bool>>? Criteria { get; }
 
     /// <summary>
     /// Eager loading (Include clauses)
     /// </summary>
-    List<Expression<Func<TAggregateRoot, object>>> Includes { get; }
+    IReadOnlyList<Expression<Func<TAggregateRoot, object>>>? Includes { get; }
 
     /// <summary>
     /// Ordering ascending

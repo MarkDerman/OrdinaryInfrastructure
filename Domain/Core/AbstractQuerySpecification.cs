@@ -1,19 +1,34 @@
 using System.Linq.Expressions;
 
-namespace Odin.Domain.EntityFramework;
+namespace Odin.Domain;
 
 /// <inheritdoc />
-public abstract class AbstractQuerySpecification<TAggregateRoot>(Expression<Func<TAggregateRoot, bool>> criteria) 
-    : IQuerySpecification<TAggregateRoot>
+public abstract class AbstractQuerySpecification<TAggregateRoot> 
+    : IQuerySpecification<TAggregateRoot> 
     where TAggregateRoot : class, IAggregateRoot
 {
-    private readonly List<Expression<Func<TAggregateRoot, object>>> _includes = [];
+    /// <summary>
+    /// Default constructor for AbstractQuerySpecification
+    /// </summary>
+    /// <param name="criteria"></param>
+    protected AbstractQuerySpecification(Expression<Func<TAggregateRoot, bool>>? criteria)
+    {
+        Criteria = criteria;
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    protected AbstractQuerySpecification()
+    {
+    }
 
     /// <inheritdoc />
-    public Expression<Func<TAggregateRoot, bool>> Criteria { get; } = criteria;
+    public Expression<Func<TAggregateRoot, bool>>? Criteria { get; protected set; }
 
     /// <inheritdoc />
-    public IReadOnlyList<Expression<Func<TAggregateRoot, object>>> Includes => _includes;
+    public IReadOnlyList<Expression<Func<TAggregateRoot, object>>>? Includes => _includes;
+    private List<Expression<Func<TAggregateRoot, object>>>? _includes;
 
     /// <inheritdoc />
     public Expression<Func<TAggregateRoot, object>>? OrderBy { get; private set; }
@@ -34,8 +49,21 @@ public abstract class AbstractQuerySpecification<TAggregateRoot>(Expression<Func
     /// Adds a query include
     /// </summary>
     /// <param name="includeExpression"></param>
-    protected void AddInclude(Expression<Func<TAggregateRoot, object>> includeExpression) 
-        => _includes.Add(includeExpression);
+    protected void AddCriteria(Expression<Func<TAggregateRoot, object>> includeExpression)
+    {
+        if (_includes == null) _includes = new List<Expression<Func<TAggregateRoot, object>>>();
+        _includes.Add(includeExpression);
+    }
+    
+    /// <summary>
+    /// Adds a query include
+    /// </summary>
+    /// <param name="includeExpression"></param>
+    protected void AddInclude(Expression<Func<TAggregateRoot, object>> includeExpression)
+    {
+        if (_includes == null) _includes = new List<Expression<Func<TAggregateRoot, object>>>();
+        _includes.Add(includeExpression);
+    }
 
     /// <summary>
     /// Adds ordering ascending

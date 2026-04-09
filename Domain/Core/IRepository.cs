@@ -1,10 +1,13 @@
+using System.Linq.Expressions;
+using System.Numerics;
+
 namespace Odin.Domain
 {
     /// <summary>
     /// Represents a repository for persisting entities to a data store.
     /// </summary>
     /// <typeparam name="TAggregateRoot">The type of the aggregate root.</typeparam>
-    public interface IRepository<TAggregateRoot> 
+    public interface IRepository<TAggregateRoot>  : IAsyncDisposable
         where TAggregateRoot : class, IAggregateRoot
     {
         /// <summary>
@@ -16,8 +19,8 @@ namespace Odin.Domain
         /// <summary>
         /// Adds a range of entities to the context but does not persist them to the database.
         /// </summary>
-        /// <param name="entity">The entities to add.</param>
-        void AddRange(IEnumerable<TAggregateRoot> entity);
+        /// <param name="entities">The entities to add.</param>
+        void AddRange(IEnumerable<TAggregateRoot> entities);
 
         /// <summary>
         /// Updates an entity in the database.
@@ -32,25 +35,26 @@ namespace Odin.Domain
         void Delete(TAggregateRoot entity);
         
         /// <summary>
-        /// 
+        /// Attempts to fetch a single entity based on the query specified.
         /// </summary>
-        /// <param name="spec"></param>
+        /// <param name="querySpecification"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        Task<TAggregateRoot?> FetchAsync(IQuerySpecification<TAggregateRoot> spec, 
+        Task<TAggregateRoot?> FetchAsync(IQuerySpecification<TAggregateRoot> querySpecification, 
             CancellationToken ct = default);
 
         /// <summary>
-        /// 
+        /// Fetches many entities based on the query specified.
         /// </summary>
-        /// <param name="spec"></param>
+        /// <param name="querySpecification"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
         Task<IReadOnlyList<TAggregateRoot>> FetchManyAsync(
-            IQuerySpecification<TAggregateRoot> spec, CancellationToken ct = default);
+            IQuerySpecification<TAggregateRoot> querySpecification, CancellationToken ct = default);
 
         /// <summary>
-        /// Gets the unit of work, used to commit changes to the database.
+        /// Gets the unit of work, used to commit changes to the database,
+        /// and possibly fire domain events.
         /// </summary>
         IUnitOfWork UnitOfWork { get; }
     }
@@ -62,18 +66,29 @@ namespace Odin.Domain
     /// <typeparam name="TAggregateRoot"></typeparam>
     /// <typeparam name="TId"></typeparam>
     public interface IRepository<TAggregateRoot, TId> : IRepository<TAggregateRoot>
-        where TAggregateRoot : class, IAggregateRoot<TId>
+        where TAggregateRoot : class, IIdentityAggregateRoot<TId>
+        where TId : struct, IEqualityOperators<TId, TId, bool>
     {
         /// <summary>
-        /// 
+        /// Fetches an entity by its identifier, returning null if not found.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="ct"></param>
         /// <returns></returns>
-        Task<TAggregateRoot?> GetByIdAsync(TId id, CancellationToken ct = default);
+        Task<TAggregateRoot?> FetchByIdAsync(TId id, CancellationToken ct = default);
+        
+        /// <summary>
+        /// Fetches an entity by its identifier, returning null if not found.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="includes"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        Task<TAggregateRoot?> FetchByIdAsync(TId id, IReadOnlyList<Expression<Func<TAggregateRoot, object>>>? includes
+            , CancellationToken ct = default);
 
         /// <summary>
-        /// 
+        /// Fetches entities from a list of their identifiers, returning an empty list if none found.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>

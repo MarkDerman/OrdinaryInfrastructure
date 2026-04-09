@@ -3,26 +3,26 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
     <ItemGroup>
-        <PackageVersion Include="Azure.Storage.Blobs" Version="12.26.0"/>
+        <PackageVersion Include="Azure.Storage.Blobs" Version="12.27.0"/>
         <PackageVersion Include="Hangfire.Core" Version="1.8.23" />
         <PackageVersion Include="Hangfire.AspNetCore" Version="1.8.23"  />
         <PackageVersion Include="Hangfire.SqlServer" Version="1.8.23"  />
-        <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-        <PackageVersion Include="Azure.Identity" Version="1.17.1" />
-        <PackageVersion Include="Microsoft.Graph" Version="5.98.0" />
-        <PackageVersion Include="Microsoft.Data.SqlClient" Version="6.1.3" />
+        <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
+        <PackageVersion Include="Azure.Identity" Version="1.20.0" />
+        <PackageVersion Include="Microsoft.Graph" Version="5.103.0" />
+        <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.0" />
         <PackageVersion Include="Moq" Version="4.20.72" />
-        <PackageVersion Include="NUnit3TestAdapter" Version="6.0.0" />
-        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-        <PackageVersion Include="NUnit" Version="4.4.0" />
-        <PackageVersion Include="NUnit.Analyzers" Version="4.11.2" />
-        <PackageVersion Include="Polly.Core" Version="8.6.5" />
+        <PackageVersion Include="NUnit3TestAdapter" Version="6.2.0" />
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+        <PackageVersion Include="NUnit" Version="4.5.1" />
+        <PackageVersion Include="NUnit.Analyzers" Version="4.12.0" />
+        <PackageVersion Include="Polly.Core" Version="8.6.6" />
         <PackageVersion Include="SSH.NET" Version="2025.1.0" />
         <PackageVersion Include="RazorLight" Version="2.3.1" />
         <PackageVersion Include="dbup" Version="5.0.41" />
-        <PackageVersion Include="RabbitMQ.Client" Version="7.2.0" />
-        <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="5.0.0"/>
-        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0"/>
+        <PackageVersion Include="RabbitMQ.Client" Version="7.2.1" />
+        <PackageVersion Include="Microsoft.CodeAnalysis.Common" Version="5.3.0"/>
+        <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.3.0"/>
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
@@ -52,16 +52,16 @@
     </ItemGroup>
 
     <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-        <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.1"/>
-        <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.1"/>
-        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1"/>
-        <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.1"/>
-        <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0"/>
-        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1"/>
-        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.1"/>
-        <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.1"/>
+        <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.5"/>
+        <PackageVersion Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.5"/>
+        <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.5"/>
+        <PackageVersion Include="Microsoft.Extensions.Hosting.Abstractions" Version="10.0.5"/>
+        <PackageVersion Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9"/>
+        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5"/>
+        <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.5"/>
+        <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.5"/>
         <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.5" />
-        <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.5" />
+        <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="9.0.14" />
 
     </ItemGroup>
 </Project>

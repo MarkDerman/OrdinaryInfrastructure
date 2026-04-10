@@ -1,12 +1,13 @@
 namespace Odin.Patterns.Commands;
 
 /// <summary>
-/// Dispatches commands to the correct command handler.
+/// Dispatches commands to their registered command handlers.
 /// </summary>
 public interface ICommandDispatcher
 {
     /// <summary>
-    /// Dispatches a command that does not return a result.
+    /// Dispatches a command that does not return a result
+    /// to its registered command handler.
     /// </summary>
     /// <typeparam name="TCommand"></typeparam>
     /// <param name="command"></param>
@@ -17,7 +18,8 @@ public interface ICommandDispatcher
         where TCommand : ICommand;
 
     /// <summary>
-    /// Dispatches a command that returns a result.
+    /// Dispatches a command that returns a result
+    /// to its registered command handler.
     /// </summary>
     /// <typeparam name="TCommand"></typeparam>
     /// <typeparam name="TCommandResult"></typeparam>

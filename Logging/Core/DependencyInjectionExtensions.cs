@@ -10,7 +10,7 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class Logger2Extensions
     {
         /// <summary>
-        /// Sets up ILogger2 of T in dependency injection
+        /// Adds the Odin ILoggerWrapper of T implementation into dependency injection
         /// </summary>
         /// <param name="serviceCollection"></param>
         /// <returns></returns>

@@ -4,25 +4,18 @@
         <ImplicitUsings>true</ImplicitUsings>
         <Nullable>enable</Nullable>
         <PackageIcon>icon.png</PackageIcon>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
-        <Description>
-
+        <RootNamespace>Odin.Testing</RootNamespace>
+        <Description>Assertion and other utility extension methods for NUnit based tests...
         </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
-
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
-        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
     </ItemGroup>
-
     <ItemGroup>
-        <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />
-        <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />
+        <None Include="../Assets/icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
-
     <ItemGroup>
-        <None Include="../../Assets/icon.png" Pack="true" PackagePath=""/>
-        <None Include="..\README.md" Pack="true" PackagePath=""/>
+      <PackageReference Include="NUnit" />
     </ItemGroup>
 </Project>

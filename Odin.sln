@@ -100,7 +100,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.System", "System
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DesignContracts.Analyzers", "DesignContracts\Analyzers\Odin.DesignContracts.Analyzers.csproj", "{12C40512-CA83-4209-9318-6CBCABF8C798}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.CommandHandler", "Patterns\CommandHandler\Odin.Patterns.CommandHandler.csproj", "{382C1CC0-F981-4682-9EFD-4471955327C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.Commands", "Patterns\Commands\Odin.Patterns.Commands.csproj", "{382C1CC0-F981-4682-9EFD-4471955327C3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patterns", "Patterns", "{605A7674-8EA4-458D-9FEB-A86C927AC0F0}"
 EndProject
@@ -109,6 +109,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Domain", "Domain\Core\Odin.Domain.csproj", "{9EF181C9-41C7-4C02-97AB-AD0D1DDFA323}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Domain.EntityFramework", "Domain\EntityFramework\Odin.Domain.EntityFramework.csproj", "{F0C4BEDA-4B20-4EC8-8265-EFF66D2B1B15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.Notifications", "Patterns\Notifications\Odin.Patterns.Notifications.csproj", "{36D412FB-8A69-47A4-BABF-7B851603C9A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.Queries", "Patterns\Queries\Odin.Patterns.Queries.csproj", "{FA79B472-DEDA-4BEE-B151-2B553A6528C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -248,6 +252,14 @@ Global
 		{F0C4BEDA-4B20-4EC8-8265-EFF66D2B1B15}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0C4BEDA-4B20-4EC8-8265-EFF66D2B1B15}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0C4BEDA-4B20-4EC8-8265-EFF66D2B1B15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36D412FB-8A69-47A4-BABF-7B851603C9A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36D412FB-8A69-47A4-BABF-7B851603C9A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36D412FB-8A69-47A4-BABF-7B851603C9A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36D412FB-8A69-47A4-BABF-7B851603C9A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA79B472-DEDA-4BEE-B151-2B553A6528C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA79B472-DEDA-4BEE-B151-2B553A6528C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA79B472-DEDA-4BEE-B151-2B553A6528C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA79B472-DEDA-4BEE-B151-2B553A6528C2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CE323D9C-635B-EFD3-5B3F-7CE371D8A86A} = {BF440C74-E223-3CBF-8FA7-83F7D164F7C3}
@@ -283,5 +295,7 @@ Global
 		{382C1CC0-F981-4682-9EFD-4471955327C3} = {605A7674-8EA4-458D-9FEB-A86C927AC0F0}
 		{9EF181C9-41C7-4C02-97AB-AD0D1DDFA323} = {5B5DADD3-07F8-40E9-949A-82BEB18093CC}
 		{F0C4BEDA-4B20-4EC8-8265-EFF66D2B1B15} = {5B5DADD3-07F8-40E9-949A-82BEB18093CC}
+		{36D412FB-8A69-47A4-BABF-7B851603C9A1} = {605A7674-8EA4-458D-9FEB-A86C927AC0F0}
+		{FA79B472-DEDA-4BEE-B151-2B553A6528C2} = {605A7674-8EA4-458D-9FEB-A86C927AC0F0}
 	EndGlobalSection
 EndGlobal

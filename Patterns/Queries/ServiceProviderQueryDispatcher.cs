@@ -1,6 +1,6 @@
-using Microsoft.Extensions.DependencyInjection;
 using Odin.DesignContracts;
 using Odin.Logging;
+using Odin.Patterns.Dispatching.Internal;
 
 namespace Odin.Patterns.Queries;
 
@@ -9,8 +9,18 @@ namespace Odin.Patterns.Queries;
 /// </summary>
 public sealed class ServiceProviderQueryDispatcher : IQueryDispatcher
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly ILoggerWrapper<ServiceProviderQueryDispatcher> _logger;
+    private static readonly DispatcherLog<ServiceProviderQueryDispatcher> DebugLog =
+        static (logger, message, firstArgument, secondArgument) => logger.LogDebug(message, firstArgument, secondArgument);
+
+    private static readonly DispatcherExceptionLog<ServiceProviderQueryDispatcher> DebugExceptionLog =
+        static (logger, exception, message, firstArgument, secondArgument) =>
+            logger.LogDebug(exception, message, firstArgument, secondArgument);
+
+    private static readonly DispatcherExceptionLog<ServiceProviderQueryDispatcher> ErrorExceptionLog =
+        static (logger, exception, message, firstArgument, secondArgument) =>
+            logger.LogError(exception, message, firstArgument, secondArgument);
+
+    private readonly DispatcherRuntime<ServiceProviderQueryDispatcher> _runtime;
 
     /// <summary>
     /// Creates a new dispatcher.
@@ -24,8 +34,7 @@ public sealed class ServiceProviderQueryDispatcher : IQueryDispatcher
         Precondition.RequiresNotNull(serviceProvider);
         Precondition.RequiresNotNull(logger);
 
-        _serviceProvider = serviceProvider;
-        _logger = logger;
+        _runtime = new DispatcherRuntime<ServiceProviderQueryDispatcher>(serviceProvider, logger);
     }
 
     /// <inheritdoc />
@@ -39,67 +48,25 @@ public sealed class ServiceProviderQueryDispatcher : IQueryDispatcher
         Type queryType = typeof(TQuery);
         Type handlerInterfaceType = typeof(IQueryHandler<TQuery, TQueryResult>);
 
-        _logger.LogDebug(
+        _runtime.LogDispatch(
+            DebugLog,
             "Dispatching query {QueryType} using handler interface {HandlerInterface}.",
-            FormatTypeName(queryType),
-            FormatTypeName(handlerInterfaceType));
+            queryType,
+            handlerInterfaceType);
 
         IQueryHandler<TQuery, TQueryResult> handler =
-            ResolveHandler<IQueryHandler<TQuery, TQueryResult>>(queryType, handlerInterfaceType);
+            _runtime.ResolveSingleHandler<IQueryHandler<TQuery, TQueryResult>>(queryType, handlerInterfaceType, "query");
 
-        try
-        {
-            TQueryResult result = await handler.HandleAsync(query, ct).ConfigureAwait(false);
-
-            _logger.LogDebug(
-                "Query {QueryType} completed successfully using handler {HandlerType}.",
-                FormatTypeName(queryType),
-                FormatTypeName(handler.GetType()));
-
-            return result;
-        }
-        catch (OperationCanceledException ex) when (ct.IsCancellationRequested)
-        {
-            _logger.LogDebug(
-                ex,
-                "Query {QueryType} was cancelled while executing handler {HandlerType}.",
-                FormatTypeName(queryType),
-                FormatTypeName(handler.GetType()));
-            throw;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(
-                ex,
-                "Query {QueryType} failed while executing handler {HandlerType}.",
-                FormatTypeName(queryType),
-                FormatTypeName(handler.GetType()));
-            throw;
-        }
-    }
-
-    private THandler ResolveHandler<THandler>(Type queryType, Type handlerInterfaceType)
-        where THandler : class
-    {
-        THandler[] handlers = _serviceProvider.GetServices<THandler>().ToArray();
-
-        if (handlers.Length == 1)
-        {
-            return handlers[0];
-        }
-
-        string message = handlers.Length == 0
-            ? $"No query handler was registered for query type '{FormatTypeName(queryType)}'. " +
-              $"Expected handler interface: '{FormatTypeName(handlerInterfaceType)}'."
-            : $"Multiple query handlers were registered for query type '{FormatTypeName(queryType)}'. " +
-              $"Expected handler interface: '{FormatTypeName(handlerInterfaceType)}'. Found {handlers.Length} registrations.";
-
-        _logger.LogError(message);
-        throw new InvalidOperationException(message);
-    }
-
-    private static string FormatTypeName(Type type)
-    {
-        return type.FullName ?? type.Name;
+        return await _runtime.ExecuteAsync(
+            () => handler.HandleAsync(query, ct),
+            ct,
+            queryType,
+            handler.GetType(),
+            DebugLog,
+            DebugExceptionLog,
+            ErrorExceptionLog,
+            "Query {QueryType} completed successfully using handler {HandlerType}.",
+            "Query {QueryType} was cancelled while executing handler {HandlerType}.",
+            "Query {QueryType} failed while executing handler {HandlerType}.").ConfigureAwait(false);
     }
 }

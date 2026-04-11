@@ -20,6 +20,7 @@
         <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />
         <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />
         <ProjectReference Include="..\Commands.Abstractions\Odin.Patterns.Commands.Abstractions.csproj" />
+        <ProjectReference Include="..\Dispatching.Internal\Odin.Patterns.Dispatching.Internal.csproj" />
     </ItemGroup>
 
     <ItemGroup>

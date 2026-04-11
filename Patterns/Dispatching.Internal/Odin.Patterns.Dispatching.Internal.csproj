@@ -5,7 +5,8 @@
         <Nullable>enable</Nullable>
         <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <Description>Implementation of a query dispatch pattern.
+        <RootNamespace>Odin.Patterns.Dispatching.Internal</RootNamespace>
+        <Description>Shared internal dispatching runtime helpers for Odin command and query dispatchers.
 
         </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
@@ -19,8 +20,6 @@
     <ItemGroup>
         <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />
         <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />
-        <ProjectReference Include="..\Queries.Abstractions\Odin.Patterns.Queries.Abstractions.csproj" />
-        <ProjectReference Include="..\Dispatching.Internal\Odin.Patterns.Dispatching.Internal.csproj" />
     </ItemGroup>
 
     <ItemGroup>

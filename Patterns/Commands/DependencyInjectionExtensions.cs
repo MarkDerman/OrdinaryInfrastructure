@@ -27,8 +27,8 @@ public static class DependencyInjectionExtensions
 
     /// <summary>
     /// Finds all implementations of ICommandHandler (of TCommand) and
-    /// ICommandHandler (of TCommand, TResult) in the application
-    /// (or specific assemblies) and registers them as transient services.
+    /// ICommandHandler (of TCommand, TResult) in the specified assemblies,
+    /// and registers them as transient services.
     /// </summary>
     /// <param name="serviceCollection">The service collection to update.</param>
     /// <param name="assemblies">The assemblies to scan for command handler implementations.</param>

@@ -25,7 +25,7 @@ public sealed class DependencyInjectionExtensionsTests
 
     
     [Test]
-    public void AddOdinCommands_registers_dispatcher_logging_and_scanned_handlers()
+    public void AddOdinCommandHandlers_registers_scanned_handlers()
     {
         ServiceCollection services = new();
 
@@ -38,5 +38,12 @@ public sealed class DependencyInjectionExtensionsTests
             typeof(TestResultCommandHandler));
 
     }
+    
+    [Test]
+    public void AddOdinCommandHandlers_requires_specific_assemblies_to_scan()
+    {
+        ServiceCollection services = new();
 
+        Assert.Catch<ArgumentNullException>(() => services.AddOdinCommandHandlers(null!));
+    }
 }

@@ -1,11 +1,11 @@
 namespace Odin.Patterns.Queries;
 
 /// <summary>
-/// Defines the handling implementation for a command request that returns a Result.
+/// Defines the handling implementation for a query request that returns a result.
 /// </summary>
 /// <typeparam name="TQuery"></typeparam>
 /// <typeparam name="TQueryResult"></typeparam>
-public interface IQueryHandler<in TQuery, TQueryResult> 
+public interface IQueryHandler<in TQuery, TQueryResult>
     where TQuery : IQuery<TQueryResult>
 {
     /// <summary>

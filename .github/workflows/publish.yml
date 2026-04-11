@@ -65,6 +65,7 @@ jobs:
         dotnet pack ./Email/Core/Odin.Email.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Logging/Core/Odin.Logging.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Messaging/RabbitMq/Odin.Messaging.RabbitMq.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
+        dotnet pack ./Patterns/Commands.Abstractions/Odin.Patterns.Commands.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Patterns/Commands/Odin.Patterns.Commands.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Patterns/Queries/Odin.Patterns.Queries.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Patterns/Notifications/Odin.Patterns.Notifications.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR

@@ -12,12 +12,12 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static class DependencyInjectionExtensions
 {
     /// <summary>
-    /// Adds the Odin ServiceProviderCommandDispatcher.
+    /// Registers the Odin implementation for ICommandDispatcher.
     /// Does not auto register all ICommandHandler of TCommand implementations.
     /// </summary>
     /// <param name="serviceCollection">The service collection to update.</param>
     /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddOdinCommands(this IServiceCollection serviceCollection)
+    public static IServiceCollection AddOdinCommandDispatcher(this IServiceCollection serviceCollection)
     {
         Precondition.RequiresNotNull(serviceCollection);
         serviceCollection.AddOdinLoggerWrapper();
@@ -26,19 +26,19 @@ public static class DependencyInjectionExtensions
     }
 
     /// <summary>
-    /// Adds the Odin command dispatcher together with command handlers found in the provided assemblies.
+    /// Finds all implementations of ICommandHandler (of TCommand) and
+    /// ICommandHandler (of TCommand, TResult) in the application
+    /// (or specific assemblies) and registers them as transient services.
     /// </summary>
     /// <param name="serviceCollection">The service collection to update.</param>
     /// <param name="assemblies">The assemblies to scan for command handler implementations.</param>
     /// <returns>The updated service collection.</returns>
-    public static IServiceCollection AddOdinCommands(
+    public static IServiceCollection AddOdinCommandHandlers(
         this IServiceCollection serviceCollection,
         params Assembly[] assemblies)
     {
         Precondition.RequiresNotNull(serviceCollection);
         Precondition.RequiresNotNull(assemblies);
-
-        serviceCollection.AddOdinCommands();
 
         foreach (Assembly assembly in assemblies.Distinct())
         {

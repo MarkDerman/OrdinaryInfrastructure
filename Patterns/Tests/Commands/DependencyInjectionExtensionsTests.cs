@@ -10,13 +10,18 @@ namespace Tests.Odin.Patterns.Commands;
 public sealed class DependencyInjectionExtensionsTests
 {
     [Test]
-    public void AddOdinCommands_registers_CommandDispatcherr_and_LoggerWrapper()
+    public void AddOdinCommandDispatcher_registers_CommandDispatcher_and_LoggerWrapper()
     {
         ServiceCollection services = new();
 
-        services.AddOdinCommands();
-    }
+        services.AddOdinCommandDispatcher();
 
+        services.AssertServiceRegistration(typeof(ICommandDispatcher), ServiceLifetime.Transient, 
+            typeof(ServiceProviderCommandDispatcher));
+        services.AssertServiceRegistration(typeof(ILoggerWrapper<>), ServiceLifetime.Singleton, 
+            typeof(LoggerWrapper<>));
+        services.AssertServiceRegistration(typeof(ILogger<>), ServiceLifetime.Singleton);
+    }
 
     
     [Test]
@@ -24,61 +29,14 @@ public sealed class DependencyInjectionExtensionsTests
     {
         ServiceCollection services = new();
 
-        services.AddOdinCommands(typeof(DependencyInjectionExtensionsTests).Assembly);
+        services.AddOdinCommandHandlers(typeof(DependencyInjectionExtensionsTests).Assembly);
 
-        Assert.That(
-            services.Any(x =>
-                x.ServiceType == typeof(ICommandDispatcher) &&
-                x.ImplementationType == typeof(ServiceProviderCommandDispatcher) &&
-                x.Lifetime == ServiceLifetime.Transient),
-            Is.True);
+        services.AssertServiceRegistration(typeof(ICommandHandler<TestCommand>), ServiceLifetime.Transient, 
+            typeof(TestCommandHandler));
 
-        Assert.That(
-            services.Any(x =>
-                x.ServiceType == typeof(ILogger<>) &&
-                x.ImplementationType == typeof(NullLogger<>) &&
-                x.Lifetime == ServiceLifetime.Singleton),
-            Is.True);
+        services.AssertServiceRegistration(typeof(ICommandHandler<TestResultCommand, string>), ServiceLifetime.Transient, 
+            typeof(TestResultCommandHandler));
 
-        Assert.That(
-            services.Any(x =>
-                x.ServiceType == typeof(ILoggerWrapper<>) &&
-                x.ImplementationType == typeof(LoggerWrapper<>) &&
-                x.Lifetime == ServiceLifetime.Singleton),
-            Is.True);
-
-        Assert.That(
-            services.Any(x =>
-                x.ServiceType == typeof(ICommandHandler<RegisteredCommand>) &&
-                x.ImplementationType == typeof(RegisteredCommandHandler) &&
-                x.Lifetime == ServiceLifetime.Transient),
-            Is.True);
-
-        Assert.That(
-            services.Any(x =>
-                x.ServiceType == typeof(ICommandHandler<RegisteredResultCommand, string>) &&
-                x.ImplementationType == typeof(RegisteredResultCommandHandler) &&
-                x.Lifetime == ServiceLifetime.Transient),
-            Is.True);
     }
 
-    private sealed record RegisteredCommand(string Value) : ICommand;
-
-    private sealed record RegisteredResultCommand(int Value) : ICommand<string>;
-
-    private sealed class RegisteredCommandHandler : ICommandHandler<RegisteredCommand>
-    {
-        public Task HandleAsync(RegisteredCommand command, CancellationToken ct = default)
-        {
-            return Task.CompletedTask;
-        }
-    }
-
-    private sealed class RegisteredResultCommandHandler : ICommandHandler<RegisteredResultCommand, string>
-    {
-        public Task<string> HandleAsync(RegisteredResultCommand command, CancellationToken ct = default)
-        {
-            return Task.FromResult(command.Value.ToString());
-        }
-    }
 }

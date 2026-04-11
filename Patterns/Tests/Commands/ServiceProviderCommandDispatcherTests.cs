@@ -22,14 +22,14 @@ public sealed class ServiceProviderCommandDispatcherTests
 
         Assert.That(handler.ReceivedCommand, Is.SameAs(command));
         loggerMock.Verify(
-            x => x.LogInformation(
+            x => x.LogTrace(
                 "Dispatching command {CommandType} using handler interface {HandlerInterface}.",
                 It.Is<object?[]>(args =>
                     args.Length == 2 &&
                     Equals(args[0], typeof(TestCommand).FullName))),
             Times.Once);
         loggerMock.Verify(
-            x => x.LogInformation(
+            x => x.LogTrace(
                 "Command {CommandType} completed successfully using handler {HandlerType}.",
                 It.Is<object?[]>(args =>
                     args.Length == 2 &&

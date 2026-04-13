@@ -124,6 +124,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.Commands.Abst
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.Queries.Abstractions", "Patterns\Queries.Abstractions\Odin.Patterns.Queries.Abstractions.csproj", "{6B3B86A4-CB53-4E25-8681-31245BA33961}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Configuration.PrefixedAzureKeyVaultSecretManager", "Configuration\PrefixedAzureKeyVaultSecretManager\Odin.Configuration.PrefixedAzureKeyVaultSecretManager.csproj", "{92E365EC-AC42-4F5D-AC55-E9020CD631ED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -286,6 +288,10 @@ Global
 		{6B3B86A4-CB53-4E25-8681-31245BA33961}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B3B86A4-CB53-4E25-8681-31245BA33961}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B3B86A4-CB53-4E25-8681-31245BA33961}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92E365EC-AC42-4F5D-AC55-E9020CD631ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92E365EC-AC42-4F5D-AC55-E9020CD631ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92E365EC-AC42-4F5D-AC55-E9020CD631ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92E365EC-AC42-4F5D-AC55-E9020CD631ED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CE323D9C-635B-EFD3-5B3F-7CE371D8A86A} = {BF440C74-E223-3CBF-8FA7-83F7D164F7C3}
@@ -327,5 +333,6 @@ Global
 		{46BCDE44-FA4E-4AE0-A6C0-9AFAE1BE09DF} = {51D0FF83-33F9-490F-A0CB-A32DC1CC48AF}
 		{7749636C-2D34-4E0B-81C9-9E89C5630858} = {605A7674-8EA4-458D-9FEB-A86C927AC0F0}
 		{6B3B86A4-CB53-4E25-8681-31245BA33961} = {605A7674-8EA4-458D-9FEB-A86C927AC0F0}
+		{92E365EC-AC42-4F5D-AC55-E9020CD631ED} = {E448CD88-53B9-4ED2-BEB3-8456F601CD0F}
 	EndGlobalSection
 EndGlobal

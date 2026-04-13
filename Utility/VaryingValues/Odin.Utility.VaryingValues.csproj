@@ -15,20 +15,12 @@
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
     
-    <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="8.0.2" />
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions"  />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" />
     </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.11" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.11" />
-    </ItemGroup>
 
-    <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
-        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="10.0.1" />
-    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />

@@ -5,7 +5,6 @@ using Microsoft.Graph.Models;
 using Microsoft.Graph.Users.Item.SendMail;
 using Odin.Logging;
 using Odin.System;
-using Contract = Odin.DesignContracts.Contract;
 
 namespace Odin.Email;
 
@@ -133,7 +132,7 @@ public class Office365EmailSender : IEmailSender
 
     static byte[] ToByteArray(Stream inputStream)
     {
-        ArgumentNullException.ThrowIfNull(inputStream);
+        Precondition.RequiresNotNull(inputStream);
 
         if (inputStream.CanSeek)
         {

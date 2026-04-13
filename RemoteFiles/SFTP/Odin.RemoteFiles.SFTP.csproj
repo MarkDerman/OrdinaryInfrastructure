@@ -12,7 +12,7 @@
     </Description>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="SSH.NET" Version="2025.1.0" />
+    <PackageReference Include="SSH.NET" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Abstractions\Odin.RemoteFiles.Abstractions.csproj" />

@@ -15,7 +15,7 @@
     <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="RazorLight" Version="2.3.1" />
+    <PackageReference Include="RazorLight"/>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />

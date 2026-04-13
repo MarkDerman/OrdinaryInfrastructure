@@ -4,6 +4,7 @@
         <Company>Soulv Software (Pty) Ltd</Company>
         <Copyright>Copyright (c) Soulv Software 2025</Copyright>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <LangVersion>13</LangVersion>
         <PackageProjectUrl>https://github.com/MarkDerman/OrdinaryInfrastructure</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/MarkDerman/OrdinaryInfrastructure</RepositoryUrl>
@@ -11,5 +12,6 @@
         <WarningsAsErrors>8625;8600;8601;8603</WarningsAsErrors>
 <!--     Todo: Add these ones in...   <WarningsAsErrors>8625;8613;8618</WarningsAsErrors>-->
         <NoWarn>1701;1702;5104;8602;8604;8618;8619;NU1901</NoWarn>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>        
     </PropertyGroup>
 </Project>

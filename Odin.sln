@@ -80,7 +80,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messaging", "Messaging", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.System.Result", "System\Result\Odin.System.Result.csproj", "{36463D1F-7E51-41B8-B6EA-5E3B833DB479}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.System.StringEnum", "System\StringEnum\Odin.System.StringEnum.csproj", "{13D2E2D9-7E61-4AED-83C6-71D01D6E3BFD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.System.Strings", "System\Strings\Odin.System.Strings.csproj", "{13D2E2D9-7E61-4AED-83C6-71D01D6E3BFD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.BackgroundProcessing", "BackgroundProcessing\Tests\Tests.Odin.BackgroundProcessing.csproj", "{B091589D-960C-40F6-822F-522D099828E6}"
 EndProject

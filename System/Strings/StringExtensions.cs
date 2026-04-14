@@ -1,4 +1,4 @@
-namespace Odin.System;
+namespace System;
 
 /// <summary>
 /// Commonly used string utilities. 

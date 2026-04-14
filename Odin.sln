@@ -118,11 +118,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Patterns", "Patt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{51D0FF83-33F9-490F-A0CB-A32DC1CC48AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.NUnitUtility", "TestingUtility\Odin.Testing.NUnitUtility.csproj", "{46BCDE44-FA4E-4AE0-A6C0-9AFAE1BE09DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.NUnitUtility", "Testing\NUnitUtility\Odin.Testing.NUnitUtility.csproj", "{46BCDE44-FA4E-4AE0-A6C0-9AFAE1BE09DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.Commands.Abstractions", "Patterns\Commands.Abstractions\Odin.Patterns.Commands.Abstractions.csproj", "{7749636C-2D34-4E0B-81C9-9E89C5630858}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.Queries.Abstractions", "Patterns\Queries.Abstractions\Odin.Patterns.Queries.Abstractions.csproj", "{6B3B86A4-CB53-4E25-8681-31245BA33961}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.Fakes", "Testing\Fakes\Odin.Testing.Fakes.csproj", "{9B70E469-CF39-45B0-B88E-7B28943BF2FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -286,6 +288,10 @@ Global
 		{6B3B86A4-CB53-4E25-8681-31245BA33961}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B3B86A4-CB53-4E25-8681-31245BA33961}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B3B86A4-CB53-4E25-8681-31245BA33961}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B70E469-CF39-45B0-B88E-7B28943BF2FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B70E469-CF39-45B0-B88E-7B28943BF2FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B70E469-CF39-45B0-B88E-7B28943BF2FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B70E469-CF39-45B0-B88E-7B28943BF2FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CE323D9C-635B-EFD3-5B3F-7CE371D8A86A} = {BF440C74-E223-3CBF-8FA7-83F7D164F7C3}
@@ -327,5 +333,6 @@ Global
 		{46BCDE44-FA4E-4AE0-A6C0-9AFAE1BE09DF} = {51D0FF83-33F9-490F-A0CB-A32DC1CC48AF}
 		{7749636C-2D34-4E0B-81C9-9E89C5630858} = {605A7674-8EA4-458D-9FEB-A86C927AC0F0}
 		{6B3B86A4-CB53-4E25-8681-31245BA33961} = {605A7674-8EA4-458D-9FEB-A86C927AC0F0}
+		{9B70E469-CF39-45B0-B88E-7B28943BF2FE} = {51D0FF83-33F9-490F-A0CB-A32DC1CC48AF}
 	EndGlobalSection
 EndGlobal

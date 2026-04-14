@@ -34,7 +34,7 @@
         /// <returns></returns>
         public new static Result Failure(string message)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
+            Contract.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
             return new Result(false, message);
         }
         
@@ -45,9 +45,9 @@
         /// <returns></returns>
         public new static Result Failure(IEnumerable<string> messages)
         {
-            Precondition.RequiresNotNull(messages);
+            Contract.RequiresNotNull(messages);
             List<string> list = messages.ToList();
-            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
+            Contract.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
             return new Result(false, list);
         }
         

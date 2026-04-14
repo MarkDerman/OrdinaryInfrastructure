@@ -21,8 +21,8 @@ public sealed class ServiceProviderCommandDispatcher : ICommandDispatcher
         IServiceProvider serviceProvider,
         ILoggerWrapper<ServiceProviderCommandDispatcher> logger)
     {
-        Precondition.RequiresNotNull(serviceProvider);
-        Precondition.RequiresNotNull(logger);
+        Contract.RequiresNotNull(serviceProvider);
+        Contract.RequiresNotNull(logger);
 
         _serviceProvider = serviceProvider;
         _logger = logger;
@@ -34,7 +34,7 @@ public sealed class ServiceProviderCommandDispatcher : ICommandDispatcher
         CancellationToken ct = default)
         where TCommand : ICommand
     {
-        Precondition.RequiresNotNull(command);
+        Contract.RequiresNotNull(command);
 
         Type commandType = typeof(TCommand);
         Type handlerInterfaceType = typeof(ICommandHandler<TCommand>);
@@ -81,7 +81,7 @@ public sealed class ServiceProviderCommandDispatcher : ICommandDispatcher
         CancellationToken ct = default)
         where TCommand : ICommand<TCommandResult>
     {
-        Precondition.RequiresNotNull(command);
+        Contract.RequiresNotNull(command);
 
         Type commandType = typeof(TCommand);
         Type handlerInterfaceType = typeof(ICommandHandler<TCommand, TCommandResult>);

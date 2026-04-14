@@ -21,8 +21,8 @@ public sealed class ServiceProviderQueryDispatcher : IQueryDispatcher
         IServiceProvider serviceProvider,
         ILoggerWrapper<ServiceProviderQueryDispatcher> logger)
     {
-        Precondition.RequiresNotNull(serviceProvider);
-        Precondition.RequiresNotNull(logger);
+        Contract.RequiresNotNull(serviceProvider);
+        Contract.RequiresNotNull(logger);
 
         _serviceProvider = serviceProvider;
         _logger = logger;
@@ -34,7 +34,7 @@ public sealed class ServiceProviderQueryDispatcher : IQueryDispatcher
         CancellationToken ct = default)
         where TQuery : IQuery<TQueryResult>
     {
-        Precondition.RequiresNotNull(query);
+        Contract.RequiresNotNull(query);
 
         Type queryType = typeof(TQuery);
         Type handlerInterfaceType = typeof(IQueryHandler<TQuery, TQueryResult>);

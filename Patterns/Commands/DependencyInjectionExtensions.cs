@@ -19,7 +19,7 @@ public static class DependencyInjectionExtensions
     /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddOdinCommandDispatcher(this IServiceCollection serviceCollection)
     {
-        Precondition.RequiresNotNull(serviceCollection);
+        Contract.RequiresNotNull(serviceCollection);
         serviceCollection.AddOdinLoggerWrapper();
         serviceCollection.TryAddTransient<ICommandDispatcher, ServiceProviderCommandDispatcher>();
         return serviceCollection;
@@ -37,12 +37,12 @@ public static class DependencyInjectionExtensions
         this IServiceCollection serviceCollection,
         params Assembly[] assemblies)
     {
-        Precondition.RequiresNotNull(serviceCollection);
-        Precondition.RequiresNotNull(assemblies);
+        Contract.RequiresNotNull(serviceCollection);
+        Contract.RequiresNotNull(assemblies);
 
         foreach (Assembly assembly in assemblies.Distinct())
         {
-            Precondition.RequiresNotNull(assembly);
+            Contract.RequiresNotNull(assembly);
             RegisterCommandHandlers(serviceCollection, assembly);
         }
 

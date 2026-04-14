@@ -75,7 +75,7 @@ namespace Odin.System
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
         protected ResultValue(bool success, TValue? value, IEnumerable<TMessage>? messages)
         {
-            Precondition.Requires(!(value == null && success), "Value is required for a successful result.");
+            Contract.Requires(!(value == null && success), "Value is required for a successful result.");
             IsSuccess = success;
             Value = value;
             _messages = messages?.ToList();
@@ -89,7 +89,7 @@ namespace Odin.System
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
         protected ResultValue(bool success, TValue? value, TMessage? message = null)
         {
-            Precondition.Requires(!(value == null && success), "Value is required for a successful result.");
+            Contract.Requires(!(value == null && success), "Value is required for a successful result.");
             IsSuccess = success;
             Value = value;
             _messages = message != null ? [message] : null;
@@ -103,7 +103,7 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultValue<TValue, TMessage> Success(TValue value, IEnumerable<TMessage>? messages)
         {
-            Precondition.RequiresNotNull(value);
+            Contract.RequiresNotNull(value);
             return new ResultValue<TValue, TMessage>(true, value, messages);
         }
 
@@ -114,7 +114,7 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultValue<TValue, TMessage> Success(TValue value)
         {
-            Precondition.RequiresNotNull(value);
+            Contract.RequiresNotNull(value);
             return new ResultValue<TValue, TMessage>(true, value, null as TMessage);
         }
 
@@ -126,7 +126,7 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultValue<TValue, TMessage> Success(TValue value, TMessage? message)
         {
-            Precondition.RequiresNotNull(value);
+            Contract.RequiresNotNull(value);
             return new ResultValue<TValue, TMessage>(true, value, message);
         }
 
@@ -138,9 +138,9 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultValue<TValue, TMessage> Failure(IEnumerable<TMessage> messages, TValue? value = default(TValue))
         {
-            Precondition.RequiresNotNull(messages);
+            Contract.RequiresNotNull(messages);
             List<TMessage> messagesList = messages.ToList();
-            Precondition.Requires(messagesList.Any(m => m != null!), "At least 1 message is required.");
+            Contract.Requires(messagesList.Any(m => m != null!), "At least 1 message is required.");
             return new ResultValue<TValue, TMessage>(false, value, messagesList);
         }
 
@@ -152,7 +152,7 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultValue<TValue, TMessage> Failure(TMessage message, TValue? value = default(TValue))
         {
-            Precondition.RequiresNotNull(message);
+            Contract.RequiresNotNull(message);
             return new ResultValue<TValue, TMessage>(false, value, new List<TMessage>() { message });
         }
         

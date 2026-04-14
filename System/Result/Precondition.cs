@@ -1,6 +1,6 @@
 namespace Odin.System;
 
-internal static class Precondition
+internal static class Contract
 {
     internal static void Requires(bool requirement, string argumentRequirementMessage)
     {

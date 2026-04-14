@@ -49,9 +49,9 @@ public class ResultValueNullable<TValue> : ResultValueNullable<TValue, string>
         /// <returns></returns>
         public new static ResultValueNullable<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue) )
         {
-            Precondition.RequiresNotNull(messages);
+            Contract.RequiresNotNull(messages);
             List<string> list = messages.ToList();
-            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
+            Contract.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
             return new ResultValueNullable<TValue>(false, value, list);
         }
 
@@ -63,7 +63,7 @@ public class ResultValueNullable<TValue> : ResultValueNullable<TValue, string>
         /// <returns></returns>
         public new static ResultValueNullable<TValue> Failure(string message, TValue? value = default(TValue) )
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
+            Contract.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
             return new ResultValueNullable<TValue>(false, value, new List<string>() { message });
         }
         

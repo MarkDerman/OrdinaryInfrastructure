@@ -18,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Activator2\Odin.System.Activator2.csproj" />
     <ProjectReference Include="..\Result\Odin.System.Result.csproj" />
-    <ProjectReference Include="..\StringEnum\Odin.System.StringEnum.csproj" />
+    <ProjectReference Include="..\Strings\Odin.System.Strings.csproj" />
   </ItemGroup>
 
 </Project>

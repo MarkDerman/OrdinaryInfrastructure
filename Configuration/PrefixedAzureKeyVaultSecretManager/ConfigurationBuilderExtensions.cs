@@ -16,9 +16,24 @@ public static class ConfigurationBuilderExtensions
     /// <param name="credential">The token credential to use for authentication.</param>
     /// <param name="options">The optional configuration options for Azure Key Vault.</param>
     /// <returns>The configuration builder.</returns>
-    public static IConfigurationBuilder AddPrefixedAzureKeyVault(this IConfigurationBuilder configBuilder, 
-        string vaultNameOrUri, string prefix, TokenCredential credential, AzureKeyVaultConfigurationOptions? options = null)
+    public static IConfigurationBuilder AddPrefixedAzureKeyVault(
+        this IConfigurationBuilder configBuilder, 
+        string vaultNameOrUri, 
+        string prefix, 
+        TokenCredential credential, 
+        AzureKeyVaultConfigurationOptions? options = null)
     {
+        // Guard Clauses
+        ArgumentNullException.ThrowIfNull(configBuilder);
+    
+        if (string.IsNullOrWhiteSpace(vaultNameOrUri))
+            throw new ArgumentException("Vault name or URI cannot be null or empty.", nameof(vaultNameOrUri));
+        
+        if (prefix == null)
+            throw new ArgumentNullException(nameof(prefix));
+        
+        ArgumentNullException.ThrowIfNull(credential);
+
         var vaultUri = vaultNameOrUri.StartsWith("https://") 
             ? new Uri(vaultNameOrUri) 
             : new Uri($"https://{vaultNameOrUri}.vault.azure.net/");

@@ -38,6 +38,6 @@ public class PrefixedAzureKeyVaultSecretManager : KeyVaultSecretManager
     {
         // Strip prefix and map "--" to ":"
         var key = secret.Name.Substring(_prefix.Length);
-        return key.Replace("--", ":");
+        return key.Replace("-", ":");
     }
 }

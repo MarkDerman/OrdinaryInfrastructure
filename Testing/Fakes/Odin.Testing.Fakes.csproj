@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Testing</RootNamespace>
-        <Description>Assertion and other utility extension methods for NUnit based tests...
+        <Description>Fakes and other utility classes supporting testing.
         </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
@@ -13,7 +13,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
     </ItemGroup>
     <ItemGroup>
-        <None Include="../Assets/icon.png" Pack="true" PackagePath="" />
+        <None Include="../../Assets/icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="NUnit" />

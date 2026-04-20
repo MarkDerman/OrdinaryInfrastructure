@@ -1,10 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <LangVersion>latest</LangVersion>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
     </PropertyGroup>
 
@@ -17,7 +13,7 @@
     </ItemGroup>
     
     <ItemGroup>
-        <ProjectReference Include="..\Configuration\PrefixedAzureKeyVaultSecretManager\Odin.Configuration.PrefixedAzureKeyVaultSecretManager.csproj" />
+        <ProjectReference Include="..\PrefixedAzureKeyVaultSecretManager\Odin.Configuration.PrefixedAzureKeyVaultSecretManager.csproj" />
     </ItemGroup>
 
     <ItemGroup>

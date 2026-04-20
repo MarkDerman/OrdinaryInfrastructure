@@ -128,7 +128,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Configuration.Prefixed
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.Fakes", "Testing\Fakes\Odin.Testing.Fakes.csproj", "{9B70E469-CF39-45B0-B88E-7B28943BF2FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Configuration", "Tests.Odin.Configuration\Tests.Odin.Configuration.csproj", "{E1B586BD-FA3C-4B94-89E0-CA33E364D4A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Configuration", "Configuration\Tests\Tests.Odin.Configuration.csproj", "{E1B586BD-FA3C-4B94-89E0-CA33E364D4A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

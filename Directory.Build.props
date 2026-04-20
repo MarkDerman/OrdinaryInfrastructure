@@ -1,10 +1,13 @@
 <Project>
     <PropertyGroup>
+        <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
         <Authors>Mark Derman</Authors>
         <Company>Soulv Software (Pty) Ltd</Company>
         <Copyright>Copyright (c) Soulv Software 2025</Copyright>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <LangVersion>13</LangVersion>
         <PackageProjectUrl>https://github.com/MarkDerman/OrdinaryInfrastructure</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/MarkDerman/OrdinaryInfrastructure</RepositoryUrl>

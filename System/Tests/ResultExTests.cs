@@ -1,32 +1,30 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using NUnit.Framework;
 using Odin.System;
 
 namespace Tests.Odin.System
 {
-    [TestFixture]
     public sealed class ResultExTests
     {
-        [Test]
+        [Fact]
         public void Success()
         {
             ResultEx sut = ResultEx.Success();
 
-            Assert.That(sut.IsSuccess, Is.True);
-            Assert.That(sut.MessagesToString(), Is.Empty);
-            Assert.That(sut.Messages, Is.Empty);
+            Assert.True(sut.IsSuccess);
+            Assert.Equal(string.Empty, sut.MessagesToString());
+            Assert.Empty(sut.Messages);
         }
 
-        [Test]
-        [TestCase("Reason", true,false)]
-        [TestCase("Reason", false,false)]
-        [TestCase(null, true, false)]
-        [TestCase(null, false, true)]
-        [TestCase(" ", true, false)]
-        [TestCase("", true, false)]
-        [TestCase(" ", false, true)]
-        [TestCase("", false, true)]
+        [Theory]
+        [InlineData("Reason", true, false)]
+        [InlineData("Reason", false, false)]
+        [InlineData(null, true, false)]
+        [InlineData(null, false, true)]
+        [InlineData(" ", true, false)]
+        [InlineData("", true, false)]
+        [InlineData(" ", false, true)]
+        [InlineData("", false, true)]
         public void Failure_requires_a_non_whitespace_message_or_an_error(string? message, bool passAnException, bool shouldThrow)
         {
             Exception? exception = passAnException ? new Exception("ABC") : null;
@@ -38,69 +36,70 @@ namespace Tests.Odin.System
             else
             {
                 ResultEx sut = ResultEx.Failure(message,LogLevel.Error,exception);
-                Assert.That(sut.IsSuccess, Is.False);
-                Assert.That(sut.Messages.Count, Is.EqualTo(1));
+                Assert.False(sut.IsSuccess);
+                Assert.Equal(1, sut.Messages.Count);
             }
         }
 
-        [Test]
+        [Fact]
         public void Succeed_with_message()
         {
             ResultEx sut = ResultEx.Success("lovely");
 
-            Assert.That(sut.IsSuccess, Is.True);
-            Assert.That(sut.Messages[0].Message, Is.EqualTo("lovely"));
-            Assert.That(sut.MessagesToString(), Is.EqualTo("Information: lovely"));
-            Assert.That(1, Is.EqualTo(sut.Messages.Count));
+            Assert.True(sut.IsSuccess);
+            Assert.Equal("lovely", sut.Messages[0].Message);
+            Assert.Equal("Information: lovely", sut.MessagesToString());
+            Assert.Equal(1, sut.Messages.Count);
         }
 
-        [Test]
-        [TestCase("message",true)]
-        [TestCase("message",false)]
-        [TestCase("",false)]
-        [TestCase(null,false)]
+        [Theory]
+        [InlineData("message", true)]
+        [InlineData("message", false)]
+        [InlineData("", false)]
+        [InlineData(null, false)]
         public void Constructor_with_success_and_failure(string? message, bool isSuccess)
         {
             ResultEx sut = new ResultEx(isSuccess, new MessageEx() { Message = message! });
 
-            Assert.That(sut.IsSuccess, Is.EqualTo(isSuccess));
+            Assert.Equal(isSuccess, sut.IsSuccess);
         }
 
-        [Test]
+        [Fact]
         public void Default_result_is_a_failure()
         {
             ResultEx sut = new ResultEx();
 
-            Assert.That(sut.IsSuccess, Is.False);
-            Assert.That(sut.Messages, Is.Empty);
+            Assert.False(sut.IsSuccess);
+            Assert.Empty(sut.Messages);
         }
 
-        [Test]
+        [Fact]
         public void ResultEx_serialises_with_system_dot_text_dot_json()
         {
             ResultEx sut = ResultEx.Success("cool man",LogLevel.Trace);
 
             string result = JsonSerializer.Serialize(sut);
 
-            Assert.That(result, Contains.Substring("cool man"));
+            Assert.Contains("cool man", result);
         }
 
-        [Test]
-        public void ResultEx_deserialises_with_system_dot_text_dot_json([Values] LogLevel severity)
+        [Theory]
+        [MemberData(nameof(LogLevels))]
+        public void ResultEx_deserialises_with_system_dot_text_dot_json(LogLevel severity)
         {
             string level = ((short) severity).ToString();
             string serialised = """{"IsSuccess":true,"Messages":[{"Message":"cool man","Severity":""" + level + ""","Error":null}]}""";
 
             ResultEx result = JsonSerializer.Deserialize<ResultEx>(serialised)!;
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.Messages[0].Message, Is.EqualTo("cool man"));
-            Assert.That(result.Messages[0].Severity, Is.EqualTo(severity));
-            Assert.That(result.Messages[0].Error, Is.Null);
+            Assert.NotNull(result);
+            Assert.True(result.IsSuccess);
+            Assert.Equal("cool man", result.Messages[0].Message);
+            Assert.Equal(severity, result.Messages[0].Severity);
+            Assert.Null(result.Messages[0].Error);
         }
         
-        [Test]
+        [Fact]
         public void Combine_with_success_and_failures()
         {
             ResultEx r1 = ResultEx.Success();
@@ -109,14 +108,14 @@ namespace Tests.Odin.System
             
             ResultEx sut = ResultEx.Combine(r1, r2, r3);
 
-            Assert.That(sut.IsSuccess, Is.False);
+            Assert.False(sut.IsSuccess);
             // First failure is returned...
-            Assert.That(sut.Messages.Count, Is.EqualTo(1));
-            Assert.That(sut.Messages[0].Message, Is.EqualTo("r2"));
-            Assert.That(sut.Messages[0].Severity, Is.EqualTo(LogLevel.Critical));
+            Assert.Equal(1, sut.Messages.Count);
+            Assert.Equal("r2", sut.Messages[0].Message);
+            Assert.Equal(LogLevel.Critical, sut.Messages[0].Severity);
         }
 
-        [Test]
+        [Fact]
         public void Combine_with_only_success()
         {
             ResultEx r1 = ResultEx.Success("r1");
@@ -125,10 +124,17 @@ namespace Tests.Odin.System
             
             ResultEx sut = ResultEx.Combine(r1, r2, r3);
 
-            Assert.That(sut.IsSuccess, Is.True);
-            Assert.That(sut.Messages, Is.Empty);
+            Assert.True(sut.IsSuccess);
+            Assert.Empty(sut.Messages);
         }
 
+        public static IEnumerable<object?[]> LogLevels()
+        {
+            foreach (LogLevel severity in Enum.GetValues<LogLevel>())
+            {
+                yield return [severity];
+            }
+        }
         
     }
 }

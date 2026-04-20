@@ -3,21 +3,20 @@ using Microsoft.Extensions.Configuration;
 
 namespace Tests.Odin.Email
 {
-    public class Program
+    public sealed class Program
     {
-        public static void Main(string[] args)
+        public static WebApplication BuildApplication(string[]? args = null)
         {
             string baseDir = AppContext.BaseDirectory;
             WebApplicationOptions appOptions = new WebApplicationOptions()
             {
-                Args = args,
+                Args = args ?? [],
                 ContentRootPath = baseDir
             };
             WebApplicationBuilder builder = WebApplication.CreateBuilder(appOptions);
             builder.Configuration.AddJsonFile("appSettings.json", false);
             builder.Configuration.AddUserSecrets<Program>();
-            WebApplication app = builder.Build();
-            app.RunAsync();
+            return builder.Build();
         }
     }
 }

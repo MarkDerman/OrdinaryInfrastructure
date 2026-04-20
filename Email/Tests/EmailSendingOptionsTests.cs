@@ -1,18 +1,14 @@
-﻿using NUnit.Framework;
-using Odin.Email;
+﻿using Odin.Email;
 using Odin.System;
 
 
 namespace Tests.Odin.Email
 {
-    [TestFixture]
     public sealed class EmailSendingOptionsTests
     {
-        [Test]
-        [TestCase("Mailgun", true)]
-        [TestCase("Null", true)]
-        [TestCase(EmailSendingProviders.Mailgun, true)]
-        [TestCase(EmailSendingProviders.Null, true)]
+        [Theory]
+        [InlineData("Mailgun", true)]
+        [InlineData("Null", true)]
         public void IsConfigurationValid_requires_valid_provider(string provider, bool isValidConfig)
         {
             EmailSendingOptions sut = new EmailSendingOptions()
@@ -24,7 +20,7 @@ namespace Tests.Odin.Email
 
             Result result = sut.Validate();
             
-            Assert.That(result.IsSuccess, Is.EqualTo(isValidConfig));
+            Assert.Equal(isValidConfig, result.IsSuccess);
         }
     }
 }

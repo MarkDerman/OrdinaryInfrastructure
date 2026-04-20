@@ -1,21 +1,13 @@
 using System.Text;
 using Microsoft.Extensions.Configuration;
-using NUnit.Framework;
 using Odin.Utility;
 
 namespace Tests.Odin.Utility;
 
-[TestFixture]
 public sealed class ValueChangesListProviderTests
 {
-    [Test]
-    [TestCase("1899-12-31", 0.0)]
-    [TestCase("1900-01-01", 15.0)]
-    [TestCase("2025-04-30", 15.0)]
-    [TestCase("2025-05-01", 15.5)]
-    [TestCase("2025-05-02", 15.5)]
-    [TestCase("2026-03-31", 15.5)]
-    [TestCase("2026-04-01", 16.0)]
+    [Theory]
+    [MemberData(nameof(VatChangeCases))]
     public void Vat_changes_in_time_are_correct(string testDateString, decimal? shouldBeValue)
     {
         DateOnly testDate = DateOnly.Parse(testDateString);
@@ -27,33 +19,33 @@ public sealed class ValueChangesListProviderTests
                 new(new DateOnly(2025, 5, 1), 15.5m)
             });
 
-        Assert.That(sut, Is.Not.Null);
+        Assert.NotNull(sut);
         decimal result = sut.GetValue(testDate);
-        Assert.That(result, Is.EqualTo(shouldBeValue), $"Expected {shouldBeValue} but was {result}.");
+        Assert.Equal(shouldBeValue, result);
     }
 
-    [Test]
+    [Fact]
     public void Initialise_from_IConfiguration()
     {
         ValueChangesListProvider<DateOnly, decimal> sut =
             new ValueChangesListProvider<DateOnly, decimal>(CreateTestVaryingDecimalsConfiguration(), "VaryingDecimals");
         
-        Assert.That(sut._valueChangesInOrder[0].From, Is.EqualTo(new DateOnly(1900, 1, 1)));
-        Assert.That(sut._valueChangesInOrder[0].Value, Is.EqualTo(15.0m));
-        Assert.That(sut._valueChangesInOrder[1].From, Is.EqualTo(new DateOnly(2025, 5, 1)));
-        Assert.That(sut._valueChangesInOrder[1].Value, Is.EqualTo(15.5m));
+        Assert.Equal(new DateOnly(1900, 1, 1), sut._valueChangesInOrder[0].From);
+        Assert.Equal(15.0m, sut._valueChangesInOrder[0].Value);
+        Assert.Equal(new DateOnly(2025, 5, 1), sut._valueChangesInOrder[1].From);
+        Assert.Equal(15.5m, sut._valueChangesInOrder[1].Value);
     }
 
-    [Test]
+    [Fact]
     public void Initialise_from_IConfigurationSection()
     {
         ValueChangesListProvider<DateOnly, decimal> sut =
             new ValueChangesListProvider<DateOnly, decimal>(CreateTestVaryingDecimalsConfiguration().GetSection("VaryingDecimals"));
         
-        Assert.That(sut._valueChangesInOrder[0].From, Is.EqualTo(new DateOnly(1900, 1, 1)));
-        Assert.That(sut._valueChangesInOrder[0].Value, Is.EqualTo(15.0m));
-        Assert.That(sut._valueChangesInOrder[1].From, Is.EqualTo(new DateOnly(2025, 5, 1)));
-        Assert.That(sut._valueChangesInOrder[1].Value, Is.EqualTo(15.5m));
+        Assert.Equal(new DateOnly(1900, 1, 1), sut._valueChangesInOrder[0].From);
+        Assert.Equal(15.0m, sut._valueChangesInOrder[0].Value);
+        Assert.Equal(new DateOnly(2025, 5, 1), sut._valueChangesInOrder[1].From);
+        Assert.Equal(15.5m, sut._valueChangesInOrder[1].Value);
     }
 
     private IConfigurationRoot CreateTestVaryingDecimalsConfiguration()
@@ -87,5 +79,16 @@ public sealed class ValueChangesListProviderTests
             new(new DateOnly(1900, 1, 1), 15.0m),
             new(new DateOnly(2025, 5, 1), 15.5m)
         };
+    }
+
+    public static IEnumerable<object?[]> VatChangeCases()
+    {
+        yield return ["1899-12-31", 0.0m];
+        yield return ["1900-01-01", 15.0m];
+        yield return ["2025-04-30", 15.0m];
+        yield return ["2025-05-01", 15.5m];
+        yield return ["2025-05-02", 15.5m];
+        yield return ["2026-03-31", 15.5m];
+        yield return ["2026-04-01", 16.0m];
     }
 }

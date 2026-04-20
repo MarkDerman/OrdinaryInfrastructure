@@ -1,22 +1,19 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
-using NUnit.Framework;
 using Odin.Email;
 using Odin.System;
 
 
 namespace Tests.Odin.Email.Office365;
 
-[TestFixture]
-[Category("IntegrationTest")]
+[Trait("Category", "IntegrationTest")]
 public class Office365EmailSenderTests : IntegrationTest
 {
     private string _toTestEmail = null!;
     private string _fromTestEmail = null!;
 
-    [SetUp]
-    public void Setup()
+    public Office365EmailSenderTests()
     {
         IConfiguration config = AppFactory.GetConfiguration();
         IConfigurationSection office365Options = config.GetRequiredSection("Email-Office365");
@@ -36,14 +33,14 @@ public class Office365EmailSenderTests : IntegrationTest
         };
     }
 
-    [Test]
-    [TestCase("1-Tag")]
-    [TestCase("Null-Tags")]
-    [TestCase("Empty-Tags")]
-    [TestCase("Many-Tags")]
-    [TestCase("1-Attachment")]
-    [TestCase("2-Attachments")]
-    [TestCase("Plain-Text-Body")]
+    [Theory]
+    [InlineData("1-Tag")]
+    [InlineData("Null-Tags")]
+    [InlineData("Empty-Tags")]
+    [InlineData("Many-Tags")]
+    [InlineData("1-Attachment")]
+    [InlineData("2-Attachments")]
+    [InlineData("Plain-Text-Body")]
     public async Task Send_various_emails(string testCase)
     {
         EmailMessage email = new EmailMessage()
@@ -85,8 +82,7 @@ public class Office365EmailSenderTests : IntegrationTest
                 email.Body = testCase;
                 break;
             default:
-                Assert.Fail($"Case {testCase} not implemented");
-                break;
+                throw new InvalidOperationException($"Case {testCase} not implemented");
         }
         IConfiguration config = AppFactory.GetConfiguration();
 
@@ -95,19 +91,19 @@ public class Office365EmailSenderTests : IntegrationTest
             .WithEmailSendingOptionsFromTestConfiguration(config);
         Office365EmailSender sut = scenario.Build();
         
-        ResultValue<string?> result = await sut.SendEmail(email);
+        ResultValue<string> result = await sut.SendEmail(email);
 
         VerifySuccessfulSendAndLogging(scenario, email, result);
     }
 
-    [Test]
-    [TestCase("Subject-prefix")]
-    [TestCase("Subject-postfix")]
-    [TestCase("Default-from-is-used")]
-    [TestCase("Default-from-and-name-are-used")]
-    [TestCase("No-default-from-does-not-throw")]
-    [TestCase("1-tag")]
-    [TestCase("2-tags")]
+    [Theory]
+    [InlineData("Subject-prefix")]
+    [InlineData("Subject-postfix")]
+    [InlineData("Default-from-is-used")]
+    [InlineData("Default-from-and-name-are-used")]
+    [InlineData("No-default-from-does-not-throw")]
+    [InlineData("1-tag")]
+    [InlineData("2-tags")]
     public async Task Send_correctly_implements_email_options(string testCase)
     {
         EmailSendingOptions emailSendingOptions = new EmailSendingOptions();
@@ -154,24 +150,23 @@ public class Office365EmailSenderTests : IntegrationTest
                 emailSendingOptions.DefaultTags = new List<string> { "Dev", "QA" };
                 break;
             default:
-                Assert.Fail($"Case {testCase} not implemented");
-                break;
+                throw new InvalidOperationException($"Case {testCase} not implemented");
         }
 
         Office365EmailSender sut = scenario.Build();
 
-        ResultValue<string?> result = await sut.SendEmail(email);
+        ResultValue<string> result = await sut.SendEmail(email);
 
         VerifySuccessfulSendAndLogging(scenario, email, result);
     }
 
     private void VerifySuccessfulSendAndLogging(Office365EmailSenderTestBuilder scenario, EmailMessage message,
-        ResultValue<string?> result)
+        ResultValue<string> result)
     {
         // Result
-        Assert.That(result.IsSuccess, Is.True, result.MessagesToString());
-        Assert.That(result.Value, Is.Not.Null);
-        Assert.That(string.IsNullOrWhiteSpace(result.Value), Is.False, "Message Id expected from Office365");
+        Assert.True(result.IsSuccess, result.MessagesToString());
+        Assert.NotNull(result.Value);
+        Assert.False(string.IsNullOrWhiteSpace(result.Value), "Message Id expected from Office365");
 
         // Should be no warnings, errors
         scenario.LoggerMock!.Verify(

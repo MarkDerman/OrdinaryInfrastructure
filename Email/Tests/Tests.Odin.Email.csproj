@@ -9,10 +9,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit"/>
+    <PackageReference Include="xunit.v3"/>
     <PackageReference Include="Moq"  />
-    <PackageReference Include="NUnit3TestAdapter"  />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk"/> 
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
   </ItemGroup>
   <!-- IMPORTANT: match Mvc.Testing major version to the TFM -->
   <ItemGroup >

@@ -1,13 +1,10 @@
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
-using NUnit.Framework;
 using Odin.Messaging.RabbitMq;
 
 namespace Tests.Odin.Messaging.RabbitMq;
 
-[TestFixture]
-[Ignore("So far, RabbitConnectionService is tested manually only.")]
 public class RabbitConnectionServiceTests
 {
     public record TestMessage
@@ -17,10 +14,10 @@ public class RabbitConnectionServiceTests
         public required string ThreadIdentifier { get; init; }
     }
 
-    [Test]
+    [Fact(Skip = "So far, RabbitConnectionService is tested manually only.")]
     public async Task Publish_Works()
     {
-        CancellationToken cancellationToken = new  CancellationTokenSource().Token;
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         RabbitConnectionService box = new RabbitConnectionService(new RabbitConnectionServiceSettings
         {
             Host = "localhost",
@@ -127,9 +124,10 @@ public class RabbitConnectionServiceTests
         await Task.WhenAll(sendingTasks);
     }
 
-    [Test]
-    public async Task QueueSubscription_Works(CancellationToken cancellationToken)
+    [Fact(Skip = "So far, RabbitConnectionService is tested manually only.")]
+    public async Task QueueSubscription_Works()
     {
+        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
         RabbitConnectionService box = new RabbitConnectionService(new RabbitConnectionServiceSettings
         {
             Host = "localhost",

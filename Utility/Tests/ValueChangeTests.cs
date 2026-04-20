@@ -1,19 +1,17 @@
-﻿using NUnit.Framework;
-using Odin.Utility;
+﻿using Odin.Utility;
 
 namespace Tests.Odin.Utility
 {
-    [TestFixture]
     public sealed class ValueChangeTests
     {
-        [Test]
+        [Fact]
         public void Create_DateOnly_and_Decimal_value_change()
         {
             ValueChange<DateOnly, decimal> sut = new ValueChange<DateOnly, Decimal>(new DateOnly(2025, 5, 1), 15.5m);
                 
-            Assert.That(sut, Is.Not.Null);
-            Assert.That(sut.From, Is.EqualTo(new DateOnly(2025, 5, 1)));
-            Assert.That(sut.Value, Is.EqualTo(15.5m));
+            Assert.NotNull(sut);
+            Assert.Equal(new DateOnly(2025, 5, 1), sut.From);
+            Assert.Equal(15.5m, sut.Value);
         }
         
          // [Test]

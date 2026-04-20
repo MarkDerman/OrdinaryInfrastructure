@@ -2,10 +2,9 @@
 
 namespace Tests.Odin.BackgroundProcessing
 {
-    [TestFixture]
     public sealed class JobDetailsTests
     {
-        [Test]
+        [Fact]
         public void Constructor_sets_properties()
         {
             string id = "123";
@@ -13,8 +12,8 @@ namespace Tests.Odin.BackgroundProcessing
             
             JobDetails sut = new JobDetails(id,when);
          
-            Assert.That(id, Is.EqualTo(sut.JobId)); 
-            Assert.That(when , Is.EqualTo(sut.ScheduledFor));   
+            Assert.Equal(id, sut.JobId);
+            Assert.Equal(when, sut.ScheduledFor);
         }
     }
 }

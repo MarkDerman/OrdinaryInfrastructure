@@ -11,21 +11,22 @@ public static class ConfigurationBuilderExtensions
     /// Adds Azure Key Vault secrets filtered by a prefix to configuration.
     /// </summary>
     /// <param name="configBuilder">The configuration builder.</param>
-    /// <param name="vaultNameOrUri">The Azure Key Vault name or URI. Handles whitespace and trailing slashes.</param>
+    /// <param name="vaultNameOrUri">The Azure Key Vault name or URI. Handles whitespace and trailing slashes. Use either "https://MyVault.vault.azure.net/" or "MyVault"</param>
     /// <param name="prefix">Optional prefix to filter secrets by. Secrets starting with this prefix will be loaded with the prefix stripped.</param>
     /// <param name="credential">The token credential to use for authentication.</param>
     /// <param name="options">The optional configuration options for Azure Key Vault.</param>
     /// <returns>The configuration builder.</returns>
-    public static IConfigurationBuilder AddPrefixedAzureKeyVault(
-        this IConfigurationBuilder configBuilder, 
-        string vaultNameOrUri, 
-        string? prefix, 
-        TokenCredential credential, 
+    public static IConfigurationBuilder AddOdinPrefixedAzureKeyVault(this IConfigurationBuilder configBuilder,
+        string vaultNameOrUri,
+        string? prefix,
+        TokenCredential credential,
         AzureKeyVaultConfigurationOptions? options = null)
     {
         // Guard Clauses
         ArgumentNullException.ThrowIfNull(configBuilder);
         ArgumentException.ThrowIfNullOrWhiteSpace(vaultNameOrUri);
+        ArgumentNullException.ThrowIfNull(prefix);
+        ArgumentNullException.ThrowIfNull(credential);
     
         // Process inputs
         vaultNameOrUri = vaultNameOrUri.Trim().TrimEnd('/');

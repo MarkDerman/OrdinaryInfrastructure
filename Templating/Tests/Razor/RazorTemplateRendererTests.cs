@@ -1,39 +1,37 @@
 ﻿using System.Reflection;
-using NUnit.Framework;
 using Odin.System;
 using Odin.Templating;
+using Xunit;
 
 namespace Tests.Odin.Templating.Razor
 {
-    [TestFixture]
     public sealed class RazorTemplateRendererTests
     {
-        [Test]
-        [Ignore("Can't figure out why the error 'Template XXX.cshtml is corrupted or invalid' is happening???")]
-        [TestCase("Tests.Odin.Templating", "TestTemplate2", true, Description = "Should work. Without a period")]
-        [TestCase("Tests.Odin.Templating.Views", "TestTemplate1", true, Description = "Should work. Without a period")]
-        [TestCase("tests.odin.templating.views", "TestTemplate1", false, Description = "Case sensitive namespace..")]
-        [TestCase("Tests.Odin.Templating.Views.", "TestTemplate1", true, Description = "Should work. With a period")]
-        [TestCase("tests.odin.templating.razor", "testtemplate1", false, Description = "Case sensitive template")]
-        [TestCase("Wrong", "TestTemplate1", false, Description = "Wrong namespace")]
-        [TestCase("Tests.Odin.Templating.Views", "Wrong", false, Description = "Wrong templateKey")]
-        [TestCase("Tests.Odin.Templating", "TestTemplate1", false, Description = "Testing sub dirs - they don't work")]
-        [TestCase(null, "TestTemplate1", false, Description = "Testing optionality of namespace. Doesn't work.")]
-        [TestCase("", "TestTemplate1", false, Description = "Testing optionality of namespace. Doesn't work.")]
-        public async Task Create_with_different_templateKeys_and_namespaces(string rootNamespace, string templateKey, bool shouldSucceed)
+        [Theory(Skip = "Can't figure out why the error 'Template XXX.cshtml is corrupted or invalid' is happening???")]
+        [InlineData("Tests.Odin.Templating", "TestTemplate2", true)]
+        [InlineData("Tests.Odin.Templating.Views", "TestTemplate1", true)]
+        [InlineData("tests.odin.templating.views", "TestTemplate1", false)]
+        [InlineData("Tests.Odin.Templating.Views.", "TestTemplate1", true)]
+        [InlineData("tests.odin.templating.razor", "testtemplate1", false)]
+        [InlineData("Wrong", "TestTemplate1", false)]
+        [InlineData("Tests.Odin.Templating.Views", "Wrong", false)]
+        [InlineData("Tests.Odin.Templating", "TestTemplate1", false)]
+        [InlineData(null, "TestTemplate1", false)]
+        [InlineData("", "TestTemplate1", false)]
+        public async Task Create_with_different_templateKeys_and_namespaces(string? rootNamespace, string templateKey, bool shouldSucceed)
         {
             Assembly testsAssembly = typeof(RazorTemplateRendererTests).Assembly;
             RazorTemplateRenderer sut = new RazorTemplateRenderer(testsAssembly, rootNamespace);
             ResultValue<string> result = await sut.RenderAsync(templateKey, new TestViewModel(){ Title = "World"});
 
-            Assert.That(result.IsSuccess, Is.EqualTo(shouldSucceed), result.MessagesToString());
+            Assert.True(result.IsSuccess == shouldSucceed, result.MessagesToString());
             if (shouldSucceed)
             {
-                Assert.That(result.Value, Does.Contain("<div>Hello World</div>"), result.MessagesToString());
+                Assert.Contains("<div>Hello World</div>", result.Value);
             }
             else
             {
-                Assert.That(result.MessagesToString(), Is.Not.Empty);
+                Assert.NotEmpty(result.MessagesToString());
             }
         }
     }

@@ -1,13 +1,13 @@
 using Moq;
 using Odin.Logging;
 using Odin.Patterns.Commands;
+using Xunit;
 
 namespace Tests.Odin.Patterns.Commands;
 
-[TestFixture]
 public sealed class ServiceProviderCommandDispatcherTests
 {
-    [Test]
+    [Fact]
     public async Task DispatchAsync_for_void_command_calls_resolved_handler_and_logs_success()
     {
         RecordingCommandHandler handler = new RecordingCommandHandler();
@@ -20,7 +20,7 @@ public sealed class ServiceProviderCommandDispatcherTests
 
         await sut.DispatchAsync(command);
 
-        Assert.That(handler.ReceivedCommand, Is.SameAs(command));
+        Assert.Same(command, handler.ReceivedCommand);
         loggerMock.Verify(
             x => x.LogTrace(
                 "Dispatching command {CommandType} using handler interface {HandlerInterface}.",
@@ -37,7 +37,7 @@ public sealed class ServiceProviderCommandDispatcherTests
             Times.Once);
     }
 
-    [Test]
+    [Fact]
     public async Task DispatchAsync_for_result_command_returns_handler_result()
     {
         ResultCommandHandler handler = new("Trillian");
@@ -48,21 +48,20 @@ public sealed class ServiceProviderCommandDispatcherTests
 
         string result = await sut.DispatchAsync<ResultCommand, string>(new ResultCommand(42));
 
-        Assert.That(result, Is.EqualTo("Trillian"));
+        Assert.Equal("Trillian", result);
     }
 
-    [Test]
-    public void DispatchAsync_when_no_handler_is_registered_throws_with_command_and_handler_details()
+    [Fact]
+    public async Task DispatchAsync_when_no_handler_is_registered_throws_with_command_and_handler_details()
     {
         Mock<ILoggerWrapper<ServiceProviderCommandDispatcher>> loggerMock = CreateLoggerMock();
         ServiceProviderCommandDispatcher sut = new(new TestServiceProvider(), loggerMock.Object);
 
-        InvalidOperationException? ex = Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await sut.DispatchAsync(new TestCommand("Ford")));
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => sut.DispatchAsync(new TestCommand("Ford")));
 
-        Assert.That(ex, Is.Not.Null);
-        Assert.That(ex!.Message, Does.Contain(typeof(TestCommand).FullName));
-        Assert.That(ex.Message, Does.Contain(typeof(ICommandHandler<TestCommand>).FullName));
+        Assert.Contains(typeof(TestCommand).FullName, ex.Message);
+        Assert.Contains(typeof(ICommandHandler<TestCommand>).FullName, ex.Message);
         loggerMock.Verify(
             x => x.LogError(
                 It.Is<string?>(message =>
@@ -73,8 +72,8 @@ public sealed class ServiceProviderCommandDispatcherTests
             Times.Once);
     }
 
-    [Test]
-    public void DispatchAsync_when_multiple_handlers_are_registered_throws_with_command_and_handler_details()
+    [Fact]
+    public async Task DispatchAsync_when_multiple_handlers_are_registered_throws_with_command_and_handler_details()
     {
         Mock<ILoggerWrapper<ServiceProviderCommandDispatcher>> loggerMock = CreateLoggerMock();
         ServiceProviderCommandDispatcher sut = new(
@@ -83,17 +82,16 @@ public sealed class ServiceProviderCommandDispatcherTests
                 new RecordingCommandHandler()),
             loggerMock.Object);
 
-        InvalidOperationException? ex = Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await sut.DispatchAsync(new TestCommand("Ford")));
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => sut.DispatchAsync(new TestCommand("Ford")));
 
-        Assert.That(ex, Is.Not.Null);
-        Assert.That(ex!.Message, Does.Contain(typeof(TestCommand).FullName));
-        Assert.That(ex.Message, Does.Contain(typeof(ICommandHandler<TestCommand>).FullName));
-        Assert.That(ex.Message, Does.Contain("Found 2 registrations"));
+        Assert.Contains(typeof(TestCommand).FullName, ex.Message);
+        Assert.Contains(typeof(ICommandHandler<TestCommand>).FullName, ex.Message);
+        Assert.Contains("Found 2 registrations", ex.Message);
     }
 
-    [Test]
-    public void DispatchAsync_bubbles_handler_exceptions_and_logs_error()
+    [Fact]
+    public async Task DispatchAsync_bubbles_handler_exceptions_and_logs_error()
     {
         InvalidOperationException expectedException = new("Kaboom");
         ThrowingCommandHandler handler = new(expectedException);
@@ -102,10 +100,10 @@ public sealed class ServiceProviderCommandDispatcherTests
             new TestServiceProvider().AddHandlers<ICommandHandler<TestCommand>>(handler),
             loggerMock.Object);
 
-        InvalidOperationException? ex = Assert.ThrowsAsync<InvalidOperationException>(
-            async () => await sut.DispatchAsync(new TestCommand("Zaphod")));
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(
+            () => sut.DispatchAsync(new TestCommand("Zaphod")));
 
-        Assert.That(ex, Is.SameAs(expectedException));
+        Assert.Same(expectedException, ex);
         loggerMock.Verify(
             x => x.LogError(
                 expectedException,
@@ -116,8 +114,8 @@ public sealed class ServiceProviderCommandDispatcherTests
             Times.Once);
     }
 
-    [Test]
-    public void DispatchAsync_passes_the_cancellation_token_to_the_handler()
+    [Fact]
+    public async Task DispatchAsync_passes_the_cancellation_token_to_the_handler()
     {
         CancellationTokenSource cancellationTokenSource = new();
         cancellationTokenSource.Cancel();
@@ -128,11 +126,10 @@ public sealed class ServiceProviderCommandDispatcherTests
             new TestServiceProvider().AddHandlers<ICommandHandler<TestCommand>>(handler),
             loggerMock.Object);
 
-        OperationCanceledException? ex = Assert.ThrowsAsync<OperationCanceledException>(
-            async () => await sut.DispatchAsync(new TestCommand("Marvin"), cancellationTokenSource.Token));
+        OperationCanceledException ex = await Assert.ThrowsAsync<OperationCanceledException>(
+            () => sut.DispatchAsync(new TestCommand("Marvin"), cancellationTokenSource.Token));
 
-        Assert.That(ex, Is.Not.Null);
-        Assert.That(handler.ReceivedCancellationToken, Is.EqualTo(cancellationTokenSource.Token));
+        Assert.Equal(cancellationTokenSource.Token, handler.ReceivedCancellationToken);
     }
 
     private static Mock<ILoggerWrapper<ServiceProviderCommandDispatcher>> CreateLoggerMock()

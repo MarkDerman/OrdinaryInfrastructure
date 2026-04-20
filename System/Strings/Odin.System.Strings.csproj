@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
-    <RootNamespace>Odin.System</RootNamespace>
+        <RootNamespace>Odin.System</RootNamespace>
     <ImplicitUsings>true</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <Description>Provides enum-like behaviour for a set of string values.

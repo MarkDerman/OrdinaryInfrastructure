@@ -7,6 +7,7 @@ namespace Odin.System
     /// Like Result, but with a list of Messages of type ResultMessage2
     /// which includes a Severity, a Message and optionally an Exception.
     /// </summary>
+    [Obsolete("Prefer Result<ResultMessage> or Result<MessageEx>.")]
     public class ResultEx : Result<MessageEx>
     {
         /// <inheritdoc />
@@ -119,6 +120,26 @@ namespace Odin.System
             }
 
             return Success();
+        }
+
+        /// <summary>
+        /// Returns success only if all succeed, otherwise aggregates the
+        /// messages from every failed result.
+        /// </summary>
+        /// <param name="results"></param>
+        /// <returns></returns>
+        public static ResultEx CombineAll(params ResultEx[] results)
+        {
+            Precondition.RequiresNotNull(results);
+
+            List<MessageEx> failureMessages = results
+                .Where(r => r is { IsSuccess: false })
+                .SelectMany(r => r.Messages)
+                .ToList();
+
+            return failureMessages.Count == 0
+                ? Success()
+                : Failure(failureMessages);
         }
     }
 }

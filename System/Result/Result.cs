@@ -95,5 +95,85 @@
 
             return Success();
         }
+
+        /// <summary>
+        /// Returns success only if all succeed, otherwise aggregates the
+        /// messages from every failed result.
+        /// </summary>
+        /// <param name="results"></param>
+        /// <returns></returns>
+        public static Result CombineAll(params Result[] results)
+        {
+            Precondition.RequiresNotNull(results);
+
+            List<string> failureMessages = results
+                .Where(r => r is { IsSuccess: false })
+                .SelectMany(r => r.Messages)
+                .ToList();
+
+            return failureMessages.Count == 0
+                ? Success()
+                : Failure(failureMessages);
+        }
+
+        /// <summary>
+        /// Executes the action when the result is successful and returns the same instance.
+        /// </summary>
+        /// <param name="onSuccess"></param>
+        /// <returns></returns>
+        public new Result Tap(Action onSuccess)
+        {
+            Precondition.RequiresNotNull(onSuccess);
+
+            if (IsSuccess)
+            {
+                onSuccess();
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Matches the success or failure branch and returns the projected value.
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="onSuccess"></param>
+        /// <param name="onFailure"></param>
+        /// <returns></returns>
+        public new TResult Match<TResult>(Func<TResult> onSuccess, Func<IReadOnlyList<string>, TResult> onFailure)
+        {
+            return base.Match(onSuccess, onFailure);
+        }
+
+        /// <summary>
+        /// Chains the next result-producing operation when successful.
+        /// Failures are propagated unchanged.
+        /// </summary>
+        /// <param name="next"></param>
+        /// <returns></returns>
+        public Result Bind(Func<Result> next)
+        {
+            Precondition.RequiresNotNull(next);
+
+            return IsSuccess
+                ? next()
+                : Failure(Messages);
+        }
+
+        /// <summary>
+        /// Chains the next result-with-value-producing operation when successful.
+        /// Failures are propagated unchanged.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="next"></param>
+        /// <returns></returns>
+        public ResultValue<TValue> Bind<TValue>(Func<ResultValue<TValue>> next) where TValue : notnull
+        {
+            Precondition.RequiresNotNull(next);
+
+            return IsSuccess
+                ? next()
+                : ResultValue<TValue>.Failure(Messages);
+        }
     }
 }

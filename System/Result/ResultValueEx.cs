@@ -7,6 +7,7 @@
     /// </summary>
     /// <typeparam name="TValue"></typeparam>
     /// <remarks>To be renamed to ResultValueEx of TValue</remarks>
+    [Obsolete("Prefer ResultValue<TValue, ResultMessage> or ResultValue<TValue, MessageEx>.")]
     public class ResultValueEx<TValue> : ResultValue<TValue, MessageEx> where TValue : notnull
     {
         /// <summary>
@@ -23,12 +24,8 @@
         /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValueEx(bool isSuccess, TValue? value, IEnumerable<MessageEx>? messages)
+        public ResultValueEx(bool isSuccess, TValue? value, IEnumerable<MessageEx>? messages) : base(isSuccess, value, messages)
         {
-            Precondition.Requires(!(value == null && isSuccess), "Value is required for a successful result.");
-            IsSuccess = isSuccess;
-            Value = value;
-            _messages = messages?.ToList();
         }
 
         /// <summary>
@@ -37,12 +34,8 @@
         /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValueEx(bool isSuccess, TValue? value, MessageEx? message = null)
+        public ResultValueEx(bool isSuccess, TValue? value, MessageEx? message = null) : base(isSuccess, value, message)
         {
-            Precondition.Requires(!(value == null && isSuccess), "A value is required for a successful result.");
-            IsSuccess = isSuccess;
-            Value = value;
-            _messages = message != null ? [message] : null;
         }
         
         /// <summary>

@@ -113,5 +113,56 @@ namespace Tests.Odin.System
             Assert.Equal(1, fail.Messages.Count);
             Assert.Equal(testValue, fail.Value);
         }
+
+        [Fact]
+        public void Map_projects_the_success_value()
+        {
+            ResultValue<int> sut = ResultValue<string>.Success("123").Map(int.Parse);
+
+            Assert.True(sut.IsSuccess);
+            Assert.Equal(123, sut.Value);
+            Assert.Empty(sut.Messages);
+        }
+
+        [Fact]
+        public void Bind_propagates_failure_without_running_the_next_step()
+        {
+            bool invoked = false;
+
+            ResultValue<int> sut = ResultValue<string>.Failure("bad").Bind(value =>
+            {
+                invoked = true;
+                return ResultValue<int>.Success(value.Length);
+            });
+
+            Assert.False(invoked);
+            Assert.False(sut.IsSuccess);
+            Assert.Equal("bad", sut.MessagesToString());
+        }
+
+        [Fact]
+        public void Match_returns_the_selected_branch()
+        {
+            int success = ResultValue<string>.Success("123").Match(
+                onSuccess: value => value.Length,
+                onFailure: _ => -1);
+            int failure = ResultValue<string>.Failure("bad").Match(
+                onSuccess: value => value.Length,
+                onFailure: _ => -1);
+
+            Assert.Equal(3, success);
+            Assert.Equal(-1, failure);
+        }
+
+        [Fact]
+        public void Tap_runs_only_for_success()
+        {
+            string tapped = string.Empty;
+
+            ResultValue<string>.Success("123").Tap(value => tapped = value);
+            ResultValue<string>.Failure("bad").Tap(value => tapped = "should not run");
+
+            Assert.Equal("123", tapped);
+        }
     }
 }

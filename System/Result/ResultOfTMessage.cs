@@ -1,4 +1,6 @@
-﻿namespace Odin.System
+﻿using System.Text.Json.Serialization;
+
+namespace Odin.System
 {
     /// <summary>
     /// Represents the result of an operation that can succeed or fail,
@@ -10,6 +12,7 @@
         /// <summary>
         /// True if successful
         /// </summary>
+        [JsonPropertyOrder(-2)]
         public bool IsSuccess { get; init; }
 
         /// <summary>
@@ -21,6 +24,7 @@
         /// <summary>
         /// Messages
         /// </summary>
+        [JsonPropertyOrder(0)]
         public IReadOnlyList<TMessage> Messages
         {
             get
@@ -30,7 +34,7 @@
             }
             init // For deserialisation
             {
-                _messages = value.ToList();
+                _messages = value?.ToList();
             }
         }
 
@@ -93,6 +97,7 @@
         /// <returns></returns>
         public static Result<TMessage> Failure(TMessage message)
         {
+            Precondition.RequiresNotNull(message);
             return new Result<TMessage>(false, message);
         }
 
@@ -103,7 +108,10 @@
         /// <returns></returns> 
         public static Result<TMessage> Failure(IEnumerable<TMessage> messages)
         {
-            return new Result<TMessage>(false, messages);
+            Precondition.RequiresNotNull(messages);
+            List<TMessage> messagesList = messages.ToList();
+            Precondition.Requires(messagesList.Any(m => m != null!), "At least 1 message is required.");
+            return new Result<TMessage>(false, messagesList);
         }
 
         /// <summary>
@@ -149,6 +157,91 @@
             }
 
             return Success();
+        }
+
+        /// <summary>
+        /// Returns success only if all succeed, otherwise aggregates the
+        /// messages from every failed result.
+        /// </summary>
+        /// <param name="results"></param>
+        /// <returns></returns>
+        public static Result<TMessage> CombineAll(params Result<TMessage>[] results)
+        {
+            Precondition.RequiresNotNull(results);
+
+            List<TMessage> failureMessages = results
+                .Where(r => r is { IsSuccess: false })
+                .SelectMany(r => r.Messages)
+                .ToList();
+
+            return failureMessages.Count == 0
+                ? Success()
+                : Failure(failureMessages);
+        }
+
+        /// <summary>
+        /// Executes the action when the result is successful and returns the same instance.
+        /// </summary>
+        /// <param name="onSuccess"></param>
+        /// <returns></returns>
+        public Result<TMessage> Tap(Action onSuccess)
+        {
+            Precondition.RequiresNotNull(onSuccess);
+
+            if (IsSuccess)
+            {
+                onSuccess();
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Matches the success or failure branch and returns the projected value.
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="onSuccess"></param>
+        /// <param name="onFailure"></param>
+        /// <returns></returns>
+        public TResult Match<TResult>(Func<TResult> onSuccess, Func<IReadOnlyList<TMessage>, TResult> onFailure)
+        {
+            Precondition.RequiresNotNull(onSuccess);
+            Precondition.RequiresNotNull(onFailure);
+
+            return IsSuccess
+                ? onSuccess()
+                : onFailure(Messages);
+        }
+
+        /// <summary>
+        /// Chains the next result-producing operation when successful.
+        /// Failures are propagated unchanged.
+        /// </summary>
+        /// <param name="next"></param>
+        /// <returns></returns>
+        public Result<TMessage> Bind(Func<Result<TMessage>> next)
+        {
+            Precondition.RequiresNotNull(next);
+
+            return IsSuccess
+                ? next()
+                : Failure(Messages);
+        }
+
+        /// <summary>
+        /// Chains the next result-with-value-producing operation when successful.
+        /// Failures are propagated unchanged.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="next"></param>
+        /// <returns></returns>
+        public ResultValue<TValue, TMessage> Bind<TValue>(Func<ResultValue<TValue, TMessage>> next) where TValue : notnull
+        {
+            Precondition.RequiresNotNull(next);
+
+            return IsSuccess
+                ? next()
+                : ResultValue<TValue, TMessage>.Failure(Messages);
         }
     }
 }

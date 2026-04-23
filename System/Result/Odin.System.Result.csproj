@@ -5,13 +5,7 @@
     
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Description>Provides 2 'result' records that supporting returning a value or not, as well as a generic messages Type,
-      should string[] Result.Messages not match a use case.
-      Result, Result of TMessage, ResultValue of TValue, and ResultValue of TValue and TMessage.
-      
-      
-
-        </Description>
+    <Description>Provides lightweight Result types for success or failure flows, with optional generic message payloads and a required success value when needed. Result and ResultValue are the primary concepts; generic message forms support structured errors and logging metadata.</Description>
     <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
   </PropertyGroup>
   

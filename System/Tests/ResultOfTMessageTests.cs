@@ -15,12 +15,9 @@ namespace Tests.Odin.System
         }
         
         [Fact]
-        public void Failure_without_TMessage()
+        public void Failure_requires_TMessage()
         {
-            Result<TMessage> sut = Result<TMessage>.Failure((null as TMessage)!);
-
-            Assert.False(sut.IsSuccess);
-            Assert.Empty(sut.Messages);
+            Assert.Throws<ArgumentNullException>(() => Result<TMessage>.Failure((null as TMessage)!));
         }
 
         [Fact]

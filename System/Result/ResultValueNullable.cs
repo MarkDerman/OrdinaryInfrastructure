@@ -5,6 +5,7 @@ namespace Odin.System;
 /// and list of string messages.
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
+[Obsolete("Prefer ResultValue<TValue> for non-null success values. Keep ResultValueNullable only for legacy flows that intentionally treat null as a successful value.")]
 public class ResultValueNullable<TValue> : ResultValueNullable<TValue, string>
 {
             /// <summary>
@@ -21,11 +22,8 @@ public class ResultValueNullable<TValue> : ResultValueNullable<TValue, string>
         /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValueNullable(bool isSuccess, TValue? value, IEnumerable<string>? messages)
+        public ResultValueNullable(bool isSuccess, TValue? value, IEnumerable<string>? messages) : base(isSuccess, value, messages)
         {
-            IsSuccess = isSuccess;
-            Value = value;
-            _messages = messages?.ToList();
         }
 
         /// <summary>
@@ -34,11 +32,8 @@ public class ResultValueNullable<TValue> : ResultValueNullable<TValue, string>
         /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValueNullable(bool isSuccess, TValue? value, string? message = null)
+        public ResultValueNullable(bool isSuccess, TValue? value, string? message = null) : base(isSuccess, value, message)
         {
-            IsSuccess = isSuccess;
-            Value = value;
-            _messages = message != null ? [message] : null;
         }
         
         /// <summary>

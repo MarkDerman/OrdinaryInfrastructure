@@ -143,6 +143,60 @@ namespace Tests.Odin.System
             Assert.Empty(sut.Messages);
         }
 
+        [Fact]
+        public void CombineAll_aggregates_all_failure_messages()
+        {
+            Result r1 = Result.Success();
+            Result r2 = Result.Failure("r2");
+            Result r3 = Result.Failure("r3");
+
+            Result sut = Result.CombineAll(r1, r2, r3);
+
+            Assert.False(sut.IsSuccess);
+            Assert.Equal(["r2", "r3"], sut.Messages);
+        }
+
+        [Fact]
+        public void Match_returns_the_selected_branch()
+        {
+            string success = Result.Success().Match(
+                onSuccess: () => "ok",
+                onFailure: messages => string.Join(",", messages));
+            string failure = Result.Failure("bad").Match(
+                onSuccess: () => "ok",
+                onFailure: messages => string.Join(",", messages));
+
+            Assert.Equal("ok", success);
+            Assert.Equal("bad", failure);
+        }
+
+        [Fact]
+        public void Bind_propagates_failures_without_invoking_next_step()
+        {
+            bool invoked = false;
+
+            Result sut = Result.Failure("bad").Bind(() =>
+            {
+                invoked = true;
+                return Result.Success();
+            });
+
+            Assert.False(invoked);
+            Assert.False(sut.IsSuccess);
+            Assert.Equal("bad", sut.MessagesToString());
+        }
+
+        [Fact]
+        public void Tap_runs_only_for_success()
+        {
+            int count = 0;
+
+            Result.Success().Tap(() => count++);
+            Result.Failure("bad").Tap(() => count++);
+
+            Assert.Equal(1, count);
+        }
+
         internal string ResultJsonFor(bool isSuccess, string? message)
         {
             return $"{{\"IsSuccess\":{isSuccess.ToString().ToLower()},\"Messages\":[\"{message}\"]}}";

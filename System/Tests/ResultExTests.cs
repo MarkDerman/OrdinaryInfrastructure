@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿#pragma warning disable CS0618
+
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Odin.System;
 
@@ -138,3 +140,5 @@ namespace Tests.Odin.System
         
     }
 }
+
+#pragma warning restore CS0618

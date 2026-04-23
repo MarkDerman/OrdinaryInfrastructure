@@ -3,15 +3,37 @@
 [![NuGet](https://img.shields.io/nuget/v/Odin.System.Result.svg)](https://www.nuget.org/packages/Odin.System.Result)  ![Nuget](https://img.shields.io/nuget/dt/Odin.System.Result)
 
 [Odin.System.Result](https://github.com/MarkDerman/OrdinaryInfrastructure/tree/master/System/Result), part of the [OrDinary INfrastructure](https://github.com/MarkDerman/OrdinaryInfrastructure) 
-libraries, provides several **'Result'** classes, which all encapsulate the outcome of an operation, together with a list of messages.
+libraries, provides lightweight **Result** types that encapsulate the outcome of an operation together with a list of messages.
 
-**Result** is the simplest concept.
+## Preferred Concepts
 
-**ResultValue of TValue** adds a generic **Value** property.
+### `Result`
 
-**Result of TMessage** and **ResultValue of TValue, TMessage** add support for the **Messages** list to be of any type.
+Represents success or failure with string messages.
 
-**ResultEx** and **ResultValueEx of TValue** come with a TMessage type that is aligned with logging failure issues.
+### `ResultValue<TValue>`
+
+Represents success or failure with a required non-null value on success.
+
+### `Result<TMessage>`
+
+Advanced form for callers that want a structured message payload instead of `string`.
+
+### `ResultValue<TValue, TMessage>`
+
+Advanced form for callers that want both a required non-null success value and a structured message payload.
+
+## Legacy Concepts
+
+The following types remain for backward compatibility but are no longer the preferred direction:
+
+- `ResultValueNullable<TValue>`
+- `ResultValueNullable<TValue, TMessage>`
+- `ResultEx`
+- `ResultValueEx<TValue>`
+- `MessageEx`
+
+Prefer using `ResultMessage` with the generic result forms when structured logging or exception data needs to travel with the result.
 
 ## Getting Started
 
@@ -95,4 +117,26 @@ Uses a message type that is aligned with logging...
     MessageEx message =  result.Messages[0];
     _logger.Log(message.Severity, message.Error, message.Message);    
 
+```
+
+## Composition Helpers
+
+The preferred result types now expose a small composition surface inspired by modern .NET result libraries:
+
+- `Map`
+- `Bind`
+- `Match`
+- `Tap`
+- `CombineAll`
+
+Example:
+
+```csharp
+ResultValue<int> parseResult = ResultValue<string>.Success("42")
+    .Map(int.Parse)
+    .Tap(value => _logger.LogInformation("Parsed {Value}", value));
+
+string outcome = parseResult.Match(
+    onSuccess: value => $"Value = {value}",
+    onFailure: messages => string.Join(" | ", messages));
 ```

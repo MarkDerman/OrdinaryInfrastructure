@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Odin.System;
 
 /// <summary>
@@ -6,55 +8,15 @@ namespace Odin.System;
 /// </summary>
 /// <typeparam name="TValue"></typeparam>
 /// <typeparam name="TMessage"></typeparam>
-public class ResultValueNullable<TValue, TMessage> where TMessage : class
+[Obsolete("Prefer ResultValue<TValue, TMessage> for non-null success values. Keep ResultValueNullable only for legacy flows that intentionally treat null as a successful value.")]
+public class ResultValueNullable<TValue, TMessage> : Result<TMessage> where TMessage : class
 {
-    /// <summary>
-    /// True if successful
-    /// </summary>
-    public bool IsSuccess { get; init; }
-
     /// <summary>
     /// Value may or may not be set when successful.
     /// Value is null when Success is false.
     /// </summary>
+    [JsonPropertyOrder(-1)]
     public TValue? Value { get; init; }
-
-    /// <summary>
-    /// Messages list
-    /// </summary>
-    // ReSharper disable once InconsistentNaming
-    protected List<TMessage>? _messages;
-
-    /// <summary>
-    /// Messages
-    /// </summary>
-    public IReadOnlyList<TMessage> Messages
-    {
-        get
-        {
-            _messages ??= new List<TMessage>();
-            return _messages;
-        }
-        init // For deserialisation
-        {
-            _messages = value.ToList();
-        }
-    }
-
-    /// <summary>
-    /// All messages flattened into 1 message.
-    /// Assumes a decent implementation of TMessage.ToString()
-    /// </summary>
-    public string MessagesToString(string separator = " | ")
-    {
-        if (_messages == null || _messages.Count == 0)
-        {
-            return string.Empty;
-        }
-
-        return string.Join(separator, _messages.Select(c => c.ToString()));
-    }
-
 
     /// <summary>
     /// Parameterless constructor for serialisation, etc.
@@ -70,11 +32,9 @@ public class ResultValueNullable<TValue, TMessage> where TMessage : class
     /// <param name="success">true or false</param>
     /// <param name="value">Required if successful</param>
     /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
-    protected ResultValueNullable(bool success, TValue? value, IEnumerable<TMessage>? messages)
+    protected ResultValueNullable(bool success, TValue? value, IEnumerable<TMessage>? messages) : base(success, messages)
     {
-        IsSuccess = success;
         Value = value;
-        _messages = messages?.ToList();
     }
 
     /// <summary>
@@ -83,11 +43,9 @@ public class ResultValueNullable<TValue, TMessage> where TMessage : class
     /// <param name="success">true or false</param>
     /// <param name="value">Required if successful</param>
     /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
-    protected ResultValueNullable(bool success, TValue? value, TMessage? message = null)
+    protected ResultValueNullable(bool success, TValue? value, TMessage? message = null) : base(success, message)
     {
-        IsSuccess = success;
         Value = value;
-        _messages = message != null ? [message] : null;
     }
 
     /// <summary>
@@ -176,5 +134,72 @@ public class ResultValueNullable<TValue, TMessage> where TMessage : class
         }
 
         return ResultValueNullable<TOtherValue, TMessage>.Failure(Messages);
+    }
+
+    /// <summary>
+    /// Projects the value when successful.
+    /// Failures are propagated unchanged.
+    /// </summary>
+    /// <typeparam name="TOtherValue"></typeparam>
+    /// <param name="map"></param>
+    /// <returns></returns>
+    public ResultValueNullable<TOtherValue, TMessage> Map<TOtherValue>(Func<TValue?, TOtherValue?> map)
+    {
+        Precondition.RequiresNotNull(map);
+
+        return IsSuccess
+            ? ResultValueNullable<TOtherValue, TMessage>.Success(map(Value))
+            : ResultValueNullable<TOtherValue, TMessage>.Failure(Messages);
+    }
+
+    /// <summary>
+    /// Chains the next result-producing operation when successful.
+    /// Failures are propagated unchanged.
+    /// </summary>
+    /// <typeparam name="TOtherValue"></typeparam>
+    /// <param name="bind"></param>
+    /// <returns></returns>
+    public ResultValueNullable<TOtherValue, TMessage> Bind<TOtherValue>(Func<TValue?, ResultValueNullable<TOtherValue, TMessage>> bind)
+        where TOtherValue : notnull
+    {
+        Precondition.RequiresNotNull(bind);
+
+        return IsSuccess
+            ? bind(Value)
+            : ResultValueNullable<TOtherValue, TMessage>.Failure(Messages);
+    }
+
+    /// <summary>
+    /// Executes the action when successful and returns the same instance.
+    /// </summary>
+    /// <param name="onSuccess"></param>
+    /// <returns></returns>
+    public ResultValueNullable<TValue, TMessage> Tap(Action<TValue?> onSuccess)
+    {
+        Precondition.RequiresNotNull(onSuccess);
+
+        if (IsSuccess)
+        {
+            onSuccess(Value);
+        }
+
+        return this;
+    }
+
+    /// <summary>
+    /// Matches the success or failure branch and returns the projected value.
+    /// </summary>
+    /// <typeparam name="TResult"></typeparam>
+    /// <param name="onSuccess"></param>
+    /// <param name="onFailure"></param>
+    /// <returns></returns>
+    public TResult Match<TResult>(Func<TValue?, TResult> onSuccess, Func<IReadOnlyList<TMessage>, TResult> onFailure)
+    {
+        Precondition.RequiresNotNull(onSuccess);
+        Precondition.RequiresNotNull(onFailure);
+
+        return IsSuccess
+            ? onSuccess(Value)
+            : onFailure(Messages);
     }
 }

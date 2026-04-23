@@ -22,12 +22,8 @@
         /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValue(bool isSuccess, TValue? value, IEnumerable<string>? messages)
+        public ResultValue(bool isSuccess, TValue? value, IEnumerable<string>? messages) : base(isSuccess, value, messages)
         {
-            Precondition.Requires(!(value == null && isSuccess), "Value is required for a successful result.");
-            IsSuccess = isSuccess;
-            Value = value;
-            _messages = messages?.ToList();
         }
 
         /// <summary>
@@ -36,12 +32,8 @@
         /// <param name="isSuccess">true or false</param>
         /// <param name="value">Required if successful</param>
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
-        public ResultValue(bool isSuccess, TValue? value, string? message = null)
+        public ResultValue(bool isSuccess, TValue? value, string? message = null) : base(isSuccess, value, message)
         {
-            Precondition.Requires(!(value == null && isSuccess), "A value is required for a successful result.");
-            IsSuccess = isSuccess;
-            Value = value;
-            _messages = message != null ? [message] : null;
         }
         
         /// <summary>
@@ -117,6 +109,68 @@
             }
             
             return ResultValue<TOtherValue>.Failure(Messages);
+        }
+
+        /// <summary>
+        /// Projects the value when successful.
+        /// Failures are propagated unchanged.
+        /// </summary>
+        /// <typeparam name="TOtherValue"></typeparam>
+        /// <param name="map"></param>
+        /// <returns></returns>
+        public new ResultValue<TOtherValue> Map<TOtherValue>(Func<TValue, TOtherValue> map) where TOtherValue : notnull
+        {
+            Precondition.RequiresNotNull(map);
+
+            return IsSuccess
+                ? ResultValue<TOtherValue>.Success(map(Value))
+                : ResultValue<TOtherValue>.Failure(Messages);
+        }
+
+        /// <summary>
+        /// Chains the next result-producing operation when successful.
+        /// Failures are propagated unchanged.
+        /// </summary>
+        /// <typeparam name="TOtherValue"></typeparam>
+        /// <param name="bind"></param>
+        /// <returns></returns>
+        public ResultValue<TOtherValue> Bind<TOtherValue>(Func<TValue, ResultValue<TOtherValue>> bind)
+            where TOtherValue : notnull
+        {
+            Precondition.RequiresNotNull(bind);
+
+            return IsSuccess
+                ? bind(Value)
+                : ResultValue<TOtherValue>.Failure(Messages);
+        }
+
+        /// <summary>
+        /// Executes the action when successful and returns the same instance.
+        /// </summary>
+        /// <param name="onSuccess"></param>
+        /// <returns></returns>
+        public new ResultValue<TValue> Tap(Action<TValue> onSuccess)
+        {
+            Precondition.RequiresNotNull(onSuccess);
+
+            if (IsSuccess)
+            {
+                onSuccess(Value);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Matches the success or failure branch and returns the projected value.
+        /// </summary>
+        /// <typeparam name="TResult"></typeparam>
+        /// <param name="onSuccess"></param>
+        /// <param name="onFailure"></param>
+        /// <returns></returns>
+        public new TResult Match<TResult>(Func<TValue, TResult> onSuccess, Func<IReadOnlyList<string>, TResult> onFailure)
+        {
+            return base.Match(onSuccess, onFailure);
         }
     }
 }

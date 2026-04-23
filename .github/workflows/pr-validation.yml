@@ -4,7 +4,7 @@
 name: Validation - All unit tests
 
 on:  
-  Íworkflow_dispatch:
+  workflow_dispatch:
   push:
     branches:
       - master

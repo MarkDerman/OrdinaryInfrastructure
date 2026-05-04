@@ -71,6 +71,7 @@ jobs:
         dotnet pack ./RemoteFiles/Core/Odin.RemoteFiles.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./System/Strings/Odin.System.Strings.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./System/Result/Odin.System.Result.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
+        dotnet pack ./Testing/XUnitUtility/Odin.Testing.XUnitUtility.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Testing/NUnitUtility/Odin.Testing.NUnitUtility.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Testing/Fakes/Odin.Testing.Fakes.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Templating/Razor.Abstractions/Odin.Templating.Razor.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR

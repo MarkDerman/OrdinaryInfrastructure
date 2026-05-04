@@ -18,7 +18,8 @@ public static class ServiceCollectionAssertions
         ServiceDescriptorSpecification serviceSpecification
     )
     {
-        ServiceCollectionGenericAssertions.AssertServiceRegistration(services, AssertionAdaptor.Instance, serviceSpecification);
+        ServiceCollectionGenericAssertions.AssertServiceRegistration(services, 
+            Adaptor.Instance, serviceSpecification);
     }
     
     /// <summary>
@@ -33,7 +34,8 @@ public static class ServiceCollectionAssertions
         ServiceLifetime specificLifetime, Type implementationType, int registrationCount = 1
         )
     {
-        ServiceCollectionGenericAssertions.AssertServiceRegistration(services, AssertionAdaptor.Instance,serviceType,
+        ServiceCollectionGenericAssertions.AssertServiceRegistration(services, 
+            Adaptor.Instance,serviceType,
             specificLifetime, implementationType, registrationCount);
     }
     
@@ -48,7 +50,8 @@ public static class ServiceCollectionAssertions
         ServiceLifetime specificLifetime, int registrationCount = 1
     )
     {
-        ServiceCollectionGenericAssertions.AssertServiceRegistration(services, AssertionAdaptor.Instance,serviceType,
+        ServiceCollectionGenericAssertions.AssertServiceRegistration(services, 
+            Adaptor.Instance,serviceType,
             specificLifetime, registrationCount);
     }
     
@@ -63,7 +66,8 @@ public static class ServiceCollectionAssertions
         Type implementationType, int registrationCount = 1
     )
     {
-        ServiceCollectionGenericAssertions.AssertServiceRegistration(services, AssertionAdaptor.Instance,serviceType,implementationType,
+        ServiceCollectionGenericAssertions.AssertServiceRegistration(services, 
+            Adaptor.Instance,serviceType,implementationType,
             registrationCount);
     }
     

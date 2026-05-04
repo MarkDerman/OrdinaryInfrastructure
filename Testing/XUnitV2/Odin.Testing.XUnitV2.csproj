@@ -2,11 +2,13 @@
     <PropertyGroup>
         <ImplicitUsings>true</ImplicitUsings>
         <PackageIcon>icon.png</PackageIcon>
-        <RootNamespace>Odin.Testing</RootNamespace>
         <Description>Assertion and other utility extension methods for xunit based tests...
         </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
+    <ItemGroup>
+        <Using Include="Odin.Testing.XUnitV2" />
+    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions"/>
         <PackageReference Include="xunit.assert"/>

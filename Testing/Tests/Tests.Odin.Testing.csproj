@@ -4,6 +4,7 @@
     <UserSecretsId>Tests.Odin.System</UserSecretsId>
     <ImplicitUsings>true</ImplicitUsings>
     <NoWarn>1591;</NoWarn>
+    <RootNamespace>Tests.Odin.Testing</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +17,13 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk"  />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Hosting"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Odin.Testing.csproj" />
+    <ProjectReference Include="..\NUnit\Odin.Testing.NUnit.csproj" />
+    <ProjectReference Include="..\XUnitV2\Odin.Testing.XUnitV2.csproj" />
+    <ProjectReference Include="..\XUnit\Odin.Testing.XUnit.csproj" />
   </ItemGroup>
 
 

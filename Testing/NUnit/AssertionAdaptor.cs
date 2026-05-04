@@ -1,15 +1,10 @@
 using NUnit.Framework;
 
-namespace Odin.Testing;
+namespace Odin.Testing.NUnit;
 
 /// <inheritdoc />
-internal class AssertionAdaptor : IAssertionAdaptor
+public class NUnitAssertionAdaptor : IAssertionAdaptor
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public static IAssertionAdaptor Instance => new AssertionAdaptor();
-
     /// <inheritdoc />
     public void True(bool condition, string failureMessage)
     {

@@ -1,15 +1,10 @@
 using Xunit;
 
-namespace Odin.Testing;
+namespace Odin.Testing.XUnitV2;
 
 /// <inheritdoc />
-internal class AssertionAdaptor : IAssertionAdaptor
+public class XUnitV2AssertionAdaptor : IAssertionAdaptor
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public static IAssertionAdaptor Instance => new AssertionAdaptor();
-
     /// <inheritdoc />
     public void True(bool condition, string failureMessage)
     {

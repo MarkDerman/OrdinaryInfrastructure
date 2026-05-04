@@ -1,17 +1,13 @@
-using Microsoft.Extensions.DependencyInjection;
-
 using Microsoft.Extensions.Hosting;
 
-using IHost host = Host.CreateApplicationBuilder(args)
-
-    .ConfigureServices((context, services) =>
-
+namespace Tests.Odin.Testing
+{
+    public static class ApplicationBuilder
     {
-
-        services.AddSingleton<IMyService, MyService>();
-
-        services.AddTransient<App>();
-
-    })
-
-    .Build();
+        public static HostApplicationBuilder CreateBuilder()
+        {
+            HostApplicationBuilder hostBuilder = Host.CreateApplicationBuilder();
+            return hostBuilder;
+        }
+    }
+}

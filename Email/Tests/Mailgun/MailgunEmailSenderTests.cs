@@ -29,6 +29,7 @@ namespace Tests.Odin.Email.Mailgun
         [InlineData("No-default-from-does-not-throw")]
         [InlineData("1-tag")]
         [InlineData("2-tags")]
+        [Trait("Category", "IntegrationTest")]
         public async Task Sending_using_various_email_options(string testCase)
         {
             EmailSendingOptions emailSendingOptions = new EmailSendingOptions();
@@ -85,6 +86,7 @@ namespace Tests.Odin.Email.Mailgun
         }
 
         [Fact]
+        [Trait("Category", "IntegrationTest")]
         public async Task Send_with_attachment()
         {
             IConfiguration config = AppFactory.GetConfiguration();
@@ -131,6 +133,7 @@ namespace Tests.Odin.Email.Mailgun
         /// Ensure send does not succeed, and that appropriate logging is called.
         /// </summary>
         [Fact]
+        [Trait("Category", "IntegrationTest")]
         public async Task Send_handles_and_logs_for_bad_Mailgun_api_key()
         {
             IConfiguration config = AppFactory.GetConfiguration();

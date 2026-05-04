@@ -118,7 +118,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Patterns", "Patt
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{51D0FF83-33F9-490F-A0CB-A32DC1CC48AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.NUnitUtility", "Testing\NUnitUtility\Odin.Testing.NUnitUtility.csproj", "{46BCDE44-FA4E-4AE0-A6C0-9AFAE1BE09DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.NUnit", "Testing\NUnit\Odin.Testing.NUnit.csproj", "{46BCDE44-FA4E-4AE0-A6C0-9AFAE1BE09DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.Commands.Abstractions", "Patterns\Commands.Abstractions\Odin.Patterns.Commands.Abstractions.csproj", "{7749636C-2D34-4E0B-81C9-9E89C5630858}"
 EndProject
@@ -126,13 +126,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.Queries.Abstr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Configuration.PrefixedAzureKeyVaultSecretManager", "Configuration\PrefixedAzureKeyVaultSecretManager\Odin.Configuration.PrefixedAzureKeyVaultSecretManager.csproj", "{92E365EC-AC42-4F5D-AC55-E9020CD631ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.Fakes", "Testing\Fakes\Odin.Testing.Fakes.csproj", "{9B70E469-CF39-45B0-B88E-7B28943BF2FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing", "Testing\Core\Odin.Testing.csproj", "{9B70E469-CF39-45B0-B88E-7B28943BF2FE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Configuration", "Configuration\Tests\Tests.Odin.Configuration.csproj", "{E1B586BD-FA3C-4B94-89E0-CA33E364D4A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.XUnitUtility", "Testing\XUnitUtility\Odin.Testing.XUnitUtility.csproj", "{8AEFFAE1-AD1B-44B1-B441-397EA2ED895D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.XUnitV2", "Testing\XUnitV2\Odin.Testing.XUnitV2.csproj", "{8AEFFAE1-AD1B-44B1-B441-397EA2ED895D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Logging", "Logging\Tests\Tests.Odin.Logging.csproj", "{0AE71277-105C-4CC6-BA22-0F21586A326D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.XUnit", "Testing\XUnit\Odin.Testing.XUnit.csproj", "{8672DF3F-2D87-4DE6-9568-E32E5BFD7288}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Testing", "Testing\Tests\Tests.Odin.Testing.csproj", "{C2AF9D9B-637D-47ED-8435-270ABB184326}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -316,6 +320,14 @@ Global
 		{0AE71277-105C-4CC6-BA22-0F21586A326D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0AE71277-105C-4CC6-BA22-0F21586A326D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0AE71277-105C-4CC6-BA22-0F21586A326D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8672DF3F-2D87-4DE6-9568-E32E5BFD7288}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8672DF3F-2D87-4DE6-9568-E32E5BFD7288}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8672DF3F-2D87-4DE6-9568-E32E5BFD7288}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8672DF3F-2D87-4DE6-9568-E32E5BFD7288}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2AF9D9B-637D-47ED-8435-270ABB184326}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2AF9D9B-637D-47ED-8435-270ABB184326}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2AF9D9B-637D-47ED-8435-270ABB184326}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2AF9D9B-637D-47ED-8435-270ABB184326}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{CE323D9C-635B-EFD3-5B3F-7CE371D8A86A} = {BF440C74-E223-3CBF-8FA7-83F7D164F7C3}
@@ -362,5 +374,7 @@ Global
 		{E1B586BD-FA3C-4B94-89E0-CA33E364D4A7} = {E448CD88-53B9-4ED2-BEB3-8456F601CD0F}
 		{8AEFFAE1-AD1B-44B1-B441-397EA2ED895D} = {51D0FF83-33F9-490F-A0CB-A32DC1CC48AF}
 		{0AE71277-105C-4CC6-BA22-0F21586A326D} = {6D4C8AB9-F597-49BD-91D3-081FA1845584}
+		{8672DF3F-2D87-4DE6-9568-E32E5BFD7288} = {51D0FF83-33F9-490F-A0CB-A32DC1CC48AF}
+		{C2AF9D9B-637D-47ED-8435-270ABB184326} = {51D0FF83-33F9-490F-A0CB-A32DC1CC48AF}
 	EndGlobalSection
 EndGlobal

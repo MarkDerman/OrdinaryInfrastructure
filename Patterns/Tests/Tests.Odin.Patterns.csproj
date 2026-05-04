@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Testing\XUnitUtility\Odin.Testing.XUnitUtility.csproj" />
+    <ProjectReference Include="..\..\Testing\XUnit\Odin.Testing.XUnit.csproj" />
     <ProjectReference Include="..\Commands\Odin.Patterns.Commands.csproj" />
     <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />
   </ItemGroup>

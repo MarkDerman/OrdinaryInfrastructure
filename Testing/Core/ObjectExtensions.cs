@@ -10,9 +10,7 @@ public static class ObjectExtensions
     /// </summary>
     /// <param name="testObjects"></param>
     /// <returns></returns>
-    public static IReadOnlyList<object[]> AsSingleObjectsList(IEnumerable<T> testObjects)
-        where T : class
-
+    public static IReadOnlyList<object[]> AsListOfObjectArray(IEnumerable<object> testObjects)
     {
         return testObjects.Select(obj => new object[] { obj }).ToList();
     }

@@ -7,7 +7,9 @@ namespace Odin.DomainDrivenDesign
     /// Exposes flexible FetchSingleAsync and FetchManyAsync query endpoints.
     /// </summary>
     /// <typeparam name="TAggregateRoot"></typeparam>
-    /// <typeparam name="TDbContext">The database context that must contain a DBSet of <typeparamref name="TAggregateRoot"/></typeparam>
+    /// <typeparam name="TDbContext">The database context that must contain a DBSet of <typeparamref name="TAggregateRoot"/>
+    /// We encapsulate save\commit under IUnitOfWork, in order that other commit-time aspects can be implemented,
+    /// the most notable being domain event publishing.</typeparam>
     public abstract class AbstractEntityFrameworkRepository<TAggregateRoot, TDbContext> : IRepository<TAggregateRoot>, IDisposable
         where TDbContext : DbContext, IUnitOfWork
         where TAggregateRoot : class, IAggregateRoot

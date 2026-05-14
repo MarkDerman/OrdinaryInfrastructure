@@ -8,7 +8,6 @@ namespace Tests.Odin.BackgroundProcessing
 {
     public sealed class DependencyInjectionExtensionsTests
     {
-        
         [Fact]
         public void AddBackgroundProcessing_adds_FakeBackgroundProcessor_to_application_from_configuration()
         {

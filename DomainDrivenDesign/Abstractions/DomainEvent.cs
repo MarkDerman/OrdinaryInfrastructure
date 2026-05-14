@@ -1,5 +1,5 @@
 
-namespace Odin.Domain
+namespace Odin.DomainDrivenDesign
 {
     /// <summary>
     /// Base class for a domain event.

@@ -1,5 +1,5 @@
 
-namespace Odin.Domain
+namespace Odin.DomainDrivenDesign
 {
     /// <summary>
     /// Intended to wrap DbContext.SaveChangesAsync to support domain event publishing

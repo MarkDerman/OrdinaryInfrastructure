@@ -108,7 +108,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DomainDrivenDesign", "Domai
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DomainDrivenDesign.Abstractions", "DomainDrivenDesign\Abstractions\Odin.DomainDrivenDesign.Abstractions.csproj", "{9EF181C9-41C7-4C02-97AB-AD0D1DDFA323}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DomainDrivenDesign.EntityFrameworkSqlRepository", "DomainDrivenDesign\SqlRepository\Odin.DomainDrivenDesign.EntityFrameworkSqlRepository.csproj", "{F0C4BEDA-4B20-4EC8-8265-EFF66D2B1B15}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DomainDrivenDesign.EntityFrameworkSqlRepository", "DomainDrivenDesign\EntityFrameworkSqlRepository\Odin.DomainDrivenDesign.EntityFrameworkSqlRepository.csproj", "{F0C4BEDA-4B20-4EC8-8265-EFF66D2B1B15}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Patterns.Notifications", "Patterns\Notifications\Odin.Patterns.Notifications.csproj", "{36D412FB-8A69-47A4-BABF-7B851603C9A1}"
 EndProject

@@ -31,13 +31,13 @@ namespace Odin.DomainDrivenDesign
         {
             ArgumentNullException.ThrowIfNull(dbContext);
             DbContext = dbContext;
-
-            if (DbContext.Model.FindEntityType(typeof(TAggregateRoot)) == null)
-            {
-                throw new InvalidOperationException(
-                    $"The DbContext does not contain a DbSet for aggregate root type {typeof(TAggregateRoot).FullName}.");
-            }
-
+            // If TAggregateRoot is a base type of the actual implementation type in the database context
+            // then this exception will be thrown which is no good.
+            // if (DbContext.Model.FindEntityType(typeof(TAggregateRoot)) == null)
+            // {
+            //     throw new InvalidOperationException(
+            //         $"The DbContext does not contain a DbSet for aggregate root type {typeof(TAggregateRoot).FullName}.");
+            // }
             DbSet = DbContext.Set<TAggregateRoot>();
         }
         

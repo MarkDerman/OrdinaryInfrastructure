@@ -1,17 +1,17 @@
 using System.Linq.Expressions;
 
-namespace Odin.Domain;
+namespace Odin.DomainDrivenDesign;
 
 /// <inheritdoc />
-public abstract class AbstractQuerySpecification<TAggregateRoot> 
+public class QuerySpecification<TAggregateRoot> 
     : IQuerySpecification<TAggregateRoot> 
     where TAggregateRoot : class, IAggregateRoot
 {
     /// <summary>
-    /// Default constructor for AbstractQuerySpecification
+    /// Default constructor for QuerySpecification
     /// </summary>
     /// <param name="criteria"></param>
-    protected AbstractQuerySpecification(Expression<Func<TAggregateRoot, bool>>? criteria)
+    protected QuerySpecification(Expression<Func<TAggregateRoot, bool>>? criteria)
     {
         Criteria = criteria;
     }
@@ -19,7 +19,7 @@ public abstract class AbstractQuerySpecification<TAggregateRoot>
     /// <summary>
     /// 
     /// </summary>
-    protected AbstractQuerySpecification()
+    protected QuerySpecification()
     {
     }
 

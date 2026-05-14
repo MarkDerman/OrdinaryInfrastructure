@@ -1,17 +1,18 @@
 using System.Linq.Expressions;
 
-namespace Odin.Domain;
+namespace Odin.DomainDrivenDesign;
 
 /// <summary>
-/// Represents a specification for filter criteria, preloading includes,
-/// ordering and pagination for a repository query.
+/// Represents a repository query specification for filter criteria, preloading includes,
+/// ordering and pagination for a repository query that can return multiple entities.
 /// </summary>
 /// <typeparam name="TAggregateRoot"></typeparam>
 public interface IQuerySpecification<TAggregateRoot>
     where TAggregateRoot : class, IAggregateRoot
 {
     /// <summary>
-    /// The filter criteria (Where clause)
+    /// Filter criteria (Where clause)
+    /// Can be optional for querying all entities from a repository.
     /// </summary>
     Expression<Func<TAggregateRoot, bool>>? Criteria { get; }
 
@@ -19,7 +20,7 @@ public interface IQuerySpecification<TAggregateRoot>
     /// Eager loading (Include clauses)
     /// </summary>
     IReadOnlyList<Expression<Func<TAggregateRoot, object>>>? Includes { get; }
-
+    
     /// <summary>
     /// Ordering ascending
     /// </summary>

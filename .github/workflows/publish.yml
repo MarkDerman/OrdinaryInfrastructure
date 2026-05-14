@@ -56,7 +56,6 @@ jobs:
         dotnet pack ./Data/SqlScriptsRunner/Odin.Data.SqlScriptsRunner.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./DesignContracts/Core/Odin.DesignContracts.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./DomainDrivenDesign/Abstractions/Odin.DomainDrivenDesign.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./DomainDrivenDesign/EntityFrameworkSqlRepository/Odin.DomainDrivenDesign.EntityFrameworkSqlRepository.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Email/Mailgun/Odin.Email.Mailgun.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Email/Office365/Odin.Email.Office365.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Email/Core/Odin.Email.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
@@ -79,6 +78,7 @@ jobs:
         dotnet pack ./Utility/VaryingValues/Odin.Utility.VaryingValues.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Utility/Tax/Odin.Utility.Tax.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./System/Activator2/Odin.System.Activator2.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
+        dotnet pack ./DomainDrivenDesign/EntityFrameworkSqlRepository/Odin.DomainDrivenDesign.EntityFrameworkSqlRepository.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
       env:
         CONFIGURATION: ${{env.BUILD_CONFIGURATION}}
         PACKAGE_DIR: ${{env.PACKAGE_DIR}}

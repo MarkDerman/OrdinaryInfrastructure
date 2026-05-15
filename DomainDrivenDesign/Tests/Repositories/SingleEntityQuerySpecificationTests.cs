@@ -1,7 +1,8 @@
 using System.Linq.Expressions;
-using Odin.DomainDrivenDesign;
+using Odin.DDD;
+using Odin.DDD.Repositories;
 
-namespace Tests.Odin.DomainDrivenDesign.Abstractions;
+namespace Tests.Odin.DDD.Repositories;
 
 public sealed class SingleEntityQuerySpecificationTests
 {

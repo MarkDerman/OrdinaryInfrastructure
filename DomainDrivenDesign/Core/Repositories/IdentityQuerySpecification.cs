@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using System.Numerics;
 
-namespace Odin.DomainDrivenDesign;
+namespace Odin.DDD.Repositories;
 
 /// <inheritdoc />
 public abstract class IdentityQuerySpecification<TAggregateRoot, TId> 

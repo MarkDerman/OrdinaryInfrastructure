@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <UserSecretsId>Tests.Odin.System</UserSecretsId>
+    <UserSecretsId>Tests.Odin.Data</UserSecretsId>
     <ImplicitUsings>true</ImplicitUsings>
     <NoWarn>1591;</NoWarn>
   </PropertyGroup>
@@ -13,7 +13,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk"  />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+
   </ItemGroup>
 
   <ItemGroup>
@@ -21,7 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abstractions\Odin.DomainDrivenDesign.Abstractions.csproj" />
+    <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
+    <ProjectReference Include="..\EFSqlRepository\Odin.DDD.Repositories.EF.csproj" />
+    <ProjectReference Include="..\SqlScriptsRunner\Odin.Data.SqlScriptsRunner.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
   </ItemGroup>
 
 </Project>

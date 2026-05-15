@@ -1,4 +1,4 @@
-namespace Odin.DomainDrivenDesign
+namespace Odin.DDD.Repositories
 {
     /// <summary>
     /// Represents a repository for persisting entities to a data store.

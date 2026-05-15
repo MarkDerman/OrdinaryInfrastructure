@@ -3,7 +3,7 @@
         <ImplicitUsings>true</ImplicitUsings>
         <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RootNamespace>Odin.DomainDrivenDesign</RootNamespace>
+        <RootNamespace>Odin.DDD</RootNamespace>
         <Description>
 
         </Description>
@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Abstractions\Odin.DomainDrivenDesign.Abstractions.csproj"/>
+        <ProjectReference Include="..\Abstractions\Odin.DDD.csproj" />
     </ItemGroup>
 
     <ItemGroup>

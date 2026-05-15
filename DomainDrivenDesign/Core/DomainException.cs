@@ -1,4 +1,4 @@
-namespace Odin.DomainDrivenDesign;
+namespace Odin.DDD;
 
 /// <summary>
 /// Represents an exception originating from the core application domain.

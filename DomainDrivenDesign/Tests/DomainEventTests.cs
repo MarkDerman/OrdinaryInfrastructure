@@ -1,6 +1,6 @@
-using Odin.DomainDrivenDesign;
+using Odin.DDD;
 
-namespace Tests.Odin.DomainDrivenDesign.Abstractions;
+namespace Tests.Odin.DDD;
 
 public sealed class DomainEventTests
 {

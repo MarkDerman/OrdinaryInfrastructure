@@ -1,6 +1,6 @@
 // using System.Numerics;
 //
-// namespace Odin.DomainDrivenDesign;
+// namespace Odin.DDD;
 //
 // /// <summary>
 // /// Allows querying of an aggregate root by Id.

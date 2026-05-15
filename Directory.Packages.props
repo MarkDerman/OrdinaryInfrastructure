@@ -31,6 +31,7 @@
     <PackageVersion Include="Polly.Core" Version="8.6.6" />
     <PackageVersion Include="RabbitMQ.Client" Version="7.2.1" />
     <PackageVersion Include="RazorLight" Version="2.3.1" />
+    <PackageVersion Include="Respawn" Version="7.0.0" />
     <PackageVersion Include="SSH.NET" Version="2025.1.0" />
     <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageVersion Include="xunit.v3" Version="3.2.2" />

@@ -3,7 +3,7 @@
         <ImplicitUsings>true</ImplicitUsings>
         <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RootNamespace>Odin.DomainDrivenDesign</RootNamespace>
+        <RootNamespace>Odin.DDD.Repositories</RootNamespace>
         <Description>
 
         </Description>
@@ -12,11 +12,11 @@
 
     <ItemGroup>
         <None Include="../../Assets/icon.png" Pack="true" PackagePath=""/>
-        <None Include="..\README.md" Pack="true" PackagePath=""/>
+        <None Include="README.md" Pack="true" PackagePath=""/>
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Abstractions\Odin.DomainDrivenDesign.Abstractions.csproj"/>
+        <ProjectReference Include="..\..\DomainDrivenDesign\Core\Odin.DDD.csproj" />
     </ItemGroup>
 
     <ItemGroup>

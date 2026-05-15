@@ -1,26 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
+    <PropertyGroup>
         <RootNamespace>Odin.System</RootNamespace>
-    <ImplicitUsings>true</ImplicitUsings>
-    
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Description>Provides 2 'result' records that supporting returning a value or not, as well as a generic messages Type,
-      should string[] Result.Messages not match a use case.
-      Result, Result of TMessage, ResultValue of TValue, and ResultValue of TValue and TMessage.
-      
-      
+        <ImplicitUsings>true</ImplicitUsings>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Description>Provides 2 'result' records that supporting returning a value or not, as well as a generic messages Type,
+            should string[] Result.Messages not match a use case.
+            Result, Result of TMessage, ResultValue of TValue, and ResultValue of TValue and TMessage.
+
 
         </Description>
-    <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-  </ItemGroup>
+        <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="../../Assets/icon.png" Pack="true" PackagePath="" />
-    <None Include="README.md" Pack="true" PackagePath="" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="../../Assets/icon.png" Pack="true" PackagePath=""/>
+        <None Include="README.md" Pack="true" PackagePath=""/>
+    </ItemGroup>
 </Project>

@@ -1,14 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Odin.DomainDrivenDesign
+namespace Odin.DDD.Repositories
 {
     /// <summary>
     /// Provides a base implementation for repositories that use Entity Framework Core for data access.
     /// Exposes flexible FetchSingleAsync and FetchManyAsync query endpoints.
     /// </summary>
     /// <typeparam name="TAggregateRoot"></typeparam>
-    /// <typeparam name="TDbContext">The database context that must contain a DBSet of <typeparamref name="TAggregateRoot"/></typeparam>
-    public abstract class AbstractEntityFrameworkRepository<TAggregateRoot, TDbContext> : IRepository<TAggregateRoot>, IDisposable
+    /// <typeparam name="TDbContext">The database context that must contain a DBSet of <typeparamref name="TAggregateRoot"/>
+    /// We encapsulate save\commit under IUnitOfWork, in order that other commit-time aspects can be implemented,
+    /// the most notable being domain event publishing.</typeparam>
+    public abstract class EntityFrameworkRepositoryBase<TAggregateRoot, TDbContext> : IRepository<TAggregateRoot>, IDisposable
         where TDbContext : DbContext, IUnitOfWork
         where TAggregateRoot : class, IAggregateRoot
     {
@@ -27,7 +29,7 @@ namespace Odin.DomainDrivenDesign
         /// </summary>
         /// <param name="dbContext"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        protected AbstractEntityFrameworkRepository(TDbContext dbContext)
+        protected EntityFrameworkRepositoryBase(TDbContext dbContext)
         {
             ArgumentNullException.ThrowIfNull(dbContext);
             DbContext = dbContext;

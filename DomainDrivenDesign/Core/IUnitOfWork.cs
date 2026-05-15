@@ -1,5 +1,5 @@
 
-namespace Odin.DDD.Repositories
+namespace Odin.DDD
 {
     /// <summary>
     /// Intended to wrap DbContext.SaveChangesAsync to support domain event publishing
@@ -8,7 +8,9 @@ namespace Odin.DDD.Repositories
     public interface IUnitOfWork
     {
         /// <summary>
-        /// Commit database changes and publish any unpublished domain events.
+        /// Commits any changes made during the unit of work.
+        /// This typically includes persisting entity changes to a database,
+        /// firing unpublished domain events, and any other necessary post-save operations.
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>

@@ -33,7 +33,7 @@ namespace Odin.DDD.Repositories
         
         /// <summary>
         /// Gets the unit of work, used to commit changes to the database,
-        /// and possibly fire domain events.
+        /// fire domain events, etc.
         /// </summary>
         IUnitOfWork UnitOfWork { get; }
     }

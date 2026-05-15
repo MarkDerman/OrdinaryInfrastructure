@@ -138,7 +138,10 @@ namespace Odin.DDD.Repositories
         }
 
         /// <inheritdoc />
-        public IUnitOfWork UnitOfWork => DbContext;
+        public IUnitOfWork UnitOfWork
+        {
+            get { return DbContext; }
+        }
 
         /// <inheritdoc />
         public void Delete(TAggregateRoot entity)

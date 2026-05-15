@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Odin.DDD;
 
-namespace Odin.DomainDrivenDesign
+namespace Odin.Data.EFSqlRepository
 {
     /// <summary>
     /// Provides a base implementation for repositories that use Entity Framework Core for data access.

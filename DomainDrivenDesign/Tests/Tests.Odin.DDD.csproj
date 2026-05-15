@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Abstractions\Odin.DomainDrivenDesign.Abstractions.csproj" />
+    <ProjectReference Include="..\Core\Odin.DDD.csproj" />
   </ItemGroup>
 
 </Project>

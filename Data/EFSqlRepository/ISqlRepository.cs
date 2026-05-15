@@ -1,7 +1,8 @@
 using System.Linq.Expressions;
 using System.Numerics;
+using Odin.DDD;
 
-namespace Odin.DomainDrivenDesign;
+namespace Odin.Data.EFSqlRepository;
 
 /// <summary>
 /// Represents a repository for persisting entities with a single column

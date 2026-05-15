@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Odin.DomainDrivenDesign;
+namespace Odin.DDD;
 
 /// <inheritdoc />
 public class QuerySpecification<TAggregateRoot> 

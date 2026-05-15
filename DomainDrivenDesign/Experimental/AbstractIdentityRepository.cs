@@ -2,7 +2,7 @@
 // using System.Numerics;
 // using Microsoft.EntityFrameworkCore;
 //
-// namespace Odin.DomainDrivenDesign;
+// namespace Odin.DDD;
 //
 // /// <summary>
 // /// 

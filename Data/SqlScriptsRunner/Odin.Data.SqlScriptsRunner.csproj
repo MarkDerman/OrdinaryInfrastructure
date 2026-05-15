@@ -6,8 +6,6 @@
     <RootNamespace>Odin.Data</RootNamespace>
     <Description>Provides a SqlScriptsRunner that supports journalled and unjournalled execution of SQL database change and other scripts. 
       Useful for running database migration scripts at application deployment time.
-
-
       
     </Description>
     <NoWarn>CS1591</NoWarn>
@@ -26,6 +24,7 @@
     <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="../../Assets/icon.png" Pack="true" PackagePath="" />
+    <None Include="../../Assets/icon.png" Pack="true" PackagePath=""/>
+    <None Include="README.md" Pack="true" PackagePath=""/>
   </ItemGroup>
 </Project>

@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Odin.DomainDrivenDesign;
+namespace Odin.DDD;
 
 /// <summary>
 /// Represents a repository query specification (filter criteria and preloading includes)

@@ -1,4 +1,4 @@
-namespace Odin.DomainDrivenDesign;
+namespace Odin.DDD;
 
 /// <summary>
 /// Marker interface to identify an 'aggregate root' entity

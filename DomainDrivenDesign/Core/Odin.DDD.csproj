@@ -6,7 +6,6 @@
         <Description>Abstractions to support DDD (Domain Driven Design) entity classes and DDD repository concepts. 
         </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
-        <RootNamespace>Odin.DomainDrivenDesign</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
         <None Include="../../Assets/icon.png" Pack="true" PackagePath=""/>

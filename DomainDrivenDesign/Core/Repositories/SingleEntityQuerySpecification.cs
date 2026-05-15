@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 
-namespace Odin.DDD;
+namespace Odin.DDD.Repositories;
 
 /// <summary>
 /// Defines a query to find a single entity in a repository.

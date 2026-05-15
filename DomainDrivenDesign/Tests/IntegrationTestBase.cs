@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
-using Tests.Odin.Data.Database;
+using Tests.Odin.DDD.DB;
 
-namespace Tests.Odin.Data;
+namespace Tests.Odin.DDD;
 
 [Collection(nameof(DatabaseCollection))]
 public abstract class IntegrationTestBase : IClassFixture<AppFactory>, IAsyncLifetime

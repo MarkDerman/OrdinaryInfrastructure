@@ -5,7 +5,7 @@ using Odin.Data;
 using Odin.System;
 using Respawn;
 
-namespace Tests.Odin.Data.Database;
+namespace Tests.Odin.DDD.DB;
 
 /// <summary>
 /// For XUnit shared DatabaseFixture

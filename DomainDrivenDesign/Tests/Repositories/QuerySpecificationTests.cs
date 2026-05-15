@@ -1,7 +1,8 @@
 using System.Linq.Expressions;
 using Odin.DDD;
+using Odin.DDD.Repositories;
 
-namespace Tests.Odin.DDD.Abstractions;
+namespace Tests.Odin.DDD.Repositories;
 
 public sealed class QuerySpecificationTests
 {

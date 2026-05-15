@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
-namespace Tests.Odin.Data
+namespace Tests.Odin.DDD
 {
     public class AppFactory : WebApplicationFactory<Program>
     { 

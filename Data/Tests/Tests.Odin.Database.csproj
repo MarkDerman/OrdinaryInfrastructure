@@ -15,7 +15,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk"  />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    <PackageReference Include="Respawn" />    
+
   </ItemGroup>
 
   <ItemGroup>
@@ -23,12 +23,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="EFSqlRepository\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
-    <ProjectReference Include="..\EFSqlRepository\Odin.Data.EFSqlRepository.csproj" />
+    <ProjectReference Include="..\EFSqlRepository\Odin.DDD.Repositories.EF.csproj" />
     <ProjectReference Include="..\SqlScriptsRunner\Odin.Data.SqlScriptsRunner.csproj" />
   </ItemGroup>
 

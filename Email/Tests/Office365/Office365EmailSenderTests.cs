@@ -41,6 +41,7 @@ public class Office365EmailSenderTests : IntegrationTest
     [InlineData("1-Attachment")]
     [InlineData("2-Attachments")]
     [InlineData("Plain-Text-Body")]
+    [Trait("Category", "IntegrationTest")]
     public async Task Send_various_emails(string testCase)
     {
         EmailMessage email = new EmailMessage()
@@ -104,6 +105,7 @@ public class Office365EmailSenderTests : IntegrationTest
     [InlineData("No-default-from-does-not-throw")]
     [InlineData("1-tag")]
     [InlineData("2-tags")]
+    [Trait("Category", "IntegrationTest")]
     public async Task Send_correctly_implements_email_options(string testCase)
     {
         EmailSendingOptions emailSendingOptions = new EmailSendingOptions();

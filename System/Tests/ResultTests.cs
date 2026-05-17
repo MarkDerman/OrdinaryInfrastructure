@@ -33,7 +33,7 @@ namespace Tests.Odin.System
                 Assert.False(sut.IsSuccess);
                 Assert.Equal(message, sut.MessagesToString());
                 Assert.Equal(message, sut.Messages[0]);
-                Assert.Equal(1, sut.Messages.Count);
+                Assert.Single(sut.Messages);
             }
         }
 
@@ -45,7 +45,7 @@ namespace Tests.Odin.System
             Assert.True(sut.IsSuccess);
             Assert.Equal("lovely", sut.MessagesToString());
             Assert.Equal("lovely", sut.Messages[0]);
-            Assert.Equal(1, sut.Messages.Count);
+            Assert.Single(sut.Messages);
         }
 
         [Theory]

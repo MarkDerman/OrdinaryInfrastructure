@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Odin.System;
 using System.Text.Json;
 
@@ -37,7 +37,7 @@ namespace Tests.Odin.System
             {
                 ResultEx sut = ResultEx.Failure(message, LogLevel.Error, exception);
                 Assert.False(sut.IsSuccess);
-                Assert.Equal(1, sut.Messages.Count);
+                Assert.Single(sut.Messages);
             }
         }
 
@@ -49,7 +49,7 @@ namespace Tests.Odin.System
             Assert.True(sut.IsSuccess);
             Assert.Equal("lovely", sut.Messages[0].Message);
             Assert.Equal("Information: lovely", sut.MessagesToString());
-            Assert.Equal(1, sut.Messages.Count);
+            Assert.Single(sut.Messages);
         }
 
         [Theory]
@@ -110,7 +110,7 @@ namespace Tests.Odin.System
 
             Assert.False(sut.IsSuccess);
             // First failure is returned...
-            Assert.Equal(1, sut.Messages.Count);
+            Assert.Single(sut.Messages);
             Assert.Equal("r2", sut.Messages[0].Message);
             Assert.Equal(LogLevel.Critical, sut.Messages[0].Severity);
         }

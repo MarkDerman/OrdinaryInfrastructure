@@ -7,7 +7,7 @@ using Odin.Configuration;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace Tests.Odin.Configuration.PrefixedAzureKeyVaultSecretManager;
+namespace Tests.Odin.Configuration.AzureKeyVault;
 
 /// <summary>
 /// Unit tests for the <see cref="ConfigurationBuilderExtensions.AddOdinPrefixedAzureKeyVault"/> extension method

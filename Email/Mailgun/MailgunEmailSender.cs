@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Odin.DesignContracts;
 using Odin.Logging;
 using Odin.System;
@@ -42,9 +42,9 @@ namespace Odin.Email
         public MailgunEmailSender(MailgunOptions mailgunSettings,
             EmailSendingOptions emailSettings, ILoggerWrapper<MailgunEmailSender> logger)
         {
-            Precondition.RequiresNotNull(mailgunSettings);
-            Precondition.RequiresNotNull(emailSettings);
-            Precondition.RequiresNotNull(logger);
+            ArgumentNullException.ThrowIfNull(mailgunSettings);
+            ArgumentNullException.ThrowIfNull(emailSettings);
+            ArgumentNullException.ThrowIfNull(logger);
             _mailgunSettings = mailgunSettings;
             _emailSettings = emailSettings;
             _logger = logger;
@@ -85,7 +85,7 @@ namespace Odin.Email
 
         private static ByteArrayContent ToByteArrayContent(Stream stream)
         {
-            Precondition.RequiresNotNull(stream);
+            ArgumentNullException.ThrowIfNull(stream);
             Precondition.Requires(stream.CanRead, "Stream.CanRead must be true");
             Precondition.Requires(stream.CanSeek, "Stream.CanSeek must be true");
 
@@ -112,7 +112,7 @@ namespace Odin.Email
         /// <exception cref="HttpRequestException"></exception>
         public async Task<ResultValue<string>> SendEmail(IEmailMessage email)
         {
-            Precondition.RequiresNotNull(email);
+            ArgumentNullException.ThrowIfNull(email);
             Precondition.Requires(email.To.Any(), "Mailgun requires one or more to addresses.");
             Precondition.Requires(!string.IsNullOrWhiteSpace(email.Subject), "Mailgun requires an email subject");
 

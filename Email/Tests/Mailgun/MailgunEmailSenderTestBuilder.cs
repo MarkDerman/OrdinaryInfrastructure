@@ -1,6 +1,5 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Moq;
-using Odin.DesignContracts;
 using Odin.Email;
 using Odin.Logging;
 using Odin.System;
@@ -44,7 +43,7 @@ namespace Tests.Odin.Email.Mailgun
 
         public MailgunEmailSenderTestBuilder WithEmailSendingOptionsFromTestConfiguration(IConfiguration configuration)
         {
-            Precondition.RequiresNotNull(configuration);
+            ArgumentNullException.ThrowIfNull(configuration);
             string testerEmail = EmailTestConfiguration.GetTestEmailAddressFromConfig(configuration);
             string testerName = EmailTestConfiguration.GetTestFromNameFromConfig(configuration);
             EmailSendingOptions = new EmailSendingOptions()
@@ -67,7 +66,7 @@ namespace Tests.Odin.Email.Mailgun
 
         public static MailgunOptions GetMailgunOptionsFromConfig(IConfiguration config)
         {
-            Precondition.RequiresNotNull(config);
+            ArgumentNullException.ThrowIfNull(config);
             IConfigurationSection section = config.GetSection("Email-MailgunOptions");
             MailgunOptions options = new MailgunOptions();
             section.Bind(options);

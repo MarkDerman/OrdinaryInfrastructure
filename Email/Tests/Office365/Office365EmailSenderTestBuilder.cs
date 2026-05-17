@@ -1,6 +1,5 @@
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Moq;
-using Odin.DesignContracts;
 using Odin.Email;
 using Odin.Logging;
 
@@ -43,7 +42,7 @@ namespace Tests.Odin.Email.Office365
 
         public Office365EmailSenderTestBuilder WithEmailSendingOptionsFromTestConfiguration(IConfiguration configuration)
         {
-            Precondition.RequiresNotNull(configuration);
+            ArgumentNullException.ThrowIfNull(configuration);
             string testerEmail = EmailTestConfiguration.GetTestEmailAddressFromConfig(configuration);
             string testerName = EmailTestConfiguration.GetTestFromNameFromConfig(configuration);
             EmailSendingOptions = new EmailSendingOptions()
@@ -66,7 +65,7 @@ namespace Tests.Odin.Email.Office365
 
         public static Office365Options GetOffice365OptionsFromConfig(IConfiguration config)
         {
-            Precondition.RequiresNotNull(config);
+            ArgumentNullException.ThrowIfNull(config);
             IConfigurationSection section = config.GetSection("Email-Office365");
             Office365Options options = new Office365Options();
             section.Bind(options);

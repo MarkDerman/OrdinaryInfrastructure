@@ -130,7 +130,7 @@ public class ResultValueNullable<TValue, TMessage> where TMessage : class
     /// <returns></returns>
     public static ResultValueNullable<TValue, TMessage> Failure(IEnumerable<TMessage> messages, TValue? value = default(TValue))
     {
-        Precondition.RequiresNotNull(messages);
+        ArgumentNullException.ThrowIfNull(messages);
         List<TMessage> messagesList = messages.ToList();
         Precondition.Requires(messagesList.Any(m => m != null!), "At least 1 message is required.");
         return new ResultValueNullable<TValue, TMessage>(false, value, messagesList);
@@ -144,7 +144,7 @@ public class ResultValueNullable<TValue, TMessage> where TMessage : class
     /// <returns></returns>
     public static ResultValueNullable<TValue, TMessage> Failure(TMessage message, TValue? value = default(TValue))
     {
-        Precondition.RequiresNotNull(message);
+        ArgumentNullException.ThrowIfNull(message);
         return new ResultValueNullable<TValue, TMessage>(false, value, new List<TMessage>() { message });
     }
 

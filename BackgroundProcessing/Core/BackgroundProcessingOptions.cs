@@ -1,5 +1,4 @@
-using Odin.DesignContracts;
-using Odin.System;
+﻿using Odin.System;
 
 namespace Odin.BackgroundProcessing
 {
@@ -18,7 +17,7 @@ namespace Odin.BackgroundProcessing
             get => _provider;
             set
             {
-                Precondition.Requires(!string.IsNullOrWhiteSpace(value));
+                ArgumentException.ThrowIfNullOrWhiteSpace(value);
                 _provider = value.Replace("BackgroundProcessor", "", StringComparison.OrdinalIgnoreCase);
             }
         }

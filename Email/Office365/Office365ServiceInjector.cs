@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Odin.DesignContracts;
 
 namespace Odin.Email;
 
@@ -11,7 +10,7 @@ public class Office365ServiceInjector : IEmailSenderServiceInjector
     /// <inheritdoc />
     public void TryAddEmailSender(IServiceCollection serviceCollection, IConfigurationSection emailConfigurationSection)
     {
-        Precondition.RequiresNotNull(emailConfigurationSection);
+        ArgumentNullException.ThrowIfNull(emailConfigurationSection);
 
         EmailSendingOptions emailOptions = new();
         emailConfigurationSection.Bind(emailOptions);

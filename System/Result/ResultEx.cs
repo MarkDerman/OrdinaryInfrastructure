@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace Odin.System
 {
@@ -59,7 +59,7 @@ namespace Odin.System
         /// <returns></returns>
         public new static ResultEx Failure(IEnumerable<MessageEx> messages)
         {
-            Precondition.RequiresNotNull(messages);
+            ArgumentNullException.ThrowIfNull(messages);
             List<MessageEx> list = messages.ToList();
             Precondition.Requires(list.Any(s => s.Error != null || !string.IsNullOrWhiteSpace(s.Message)), "At least 1 message with an Error or a Message is required.");
             return new ResultEx(false, list);

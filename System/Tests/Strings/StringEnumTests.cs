@@ -1,7 +1,7 @@
-using Odin.System;
+﻿using Odin.System;
 using System.Collections.Immutable;
 
-namespace Tests.Odin.System.StringEnum
+namespace Tests.Odin.System.Strings
 {
     public sealed class StringEnumTests
     {
@@ -33,11 +33,11 @@ namespace Tests.Odin.System.StringEnum
             ImmutableHashSet<string> sut = FourValsStringEnum.Values;
 
             Assert.Equal(4, sut.Count);
-            Assert.True(sut.Contains("val1"));
-            Assert.True(sut.Contains("val2"));
-            Assert.True(sut.Contains("val3"));
-            Assert.True(sut.Contains("val4"));
-            Assert.False(sut.Contains("Rusty"));
+            Assert.Contains("val1", sut);
+            Assert.Contains("val2", sut);
+            Assert.Contains("val3", sut);
+            Assert.Contains("val4", sut);
+            Assert.DoesNotContain("Rusty", sut);
         }
 
         [Fact]
@@ -46,11 +46,11 @@ namespace Tests.Odin.System.StringEnum
             ImmutableHashSet<string> sut = FourValsStringEnum.Values;
 
             Assert.Equal(4, sut.Count);
-            Assert.True(sut.Contains("val1"));
-            Assert.True(sut.Contains("val2"));
-            Assert.True(sut.Contains("val3"));
-            Assert.True(sut.Contains("val4"));
-            Assert.False(sut.Contains("Rusty"));
+            Assert.Contains("val1", sut);
+            Assert.Contains("val2", sut);
+            Assert.Contains("val3", sut);
+            Assert.Contains("val4", sut);
+            Assert.DoesNotContain("Rusty", sut);
         }
 
         [Fact]

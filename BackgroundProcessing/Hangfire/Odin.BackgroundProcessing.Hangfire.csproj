@@ -1,14 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-        
     <ImplicitUsings>true</ImplicitUsings>
     <PackageId>Odin.BackgroundProcessing.Hangfire</PackageId>
     <RootNamespace>Odin.BackgroundProcessing</RootNamespace>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Concrete implementation of IBackgroundProcessor via Hangfire.
-
-
-      
     </Description>
   </PropertyGroup>
   <ItemGroup>

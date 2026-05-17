@@ -49,7 +49,7 @@ public class ResultValueNullable<TValue> : ResultValueNullable<TValue, string>
     /// <returns></returns>
     public new static ResultValueNullable<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue))
     {
-        Precondition.RequiresNotNull(messages);
+        ArgumentNullException.ThrowIfNull(messages);
         List<string> list = messages.ToList();
         Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)), "At least 1 message is required.");
         return new ResultValueNullable<TValue>(false, value, list);

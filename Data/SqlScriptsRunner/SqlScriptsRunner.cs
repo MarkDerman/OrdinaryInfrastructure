@@ -50,8 +50,8 @@ namespace Odin.Data
         public static ResultValue<SqlScriptsRunner> CreateFromConnectionStringName(string connectionStringName,
             Assembly assemblyWithEmbeddedScripts, IConfiguration configuration)
         {
-            Precondition.Requires(configuration != null!);
-            Precondition.Requires(assemblyWithEmbeddedScripts != null!);
+            ArgumentNullException.ThrowIfNull(configuration);
+            ArgumentNullException.ThrowIfNull(assemblyWithEmbeddedScripts);
             SqlScriptsRunner runner = new SqlScriptsRunner(assemblyWithEmbeddedScripts)
             {
                 ConnectionString = configuration.GetConnectionString(connectionStringName)!

@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Odin.DesignContracts;
 using Odin.Patterns.Commands;
 using System.Reflection;
 
@@ -19,7 +18,7 @@ public static class DependencyInjectionExtensions
     /// <returns>The updated service collection.</returns>
     public static IServiceCollection AddOdinCommandDispatcher(this IServiceCollection serviceCollection)
     {
-        Precondition.RequiresNotNull(serviceCollection);
+        ArgumentNullException.ThrowIfNull(serviceCollection);
         serviceCollection.AddOdinLoggerWrapper();
         serviceCollection.TryAddTransient<ICommandDispatcher, ServiceProviderCommandDispatcher>();
         return serviceCollection;
@@ -37,12 +36,12 @@ public static class DependencyInjectionExtensions
         this IServiceCollection serviceCollection,
         params Assembly[] assemblies)
     {
-        Precondition.RequiresNotNull(serviceCollection);
-        Precondition.RequiresNotNull(assemblies);
+        ArgumentNullException.ThrowIfNull(serviceCollection);
+        ArgumentNullException.ThrowIfNull(assemblies);
 
         foreach (Assembly assembly in assemblies.Distinct())
         {
-            Precondition.RequiresNotNull(assembly);
+            ArgumentNullException.ThrowIfNull(assembly);
             RegisterCommandHandlers(serviceCollection, assembly);
         }
 

@@ -1,7 +1,6 @@
 using Moq;
 using Odin.Logging;
 using Odin.Patterns.Commands;
-using Xunit;
 
 namespace Tests.Odin.Patterns.Commands;
 

@@ -1,4 +1,4 @@
-using Odin.DesignContracts;
+﻿using Odin.DesignContracts;
 using System.Text.Json.Serialization;
 
 namespace Odin.Email
@@ -19,7 +19,7 @@ namespace Odin.Email
         {
             Precondition.Requires(!string.IsNullOrWhiteSpace(fileName));
             Precondition.Requires(!string.IsNullOrWhiteSpace(contentType));
-            Precondition.RequiresNotNull(data);
+            ArgumentNullException.ThrowIfNull(data);
             FileName = fileName;
             Data = data;
             ContentType = contentType;

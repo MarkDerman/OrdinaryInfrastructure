@@ -1,4 +1,4 @@
-using Odin.DesignContracts;
+﻿using Odin.DesignContracts;
 
 namespace Odin.Email
 {
@@ -207,7 +207,7 @@ namespace Odin.Email
         /// <param name="attachment"></param>
         public void Attach(Attachment attachment)
         {
-            Precondition.RequiresNotNull(attachment);
+            ArgumentNullException.ThrowIfNull(attachment);
             Attachments.Add(attachment);
         }
     }

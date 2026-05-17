@@ -1,4 +1,4 @@
-namespace Odin.System
+﻿namespace Odin.System
 {
     /// <summary>
     /// Represents the success or failure of an operation that returns a non-null Value\Result on success,
@@ -24,7 +24,8 @@ namespace Odin.System
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
         public ResultValue(bool isSuccess, TValue? value, IEnumerable<string>? messages)
         {
-            Precondition.Requires(!(value == null && isSuccess), "Value is required for a successful result.");
+            if (!(value == null && isSuccess)) 
+                throw new ArgumentException("Value is required for a successful result.");
             IsSuccess = isSuccess;
             Value = value;
             _messages = messages?.ToList();
@@ -52,7 +53,7 @@ namespace Odin.System
         /// <returns></returns>
         public new static ResultValue<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue))
         {
-            Precondition.RequiresNotNull(messages);
+            ArgumentNullException.ThrowIfNull(messages);
             List<string> list = messages.ToList();
             Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)), "At least 1 message is required.");
             return new ResultValue<TValue>(false, value, list);

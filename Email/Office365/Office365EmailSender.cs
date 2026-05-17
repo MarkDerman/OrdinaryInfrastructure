@@ -1,4 +1,4 @@
-using Azure.Identity;
+﻿using Azure.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
@@ -27,9 +27,9 @@ public class Office365EmailSender : IEmailSender
     /// <param name="logger">Microsoft UserId</param>
     public Office365EmailSender(Office365Options office365Options, EmailSendingOptions emailSettings, ILoggerWrapper<Office365EmailSender> logger)
     {
-        Precondition.RequiresNotNull(office365Options);
-        Precondition.RequiresNotNull(emailSettings);
-        Precondition.RequiresNotNull(logger);
+        ArgumentNullException.ThrowIfNull(office365Options);
+        ArgumentNullException.ThrowIfNull(emailSettings);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _emailSettings = emailSettings;
         _logger = logger;
@@ -133,7 +133,7 @@ public class Office365EmailSender : IEmailSender
 
     static byte[] ToByteArray(Stream inputStream)
     {
-        Precondition.RequiresNotNull(inputStream);
+        ArgumentNullException.ThrowIfNull(inputStream);
 
         if (inputStream.CanSeek)
         {

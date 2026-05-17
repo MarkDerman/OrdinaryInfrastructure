@@ -1,9 +1,8 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Odin.Templating;
 using RazorLight;
 using System.Reflection;
-using Xunit;
 
 namespace Tests.Odin.Templating.Razor
 {

@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using Odin.DesignContracts;
 
 namespace Odin.BackgroundProcessing
 {
@@ -16,8 +15,8 @@ namespace Odin.BackgroundProcessing
         public void TryAddBackgroundProcessor(IServiceCollection serviceCollection, IConfiguration configuration,
             IConfigurationSection backgroundProcessingSection, Func<IServiceProvider, string>? connectionStringFactory = null)
         {
-            Precondition.RequiresNotNull(serviceCollection);
-            Precondition.RequiresNotNull(backgroundProcessingSection);
+            ArgumentNullException.ThrowIfNull(serviceCollection);
+            ArgumentNullException.ThrowIfNull(backgroundProcessingSection);
             IConfigurationSection? providerSection =
                 backgroundProcessingSection.GetSection(BackgroundProcessingProviders.Hangfire);
             if (providerSection == null)

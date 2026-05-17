@@ -1,10 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                <ImplicitUsings>true</ImplicitUsings>
-        
+        <ImplicitUsings>true</ImplicitUsings>
         <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <Description>Implementation of a query dispatch pattern.
+        <Description>Implementation of a command dispatch pattern.
 
         </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
@@ -16,8 +15,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />
-        <ProjectReference Include="..\Queries.Abstractions\Odin.Patterns.Queries.Abstractions.csproj" />
+        <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj"/>
+        <ProjectReference Include="..\Abstractions\Odin.Commands.Abstractions.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

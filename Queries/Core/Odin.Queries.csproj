@@ -4,7 +4,7 @@
         
         <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <Description>Implementation of a command dispatch pattern.
+        <Description>Implementation of a query dispatch pattern.
 
         </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
@@ -17,7 +17,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />
-        <ProjectReference Include="..\Commands.Abstractions\Odin.Patterns.Commands.Abstractions.csproj" />
+        <ProjectReference Include="..\Abstractions\Odin.Queries.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>

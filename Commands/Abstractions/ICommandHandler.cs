@@ -1,4 +1,4 @@
-namespace Odin.Patterns.Commands;
+namespace Odin.Commands;
 
 /// <summary>
 /// Defines the handling implementation for a command request that does not return a Result.

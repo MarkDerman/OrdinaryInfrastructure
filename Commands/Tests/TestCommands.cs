@@ -1,6 +1,6 @@
-using Odin.Patterns.Commands;
+using Odin.Commands;
 
-namespace Tests.Odin.Patterns.Commands;
+namespace Tests.Odin.Commands;
 
 // ReSharper disable once ClassNeverInstantiated.Local
 internal sealed record TestCommand(string Value) : ICommand;

@@ -53,7 +53,7 @@ jobs:
         dotnet pack ./BackgroundProcessing/Core/Odin.BackgroundProcessing.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Configuration/AzureBlobJson/Odin.Configuration.AzureBlobJson.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Configuration/PrefixedAzureKeyVaultSecretManager/Odin.Configuration.PrefixedAzureKeyVaultSecretManager.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Data/SqlScriptsRunner/Odin.Data.SqlScriptsRunner.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
+        dotnet pack ./Database/SqlScriptsRunner/Odin.Database.SqlScriptsRunner.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./DesignContracts/Core/Odin.DesignContracts.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./DomainDrivenDesign/Core/Odin.DDD.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Email/Mailgun/Odin.Email.Mailgun.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR

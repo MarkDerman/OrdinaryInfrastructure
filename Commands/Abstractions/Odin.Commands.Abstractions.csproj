@@ -4,7 +4,7 @@
         
         <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RootNamespace>Odin.Patterns.Commands</RootNamespace>
+        <RootNamespace>Odin.Commands</RootNamespace>
         <Description>All abstractions for the command dispatch pattern.
 
         </Description>

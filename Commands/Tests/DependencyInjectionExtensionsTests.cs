@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Odin.Commands;
 using Odin.Logging;
-using Odin.Patterns.Commands;
 
-namespace Tests.Odin.Patterns.Commands;
+namespace Tests.Odin.Commands;
 
 public sealed class DependencyInjectionExtensionsTests
 {

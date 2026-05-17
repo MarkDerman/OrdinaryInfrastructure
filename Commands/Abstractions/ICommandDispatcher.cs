@@ -1,4 +1,4 @@
-namespace Odin.Patterns.Commands;
+namespace Odin.Commands;
 
 /// <summary>
 /// Dispatches commands to their registered command handlers.

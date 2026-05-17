@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Odin.Logging;
 
-namespace Odin.Patterns.Queries;
+namespace Odin.Queries;
 
 /// <summary>
 /// Dispatches queries by resolving their matching query handler from an <see cref="IServiceProvider"/>.

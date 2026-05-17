@@ -1,4 +1,4 @@
-namespace Odin.Patterns.Queries;
+namespace Odin.Queries;
 
 /// <summary>
 /// Returns the result passed in via the constructor.

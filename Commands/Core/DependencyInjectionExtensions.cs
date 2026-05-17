@@ -1,5 +1,5 @@
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Odin.Patterns.Commands;
+using Odin.Commands;
 using System.Reflection;
 
 // ReSharper disable once CheckNamespace

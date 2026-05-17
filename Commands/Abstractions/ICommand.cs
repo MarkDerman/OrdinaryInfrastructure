@@ -1,4 +1,4 @@
-namespace Odin.Patterns.Commands;
+namespace Odin.Commands;
 
 /// <summary>
 ///  Defines a command request that returns an operation result

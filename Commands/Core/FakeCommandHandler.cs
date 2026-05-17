@@ -1,4 +1,4 @@
-namespace Odin.Patterns.Commands;
+namespace Odin.Commands;
 
 /// <summary>
 /// Generic treatment of ICommandHandler for use in testing and other scenarios.

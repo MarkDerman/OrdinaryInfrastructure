@@ -1,4 +1,4 @@
-namespace Odin.Patterns.Queries;
+namespace Odin.Queries;
 
 /// <summary>
 /// Defines a query request that returns

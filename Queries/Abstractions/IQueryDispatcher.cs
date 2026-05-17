@@ -1,4 +1,4 @@
-namespace Odin.Patterns.Queries;
+namespace Odin.Queries;
 
 /// <summary>
 /// Dispatches queries to their registered query handlers.

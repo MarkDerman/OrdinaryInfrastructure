@@ -1,4 +1,4 @@
-namespace Odin.Patterns.Notifications;
+namespace Odin.Notifications;
 
 /// <summary>
 /// Defines a notification request.

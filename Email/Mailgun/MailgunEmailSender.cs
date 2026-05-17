@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Odin.DesignContracts;
 using Odin.Logging;
 using Odin.System;
 using Polly;
@@ -59,7 +58,10 @@ namespace Odin.Email
                 endPoint += "/";
             }
 
-            Precondition.Requires(!string.IsNullOrWhiteSpace(_mailgunSettings.Domain), "Domain missing in MailgunOptions");
+            if (string.IsNullOrWhiteSpace(_mailgunSettings.Domain))
+            {
+                throw new ArgumentException("Domain missing in MailgunOptions", nameof(mailgunSettings));
+            }
             string subPath = $"{_mailgunSettings.Domain}/messages";
             // Leading slash will replace the /v3
             if (subPath[0] == '/')
@@ -68,7 +70,10 @@ namespace Odin.Email
             }
             _httpClient.BaseAddress = new Uri(new Uri(endPoint), subPath);
 
-            Precondition.Requires(!string.IsNullOrWhiteSpace(_mailgunSettings.ApiKey), "ApiKey missing in MailgunOptions");
+            if (string.IsNullOrWhiteSpace(_mailgunSettings.ApiKey))
+            {
+                throw new ArgumentException("ApiKey missing in MailgunOptions", nameof(mailgunSettings));
+            }
 
             byte[] byteArray = Encoding.ASCII.GetBytes($"api:{_mailgunSettings.ApiKey}");
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
@@ -86,8 +91,10 @@ namespace Odin.Email
         private static ByteArrayContent ToByteArrayContent(Stream stream)
         {
             ArgumentNullException.ThrowIfNull(stream);
-            Precondition.Requires(stream.CanRead, "Stream.CanRead must be true");
-            Precondition.Requires(stream.CanSeek, "Stream.CanSeek must be true");
+            if (!stream.CanRead || !stream.CanSeek)
+            {
+                throw new ArgumentException("Stream.CanRead and Stream.CanSeek must be true", nameof(stream));
+            }
 
             try
             {
@@ -113,8 +120,11 @@ namespace Odin.Email
         public async Task<ResultValue<string>> SendEmail(IEmailMessage email)
         {
             ArgumentNullException.ThrowIfNull(email);
-            Precondition.Requires(email.To.Any(), "Mailgun requires one or more to addresses.");
-            Precondition.Requires(!string.IsNullOrWhiteSpace(email.Subject), "Mailgun requires an email subject");
+            if (!email.To.Any())
+            {
+                throw new ArgumentException("Mailgun requires one or more to addresses.", nameof(email));
+            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(email.Subject,"Mailgun requires an email subject");
 
             try
             {

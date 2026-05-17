@@ -75,7 +75,10 @@ namespace Odin.System
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
         protected ResultValue(bool success, TValue? value, IEnumerable<TMessage>? messages)
         {
-            Precondition.Requires(!(value == null && success), "Value is required for a successful result.");
+            if (value == null && success)
+            {
+                throw new ArgumentException("Value is required for a successful result.", nameof(value));
+            }
             IsSuccess = success;
             Value = value;
             _messages = messages?.ToList();
@@ -89,7 +92,10 @@ namespace Odin.System
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
         protected ResultValue(bool success, TValue? value, TMessage? message = null)
         {
-            Precondition.Requires(!(value == null && success), "Value is required for a successful result.");
+            if (value == null && success)
+            {
+                throw new ArgumentException("Value is required for a successful result.", nameof(value));
+            }
             IsSuccess = success;
             Value = value;
             _messages = message != null ? [message] : null;
@@ -140,7 +146,10 @@ namespace Odin.System
         {
             ArgumentNullException.ThrowIfNull(messages);
             List<TMessage> messagesList = messages.ToList();
-            Precondition.Requires(messagesList.Any(m => m != null!), "At least 1 message is required.");
+            if (!messagesList.Any(m => m != null!))
+            {
+                throw new ArgumentException("At least 1 message is required.", nameof(messages));
+            }
             return new ResultValue<TValue, TMessage>(false, value, messagesList);
         }
 

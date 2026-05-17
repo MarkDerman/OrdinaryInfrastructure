@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Odin.DesignContracts;
 
 namespace Odin.RemoteFiles;
 
@@ -33,7 +32,7 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddRemoteFiles(this IServiceCollection services,
         IConfigurationSection configurationSection)
     {
-        Precondition.Requires(configurationSection != null!, "Configuration Section for RemoteFiles cannot be null.");
+        ArgumentNullException.ThrowIfNull(configurationSection);
 
         if (!configurationSection.Exists())
             throw new ApplicationException(

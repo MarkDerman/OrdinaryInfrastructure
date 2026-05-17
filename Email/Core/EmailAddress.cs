@@ -1,4 +1,3 @@
-using Odin.DesignContracts;
 
 namespace Odin.Email
 {
@@ -24,7 +23,7 @@ namespace Odin.Email
         /// <param name="displayName"></param>
         public EmailAddress(string emailAddress, string? displayName = null)
         {
-            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(emailAddress), $"{nameof(emailAddress)} is required");
+            ArgumentException.ThrowIfNullOrWhiteSpace(emailAddress);
             if (string.IsNullOrWhiteSpace(displayName))
             {
                 DisplayName = null;

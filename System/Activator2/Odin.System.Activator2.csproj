@@ -10,7 +10,6 @@
     <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />
     <ProjectReference Include="..\Result\Odin.System.Result.csproj" />
   </ItemGroup>
   <ItemGroup>

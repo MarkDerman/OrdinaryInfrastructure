@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Graph.Users.Item.SendMail;
-using Odin.DesignContracts;
 using Odin.Logging;
 using Odin.System;
 
@@ -59,7 +58,9 @@ public class Office365EmailSender : IEmailSender
     {
         if (email.From is null)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(_emailSettings.DefaultFromAddress), "Cannot fall back to the default from address, since it is missing.");
+            ArgumentException.ThrowIfNullOrWhiteSpace(
+                _emailSettings.DefaultFromAddress,
+                "Cannot fall back to the default from address, since it is missing.");
             email.From = new EmailAddress(_emailSettings.DefaultFromAddress!, _emailSettings.DefaultFromName);
         }
         email.Subject = string.Concat(_emailSettings.SubjectPrefix, email.Subject,

@@ -1,4 +1,3 @@
-using Odin.DesignContracts;
 using System.Runtime.Remoting;
 
 namespace Odin.System;
@@ -16,8 +15,8 @@ public static class Activator2
     /// <returns></returns>
     public static ResultValue<T> TryCreate<T>(string typeName, string assemblyName) where T : class
     {
-        Precondition.Requires(!string.IsNullOrWhiteSpace(typeName));
-        Precondition.Requires(!string.IsNullOrWhiteSpace(assemblyName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(typeName);
+        ArgumentException.ThrowIfNullOrWhiteSpace(assemblyName);
         ObjectHandle? handle;
         try
         {
@@ -50,7 +49,7 @@ public static class Activator2
     /// <returns></returns>
     public static ResultValue<T> TryCreate<T>(Type typeToCreate) where T : class
     {
-        Precondition.Requires(typeToCreate != null!);
+        ArgumentNullException.ThrowIfNull(typeToCreate);
         try
         {
             object? obj = Activator.CreateInstance(typeToCreate);

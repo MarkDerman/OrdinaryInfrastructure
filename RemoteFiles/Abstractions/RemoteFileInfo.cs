@@ -1,4 +1,3 @@
-using Odin.DesignContracts;
 
 namespace Odin.RemoteFiles;
 
@@ -15,8 +14,8 @@ public sealed class RemoteFileInfo : IRemoteFileInfo
     /// <param name="lastWriteTimeUtc"></param>
     public RemoteFileInfo(string fullName, string name, DateTime lastWriteTimeUtc)
     {
-        Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(name), nameof(name));
-        Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(fullName), nameof(fullName));
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(fullName);
         FullName = fullName;
         Name = name;
         // Use overload for DateTimeOffset set from DateTime

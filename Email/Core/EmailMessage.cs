@@ -1,5 +1,3 @@
-﻿using Odin.DesignContracts;
-
 namespace Odin.Email
 {
     /// <summary>
@@ -29,10 +27,8 @@ namespace Odin.Email
         public EmailMessage(string toEmailAddress, string fromEmailAddress, string? subject, string? body,
             bool isHtml = false)
         {
-            Precondition.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(toEmailAddress),
-                $"{nameof(toEmailAddress)} is required");
-            Precondition.Requires<ArgumentException>(!string.IsNullOrWhiteSpace(fromEmailAddress),
-                $"{nameof(fromEmailAddress)} is required");
+            ArgumentException.ThrowIfNullOrWhiteSpace(toEmailAddress);
+            ArgumentException.ThrowIfNullOrWhiteSpace(fromEmailAddress);
             if (string.IsNullOrWhiteSpace(subject))
             {
                 Subject = "";

@@ -1,4 +1,3 @@
-using Odin.DesignContracts;
 using Odin.System;
 
 namespace Odin.RemoteFiles;
@@ -17,8 +16,8 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
     /// <param name="remoteFilesOptions"></param>
     public RemoteFileSessionFactory(RemoteFilesOptions remoteFilesOptions)
     {
-        Precondition.Requires<ArgumentNullException>(remoteFilesOptions != null, "remoteFileConfiguration cannot be null");
-        Precondition.Requires<ArgumentNullException>(remoteFilesOptions.ConnectionStrings != null, "remoteFileConfiguration connection strings cannot null");
+        ArgumentNullException.ThrowIfNull(remoteFilesOptions);
+        ArgumentNullException.ThrowIfNull(remoteFilesOptions.ConnectionStrings);
 
         _fileSourceConnections = remoteFilesOptions.ConnectionStrings.ToDictionary(
             kv => kv.Key,
@@ -37,7 +36,7 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
     /// <returns></returns>
     public ResultValue<IRemoteFileSession> CreateRemoteFileSession(string connectionName)
     {
-        Precondition.Requires<ArgumentNullException>(!string.IsNullOrEmpty(connectionName), "connectionName cannot be null");
+        ArgumentException.ThrowIfNullOrEmpty(connectionName);
 
         if (!_fileSourceConnections.ContainsKey(connectionName))
             return ResultValue<IRemoteFileSession>.Failure($"Connection name not supported or configured: {connectionName}");

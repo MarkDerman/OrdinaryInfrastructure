@@ -132,7 +132,10 @@ public class ResultValueNullable<TValue, TMessage> where TMessage : class
     {
         ArgumentNullException.ThrowIfNull(messages);
         List<TMessage> messagesList = messages.ToList();
-        Precondition.Requires(messagesList.Any(m => m != null!), "At least 1 message is required.");
+        if (!messagesList.Any(m => m != null!))
+        {
+            throw new ArgumentException("At least 1 message is required.", nameof(messages));
+        }
         return new ResultValueNullable<TValue, TMessage>(false, value, messagesList);
     }
 

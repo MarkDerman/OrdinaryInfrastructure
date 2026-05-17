@@ -48,7 +48,7 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultEx Failure(string? message, LogLevel severity = LogLevel.Error, Exception? error = null)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(message) || error != null, "Either a message or an error is required.");
+            if (string.IsNullOrWhiteSpace(message) && error == null) throw new ArgumentException("Either a message or an error is required.");
             return new ResultEx(false, new MessageEx() { Message = message, Severity = severity, Error = error });
         }
 
@@ -61,7 +61,8 @@ namespace Odin.System
         {
             ArgumentNullException.ThrowIfNull(messages);
             List<MessageEx> list = messages.ToList();
-            Precondition.Requires(list.Any(s => s.Error != null || !string.IsNullOrWhiteSpace(s.Message)), "At least 1 message with an Error or a Message is required.");
+            if (list.Any(s => s.Error != null || !string.IsNullOrWhiteSpace(s.Message)))
+                throw new ArgumentException("At least 1 message with an Error or a Message is required.");
             return new ResultEx(false, list);
         }
 

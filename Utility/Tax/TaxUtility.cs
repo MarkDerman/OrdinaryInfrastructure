@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Configuration;
-using Odin.DesignContracts;
 
 namespace Odin.Utility;
 

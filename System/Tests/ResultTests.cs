@@ -1,4 +1,4 @@
-using Odin.System;
+﻿using Odin.System;
 using System.Text.Json;
 
 namespace Tests.Odin.System
@@ -24,7 +24,7 @@ namespace Tests.Odin.System
         {
             if (shouldThrow)
             {
-                ArgumentException error = Assert.Throws<ArgumentException>(() => Result.Failure(message!));
+                ArgumentException error = Assert.ThrowsAny<ArgumentException>(() => Result.Failure(message!));
                 Assert.NotNull(error);
             }
             else

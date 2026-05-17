@@ -51,7 +51,10 @@ public class ResultValueNullable<TValue> : ResultValueNullable<TValue, string>
     {
         ArgumentNullException.ThrowIfNull(messages);
         List<string> list = messages.ToList();
-        Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)), "At least 1 message is required.");
+        if (!list.Any(s => !string.IsNullOrWhiteSpace(s)))
+        {
+            throw new ArgumentException("At least 1 message is required.", nameof(messages));
+        }
         return new ResultValueNullable<TValue>(false, value, list);
     }
 
@@ -63,7 +66,7 @@ public class ResultValueNullable<TValue> : ResultValueNullable<TValue, string>
     /// <returns></returns>
     public new static ResultValueNullable<TValue> Failure(string message, TValue? value = default(TValue))
     {
-        Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(message);
         return new ResultValueNullable<TValue>(false, value, new List<string>() { message });
     }
 

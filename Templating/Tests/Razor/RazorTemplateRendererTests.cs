@@ -1,7 +1,6 @@
-using Odin.System;
+﻿using Odin.System;
 using Odin.Templating;
 using System.Reflection;
-using Xunit;
 
 namespace Tests.Odin.Templating.Razor
 {

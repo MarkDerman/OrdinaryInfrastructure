@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Configuration;
-using Odin.DesignContracts;
 
 namespace Odin.Utility;
 
@@ -19,7 +18,7 @@ public class ValueChangesListProvider<TRangeType, TValueType> : IVaryingValuePro
     /// <param name="valuesAcrossRange"></param>
     public ValueChangesListProvider(IEnumerable<ValueChange<TRangeType, TValueType>> valuesAcrossRange)
     {
-        Precondition.Requires(valuesAcrossRange != null!);
+        ArgumentNullException.ThrowIfNull(valuesAcrossRange);
         InitialiseFrom(valuesAcrossRange.ToList());
     }
 
@@ -29,7 +28,7 @@ public class ValueChangesListProvider<TRangeType, TValueType> : IVaryingValuePro
     /// <param name="singleValue"></param>
     public ValueChangesListProvider(ValueChange<TRangeType, TValueType> singleValue)
     {
-        Precondition.Requires(singleValue != null!);
+        ArgumentNullException.ThrowIfNull(singleValue);
         InitialiseFrom(new List<ValueChange<TRangeType, TValueType>> { singleValue });
     }
 
@@ -40,7 +39,7 @@ public class ValueChangesListProvider<TRangeType, TValueType> : IVaryingValuePro
     /// <param name="sectionName">The name of the configuration section, eg 'TaxHistory'</param>
     public ValueChangesListProvider(IConfiguration configuration, string sectionName)
     {
-        Precondition.Requires(configuration != null!);
+        ArgumentNullException.ThrowIfNull(configuration);
         List<ValueChange<TRangeType, TValueType>> valuesInConfig = new List<ValueChange<TRangeType, TValueType>>();
         configuration.Bind(sectionName, valuesInConfig);
         InitialiseFrom(valuesInConfig);
@@ -52,7 +51,7 @@ public class ValueChangesListProvider<TRangeType, TValueType> : IVaryingValuePro
     /// <param name="valueChangesSection"></param>
     public ValueChangesListProvider(IConfigurationSection valueChangesSection)
     {
-        Precondition.Requires(valueChangesSection != null!);
+        ArgumentNullException.ThrowIfNull(valueChangesSection);
         List<ValueChange<TRangeType, TValueType>> valuesInConfig = new List<ValueChange<TRangeType, TValueType>>();
         valueChangesSection.Bind(valuesInConfig);
         InitialiseFrom(valuesInConfig);
@@ -60,7 +59,7 @@ public class ValueChangesListProvider<TRangeType, TValueType> : IVaryingValuePro
 
     private void InitialiseFrom(List<ValueChange<TRangeType, TValueType>> valuesAcrossRange)
     {
-        Precondition.Requires(valuesAcrossRange != null!);
+        ArgumentNullException.ThrowIfNull(valuesAcrossRange);
         _valueChangesInOrder = valuesAcrossRange.OrderBy(c => c.From).ToList();
     }
 

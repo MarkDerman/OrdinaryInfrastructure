@@ -1,4 +1,4 @@
-namespace Odin.System
+﻿namespace Odin.System
 {
 
     /// <summary>
@@ -34,7 +34,7 @@ namespace Odin.System
         /// <returns></returns>
         public new static Result Failure(string message)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
+            ArgumentException.ThrowIfNullOrWhiteSpace(message);
             return new Result(false, message);
         }
 
@@ -45,9 +45,12 @@ namespace Odin.System
         /// <returns></returns>
         public new static Result Failure(IEnumerable<string> messages)
         {
-            Precondition.RequiresNotNull(messages);
+            ArgumentNullException.ThrowIfNull(messages);
             List<string> list = messages.ToList();
-            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)), "At least 1 message is required.");
+            if (!list.Any(s => !string.IsNullOrWhiteSpace(s)))
+            {
+                throw new ArgumentException("At least 1 message is required.", nameof(messages));
+            }
             return new Result(false, list);
         }
 

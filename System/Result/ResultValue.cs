@@ -1,4 +1,4 @@
-namespace Odin.System
+﻿namespace Odin.System
 {
     /// <summary>
     /// Represents the success or failure of an operation that returns a non-null Value\Result on success,
@@ -24,7 +24,10 @@ namespace Odin.System
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
         public ResultValue(bool isSuccess, TValue? value, IEnumerable<string>? messages)
         {
-            Precondition.Requires(!(value == null && isSuccess), "Value is required for a successful result.");
+            if (value == null && isSuccess)
+            {
+                throw new ArgumentException("Value is required for a successful result.", nameof(value));
+            }
             IsSuccess = isSuccess;
             Value = value;
             _messages = messages?.ToList();
@@ -38,7 +41,10 @@ namespace Odin.System
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
         public ResultValue(bool isSuccess, TValue? value, string? message = null)
         {
-            Precondition.Requires(!(value == null && isSuccess), "A value is required for a successful result.");
+            if (value == null && isSuccess)
+            {
+                throw new ArgumentException("A value is required for a successful result.", nameof(value));
+            }
             IsSuccess = isSuccess;
             Value = value;
             _messages = message != null ? [message] : null;
@@ -52,9 +58,12 @@ namespace Odin.System
         /// <returns></returns>
         public new static ResultValue<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue))
         {
-            Precondition.RequiresNotNull(messages);
+            ArgumentNullException.ThrowIfNull(messages);
             List<string> list = messages.ToList();
-            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)), "At least 1 message is required.");
+            if (!list.Any(s => !string.IsNullOrWhiteSpace(s)))
+            {
+                throw new ArgumentException("At least 1 message is required.", nameof(messages));
+            }
             return new ResultValue<TValue>(false, value, list);
         }
 
@@ -66,7 +75,7 @@ namespace Odin.System
         /// <returns></returns>
         public new static ResultValue<TValue> Failure(string message, TValue? value = default(TValue))
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
+            ArgumentException.ThrowIfNullOrWhiteSpace(message);
             return new ResultValue<TValue>(false, value, new List<string>() { message });
         }
 

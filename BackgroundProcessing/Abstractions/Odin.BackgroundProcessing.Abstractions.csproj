@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                
         <ImplicitUsings>true</ImplicitUsings>
         <PackageId>Odin.BackgroundProcessing.Abstractions</PackageId>
         <RootNamespace>Odin.BackgroundProcessing</RootNamespace>
@@ -17,7 +16,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />
       <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
       <ProjectReference Include="..\..\System\Strings\Odin.System.Strings.csproj" />
     </ItemGroup>

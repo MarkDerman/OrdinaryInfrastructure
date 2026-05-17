@@ -1,9 +1,8 @@
-using Azure.Identity;
+﻿using Azure.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Graph.Users.Item.SendMail;
-using Odin.DesignContracts;
 using Odin.Logging;
 using Odin.System;
 
@@ -27,9 +26,9 @@ public class Office365EmailSender : IEmailSender
     /// <param name="logger">Microsoft UserId</param>
     public Office365EmailSender(Office365Options office365Options, EmailSendingOptions emailSettings, ILoggerWrapper<Office365EmailSender> logger)
     {
-        Precondition.RequiresNotNull(office365Options);
-        Precondition.RequiresNotNull(emailSettings);
-        Precondition.RequiresNotNull(logger);
+        ArgumentNullException.ThrowIfNull(office365Options);
+        ArgumentNullException.ThrowIfNull(emailSettings);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _emailSettings = emailSettings;
         _logger = logger;
@@ -59,7 +58,9 @@ public class Office365EmailSender : IEmailSender
     {
         if (email.From is null)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(_emailSettings.DefaultFromAddress), "Cannot fall back to the default from address, since it is missing.");
+            ArgumentException.ThrowIfNullOrWhiteSpace(
+                _emailSettings.DefaultFromAddress,
+                "Cannot fall back to the default from address, since it is missing.");
             email.From = new EmailAddress(_emailSettings.DefaultFromAddress!, _emailSettings.DefaultFromName);
         }
         email.Subject = string.Concat(_emailSettings.SubjectPrefix, email.Subject,
@@ -133,7 +134,7 @@ public class Office365EmailSender : IEmailSender
 
     static byte[] ToByteArray(Stream inputStream)
     {
-        Precondition.RequiresNotNull(inputStream);
+        ArgumentNullException.ThrowIfNull(inputStream);
 
         if (inputStream.CanSeek)
         {

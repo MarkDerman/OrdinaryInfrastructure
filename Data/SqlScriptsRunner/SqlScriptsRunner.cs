@@ -5,7 +5,6 @@ using DbUp.Engine.Transactions;
 using DbUp.Helpers;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Odin.DesignContracts;
 using Odin.System;
 using System.Reflection;
 
@@ -43,15 +42,15 @@ namespace Odin.Data
         {
             // Contract.Requires(logger);
             // _logger = logger;
-            Precondition.Requires(assemblyWithEmbeddedScripts != null!);
-            _assemblyWithEmbeddedScripts = assemblyWithEmbeddedScripts!;
+            ArgumentNullException.ThrowIfNull(assemblyWithEmbeddedScripts);
+            _assemblyWithEmbeddedScripts = assemblyWithEmbeddedScripts;
         }
 
         public static ResultValue<SqlScriptsRunner> CreateFromConnectionStringName(string connectionStringName,
             Assembly assemblyWithEmbeddedScripts, IConfiguration configuration)
         {
-            Precondition.Requires(configuration != null!);
-            Precondition.Requires(assemblyWithEmbeddedScripts != null!);
+            ArgumentNullException.ThrowIfNull(configuration);
+            ArgumentNullException.ThrowIfNull(assemblyWithEmbeddedScripts);
             SqlScriptsRunner runner = new SqlScriptsRunner(assemblyWithEmbeddedScripts)
             {
                 ConnectionString = configuration.GetConnectionString(connectionStringName)!
@@ -76,8 +75,8 @@ namespace Odin.Data
 
         public static ResultValue<SqlScriptsRunner> CreateFromConnectionString(string connectionString, Assembly assemblyWithEmbeddedScripts)
         {
-            Precondition.Requires(assemblyWithEmbeddedScripts != null!);
-            Precondition.Requires(!string.IsNullOrWhiteSpace(connectionString));
+            ArgumentNullException.ThrowIfNull(assemblyWithEmbeddedScripts);
+            ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
             SqlScriptsRunner runner = new SqlScriptsRunner(assemblyWithEmbeddedScripts)
             {
                 ConnectionString = connectionString

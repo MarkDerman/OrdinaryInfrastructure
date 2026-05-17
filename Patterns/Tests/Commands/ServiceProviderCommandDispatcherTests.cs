@@ -1,7 +1,6 @@
 using Moq;
 using Odin.Logging;
 using Odin.Patterns.Commands;
-using Xunit;
 
 namespace Tests.Odin.Patterns.Commands;
 
@@ -18,7 +17,7 @@ public sealed class ServiceProviderCommandDispatcherTests
 
         TestCommand command = new("Arthur");
 
-        await sut.DispatchAsync(command);
+        await sut.DispatchAsync(command, TestContext.Current.CancellationToken);
 
         Assert.Same(command, handler.ReceivedCommand);
         loggerMock.Verify(
@@ -46,7 +45,8 @@ public sealed class ServiceProviderCommandDispatcherTests
             new TestServiceProvider().AddHandlers<ICommandHandler<ResultCommand, string>>(handler),
             loggerMock.Object);
 
-        string result = await sut.DispatchAsync<ResultCommand, string>(new ResultCommand(42));
+        string result = await sut.DispatchAsync<ResultCommand, string>(new ResultCommand(42)
+            , TestContext.Current.CancellationToken);
 
         Assert.Equal("Trillian", result);
     }
@@ -58,10 +58,10 @@ public sealed class ServiceProviderCommandDispatcherTests
         ServiceProviderCommandDispatcher sut = new(new TestServiceProvider(), loggerMock.Object);
 
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => sut.DispatchAsync(new TestCommand("Ford")));
+            () => sut.DispatchAsync(new TestCommand("Ford"), TestContext.Current.CancellationToken));
 
-        Assert.Contains(typeof(TestCommand).FullName, ex.Message);
-        Assert.Contains(typeof(ICommandHandler<TestCommand>).FullName, ex.Message);
+        Assert.Contains(typeof(TestCommand).FullName!, ex.Message);
+        Assert.Contains(typeof(ICommandHandler<TestCommand>).FullName!, ex.Message);
         loggerMock.Verify(
             x => x.LogError(
                 It.Is<string?>(message =>
@@ -83,10 +83,10 @@ public sealed class ServiceProviderCommandDispatcherTests
             loggerMock.Object);
 
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => sut.DispatchAsync(new TestCommand("Ford")));
+            () => sut.DispatchAsync(new TestCommand("Ford"), TestContext.Current.CancellationToken));
 
-        Assert.Contains(typeof(TestCommand).FullName, ex.Message);
-        Assert.Contains(typeof(ICommandHandler<TestCommand>).FullName, ex.Message);
+        Assert.Contains(typeof(TestCommand).FullName!, ex.Message);
+        Assert.Contains(typeof(ICommandHandler<TestCommand>).FullName!, ex.Message);
         Assert.Contains("Found 2 registrations", ex.Message);
     }
 
@@ -101,7 +101,7 @@ public sealed class ServiceProviderCommandDispatcherTests
             loggerMock.Object);
 
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(
-            () => sut.DispatchAsync(new TestCommand("Zaphod")));
+            () => sut.DispatchAsync(new TestCommand("Zaphod"), TestContext.Current.CancellationToken));
 
         Assert.Same(expectedException, ex);
         loggerMock.Verify(

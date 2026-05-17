@@ -1,4 +1,4 @@
-using Odin.System;
+﻿using Odin.System;
 using System.Text.Json;
 
 namespace Tests.Odin.System
@@ -38,7 +38,7 @@ namespace Tests.Odin.System
 
             Assert.True(sut.IsSuccess);
             Assert.Equal("message", sut.MessagesToString());
-            Assert.Equal(1, sut.Messages.Count);
+            Assert.Single(sut.Messages);
             Assert.Equal(stringVal, sut.Value);
 
         }
@@ -51,7 +51,7 @@ namespace Tests.Odin.System
 
             Assert.True(sut.IsSuccess);
             Assert.Equal("message", sut.MessagesToString());
-            Assert.Equal(1, sut.Messages.Count);
+            Assert.Single(sut.Messages);
             Assert.Equal(num, sut.Value);
         }
 
@@ -110,7 +110,7 @@ namespace Tests.Odin.System
             ResultValue<string> fail = ResultValue<string>.Failure("message", testValue);
 
             Assert.False(fail.IsSuccess);
-            Assert.Equal(1, fail.Messages.Count);
+            Assert.Single(fail.Messages);
             Assert.Equal(testValue, fail.Value);
         }
     }

@@ -6,7 +6,6 @@ using Moq;
 using Odin.Configuration;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using Xunit;
 
 namespace Tests.Odin.Configuration;
 

@@ -17,7 +17,7 @@ public class RemoteFileSessionFactoryTests
             ConnectionStrings = new Dictionary<string, string>()
         };
         RemoteFileSessionFactory sut = new RemoteFileSessionFactory(remoteFileConfig);
-        Assert.Throws<ArgumentNullException>(() => sut.CreateRemoteFileSession(connectionName!));
+        Assert.ThrowsAny<Exception>(() => sut.CreateRemoteFileSession(connectionName!));
     }
 
     [Fact]

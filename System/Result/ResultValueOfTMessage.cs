@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 
 namespace Odin.System
 {
@@ -75,7 +75,10 @@ namespace Odin.System
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
         protected ResultValue(bool success, TValue? value, IEnumerable<TMessage>? messages)
         {
-            Precondition.Requires(!(value == null && success), "Value is required for a successful result.");
+            if (value == null && success)
+            {
+                throw new ArgumentException("Value is required for a successful result.", nameof(value));
+            }
             IsSuccess = success;
             Value = value;
             _messages = messages?.ToList();
@@ -89,7 +92,10 @@ namespace Odin.System
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
         protected ResultValue(bool success, TValue? value, TMessage? message = null)
         {
-            Precondition.Requires(!(value == null && success), "Value is required for a successful result.");
+            if (value == null && success)
+            {
+                throw new ArgumentException("Value is required for a successful result.", nameof(value));
+            }
             IsSuccess = success;
             Value = value;
             _messages = message != null ? [message] : null;
@@ -103,7 +109,7 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultValue<TValue, TMessage> Success(TValue value, IEnumerable<TMessage>? messages)
         {
-            Precondition.RequiresNotNull(value);
+            ArgumentNullException.ThrowIfNull(value);
             return new ResultValue<TValue, TMessage>(true, value, messages);
         }
 
@@ -114,7 +120,7 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultValue<TValue, TMessage> Success(TValue value)
         {
-            Precondition.RequiresNotNull(value);
+            ArgumentNullException.ThrowIfNull(value);
             return new ResultValue<TValue, TMessage>(true, value, null as TMessage);
         }
 
@@ -126,7 +132,7 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultValue<TValue, TMessage> Success(TValue value, TMessage? message)
         {
-            Precondition.RequiresNotNull(value);
+            ArgumentNullException.ThrowIfNull(value);
             return new ResultValue<TValue, TMessage>(true, value, message);
         }
 
@@ -138,9 +144,12 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultValue<TValue, TMessage> Failure(IEnumerable<TMessage> messages, TValue? value = default(TValue))
         {
-            Precondition.RequiresNotNull(messages);
+            ArgumentNullException.ThrowIfNull(messages);
             List<TMessage> messagesList = messages.ToList();
-            Precondition.Requires(messagesList.Any(m => m != null!), "At least 1 message is required.");
+            if (!messagesList.Any(m => m != null!))
+            {
+                throw new ArgumentException("At least 1 message is required.", nameof(messages));
+            }
             return new ResultValue<TValue, TMessage>(false, value, messagesList);
         }
 
@@ -152,7 +161,7 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultValue<TValue, TMessage> Failure(TMessage message, TValue? value = default(TValue))
         {
-            Precondition.RequiresNotNull(message);
+            ArgumentNullException.ThrowIfNull(message);
             return new ResultValue<TValue, TMessage>(false, value, new List<TMessage>() { message });
         }
 

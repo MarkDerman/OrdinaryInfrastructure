@@ -1,5 +1,4 @@
 using Microsoft.Extensions.DependencyInjection;
-using Odin.DesignContracts;
 using Odin.Logging;
 
 namespace Odin.Patterns.Queries;
@@ -21,8 +20,8 @@ public sealed class ServiceProviderQueryDispatcher : IQueryDispatcher
         IServiceProvider serviceProvider,
         ILoggerWrapper<ServiceProviderQueryDispatcher> logger)
     {
-        Precondition.RequiresNotNull(serviceProvider);
-        Precondition.RequiresNotNull(logger);
+        ArgumentNullException.ThrowIfNull(serviceProvider);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _serviceProvider = serviceProvider;
         _logger = logger;
@@ -34,7 +33,7 @@ public sealed class ServiceProviderQueryDispatcher : IQueryDispatcher
         CancellationToken ct = default)
         where TQuery : IQuery<TQueryResult>
     {
-        Precondition.RequiresNotNull(query);
+        ArgumentNullException.ThrowIfNull(query);
 
         Type queryType = typeof(TQuery);
         Type handlerInterfaceType = typeof(IQueryHandler<TQuery, TQueryResult>);

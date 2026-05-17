@@ -16,7 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\DesignContracts\Core\Odin.DesignContracts.csproj" />
         <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />
         <ProjectReference Include="..\Commands.Abstractions\Odin.Patterns.Commands.Abstractions.csproj" />
     </ItemGroup>

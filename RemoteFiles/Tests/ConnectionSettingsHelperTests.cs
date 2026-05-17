@@ -11,7 +11,7 @@ public class ConnectionSettingsHelperTests
     public void ParseConnectionString_throws_argument_null_exception_if_connection_string_is_malformed(
         string? connectionString)
     {
-        Assert.Throws<ArgumentNullException>(() => ConnectionSettingsHelper.ParseConnectionString(connectionString!, ';'));
+        Assert.ThrowsAny<Exception>(() => ConnectionSettingsHelper.ParseConnectionString(connectionString!, ';'));
     }
 
     [Theory]

@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Configuration;
-using Odin.DesignContracts;
 
 namespace Odin.Utility;
 
@@ -25,7 +24,7 @@ public class TaxUtility : ITaxUtility
     /// <param name="taxRatesAsPercentageHistory">Note that tax rates must be expressed as a percentage number, not a fraction.</param>
     public TaxUtility(IEnumerable<ValueChange<DateOnly, decimal>> taxRatesAsPercentageHistory)
     {
-        Precondition.Requires(taxRatesAsPercentageHistory != null!);
+        ArgumentNullException.ThrowIfNull(taxRatesAsPercentageHistory);
         _taxValues = new ValueChangesListProvider<DateOnly, decimal>(taxRatesAsPercentageHistory);
     }
 

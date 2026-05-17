@@ -1,6 +1,4 @@
-using Odin.DesignContracts;
-
-namespace Odin.BackgroundProcessing
+﻿namespace Odin.BackgroundProcessing
 {
     /// <summary>
     /// Represents the outcome of an attempt to schedule a job with the background jobs engine.
@@ -14,7 +12,7 @@ namespace Odin.BackgroundProcessing
         /// <param name="scheduledFor"></param>
         public JobDetails(string jobId, DateTimeOffset scheduledFor)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(jobId));
+            ArgumentException.ThrowIfNullOrWhiteSpace(jobId);
             JobId = jobId;
             ScheduledFor = scheduledFor;
         }

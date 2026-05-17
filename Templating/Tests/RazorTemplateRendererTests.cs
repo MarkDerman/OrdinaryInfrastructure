@@ -2,7 +2,7 @@
 using Odin.Templating;
 using System.Reflection;
 
-namespace Tests.Odin.Templating.Razor
+namespace Tests.Odin.Templating
 {
     public sealed class RazorTemplateRendererTests
     {

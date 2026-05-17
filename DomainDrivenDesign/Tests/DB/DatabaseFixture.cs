@@ -1,7 +1,7 @@
 using DbUp.Engine.Transactions;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Odin.Data;
+using Odin.Database;
 using Odin.System;
 using Respawn;
 

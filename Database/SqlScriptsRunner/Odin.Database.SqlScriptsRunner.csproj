@@ -3,7 +3,7 @@
         
     <ImplicitUsings>true</ImplicitUsings>
     <PackageIcon>icon.png</PackageIcon>
-    <RootNamespace>Odin.Data</RootNamespace>
+    <RootNamespace>Odin.Database</RootNamespace>
     <Description>Provides a SqlScriptsRunner that supports journalled and unjournalled execution of SQL database change and other scripts. 
       Useful for running database migration scripts at application deployment time.
       

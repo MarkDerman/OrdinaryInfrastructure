@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <UserSecretsId>Tests.Odin.Data</UserSecretsId>
+    <UserSecretsId>Tests.Odin.Database</UserSecretsId>
     <ImplicitUsings>true</ImplicitUsings>
     <NoWarn>1591;</NoWarn>
   </PropertyGroup>
@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
-    <ProjectReference Include="..\SqlScriptsRunner\Odin.Data.SqlScriptsRunner.csproj" />
+    <ProjectReference Include="..\SqlScriptsRunner\Odin.Database.SqlScriptsRunner.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">

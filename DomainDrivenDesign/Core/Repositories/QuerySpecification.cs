@@ -3,8 +3,8 @@ using System.Linq.Expressions;
 namespace Odin.DDD.Repositories;
 
 /// <inheritdoc />
-public class QuerySpecification<TAggregateRoot> 
-    : IQuerySpecification<TAggregateRoot> 
+public class QuerySpecification<TAggregateRoot>
+    : IQuerySpecification<TAggregateRoot>
     where TAggregateRoot : class, IAggregateRoot
 {
     /// <summary>
@@ -15,7 +15,7 @@ public class QuerySpecification<TAggregateRoot>
     {
         Criteria = criteria;
     }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -32,16 +32,16 @@ public class QuerySpecification<TAggregateRoot>
 
     /// <inheritdoc />
     public Expression<Func<TAggregateRoot, object>>? OrderBy { get; private set; }
-    
+
     /// <inheritdoc />
     public Expression<Func<TAggregateRoot, object>>? OrderByDescending { get; private set; }
-    
+
     /// <inheritdoc />
     public int Take { get; private set; }
-    
+
     /// <inheritdoc />
     public int Skip { get; private set; }
-    
+
     /// <inheritdoc />
     public bool IsPagingEnabled { get; private set; }
 
@@ -54,7 +54,7 @@ public class QuerySpecification<TAggregateRoot>
         if (_includes == null) _includes = new List<Expression<Func<TAggregateRoot, object>>>();
         _includes.Add(includeExpression);
     }
-    
+
     /// <summary>
     /// Adds a query include
     /// </summary>
@@ -69,14 +69,14 @@ public class QuerySpecification<TAggregateRoot>
     /// Adds ordering ascending
     /// </summary>
     /// <param name="orderByExpression"></param>
-    protected void ApplyOrderBy(Expression<Func<TAggregateRoot, object>> orderByExpression) 
+    protected void ApplyOrderBy(Expression<Func<TAggregateRoot, object>> orderByExpression)
         => OrderBy = orderByExpression;
-    
+
     /// <summary>
     /// Adds ordering descending
     /// </summary>
     /// <param name="orderByExpression"></param>
-    protected void ApplyOrderByDescending(Expression<Func<TAggregateRoot, object>> orderByExpression) 
+    protected void ApplyOrderByDescending(Expression<Func<TAggregateRoot, object>> orderByExpression)
         => OrderByDescending = orderByExpression;
 
     /// <summary>

@@ -1,7 +1,7 @@
+using Odin.Messaging.RabbitMq;
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
-using Odin.Messaging.RabbitMq;
 
 namespace Tests.Odin.Messaging.RabbitMq;
 
@@ -187,14 +187,14 @@ public class RabbitConnectionServiceTests
                     }
                 }
             };
-            
+
 
             subscription.OnFailure += ex =>
             {
                 Console.WriteLine("OnFailure callback called. Exception: " + ex);
                 return Task.CompletedTask;
             };
-            
+
             await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
 
             Console.WriteLine($"Will start consuming queue {queueName} with subscription1.");
@@ -210,7 +210,7 @@ public class RabbitConnectionServiceTests
             Console.WriteLine($"Stopped consuming queue {queueName}");
 
             await Task.Delay(TimeSpan.FromSeconds(10), cancellationToken);
-            
+
             Console.WriteLine("Will close channel");
 
             await subscription.CloseChannel();

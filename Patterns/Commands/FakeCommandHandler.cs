@@ -4,7 +4,7 @@ namespace Odin.Patterns.Commands;
 /// Generic treatment of ICommandHandler for use in testing and other scenarios.
 /// </summary>
 /// <typeparam name="TCommand"></typeparam>
-public class FakeCommandHandler<TCommand>  : ICommandHandler<TCommand> 
+public class FakeCommandHandler<TCommand> : ICommandHandler<TCommand>
     where TCommand : ICommand
 {
     /// <summary>
@@ -12,9 +12,9 @@ public class FakeCommandHandler<TCommand>  : ICommandHandler<TCommand>
     /// </summary>
     public FakeCommandHandler()
     {
-        
+
     }
-    
+
     /// <summary>
     /// Does nothing.
     /// </summary>
@@ -32,11 +32,11 @@ public class FakeCommandHandler<TCommand>  : ICommandHandler<TCommand>
 /// </summary>
 /// <typeparam name="TCommand"></typeparam>
 /// <typeparam name="TResult"></typeparam>
-public class FakeCommandHandler<TCommand, TResult>  : ICommandHandler<TCommand, TResult>  
+public class FakeCommandHandler<TCommand, TResult> : ICommandHandler<TCommand, TResult>
     where TCommand : ICommand<TResult>
 {
     private readonly TResult _resultToReturn;
-    
+
     /// <summary>
     /// Initialise to return 'result' on HandleAsync.
     /// </summary>
@@ -45,7 +45,7 @@ public class FakeCommandHandler<TCommand, TResult>  : ICommandHandler<TCommand, 
     {
         _resultToReturn = result;
     }
-    
+
     /// <summary>
     /// Does nothing.
     /// </summary>

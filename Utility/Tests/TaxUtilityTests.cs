@@ -1,7 +1,7 @@
-﻿using System.Globalization;
-using System.Text;
 using Microsoft.Extensions.Configuration;
 using Odin.Utility;
+using System.Globalization;
+using System.Text;
 
 namespace Tests.Odin.Utility
 {
@@ -16,11 +16,11 @@ namespace Tests.Odin.Utility
             decimal result;
             if (roundToDecimalPlaces.HasValue)
             {
-                result = sut.CalculateTaxPortionOfTaxInclusiveAmount(amount,DateOnly.MaxValue,roundToDecimalPlaces.Value );
+                result = sut.CalculateTaxPortionOfTaxInclusiveAmount(amount, DateOnly.MaxValue, roundToDecimalPlaces.Value);
             }
             else
             {
-                result = sut.CalculateTaxPortionOfTaxInclusiveAmount(amount,DateOnly.MaxValue);
+                result = sut.CalculateTaxPortionOfTaxInclusiveAmount(amount, DateOnly.MaxValue);
             }
             Assert.Equal(expected, result);
         }
@@ -33,11 +33,11 @@ namespace Tests.Odin.Utility
             decimal result;
             if (roundToDecimalPlaces.HasValue)
             {
-                result = sut.CalculateTaxOnTaxExclusiveAmount(amount,DateOnly.MaxValue,roundToDecimalPlaces.Value );
+                result = sut.CalculateTaxOnTaxExclusiveAmount(amount, DateOnly.MaxValue, roundToDecimalPlaces.Value);
             }
             else
             {
-                result = sut.CalculateTaxOnTaxExclusiveAmount(amount,DateOnly.MaxValue);
+                result = sut.CalculateTaxOnTaxExclusiveAmount(amount, DateOnly.MaxValue);
             }
             Assert.Equal(expected, result);
         }
@@ -48,7 +48,7 @@ namespace Tests.Odin.Utility
         public void Using_a_single_tax_rate(decimal testRatePercentage)
         {
             TaxUtility sut = new TaxUtility(testRatePercentage);
-            
+
             Assert.Equal(testRatePercentage * 0.01m, sut.GetTaxRateAsFraction(DateOnly.MinValue));
             Assert.Equal(testRatePercentage, sut.GetTaxRateAsPercentage(DateOnly.MinValue));
             Assert.Equal(testRatePercentage * 0.01m, sut.GetTaxRateAsFraction(DateOnly.MaxValue));
@@ -56,7 +56,7 @@ namespace Tests.Odin.Utility
             Assert.Equal(testRatePercentage * 0.01m, sut.GetTaxRateAsFraction(DateOnly.FromDateTime(DateTime.Now)));
             Assert.Equal(testRatePercentage, sut.GetTaxRateAsPercentage(DateOnly.FromDateTime(DateTime.Now)));
         }
-        
+
         [Fact]
         public void Multiple_tax_rates_are_supported()
         {
@@ -77,12 +77,12 @@ namespace Tests.Odin.Utility
             Assert.Equal(16m, sut.GetTaxRateAsPercentage(new DateOnly(2026, 5, 1)));
             Assert.Equal(16m, sut.GetTaxRateAsPercentage(DateOnly.MaxValue));
         }
-        
-        
+
+
         [Fact]
         public void Multiple_tax_rates_are_supported_via_IConfiguration()
         {
-            TaxUtility sut = new TaxUtility(CreateSouthAfricanVatHistoryConfiguration(),"TaxHistory");
+            TaxUtility sut = new TaxUtility(CreateSouthAfricanVatHistoryConfiguration(), "TaxHistory");
 
             AssertSouthAfricanVatHistoryRates(sut);
         }

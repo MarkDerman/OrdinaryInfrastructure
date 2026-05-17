@@ -1,5 +1,5 @@
-﻿using System.Text.Json;
 using Odin.System;
+using System.Text.Json;
 
 namespace Tests.Odin.System
 {

@@ -1,4 +1,3 @@
-﻿using System.Reflection;
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine;
@@ -8,6 +7,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Odin.DesignContracts;
 using Odin.System;
+using System.Reflection;
 
 namespace Odin.Data
 {
@@ -30,7 +30,7 @@ namespace Odin.Data
         public string JournalToSchemaName { get; set; } = "dbo";
         public string DatabaseName => _connectionStringBuilder.InitialCatalog;
         public string HostName => _connectionStringBuilder.DataSource;
-        
+
         /// <summary>
         /// Dot (.) separated list of partial paths in the assembly to find embedded *.sql files.
         /// </summary>
@@ -43,15 +43,15 @@ namespace Odin.Data
         {
             // Contract.Requires(logger);
             // _logger = logger;
-            Precondition.Requires(assemblyWithEmbeddedScripts!=null!);
+            Precondition.Requires(assemblyWithEmbeddedScripts != null!);
             _assemblyWithEmbeddedScripts = assemblyWithEmbeddedScripts!;
         }
 
         public static ResultValue<SqlScriptsRunner> CreateFromConnectionStringName(string connectionStringName,
             Assembly assemblyWithEmbeddedScripts, IConfiguration configuration)
         {
-            Precondition.Requires(configuration!=null!);
-            Precondition.Requires(assemblyWithEmbeddedScripts!=null!);
+            Precondition.Requires(configuration != null!);
+            Precondition.Requires(assemblyWithEmbeddedScripts != null!);
             SqlScriptsRunner runner = new SqlScriptsRunner(assemblyWithEmbeddedScripts)
             {
                 ConnectionString = configuration.GetConnectionString(connectionStringName)!
@@ -76,7 +76,7 @@ namespace Odin.Data
 
         public static ResultValue<SqlScriptsRunner> CreateFromConnectionString(string connectionString, Assembly assemblyWithEmbeddedScripts)
         {
-            Precondition.Requires(assemblyWithEmbeddedScripts!=null!);
+            Precondition.Requires(assemblyWithEmbeddedScripts != null!);
             Precondition.Requires(!string.IsNullOrWhiteSpace(connectionString));
             SqlScriptsRunner runner = new SqlScriptsRunner(assemblyWithEmbeddedScripts)
             {
@@ -129,7 +129,7 @@ namespace Odin.Data
             // {
             //     return ResultValue.Fail($"No (. separated) paths specified in {nameof(EmbeddedScriptPaths)} ");
             // }
-            
+
             if (EnsureDatabaseCreated)
             {
                 Result databaseExists = EnsureDatabaseExists();
@@ -160,7 +160,7 @@ namespace Odin.Data
             {
                 throw new Exception($"Unknown {nameof(JournalMode)}: {JournalMode.ToString()}");
             }
-            
+
             //////////////////////////////////////////////////////
             // Script locations
             //////////////////////////////////////////////////////
@@ -186,11 +186,11 @@ namespace Odin.Data
                     string path = ScriptsLocation;
                     if (Path.DirectorySeparatorChar != '\\')
                     {
-                        path = ScriptsLocation.Replace('\\',Path.DirectorySeparatorChar );
+                        path = ScriptsLocation.Replace('\\', Path.DirectorySeparatorChar);
                     }
                     if (Path.DirectorySeparatorChar != '/')
                     {
-                        path = ScriptsLocation.Replace('/',Path.DirectorySeparatorChar );
+                        path = ScriptsLocation.Replace('/', Path.DirectorySeparatorChar);
                     }
                     upgradeBuilder = upgradeBuilder.WithScriptsFromFileSystem(path);
                     break;
@@ -278,7 +278,7 @@ namespace Odin.Data
             if (!string.IsNullOrWhiteSpace(message))
             {
                 Console.WriteLine(message);
-               //_logger.LogInformation(message);
+                //_logger.LogInformation(message);
             }
         }
 
@@ -288,7 +288,7 @@ namespace Odin.Data
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(error);
-               // _logger.LogError(error);
+                // _logger.LogError(error);
                 Console.ResetColor();
             }
         }
@@ -299,7 +299,7 @@ namespace Odin.Data
         EmbeddedResourcePath = 0,
         FileSystemPath = 1
     }
-    
+
     public enum JournalModeEnum
     {
         RunOnlyScriptsNotRunBefore = 0,

@@ -34,12 +34,12 @@ public class DatabaseFixture : IAsyncLifetime
         ConnectionString = config.GetConnectionString("Default")!;
     }
 
-    public string ConnectionString { get; } 
+    public string ConnectionString { get; }
 
     public async ValueTask InitializeAsync()
     {
         Result rollback = RollbackDatabaseSchema();
-        if (!rollback.IsSuccess) 
+        if (!rollback.IsSuccess)
             throw new Exception($"Database rollback scripts failed: {rollback.MessagesToString()}");
 
         Result migrations = MigrateDatabaseSchema();
@@ -62,10 +62,10 @@ public class DatabaseFixture : IAsyncLifetime
             WithReseed = true // Sets the seeds of 'Id' identity columns back to 1.
         });
     }
-    
+
     internal Result RollbackDatabaseSchema()
     {
-        ResultValue<SqlScriptsRunner> runnerCreate = 
+        ResultValue<SqlScriptsRunner> runnerCreate =
             SqlScriptsRunner.CreateFromConnectionString(ConnectionString, typeof(DatabaseFixture).Assembly);
         if (!runnerCreate.IsSuccess) return Result.Failure(runnerCreate.Messages);
 
@@ -77,13 +77,13 @@ public class DatabaseFixture : IAsyncLifetime
         runner.TransactionHandling = TransactionMode.TransactionPerScript;
         return runner.Run();
     }
-    
+
     internal Result MigrateDatabaseSchema()
     {
-        ResultValue<SqlScriptsRunner> runnerCreate = 
+        ResultValue<SqlScriptsRunner> runnerCreate =
             SqlScriptsRunner.CreateFromConnectionString(ConnectionString, typeof(DatabaseFixture).Assembly);
         if (!runnerCreate.IsSuccess) return Result.Failure(runnerCreate.Messages);
-        
+
         SqlScriptsRunner runner = runnerCreate.Value;
         runner.EnsureDatabaseCreated = true;
         runner.JournalMode = JournalModeEnum.RunOnlyScriptsNotRunBefore;

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Odin.DesignContracts;
 using Odin.Email;
@@ -15,13 +15,13 @@ namespace Tests.Odin.Email.Mailgun
         public Mock<EmailSendingOptions>? EmailSendingOptionsMock;
         public MailgunOptions MailgunOptions = null!;
         public Mock<MailgunOptions>? MailgunOptionsMock;
-    
+
         public MailgunEmailSender Build()
         {
             EnsureNullDependenciesAreMocked();
-            return new MailgunEmailSender(MailgunOptions,EmailSendingOptions,Logger);
+            return new MailgunEmailSender(MailgunOptions, EmailSendingOptions, Logger);
         }
-        
+
         public MailgunEmailSenderTestBuilder EnsureNullDependenciesAreMocked()
         {
             if (MailgunOptions is null)
@@ -41,7 +41,7 @@ namespace Tests.Odin.Email.Mailgun
             }
             return this;
         }
-    
+
         public MailgunEmailSenderTestBuilder WithEmailSendingOptionsFromTestConfiguration(IConfiguration configuration)
         {
             Precondition.RequiresNotNull(configuration);
@@ -56,7 +56,7 @@ namespace Tests.Odin.Email.Mailgun
             EmailSendingOptionsMock = null;
             return this;
         }
-        
+
         public MailgunEmailSenderTestBuilder WithMailgunOptionsFromTestConfiguration(IConfiguration configuration)
         {
             MailgunOptions options = GetMailgunOptionsFromConfig(configuration);
@@ -64,7 +64,7 @@ namespace Tests.Odin.Email.Mailgun
             MailgunOptionsMock = null;
             return this;
         }
-        
+
         public static MailgunOptions GetMailgunOptionsFromConfig(IConfiguration config)
         {
             Precondition.RequiresNotNull(config);
@@ -77,6 +77,6 @@ namespace Tests.Odin.Email.Mailgun
                     $"Invalid Email-MailgunOptions configuration. {optionsAreValid.MessagesToString()}");
             return options;
         }
-        
+
     }
 }

@@ -1,6 +1,6 @@
-using System.Text;
 using Microsoft.Extensions.Configuration;
 using Odin.Utility;
+using System.Text;
 
 namespace Tests.Odin.Utility;
 
@@ -29,7 +29,7 @@ public sealed class ValueChangesListProviderTests
     {
         ValueChangesListProvider<DateOnly, decimal> sut =
             new ValueChangesListProvider<DateOnly, decimal>(CreateTestVaryingDecimalsConfiguration(), "VaryingDecimals");
-        
+
         Assert.Equal(new DateOnly(1900, 1, 1), sut._valueChangesInOrder[0].From);
         Assert.Equal(15.0m, sut._valueChangesInOrder[0].Value);
         Assert.Equal(new DateOnly(2025, 5, 1), sut._valueChangesInOrder[1].From);
@@ -41,7 +41,7 @@ public sealed class ValueChangesListProviderTests
     {
         ValueChangesListProvider<DateOnly, decimal> sut =
             new ValueChangesListProvider<DateOnly, decimal>(CreateTestVaryingDecimalsConfiguration().GetSection("VaryingDecimals"));
-        
+
         Assert.Equal(new DateOnly(1900, 1, 1), sut._valueChangesInOrder[0].From);
         Assert.Equal(15.0m, sut._valueChangesInOrder[0].Value);
         Assert.Equal(new DateOnly(2025, 5, 1), sut._valueChangesInOrder[1].From);

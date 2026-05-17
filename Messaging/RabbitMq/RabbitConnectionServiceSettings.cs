@@ -6,27 +6,27 @@ public record RabbitConnectionServiceSettings
     /// IP or host name of RabbitMQ host
     /// </summary>
     public required string Host { get; init; }
-        
+
     /// <summary>
     /// VHost. Default is '/'
     /// </summary>
     public string VirtualHost { get; init; } = "/";
-        
+
     /// <summary>
     /// Connection UserName
     /// </summary>
     public required string Username { get; init; }
-        
+
     /// <summary>
     /// Connection password
     /// </summary>
     public required string UserPassword { get; init; }
-        
+
     /// <summary>
     /// Connection port. Default is 5672
     /// </summary>
     public int Port { get; init; } = 5672;
-    
+
     /// <summary>
     /// The client name to be used for the connection.
     /// </summary>
@@ -49,10 +49,10 @@ public record RabbitConnectionServiceSettings
     public void Validate()
     {
         List<string> errors = new List<string>();
-        if (string.IsNullOrWhiteSpace(Host)) errors.Add("Host is not specified"); 
-        if (string.IsNullOrWhiteSpace(VirtualHost)) errors.Add("VirtualHost is not specified"); 
-        if (string.IsNullOrWhiteSpace(Username)) errors.Add("UserName is not specified"); 
-        if (string.IsNullOrWhiteSpace(UserPassword)) errors.Add("UserPassword is not specified"); 
+        if (string.IsNullOrWhiteSpace(Host)) errors.Add("Host is not specified");
+        if (string.IsNullOrWhiteSpace(VirtualHost)) errors.Add("VirtualHost is not specified");
+        if (string.IsNullOrWhiteSpace(Username)) errors.Add("UserName is not specified");
+        if (string.IsNullOrWhiteSpace(UserPassword)) errors.Add("UserPassword is not specified");
         if (string.IsNullOrWhiteSpace(ConnectionName)) errors.Add("ConnectionName is not specified");
         if (MaxChannels < 1)
         {

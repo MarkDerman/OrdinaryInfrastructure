@@ -1,4 +1,4 @@
-﻿using Odin.DesignContracts;
+using Odin.DesignContracts;
 using Odin.System;
 
 namespace Odin.BackgroundProcessing
@@ -19,7 +19,7 @@ namespace Odin.BackgroundProcessing
             set
             {
                 Precondition.Requires(!string.IsNullOrWhiteSpace(value));
-                _provider = value.Replace("BackgroundProcessor", "", StringComparison.OrdinalIgnoreCase);   
+                _provider = value.Replace("BackgroundProcessor", "", StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -32,11 +32,11 @@ namespace Odin.BackgroundProcessing
             List<string> errors = new List<string>();
             if (string.IsNullOrWhiteSpace(Provider))
             {
-                errors.Add($"{nameof(Provider)} has not been specified. Must be 1 of {string.Join(" | ",BackgroundProcessingProviders.Values)}");
+                errors.Add($"{nameof(Provider)} has not been specified. Must be 1 of {string.Join(" | ", BackgroundProcessingProviders.Values)}");
             }
             else if (!BackgroundProcessingProviders.HasValue(Provider))
             {
-                errors.Add($"The {Constants.ModuleNoun} provider specified ({Provider}) is not one of the supported providers: {string.Join(" | ",BackgroundProcessingProviders.Values)}");
+                errors.Add($"The {Constants.ModuleNoun} provider specified ({Provider}) is not one of the supported providers: {string.Join(" | ", BackgroundProcessingProviders.Values)}");
             }
             return new Result(!errors.Any(), errors);
         }

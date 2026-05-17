@@ -1,4 +1,4 @@
-﻿using Odin.Email;
+using Odin.Email;
 
 namespace Tests.Odin.Email
 {

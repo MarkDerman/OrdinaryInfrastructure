@@ -1,4 +1,4 @@
-﻿namespace Odin.BackgroundProcessing
+namespace Odin.BackgroundProcessing
 {
     /// <summary>
     /// Hangfire settings 
@@ -36,7 +36,7 @@
         /// <summary>
         /// Optional title to replace 'Hangfire Dashboard'.
         /// </summary>
-        public string? DashboardTitle { get; set; } 
+        public string? DashboardTitle { get; set; }
 
         /// <summary>
         /// A comma or semi-colon delimited list of dashboard authorisation filters to use.
@@ -61,13 +61,13 @@
         /// The number of workers to start Hangfire up with. If set to NULL then Hangfire will start up using Environment.ProcessorCount as the number of workers.
         /// If null then the Hangfire default of 5 x processor count will be used.
         /// </summary>
-        public int? ServerWorkerCount { get; set; } 
+        public int? ServerWorkerCount { get; set; }
 
         /// <summary>
         /// TBA
         /// </summary>
         public bool IgnoreAntiforgeryToken { get; set; } = false;
-        
+
         /// <summary>
         /// How often the dashboard UI polls the /stats endpoint in milliseconds. Default is 10000 milliseconds.
         /// </summary>

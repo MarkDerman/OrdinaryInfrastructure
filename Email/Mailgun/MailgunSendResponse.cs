@@ -1,4 +1,4 @@
-﻿namespace Odin.Email
+namespace Odin.Email
 {
     /// <summary>
     /// Returned by Mailgun after email send
@@ -9,7 +9,7 @@
         /// Mailgun message Id
         /// </summary>
         public string? Id { get; set; }
-        
+
         /// <summary>
         /// Message
         /// </summary>

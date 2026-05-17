@@ -5,7 +5,7 @@ namespace Odin.Utility;
 /// </summary>
 /// <typeparam name="TVaryingDimensionType">Typically DateOnly, but can be any IComparable</typeparam>
 /// <typeparam name="TValueType">Declared as a class to that structs have to be passed as nullable.</typeparam>
-public record ValueChange<TVaryingDimensionType, TValueType> 
+public record ValueChange<TVaryingDimensionType, TValueType>
     where TVaryingDimensionType : IComparable
 {
 

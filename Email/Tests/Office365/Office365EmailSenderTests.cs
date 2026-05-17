@@ -22,7 +22,7 @@ public class Office365EmailSenderTests : IntegrationTest
         Office365Options options = new Office365Options();
         office365Options.Bind(options);
         _fromTestEmail = options.SenderUserId!;
-        
+
     }
 
     private EmailSendingOptions GetEmailOptionsForOffice365()
@@ -90,7 +90,7 @@ public class Office365EmailSenderTests : IntegrationTest
             .WithOffice365OptionsFromTestConfiguration(config)
             .WithEmailSendingOptionsFromTestConfiguration(config);
         Office365EmailSender sut = scenario.Build();
-        
+
         ResultValue<string> result = await sut.SendEmail(email);
 
         VerifySuccessfulSendAndLogging(scenario, email, result);

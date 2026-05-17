@@ -18,7 +18,7 @@ public static class ConnectionSettingsHelper
     private const string PasswordKey = "password";
     private const string PrivateKeyKey = "privatekey";
     private const string PrivateKeyPassphraseKey = "privatekeypassphrase";
-    
+
     /// <summary>
     /// Parse a connection string in the format 'key=value;key=value...' to a dictionary
     /// </summary>
@@ -39,7 +39,7 @@ public static class ConnectionSettingsHelper
             string key = split[0].Trim().ToLower();
 
             if (result.ContainsKey(key)) continue;
-            
+
             string value = String.Join('=', split.Skip(1)).Trim();
             result.Add(key, value);
         }
@@ -57,7 +57,7 @@ public static class ConnectionSettingsHelper
         // safeguard if called with keys containing upper case
         Dictionary<string, string> lowerCaseSettings =
             connectionSettings.ToDictionary(kv => kv.Key.ToLower(), kv => kv.Value);
-        
+
         SftpConnectionSettings sftpSettings = new SftpConnectionSettings();
 
         if (lowerCaseSettings.ContainsKey(HostKey))
@@ -68,13 +68,13 @@ public static class ConnectionSettingsHelper
 
         if (lowerCaseSettings.ContainsKey(UsernameKey))
             sftpSettings.UserName = lowerCaseSettings[UsernameKey];
-        
+
         if (lowerCaseSettings.ContainsKey(PasswordKey))
             sftpSettings.Password = lowerCaseSettings[PasswordKey];
-        
+
         if (lowerCaseSettings.ContainsKey(PrivateKeyKey))
             sftpSettings.PrivateKey = lowerCaseSettings[PrivateKeyKey];
-        
+
         if (lowerCaseSettings.ContainsKey(PrivateKeyPassphraseKey))
             sftpSettings.PrivateKeyPassphrase = lowerCaseSettings[PrivateKeyPassphraseKey];
 

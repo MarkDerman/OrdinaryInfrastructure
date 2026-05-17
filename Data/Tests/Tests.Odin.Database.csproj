@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
-    <ProjectReference Include="..\EFSqlRepository\Odin.DDD.Repositories.EF.csproj" />
     <ProjectReference Include="..\SqlScriptsRunner\Odin.Data.SqlScriptsRunner.csproj" />
   </ItemGroup>
 

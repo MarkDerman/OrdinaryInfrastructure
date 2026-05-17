@@ -1,8 +1,8 @@
-﻿using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Odin.BackgroundProcessing;
+using System.Text;
 
 namespace Tests.Odin.BackgroundProcessing
 {
@@ -15,10 +15,10 @@ namespace Tests.Odin.BackgroundProcessing
             builder.Configuration.AddJsonStream(Stream(GetNullBackgroundProcessorConfigJson()));
             builder.Services.AddOdinBackgroundProcessing(builder.Configuration);
             WebApplication sut = builder.Build();
-            
+
             IBackgroundProcessor? provider = sut.Services.GetService<IBackgroundProcessor>();
             BackgroundProcessingOptions? config = sut.Services.GetService<BackgroundProcessingOptions>();
-            
+
             Assert.NotNull(provider);
             Assert.IsType<NullBackgroundProcessor>(provider);
             Assert.NotNull(config);
@@ -31,17 +31,17 @@ namespace Tests.Odin.BackgroundProcessing
             builder.Configuration.AddJsonStream(Stream(GetHangfireBackgroundProcessorConfigJson()));
             builder.Services.AddOdinBackgroundProcessing(builder.Configuration);
             WebApplication sut = builder.Build();
-            
+
             IBackgroundProcessor? provider = sut.Services.GetService<IBackgroundProcessor>();
             BackgroundProcessingOptions? config = sut.Services.GetService<BackgroundProcessingOptions>();
             // We don't put HangfireOptions into config... It is only used to start Hangfire on app start only.
             // HangfireOptions providerConfig = sut.Services.GetService<HangfireOptions>();
-            
+
             Assert.NotNull(provider);
             Assert.IsType<HangfireBackgroundProcessor>(provider);
             Assert.NotNull(config);
         }
-        
+
         public static string GetNullBackgroundProcessorConfigJson()
         {
             return @"{
@@ -71,7 +71,7 @@ namespace Tests.Odin.BackgroundProcessing
         },
 }";
         }
-        
+
         public static Stream Stream(string input)
         {
             MemoryStream memoryStream = new MemoryStream();
@@ -83,6 +83,6 @@ namespace Tests.Odin.BackgroundProcessing
             memoryStream.Position = 0;
             return memoryStream;
         }
-        
+
     }
 }

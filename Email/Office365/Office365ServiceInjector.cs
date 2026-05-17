@@ -23,6 +23,6 @@ public class Office365ServiceInjector : IEmailSenderServiceInjector
         serviceCollection.AddOdinLoggerWrapper();
         serviceCollection.TryAddSingleton(office365Options);
         serviceCollection.TryAddTransient<IEmailSender, Office365EmailSender>();
-        
+
     }
 }

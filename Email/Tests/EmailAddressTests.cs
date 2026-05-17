@@ -1,4 +1,4 @@
-﻿using Odin.Email;
+using Odin.Email;
 
 namespace Tests.Odin.Email
 {
@@ -19,10 +19,10 @@ namespace Tests.Odin.Email
             string? expectedDisplayName)
         {
             EmailAddress sut = new EmailAddress(testEmailAddress);
-         
+
             Assert.Equal(expectedAddress, sut.Address);
             Assert.Equal(expectedDisplayName, sut.DisplayName);
         }
-        
+
     }
 }

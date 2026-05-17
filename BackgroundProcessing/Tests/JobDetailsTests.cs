@@ -1,4 +1,4 @@
-﻿using Odin.BackgroundProcessing;
+using Odin.BackgroundProcessing;
 
 namespace Tests.Odin.BackgroundProcessing
 {
@@ -9,9 +9,9 @@ namespace Tests.Odin.BackgroundProcessing
         {
             string id = "123";
             DateTimeOffset when = DateTimeOffset.Now;
-            
-            JobDetails sut = new JobDetails(id,when);
-         
+
+            JobDetails sut = new JobDetails(id, when);
+
             Assert.Equal(id, sut.JobId);
             Assert.Equal(when, sut.ScheduledFor);
         }

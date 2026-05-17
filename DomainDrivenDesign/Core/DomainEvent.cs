@@ -14,12 +14,12 @@ namespace Odin.DDD
         {
             OccurredAt = now;
         }
-        
+
         /// <summary>
         /// Whether the event has been published or not.
         /// </summary>
         public bool IsPublished { get; set; }
-        
+
         /// <summary>
         /// Gets the timestamp when the event occurred.
         /// </summary>

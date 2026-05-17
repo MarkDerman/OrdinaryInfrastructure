@@ -18,7 +18,7 @@ namespace Odin.DDD.Repositories
         /// The context for database operations
         /// </summary>
         protected readonly TDbContext DbContext;
-        
+
         /// <summary>
         /// The DbSet for the aggregate root type
         /// </summary>
@@ -42,7 +42,7 @@ namespace Odin.DDD.Repositories
             // }
             DbSet = DbContext.Set<TAggregateRoot>();
         }
-        
+
         /// <summary>
         /// Queries the repository based on the query specification.
         /// </summary>
@@ -52,18 +52,18 @@ namespace Odin.DDD.Repositories
         protected async Task<IReadOnlyList<TAggregateRoot>> FetchManyAsync(
             IQuerySpecification<TAggregateRoot> fetchManySpec, CancellationToken ct = default)
         {
-            return await AsQueryable(fetchManySpec).ToListAsync(ct);        
+            return await AsQueryable(fetchManySpec).ToListAsync(ct);
         }
 
-       /// <summary>
-       /// Queries for a single entity from the query spec, returning null if
-       /// no result returned from the repository.
-       /// Throws an exception if multiple entities are found.
-       /// </summary>
-       /// <param name="fetchOneSpec"></param>
-       /// <param name="ct"></param>
-       /// <returns></returns>
-        protected async Task<TAggregateRoot?> FetchSingleAsync(ISingleEntityQuerySpecification<TAggregateRoot> fetchOneSpec, 
+        /// <summary>
+        /// Queries for a single entity from the query spec, returning null if
+        /// no result returned from the repository.
+        /// Throws an exception if multiple entities are found.
+        /// </summary>
+        /// <param name="fetchOneSpec"></param>
+        /// <param name="ct"></param>
+        /// <returns></returns>
+        protected async Task<TAggregateRoot?> FetchSingleAsync(ISingleEntityQuerySpecification<TAggregateRoot> fetchOneSpec,
             CancellationToken ct = default)
         {
             var results = await AsSingleResultQueryable(fetchOneSpec).ToListAsync(ct);
@@ -168,7 +168,7 @@ namespace Odin.DDD.Repositories
         {
             DbSet.Update(entity);
         }
-        
+
         /// <inheritdoc />
         public void Dispose()
         {

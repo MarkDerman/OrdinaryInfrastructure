@@ -1,4 +1,4 @@
-﻿namespace Odin.System
+namespace Odin.System
 {
     /// <summary>
     /// Represents the result of an operation that can succeed or fail,

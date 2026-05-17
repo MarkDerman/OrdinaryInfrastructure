@@ -1,4 +1,4 @@
-﻿using Odin.Email;
+using Odin.Email;
 using Odin.System;
 
 
@@ -19,7 +19,7 @@ namespace Tests.Odin.Email
             };
 
             Result result = sut.Validate();
-            
+
             Assert.Equal(isValidConfig, result.IsSuccess);
         }
     }

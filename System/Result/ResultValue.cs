@@ -1,4 +1,4 @@
-﻿namespace Odin.System
+namespace Odin.System
 {
     /// <summary>
     /// Represents the success or failure of an operation that returns a non-null Value\Result on success,
@@ -15,7 +15,7 @@
         {
             IsSuccess = false;
         }
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -43,18 +43,18 @@
             Value = value;
             _messages = message != null ? [message] : null;
         }
-        
+
         /// <summary>
         /// Success.
         /// </summary>
         /// <param name="messages">Normally included as best practice for failed operations, but not mandatory.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public new static ResultValue<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue) )
+        public new static ResultValue<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue))
         {
             Precondition.RequiresNotNull(messages);
             List<string> list = messages.ToList();
-            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
+            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)), "At least 1 message is required.");
             return new ResultValue<TValue>(false, value, list);
         }
 
@@ -64,12 +64,12 @@
         /// <param name="message">Required for failed operations.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public new static ResultValue<TValue> Failure(string message, TValue? value = default(TValue) )
+        public new static ResultValue<TValue> Failure(string message, TValue? value = default(TValue))
         {
             Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
             return new ResultValue<TValue>(false, value, new List<string>() { message });
         }
-        
+
         /// <summary>
         /// Creates a successful Result with Value set.
         /// </summary>
@@ -79,7 +79,7 @@
         {
             return new ResultValue<TValue>(true, value, null as string);
         }
-        
+
         /// <summary>
         /// Creates a successful Result with Value set and a single Message.
         /// </summary>
@@ -90,7 +90,7 @@
         {
             return new ResultValue<TValue>(true, value, message);
         }
-        
+
         /// <summary>
         /// Creates a successful Result with Value set, and several Messages.
         /// </summary>
@@ -115,7 +115,7 @@
                 throw new ArgumentException($"Cannot convert a successful result of type {GetType().FullName} " +
                                             $"to a failed result of type {typeof(ResultValue<TOtherValue>).FullName}.");
             }
-            
+
             return ResultValue<TOtherValue>.Failure(Messages);
         }
     }

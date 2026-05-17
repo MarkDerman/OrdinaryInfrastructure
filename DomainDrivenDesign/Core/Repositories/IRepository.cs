@@ -4,7 +4,7 @@ namespace Odin.DDD.Repositories
     /// Represents a repository for persisting entities to a data store.
     /// </summary>
     /// <typeparam name="TAggregateRoot">The type of the aggregate root.</typeparam>
-    public interface IRepository<TAggregateRoot>  : IAsyncDisposable
+    public interface IRepository<TAggregateRoot> : IAsyncDisposable
         where TAggregateRoot : class, IAggregateRoot
     {
         /// <summary>
@@ -30,7 +30,7 @@ namespace Odin.DDD.Repositories
         /// </summary>
         /// <param name="entity">The entity to delete.</param>
         void Delete(TAggregateRoot entity);
-        
+
         /// <summary>
         /// Gets the unit of work, used to commit changes to the database,
         /// fire domain events, etc.

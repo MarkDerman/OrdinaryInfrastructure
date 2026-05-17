@@ -1,4 +1,4 @@
-﻿using Odin.System;
+using Odin.System;
 
 namespace Odin.Email
 {
@@ -11,7 +11,7 @@ namespace Odin.Email
         /// Null provider for testing. Does nothing.
         /// </summary>
         public const string Null = "Null";
-        
+
         /// <summary>
         /// Mailgun V3 API
         /// </summary>

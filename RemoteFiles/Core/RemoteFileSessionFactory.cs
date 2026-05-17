@@ -10,7 +10,7 @@ namespace Odin.RemoteFiles;
 public class RemoteFileSessionFactory : IRemoteFileSessionFactory
 {
     private readonly Dictionary<string, Dictionary<string, string>> _fileSourceConnections;
-    
+
     /// <summary>
     /// Default constructor
     /// </summary>
@@ -19,12 +19,12 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
     {
         Precondition.Requires<ArgumentNullException>(remoteFilesOptions != null, "remoteFileConfiguration cannot be null");
         Precondition.Requires<ArgumentNullException>(remoteFilesOptions.ConnectionStrings != null, "remoteFileConfiguration connection strings cannot null");
-        
+
         _fileSourceConnections = remoteFilesOptions.ConnectionStrings.ToDictionary(
-            kv => kv.Key, 
+            kv => kv.Key,
             kv => ConnectionSettingsHelper.ParseConnectionString(kv.Value, ';'));
     }
-    
+
     /// <summary>
     /// Create a new remote file session based on the configuration for the connectionName passed.
     /// At the moment we are only supporting SFTP.
@@ -51,7 +51,7 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
         {
             ConnectionProtocol.Sftp => ResultValue<IRemoteFileSession>.Success(
                 new SftpRemoteFileSession(ConnectionSettingsHelper.ConstructSftpSettings(_fileSourceConnections[connectionName]))),
-            
+
             ConnectionProtocol.Ftp => ResultValue<IRemoteFileSession>.Failure($"Protocol is not supported: {protocol}"),
             ConnectionProtocol.Https => ResultValue<IRemoteFileSession>.Failure($"Protocol is not supported: {protocol}"),
             _ => ResultValue<IRemoteFileSession>.Failure($"Protocol is not supported: {protocol}")

@@ -5,11 +5,11 @@ namespace Odin.Patterns.Queries;
 /// </summary>
 /// <typeparam name="TQuery"></typeparam>
 /// <typeparam name="TResult"></typeparam>
-public class FakeQueryHandler<TQuery, TResult>  : IQueryHandler<TQuery, TResult>  
+public class FakeQueryHandler<TQuery, TResult> : IQueryHandler<TQuery, TResult>
     where TQuery : IQuery<TResult>
 {
     private readonly TResult _resultToReturn;
-    
+
     /// <summary>
     /// Initialise to return 'result' on HandleAsync.
     /// </summary>
@@ -18,7 +18,7 @@ public class FakeQueryHandler<TQuery, TResult>  : IQueryHandler<TQuery, TResult>
     {
         _resultToReturn = result;
     }
-    
+
     /// <summary>
     /// Does nothing.
     /// </summary>

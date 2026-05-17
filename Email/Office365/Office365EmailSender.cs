@@ -1,4 +1,4 @@
-﻿using Azure.Identity;
+using Azure.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
@@ -25,7 +25,7 @@ public class Office365EmailSender : IEmailSender
     /// <param name="office365Options"></param>
     /// <param name="emailSettings"></param>
     /// <param name="logger">Microsoft UserId</param>
-    public Office365EmailSender(Office365Options office365Options, EmailSendingOptions emailSettings , ILoggerWrapper<Office365EmailSender> logger)
+    public Office365EmailSender(Office365Options office365Options, EmailSendingOptions emailSettings, ILoggerWrapper<Office365EmailSender> logger)
     {
         Precondition.RequiresNotNull(office365Options);
         Precondition.RequiresNotNull(emailSettings);
@@ -33,7 +33,7 @@ public class Office365EmailSender : IEmailSender
 
         _emailSettings = emailSettings;
         _logger = logger;
-        
+
         ClientSecretCredentialOptions credentialOptions = new ClientSecretCredentialOptions
         {
             AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
@@ -53,7 +53,7 @@ public class Office365EmailSender : IEmailSender
 
 
     const string MicrosoftGraphFileAttachmentOdataType = "#microsoft.graph.fileAttachment";
-    
+
     /// <inheritdoc />
     public async Task<ResultValue<string>> SendEmail(IEmailMessage email)
     {
@@ -64,8 +64,8 @@ public class Office365EmailSender : IEmailSender
         }
         email.Subject = string.Concat(_emailSettings.SubjectPrefix, email.Subject,
             _emailSettings.SubjectPostfix);
-        
-       // string userId = email.From?.Address ?? defaultSenderUserId;
+
+        // string userId = email.From?.Address ?? defaultSenderUserId;
         try
         {
             SendMailPostRequestBody requestBody = new SendMailPostRequestBody()
@@ -113,7 +113,7 @@ public class Office365EmailSender : IEmailSender
                         ContentType = a.ContentType,
                         ContentBytes = ToByteArray(a.Data),
                     } as Microsoft.Graph.Models.Attachment).ToList(),
-                    Categories = _emailSettings.DefaultTags == null ? 
+                    Categories = _emailSettings.DefaultTags == null ?
                         email.Tags : email.Tags.Concat(_emailSettings.DefaultTags)
                             .Distinct().ToList(),
                 }
@@ -144,7 +144,7 @@ public class Office365EmailSender : IEmailSender
         inputStream.CopyTo(memoryStream);
         return memoryStream.ToArray();
     }
-    
+
     private void LogSendEmailResult(IEmailMessage email, bool isSuccess, LogLevel level, string message, Exception? exception = null)
     {
         string to = "";
@@ -155,7 +155,7 @@ public class Office365EmailSender : IEmailSender
                 to = string.Join(',', email.To.Select(c => c.Address).ToList());
             }
         }
-        catch 
+        catch
         {
         }
 

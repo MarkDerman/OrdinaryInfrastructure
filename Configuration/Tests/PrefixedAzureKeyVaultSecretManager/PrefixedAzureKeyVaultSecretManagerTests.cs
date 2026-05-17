@@ -1,11 +1,11 @@
-using System.Reflection;
-using System.Runtime.CompilerServices;
 using Azure.Core;
 using Azure.Extensions.AspNetCore.Configuration.Secrets;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.Extensions.Configuration;
 using Moq;
 using Odin.Configuration;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Xunit;
 
 namespace Tests.Odin.Configuration;
@@ -135,7 +135,7 @@ public class PrefixedAzureKeyVaultSecretManagerTests
         IConfigurationBuilder configBuilder = null!;
 
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => 
+        Assert.Throws<ArgumentNullException>(() =>
             configBuilder.AddOdinPrefixedAzureKeyVault("my-vault", "prefix", _credentialMock.Object));
     }
 
@@ -150,7 +150,7 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     public void AddPrefixedAzureKeyVault_EmptyOrWhiteSpaceVaultName_ThrowsArgumentException(string vaultName)
     {
         // Act & Assert
-        Assert.Throws<ArgumentException>(() => 
+        Assert.Throws<ArgumentException>(() =>
             _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault(vaultName, "prefix", _credentialMock.Object));
     }
 
@@ -162,7 +162,7 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     public void AddPrefixedAzureKeyVault_NullVaultName_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => 
+        Assert.Throws<ArgumentNullException>(() =>
             _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault(null!, "prefix", _credentialMock.Object));
     }
 
@@ -174,7 +174,7 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     public void AddPrefixedAzureKeyVault_NullPrefix_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => 
+        Assert.Throws<ArgumentNullException>(() =>
             _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault("my-vault", null!, _credentialMock.Object));
     }
 
@@ -186,7 +186,7 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     public void AddPrefixedAzureKeyVault_NullCredential_ThrowsArgumentNullException()
     {
         // Act & Assert
-        Assert.Throws<ArgumentNullException>(() => 
+        Assert.Throws<ArgumentNullException>(() =>
             _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault("my-vault", "prefix", null!));
     }
 
@@ -242,14 +242,14 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     {
         // Arrange
         var prefix = "my-prefix";
-        
+
         // Act
         var options = new AzureKeyVaultConfigurationOptions();
         _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault("my-vault", prefix, _credentialMock.Object, options);
 
         // Assert
         Assert.IsType<PrefixedAzureKeyVaultSecretManager>(options.Manager);
-        
+
         // Use reflection to check the private _prefix field in the manager
         var field = typeof(PrefixedAzureKeyVaultSecretManager).GetField("_prefix", BindingFlags.NonPublic | BindingFlags.Instance);
         var actualPrefix = (string?)field?.GetValue(options.Manager);

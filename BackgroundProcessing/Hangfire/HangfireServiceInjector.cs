@@ -32,7 +32,7 @@ namespace Odin.BackgroundProcessing
 
             HangfireOptions hangfireOptions = new HangfireOptions();
             providerSection.Bind(hangfireOptions);
-            
+
             string GetConnectionString(IServiceProvider sp)
             {
                 if (connectionStringFactory is not null)
@@ -47,9 +47,9 @@ namespace Odin.BackgroundProcessing
                     throw new ApplicationException($"Invalid Hangfire configuration. ConnectionString was not passed explicitly, and " +
                                                    $"no fallback connection string was named.");
                 }
-                
+
                 string? namedConnString = sp.GetRequiredService<IConfiguration>().GetConnectionString(opts.ConnectionStringName);
-                
+
                 if (string.IsNullOrWhiteSpace(namedConnString))
                 {
                     throw new ApplicationException($"Invalid Hangfire configuration. ConnectionString was not passed explicitly " +
@@ -67,7 +67,7 @@ namespace Odin.BackgroundProcessing
 
             serviceCollection.AddOdinLoggerWrapper();
             serviceCollection.AddTransient<IBackgroundProcessor, HangfireBackgroundProcessor>();
-            
+
             serviceCollection.AddHangfire((sp, c) => c
                 .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
                 .UseSimpleAssemblyNameTypeSerializer()
@@ -97,7 +97,7 @@ namespace Odin.BackgroundProcessing
                 if (hangfireOptions.NumberOfAutomaticRetries.HasValue)
                 {
                     GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute
-                        { Attempts = hangfireOptions.NumberOfAutomaticRetries.Value });
+                    { Attempts = hangfireOptions.NumberOfAutomaticRetries.Value });
                 }
             }
         }

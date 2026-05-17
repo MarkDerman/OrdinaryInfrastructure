@@ -1,6 +1,6 @@
-using System.Linq.Expressions;
 using Odin.DDD;
 using Odin.DDD.Repositories;
+using System.Linq.Expressions;
 
 namespace Tests.Odin.DDD.Repositories;
 

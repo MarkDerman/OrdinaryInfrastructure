@@ -5,7 +5,7 @@ namespace Odin.RemoteFiles;
 /// </summary>
 public interface IRemoteFileInfo
 {
-   
+
     /// <summary>
     /// Gets the full path of the directory or file.
     /// </summary>

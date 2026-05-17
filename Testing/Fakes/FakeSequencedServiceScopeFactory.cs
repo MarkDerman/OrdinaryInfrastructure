@@ -18,17 +18,17 @@ public class FakeSequencedServiceScopeFactory : IServiceScopeFactory
             ? new List<IServiceScope>()
             : scopeSequence.ToList();
     }
-    
+
     /// <summary>
     /// The sequence of <see cref="IServiceScope"/> to be returned by CreateScope().
     /// </summary>
-    public List<IServiceScope> ScopeSequence { get;  } 
-    
+    public List<IServiceScope> ScopeSequence { get; }
+
     /// <summary>
     /// Index of the scope to be returned on the next call to CreateScope()
     /// </summary>
     public int ScopeSequenceIndex { get; set; } = 0;
-    
+
     /// <summary>
     /// Returns the next <see cref="IServiceScope"/> in the <see cref="ScopeSequence"/>.
     /// </summary>
@@ -40,7 +40,7 @@ public class FakeSequencedServiceScopeFactory : IServiceScopeFactory
         {
             throw new InvalidOperationException("No more scopes to return");
         }
-        
+
         return ScopeSequence[ScopeSequenceIndex++];
     }
 }

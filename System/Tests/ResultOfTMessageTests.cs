@@ -1,4 +1,4 @@
-﻿using Odin.System;
+using Odin.System;
 
 namespace Tests.Odin.System
 {
@@ -13,7 +13,7 @@ namespace Tests.Odin.System
             Assert.True(sut.IsSuccess);
             Assert.Empty(sut.Messages);
         }
-        
+
         [Fact]
         public void Failure_without_TMessage()
         {

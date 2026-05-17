@@ -6,7 +6,7 @@ namespace Odin.System;
 /// Used to validate an attribute as being a member of a class derived from StringEnum.
 /// </summary>
 /// <typeparam name="TStringEnum"></typeparam>
-public class StringEnumMemberAttribute<TStringEnum> : ValidationAttribute where TStringEnum : StringEnum<TStringEnum> 
+public class StringEnumMemberAttribute<TStringEnum> : ValidationAttribute where TStringEnum : StringEnum<TStringEnum>
 {
     /// <summary>
     /// 

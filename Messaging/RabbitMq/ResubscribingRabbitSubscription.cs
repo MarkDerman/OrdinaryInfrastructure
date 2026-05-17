@@ -136,7 +136,7 @@ public class ResubscribingRabbitSubscription : IResubscribingRabbitSubscription
         while (!_tryCreateSubscriptionCts.Token.IsCancellationRequested)
         {
             await _subscriptionOperationsSemaphore.WaitAsync(_tryCreateSubscriptionCts.Token);
-            
+
             if (_subscription is null)
             {
                 try

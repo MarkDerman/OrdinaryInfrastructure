@@ -6,8 +6,8 @@ namespace Odin.DDD.Repositories;
 /// Defines a query to find a single entity in a repository.
 /// </summary>
 /// <typeparam name="TAggregateRoot"></typeparam>
-public class SingleEntityQuerySpecification<TAggregateRoot>  
-    : ISingleEntityQuerySpecification<TAggregateRoot> 
+public class SingleEntityQuerySpecification<TAggregateRoot>
+    : ISingleEntityQuerySpecification<TAggregateRoot>
     where TAggregateRoot : class, IAggregateRoot
 {
     /// <summary>
@@ -19,7 +19,7 @@ public class SingleEntityQuerySpecification<TAggregateRoot>
         ArgumentNullException.ThrowIfNull(criteria);
         Criteria = criteria;
     }
-    
+
     /// <summary>
     /// Default constructor for AbstractQuerySpecification
     /// </summary>
@@ -35,7 +35,7 @@ public class SingleEntityQuerySpecification<TAggregateRoot>
     }
 
     /// <inheritdoc />
-    public Expression<Func<TAggregateRoot, bool>> Criteria { get;  }
+    public Expression<Func<TAggregateRoot, bool>> Criteria { get; }
 
     /// <inheritdoc />
     public IReadOnlyList<Expression<Func<TAggregateRoot, object>>>? Includes

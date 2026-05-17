@@ -1,9 +1,9 @@
-﻿using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Odin.Email;
 using Odin.System;
+using System.Text;
 
 namespace Tests.Odin.Email.Mailgun
 {
@@ -11,7 +11,7 @@ namespace Tests.Odin.Email.Mailgun
     public sealed class MailgunEmailSenderTests : IntegrationTest
     {
         private string _toTestEmail = null!;
-        private string _fromTestEmail= null!;
+        private string _fromTestEmail = null!;
 
         public MailgunEmailSenderTests()
         {

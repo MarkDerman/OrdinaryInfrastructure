@@ -3,14 +3,14 @@ using RabbitMQ.Client.Events;
 
 namespace Odin.Messaging.RabbitMq;
 
-internal class SingleQueueListener: IAsyncDisposable
+internal class SingleQueueListener : IAsyncDisposable
 {
     private readonly string _queueName;
 
     private readonly string _consumerTag;
 
     private readonly TimeSpan _checkChannelPeriod;
-    
+
     private IChannel? _channel;
 
     private readonly IConnection _connection;
@@ -21,13 +21,13 @@ internal class SingleQueueListener: IAsyncDisposable
 
     private readonly bool _autoAck;
     private readonly bool _exclusive;
-    
-    public event Func<Exception, Task>? OnFailure;  
+
+    public event Func<Exception, Task>? OnFailure;
     public event Func<IRabbitConnectionService.ConsumedMessage, Task>? OnConsume;
 
     private CancellationTokenSource _checkChannelCts;
     private CancellationTokenSource _checkConsumerCts;
-    
+
     public SingleQueueListener(string queueName, IConnection connection, TimeSpan checkChannelPeriod, bool autoAck, bool exclusive, ushort prefetchCount, string clientName, TimeSpan? channelOperationsTimeout = null)
     {
         _queueName = queueName;
@@ -38,11 +38,11 @@ internal class SingleQueueListener: IAsyncDisposable
         _checkChannelCts = new CancellationTokenSource();
         _checkConsumerCts = new CancellationTokenSource();
         _prefetchCount = prefetchCount;
-        
-        _consumerTag = $"{clientName}-{_queueName}-{Guid.NewGuid().ToString().Substring(0,4)}";
+
+        _consumerTag = $"{clientName}-{_queueName}-{Guid.NewGuid().ToString().Substring(0, 4)}";
     }
 
-    private CreateChannelOptions _createChannelOptions = new (
+    private CreateChannelOptions _createChannelOptions = new(
         publisherConfirmationsEnabled: true,
         publisherConfirmationTrackingEnabled: true,
         consumerDispatchConcurrency: 8
@@ -85,9 +85,9 @@ internal class SingleQueueListener: IAsyncDisposable
     public async Task StartConsuming()
     {
         IChannel channel = await GetChannel();
-        
+
         AsyncEventingBasicConsumer consumer = await GetConsumer();
-        
+
         if (consumer.IsRunning)
         {
             return;
@@ -102,7 +102,7 @@ internal class SingleQueueListener: IAsyncDisposable
             arguments: null,
             consumer: consumer
         );
-        
+
         _ = Task.Run(CheckChannelPeriodically);
         _ = Task.Run(CheckConsumerPeriodically);
     }
@@ -137,7 +137,7 @@ internal class SingleQueueListener: IAsyncDisposable
             return OnConsume?.Invoke(message) ?? Task.CompletedTask;
         };
     }
-    
+
     private void HandleMessageReceived(object? sender, BasicDeliverEventArgs args)
     {
         IRabbitConnectionService.ConsumedMessage message = new IRabbitConnectionService.ConsumedMessage
@@ -160,7 +160,7 @@ internal class SingleQueueListener: IAsyncDisposable
                 Nack = GetManualNackHandler(args.DeliveryTag),
             },
         };
-            
+
         OnConsume?.Invoke(message);
     }
 
@@ -172,7 +172,7 @@ internal class SingleQueueListener: IAsyncDisposable
 
     private Func<bool, ValueTask> GetManualNackHandler(ulong deliveryTag)
     {
-        return shouldRequeue => _channel?.BasicNackAsync(deliveryTag, false, shouldRequeue) 
+        return shouldRequeue => _channel?.BasicNackAsync(deliveryTag, false, shouldRequeue)
                                 ?? throw new ApplicationException("Channel is null");
     }
 
@@ -219,12 +219,12 @@ internal class SingleQueueListener: IAsyncDisposable
         };
 
     }
-    
-    
+
+
     public async Task StopConsuming()
     {
         await _checkConsumerCts.CancelAsync();
-        
+
         if (!_channel.IsOpen)
         {
             throw new ApplicationException("Cannot cancel consuming since channel is not open.");
@@ -244,7 +244,7 @@ internal class SingleQueueListener: IAsyncDisposable
         }
 
         await _checkChannelCts.CancelAsync();
-        
+
         try
         {
             await (_channel?.CloseAsync() ?? Task.CompletedTask);
@@ -252,7 +252,7 @@ internal class SingleQueueListener: IAsyncDisposable
         catch
         {
         }
-        
+
         _channel?.Dispose();
     }
 }

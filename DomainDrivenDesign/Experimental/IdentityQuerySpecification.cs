@@ -4,8 +4,8 @@ using System.Numerics;
 namespace Odin.DDD.Repositories;
 
 /// <inheritdoc />
-public abstract class IdentityQuerySpecification<TAggregateRoot, TId> 
-    : SingleEntityQuerySpecification<TAggregateRoot> 
+public abstract class IdentityQuerySpecification<TAggregateRoot, TId>
+    : SingleEntityQuerySpecification<TAggregateRoot>
     where TAggregateRoot : class, IIdentityAggregateRoot<TId>
     where TId : struct, IEqualityOperators<TId, TId, bool>
 {

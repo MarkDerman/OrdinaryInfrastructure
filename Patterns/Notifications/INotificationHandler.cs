@@ -4,7 +4,7 @@ namespace Odin.Patterns.Notifications;
 /// Defines the publishing implementation for a notification request.
 /// </summary>
 /// <typeparam name="TNotification"></typeparam>
-public interface INotificationHandler<in TNotification> 
+public interface INotificationHandler<in TNotification>
     where TNotification : INotification
 {
     /// <summary>

@@ -7,7 +7,7 @@ namespace Odin.DDD.Repositories;
 /// for a query that can only return 0 or 1 entities from the repository.
 /// </summary>
 /// <typeparam name="TAggregateRoot"></typeparam>
-public interface ISingleEntityQuerySpecification<TAggregateRoot> 
+public interface ISingleEntityQuerySpecification<TAggregateRoot>
     where TAggregateRoot : class, IAggregateRoot
 {
     /// <summary>
@@ -19,5 +19,5 @@ public interface ISingleEntityQuerySpecification<TAggregateRoot>
     /// Eager loading (Include clauses)
     /// </summary>
     IReadOnlyList<Expression<Func<TAggregateRoot, object>>>? Includes { get; }
-    
+
 }

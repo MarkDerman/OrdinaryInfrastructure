@@ -1,8 +1,8 @@
-using System.Text;
-using System.Text.RegularExpressions;
 using Odin.DesignContracts;
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
+using System.Text;
+using System.Text.RegularExpressions;
 
 
 namespace Odin.RemoteFiles
@@ -21,7 +21,7 @@ namespace Odin.RemoteFiles
         /// <param name="connectionInfo"></param>
         public SftpRemoteFileSession(SftpConnectionSettings connectionInfo)
         {
-            Precondition.Requires(connectionInfo!=null!);
+            Precondition.Requires(connectionInfo != null!);
             _connectionInfo = connectionInfo!;
         }
 

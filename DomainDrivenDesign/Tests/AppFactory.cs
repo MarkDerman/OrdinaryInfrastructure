@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
 
 namespace Tests.Odin.DDD
 {
     public class AppFactory : WebApplicationFactory<Program>
-    { 
+    {
         // Nothing needed yet...
         // protected override void ConfigureWebHost(IWebHostBuilder builder)
         // {

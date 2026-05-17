@@ -3,7 +3,7 @@ namespace Odin.RemoteFiles
     /// <summary>
     /// Fake implementation of IFileOperationsProvider
     /// </summary>
-    public sealed class FakeRemoteFileSession: IRemoteFileSession
+    public sealed class FakeRemoteFileSession : IRemoteFileSession
     {
         /// <summary>
         /// Default constructor
@@ -87,7 +87,7 @@ namespace Odin.RemoteFiles
                     throw new Exception($"Unknown Behaviour - {Behaviour}");
             }
         }
-        
+
         /// <summary>
         /// CreateDirectory fake
         /// </summary>
@@ -148,7 +148,7 @@ namespace Odin.RemoteFiles
         /// Behaviour of fake provider
         /// </summary>
         public FakeBehaviour Behaviour { get; set; } = FakeBehaviour.Return;
-        
+
         /// <summary>
         /// Fake behaviour enum
         /// </summary>
@@ -158,7 +158,7 @@ namespace Odin.RemoteFiles
             /// Succeed
             /// </summary>
             Return,
-        
+
             /// <summary>
             /// Throw an Exception
             /// </summary>

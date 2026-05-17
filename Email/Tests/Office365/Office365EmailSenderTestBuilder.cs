@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Odin.DesignContracts;
 using Odin.Email;
@@ -14,13 +14,13 @@ namespace Tests.Odin.Email.Office365
         public Mock<EmailSendingOptions>? EmailSendingOptionsMock;
         public Office365Options Office365Options = null!;
         public Mock<Office365Options>? Office365OptionsMock;
-    
+
         public Office365EmailSender Build()
         {
             EnsureNullDependenciesAreMocked();
-            return new Office365EmailSender(Office365Options,EmailSendingOptions,Logger);
+            return new Office365EmailSender(Office365Options, EmailSendingOptions, Logger);
         }
-        
+
         public Office365EmailSenderTestBuilder EnsureNullDependenciesAreMocked()
         {
             if (Office365Options == null!)
@@ -40,7 +40,7 @@ namespace Tests.Odin.Email.Office365
             }
             return this;
         }
-    
+
         public Office365EmailSenderTestBuilder WithEmailSendingOptionsFromTestConfiguration(IConfiguration configuration)
         {
             Precondition.RequiresNotNull(configuration);
@@ -55,7 +55,7 @@ namespace Tests.Odin.Email.Office365
             EmailSendingOptionsMock = null;
             return this;
         }
-        
+
         public Office365EmailSenderTestBuilder WithOffice365OptionsFromTestConfiguration(IConfiguration configuration)
         {
             Office365Options options = GetOffice365OptionsFromConfig(configuration);
@@ -63,7 +63,7 @@ namespace Tests.Odin.Email.Office365
             Office365OptionsMock = null;
             return this;
         }
-        
+
         public static Office365Options GetOffice365OptionsFromConfig(IConfiguration config)
         {
             Precondition.RequiresNotNull(config);
@@ -73,6 +73,6 @@ namespace Tests.Odin.Email.Office365
             options.Validate();
             return options;
         }
-        
+
     }
 }

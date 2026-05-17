@@ -4,7 +4,7 @@ namespace Odin.Patterns.Commands;
 /// Defines the handling implementation for a command request that does not return a Result.
 /// </summary>
 /// <typeparam name="TCommand"></typeparam>
-public interface ICommandHandler<in TCommand> 
+public interface ICommandHandler<in TCommand>
     where TCommand : ICommand
 {
     /// <summary>
@@ -21,7 +21,7 @@ public interface ICommandHandler<in TCommand>
 /// </summary>
 /// <typeparam name="TCommand"></typeparam>
 /// <typeparam name="TCommandResult"></typeparam>
-public interface ICommandHandler<in TCommand, TCommandResult> 
+public interface ICommandHandler<in TCommand, TCommandResult>
     where TCommand : ICommand<TCommandResult>
 {
     /// <summary>

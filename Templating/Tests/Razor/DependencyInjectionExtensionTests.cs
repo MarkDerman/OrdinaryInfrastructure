@@ -1,8 +1,8 @@
-﻿using System.Reflection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Odin.Templating;
 using RazorLight;
+using System.Reflection;
 using Xunit;
 
 namespace Tests.Odin.Templating.Razor
@@ -16,14 +16,14 @@ namespace Tests.Odin.Templating.Razor
             Assembly testsAssembly = typeof(RazorTemplateRendererTests).Assembly;
             builder.Services.AddOdinRazorTemplating(testsAssembly, "Tests.Odin.Templating.Razor");
             WebApplication sut = builder.Build();
-            
+
             IRazorTemplateRenderer? result = sut.Services.GetService<IRazorTemplateRenderer>();
             IRazorLightEngine? dependency = sut.Services.GetService<IRazorLightEngine>();
-            
+
             Assert.NotNull(result);
             Assert.NotNull(dependency);
             Assert.IsType<RazorTemplateRenderer>(result);
         }
-        
+
     }
 }

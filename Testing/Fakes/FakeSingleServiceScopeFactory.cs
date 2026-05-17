@@ -16,7 +16,7 @@ public class FakeSingleServiceScopeFactory : IServiceScopeFactory
         var provider = new FakeServiceProvider(withServices);
         Scope = new FakeServiceScope(provider);
     }
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="FakeSingleServiceScopeFactory"/> class with an empty <see cref="FakeServiceProvider"/>.
     /// </summary>

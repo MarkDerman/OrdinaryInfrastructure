@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Odin.System
 {
@@ -155,8 +155,8 @@ namespace Odin.System
             Precondition.RequiresNotNull(message);
             return new ResultValue<TValue, TMessage>(false, value, new List<TMessage>() { message });
         }
-        
-        
+
+
         /// <summary>
         /// 
         /// </summary>
@@ -182,10 +182,10 @@ namespace Odin.System
                 throw new ArgumentException($"Cannot convert a successful result of type {GetType().FullName} " +
                                             $"to a failed result of type {typeof(ResultValue<TOtherValue, TMessage>).FullName}.");
             }
-            
+
             return ResultValue<TOtherValue, TMessage>.Failure(Messages);
         }
-        
-        
+
+
     }
 }

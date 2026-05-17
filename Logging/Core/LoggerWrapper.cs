@@ -1,4 +1,4 @@
-﻿// Portions of this file are derived from the .NET runtime project.
+// Portions of this file are derived from the .NET runtime project.
 // Copyright (c) .NET Foundation and Contributors
 // Licensed under the MIT license. See the LICENSE.md file in this repository for full license information.
 
@@ -19,7 +19,7 @@ namespace Odin.Logging
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-        
+
         //---------- Convenience Exception only logging -----------//
 
         /// <inheritdoc/>
@@ -27,11 +27,11 @@ namespace Odin.Logging
         {
             Log(level, 0, exception, null);
         }
-        
+
         /// <inheritdoc/>
         public void LogWarning(Exception exception)
         {
-            Log(LogLevel.Warning, 0, exception,null);
+            Log(LogLevel.Warning, 0, exception, null);
         }
 
         /// <inheritdoc/>
@@ -43,9 +43,9 @@ namespace Odin.Logging
         /// <inheritdoc/>
         public void LogCritical(Exception exception)
         {
-            Log(LogLevel.Critical, 0, exception,null);
+            Log(LogLevel.Critical, 0, exception, null);
         }
-        
+
         //---------- Wrap ILogger access itself as well ---------------//
 
         /// <inheritdoc/>
@@ -65,9 +65,9 @@ namespace Odin.Logging
         {
             return _logger.BeginScope<TState>(state);
         }
-        
+
         //-----Support convenience extensions as per Microsoft.Extensions.Logging.LoggerExtensions --------//
-        
+
         /// <inheritdoc/>
         public void Log(LogLevel logLevel, string? message, params object?[] args)
         {
@@ -96,7 +96,7 @@ namespace Odin.Logging
             // Use the innermost ILogger Log call from LoggerExtensions
             _logger.Log(logLevel, eventId, exception, message, args);
         }
-        
+
         //------------------------------------------DEBUG------------------------------------------//
 
         /// <inheritdoc/>
@@ -260,8 +260,8 @@ namespace Odin.Logging
         {
             return _logger.BeginScope(messageFormat, args);
         }
-        
-        
-        
+
+
+
     }
 }

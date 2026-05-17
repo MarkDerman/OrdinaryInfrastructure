@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,7 +16,7 @@ namespace Odin.BackgroundProcessing
         /// <param name="configuration"></param>
         /// <param name="configSection"></param>
         /// <param name="connectionStringFactory">Constructs the SQL Server connection string</param>
-        void TryAddBackgroundProcessor(IServiceCollection serviceCollection, IConfiguration configuration, 
+        void TryAddBackgroundProcessor(IServiceCollection serviceCollection, IConfiguration configuration,
             IConfigurationSection configSection, Func<IServiceProvider, string>? connectionStringFactory = null);
 
         /// <summary>
@@ -26,6 +26,6 @@ namespace Odin.BackgroundProcessing
         /// <param name="appServices"></param>
         /// <returns></returns>
         IApplicationBuilder UseBackgroundProcessing(IApplicationBuilder app, IServiceProvider appServices);
-        
+
     }
 }

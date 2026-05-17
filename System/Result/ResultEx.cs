@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging;
 
 namespace Odin.System
 {
@@ -10,10 +10,10 @@ namespace Odin.System
     public class ResultEx : Result<MessageEx>
     {
         /// <inheritdoc />
-        public ResultEx() 
+        public ResultEx()
         {
         }
-        
+
         /// <summary>
         /// Default constructor.
         /// Use ResultValue.Succeed() for a successful Outcome with no message.
@@ -38,7 +38,7 @@ namespace Odin.System
         {
             return new ResultEx(false, message);
         }
-        
+
         /// <summary>
         /// Failure
         /// </summary>
@@ -51,7 +51,7 @@ namespace Odin.System
             Precondition.Requires(!string.IsNullOrWhiteSpace(message) || error != null, "Either a message or an error is required.");
             return new ResultEx(false, new MessageEx() { Message = message, Severity = severity, Error = error });
         }
-        
+
         /// <summary>
         /// Failure
         /// </summary>
@@ -61,10 +61,10 @@ namespace Odin.System
         {
             Precondition.RequiresNotNull(messages);
             List<MessageEx> list = messages.ToList();
-            Precondition.Requires(list.Any(s => s.Error!=null || !string.IsNullOrWhiteSpace(s.Message)),"At least 1 message with an Error or a Message is required.");
+            Precondition.Requires(list.Any(s => s.Error != null || !string.IsNullOrWhiteSpace(s.Message)), "At least 1 message with an Error or a Message is required.");
             return new ResultEx(false, list);
         }
-        
+
         /// <summary>
         /// Success
         /// </summary>
@@ -73,7 +73,7 @@ namespace Odin.System
         {
             return new ResultEx(true, null as MessageEx);
         }
-        
+
         /// <summary>
         /// Success
         /// </summary>
@@ -83,7 +83,7 @@ namespace Odin.System
         {
             return new ResultEx(true, message);
         }
-        
+
         /// <summary>
         /// Success
         /// </summary>
@@ -92,9 +92,9 @@ namespace Odin.System
         /// <returns></returns>
         public static ResultEx Success(string message, LogLevel severity = LogLevel.Information)
         {
-            return new ResultEx(true, new MessageEx(){Message = message,  Severity = severity});
+            return new ResultEx(true, new MessageEx() { Message = message, Severity = severity });
         }
-        
+
         /// <summary>
         /// Success
         /// </summary>
@@ -104,7 +104,7 @@ namespace Odin.System
         {
             return new ResultEx(true, messages);
         }
-        
+
         /// <summary>
         /// Returns Success only if all succeed, else returns the first failure.
         /// </summary>

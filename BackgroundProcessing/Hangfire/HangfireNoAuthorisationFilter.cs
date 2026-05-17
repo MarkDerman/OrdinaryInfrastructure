@@ -1,12 +1,12 @@
-﻿using Hangfire.Annotations;
- using Hangfire.Dashboard;
+using Hangfire.Annotations;
+using Hangfire.Dashboard;
 
- namespace Odin.BackgroundProcessing
+namespace Odin.BackgroundProcessing
 {
     /// <summary>
     /// Skips ASP.NET Core auth by always returning true
     /// </summary>
-    public sealed class HangfireNoAuthorizationFilter : IDashboardAuthorizationFilter 
+    public sealed class HangfireNoAuthorizationFilter : IDashboardAuthorizationFilter
     {
         /// <summary>
         /// IDashboardAuthorizationFilter.Authorize implementation

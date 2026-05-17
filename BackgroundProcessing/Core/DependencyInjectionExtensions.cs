@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Odin.BackgroundProcessing;
@@ -21,12 +21,12 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <param name="configuration"></param>
         /// <param name="configurationSection"></param>
         /// <param name="sqlServerConnectionString"></param>
-        public static void AddOdinBackgroundProcessing(this IServiceCollection serviceCollection, 
+        public static void AddOdinBackgroundProcessing(this IServiceCollection serviceCollection,
             IConfiguration configuration, IConfigurationSection configurationSection, string? sqlServerConnectionString = null)
         {
             AddOdinBackgroundProcessing(serviceCollection, configuration, configurationSection, sqlServerConnectionString is null ? null : _ => sqlServerConnectionString);
         }
-        
+
         /// <summary>
         /// B - Adds BackgroundProcessing services (such as Hangfire's server) according to the provided ConfigurationSection
         /// </summary>
@@ -43,7 +43,7 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ApplicationException(
                     $"{nameof(AddOdinBackgroundProcessing)}: Section {sectionName} missing in configuration.");
             }
-        
+
             serviceCollection.AddOdinBackgroundProcessing(configuration, section, sqlServerConnectionString);
         }
 
@@ -109,7 +109,7 @@ namespace Microsoft.Extensions.DependencyInjection
             ResultValue<IBackgroundProcessorServiceInjector> serviceInjectorCreation =
                 Activator2.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector", providerAssemblyName);
 
-            
+
             if (serviceInjectorCreation.IsSuccess)
             {
                 serviceInjectorCreation.Value.TryAddBackgroundProcessor(serviceCollection, configuration,
@@ -142,7 +142,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             string providerAssemblyName = $"{Constants.RootNamespace}.{options.Provider}";
             ResultValue<IBackgroundProcessorServiceInjector> serviceInjectorCreation =
-                Odin.System.Activator2.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector",providerAssemblyName);
+                Odin.System.Activator2.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector", providerAssemblyName);
 
             if (serviceInjectorCreation.IsSuccess)
             {

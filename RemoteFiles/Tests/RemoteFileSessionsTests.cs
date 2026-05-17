@@ -24,7 +24,7 @@ public class RemoteFileSessionsTests
         };
         RemoteFileSessionFactory factory = new RemoteFileSessionFactory(remoteFileConfig);
         ResultValue<IRemoteFileSession> sut = factory.CreateRemoteFileSession("local");
-        IEnumerable<IRemoteFileInfo> results = sut.Value!.GetFiles(baseDirectory ,filePath);
+        IEnumerable<IRemoteFileInfo> results = sut.Value!.GetFiles(baseDirectory, filePath);
         if (expectedCount != -1)
         {
             Assert.Equal(expectedCount, results.Count());
@@ -34,5 +34,5 @@ public class RemoteFileSessionsTests
             Assert.True(results.Count() > 1);
         }
     }
-    
+
 }

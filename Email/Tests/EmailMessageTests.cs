@@ -1,4 +1,4 @@
-﻿using Odin.Email;
+using Odin.Email;
 
 namespace Tests.Odin.Email
 {
@@ -10,7 +10,7 @@ namespace Tests.Odin.Email
         public void Construction_sets_properties(bool isHtml)
         {
             EmailMessage sut = new EmailMessage("to@d.com", "from@d.com", "subj", "bod", isHtml);
-         
+
             Assert.Equal("to@d.com", sut.To[0].Address);
             Assert.Equal("from@d.com", sut.From!.Address);
             Assert.Equal("subj", sut.Subject);
@@ -18,7 +18,7 @@ namespace Tests.Odin.Email
             Assert.Equal(isHtml, sut.IsHtml);
             Assert.Equal(Priority.Normal, sut.Priority);
         }
-        
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -27,11 +27,11 @@ namespace Tests.Odin.Email
         {
             EmailMessage sut = new EmailMessage("to@d.com", "from@d.com", "subj", body, false);
             EmailMessage sut2 = new EmailMessage();
-            
+
             Assert.Equal("", sut.Body);
             Assert.Equal("", sut2.Body);
         }
-        
+
         [Theory]
         [InlineData(null)]
         [InlineData("")]
@@ -40,10 +40,10 @@ namespace Tests.Odin.Email
         {
             EmailMessage sut = new EmailMessage("to@d.com", "from@d.com", subject, "body", false);
             EmailMessage sut2 = new EmailMessage();
-            
+
             Assert.Equal("", sut.Subject);
             Assert.Equal("", sut2.Subject);
         }
-        
+
     }
 }

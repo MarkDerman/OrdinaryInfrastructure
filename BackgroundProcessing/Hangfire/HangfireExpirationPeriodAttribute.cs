@@ -1,4 +1,4 @@
-﻿using Hangfire.Common;
+using Hangfire.Common;
 using Hangfire.States;
 using Hangfire.Storage;
 
@@ -14,16 +14,16 @@ namespace Odin.BackgroundProcessing
         /// ExpirationPeriod
         /// </summary>
         public TimeSpan ExpirationPeriod { get; }
-        
+
         /// <summary>
         /// Takes a TimeSpan for the expiration period
         /// </summary>
         /// <param name="expirationPeriodForCompletedJobs"></param>
-        public HangfireExpirationPeriodAttribute(TimeSpan expirationPeriodForCompletedJobs )
+        public HangfireExpirationPeriodAttribute(TimeSpan expirationPeriodForCompletedJobs)
         {
             ExpirationPeriod = expirationPeriodForCompletedJobs;
         }
-        
+
         /// <summary>
         /// Sets the job expiration timeout
         /// </summary>

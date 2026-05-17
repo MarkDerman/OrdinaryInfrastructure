@@ -1,4 +1,4 @@
-﻿using Odin.DesignContracts;
+using Odin.DesignContracts;
 
 namespace Odin.Email
 {
@@ -10,7 +10,7 @@ namespace Odin.Email
         /// <summary>
         /// Display name (optional)
         /// </summary>
-        public string? DisplayName { get;  }
+        public string? DisplayName { get; }
 
         /// <summary>
         /// Email address
@@ -31,7 +31,7 @@ namespace Odin.Email
                 // Parse emailAddress looking for < and > and split out address and display name.
                 int openIndex = emailAddress.IndexOf('<');
                 int closedIndex = emailAddress.IndexOf('>');
-                if (openIndex >= 0 && closedIndex > openIndex+1)
+                if (openIndex >= 0 && closedIndex > openIndex + 1)
                 {
                     // OK looks like this is display name and email in the string.
                     Address = emailAddress.Substring(openIndex + 1, closedIndex - openIndex - 1).Trim();
@@ -75,7 +75,7 @@ namespace Odin.Email
         {
             if (obj == null || !GetType().Equals(obj.GetType()))
                 return false;
-            EmailAddress emailAddress = (EmailAddress) obj;
+            EmailAddress emailAddress = (EmailAddress)obj;
             return Address == emailAddress.Address && DisplayName == emailAddress.DisplayName;
         }
     }

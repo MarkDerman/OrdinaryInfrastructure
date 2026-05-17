@@ -1,7 +1,7 @@
-﻿using System.Reflection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Odin.Templating;
 using RazorLight;
+using System.Reflection;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -9,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 /// <summary>
 /// Methods for adding these services to the application.
 /// </summary>
-public static class DependencyInjectionExtensions 
+public static class DependencyInjectionExtensions
 {
     /// <summary>
     /// Adds an IRazorTemplateRenderer into dependency injection.

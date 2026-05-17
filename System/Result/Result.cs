@@ -1,4 +1,4 @@
-﻿namespace Odin.System
+namespace Odin.System
 {
 
     /// <summary>
@@ -8,10 +8,10 @@
     public class Result : Result<string>
     {
         /// <inheritdoc />
-        public Result() 
+        public Result()
         {
         }
-        
+
         /// <summary>
         /// Default constructor.
         /// Use ResultValue.Succeed() for a successful Outcome with no message.
@@ -37,7 +37,7 @@
             Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
             return new Result(false, message);
         }
-        
+
         /// <summary>
         /// Failure
         /// </summary>
@@ -47,10 +47,10 @@
         {
             Precondition.RequiresNotNull(messages);
             List<string> list = messages.ToList();
-            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
+            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)), "At least 1 message is required.");
             return new Result(false, list);
         }
-        
+
         /// <summary>
         /// Success
         /// </summary>
@@ -59,7 +59,7 @@
         {
             return new Result(true, null as string);
         }
-        
+
         /// <summary>
         /// Success
         /// </summary>
@@ -69,7 +69,7 @@
         {
             return new Result(true, message);
         }
-        
+
         /// <summary>
         /// Success
         /// </summary>
@@ -79,7 +79,7 @@
         {
             return new Result(true, messages);
         }
-        
+
         /// <summary>
         /// Returns Success only if all succeed, else returns the first failure.
         /// </summary>

@@ -22,7 +22,7 @@ public sealed class RemoteFileInfo : IRemoteFileInfo
         // Use overload for DateTimeOffset set from DateTime
         LastWriteTime = DateTime.SpecifyKind(lastWriteTimeUtc, DateTimeKind.Utc);
     }
-        
+
     /// <summary>
     /// Gets the full path of the directory or file.
     /// </summary>

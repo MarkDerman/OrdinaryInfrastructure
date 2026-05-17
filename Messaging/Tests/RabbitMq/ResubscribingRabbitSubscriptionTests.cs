@@ -1,5 +1,5 @@
-using System.Text;
 using Odin.Messaging.RabbitMq;
+using System.Text;
 
 namespace Tests.Odin.Messaging.RabbitMq;
 
@@ -84,7 +84,7 @@ public class ResubscribingRabbitSubscriptionTests()
             await Task.Delay(TimeSpan.FromSeconds(2), cancellationToken);
 
             await subscription.StartConsuming();
-            
+
             Console.WriteLine("Started consuming");
 
             await Task.Delay(TimeSpan.FromSeconds(120), cancellationToken);

@@ -1,4 +1,4 @@
-﻿// Portions of this file are derived from the .NET runtime project.
+// Portions of this file are derived from the .NET runtime project.
 // Copyright (c) .NET Foundation and Contributors
 // Licensed under the MIT license.
 // See the LICENSE.md file in this repository for full license information.
@@ -36,7 +36,7 @@ namespace Odin.Logging
         /// </summary>
         /// <param name="exception"></param>
         void LogWarning(Exception exception);
-        
+
         /// <summary>
         /// Logs an Error with an Exception
         /// </summary>
@@ -48,11 +48,11 @@ namespace Odin.Logging
         /// </summary>
         /// <param name="exception"></param>
         void LogCritical(Exception exception);
-        
-        
+
+
         //----------INTERFACES AS PER Microsoft.Extensions.Logging.LoggerExtensions ---------------//
 
-        
+
         //------------------------------------------DEBUG------------------------------------------//
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace Odin.Logging
         /// <summary>
         /// Formats and writes a debug log message.
         /// </summary>
-        
+
         /// <param name="eventId">The event id associated with the log.</param>
         /// <param name="message">Format string of the log message in message template format. Example: <c>"User {User} logged in from {Address}"</c>.</param>
         /// <param name="args">An object array that contains zero or more objects to format.</param>
@@ -87,7 +87,7 @@ namespace Odin.Logging
         /// <summary>
         /// Formats and writes a debug log message.
         /// </summary>
-        
+
         /// <param name="exception">The exception to log.</param>
         /// <param name="message">Format string of the log message in message template format. Example: <c>"User {User} logged in from {Address}"</c>.</param>
         /// <param name="args">An object array that contains zero or more objects to format.</param>
@@ -102,7 +102,7 @@ namespace Odin.Logging
         /// <summary>
         /// Formats and writes a debug log message.
         /// </summary>
-        
+
         /// <param name="message">Format string of the log message in message template format. Example: <c>"User {User} logged in from {Address}"</c>.</param>
         /// <param name="args">An object array that contains zero or more objects to format.</param>
         /// <example>

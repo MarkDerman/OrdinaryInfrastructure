@@ -1,8 +1,8 @@
-﻿using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Odin.Email;
+using System.Text;
 
 namespace Tests.Odin.Email
 {
@@ -41,7 +41,7 @@ namespace Tests.Odin.Email
             Assert.NotNull(config);
             Assert.NotNull(mailgunConfig);
         }
-        
+
         [Fact]
         public void Add_Office365_provider()
         {
@@ -99,7 +99,7 @@ namespace Tests.Odin.Email
     }
   }
 }";
-   
+
 
         public static Stream Stream(string input)
         {

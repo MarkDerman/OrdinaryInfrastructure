@@ -1,4 +1,4 @@
-﻿using Odin.DesignContracts;
+using Odin.DesignContracts;
 
 namespace Odin.BackgroundProcessing
 {
@@ -18,16 +18,16 @@ namespace Odin.BackgroundProcessing
             JobId = jobId;
             ScheduledFor = scheduledFor;
         }
-        
+
         /// <summary>
         /// Unique Job Id
         /// </summary>
-        public string JobId { get;  private set;}
-        
+        public string JobId { get; private set; }
+
         /// <summary>
         /// When scheduled for
         /// </summary>
-        public DateTimeOffset ScheduledFor { get; private set;  }
-        
+        public DateTimeOffset ScheduledFor { get; private set; }
+
     }
 }

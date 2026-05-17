@@ -33,8 +33,8 @@ public static class DependencyInjectionExtensions
     public static IServiceCollection AddRemoteFiles(this IServiceCollection services,
         IConfigurationSection configurationSection)
     {
-        Precondition.Requires(configurationSection!=null!, "Configuration Section for RemoteFiles cannot be null.");
-        
+        Precondition.Requires(configurationSection != null!, "Configuration Section for RemoteFiles cannot be null.");
+
         if (!configurationSection.Exists())
             throw new ApplicationException(
                 $"Configuration section '{configurationSection.Key}' missing. Cannot configure remote files.");

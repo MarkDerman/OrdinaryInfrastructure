@@ -20,7 +20,7 @@ public interface IQuerySpecification<TAggregateRoot>
     /// Eager loading (Include clauses)
     /// </summary>
     IReadOnlyList<Expression<Func<TAggregateRoot, object>>>? Includes { get; }
-    
+
     /// <summary>
     /// Ordering ascending
     /// </summary>

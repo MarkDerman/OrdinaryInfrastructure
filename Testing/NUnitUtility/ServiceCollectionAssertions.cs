@@ -25,13 +25,13 @@ public static class ServiceCollectionAssertions
             x.ImplementationType == implementationType &&
             x.Lifetime == specificLifetime).ToList();
 
-        Assert.That(found.Count, Is.EqualTo(registrationCount), 
+        Assert.That(found.Count, Is.EqualTo(registrationCount),
             $"Expected {registrationCount} registration(s) for {serviceType.Name} with lifetime {specificLifetime} " +
-            $"and implementation {implementationType.Name} but found {found.Count}. " 
+            $"and implementation {implementationType.Name} but found {found.Count}. "
             + GetDescriptionOfAllServicesOfType(services, serviceType));
-        
+
     }
-    
+
     /// <summary>
     /// Verifies service registration for a serviceType and lifetime.
     /// </summary>
@@ -47,13 +47,13 @@ public static class ServiceCollectionAssertions
             x.ServiceType == serviceType &&
             x.Lifetime == specificLifetime).ToList();
 
-        Assert.That(found.Count, Is.EqualTo(registrationCount), 
+        Assert.That(found.Count, Is.EqualTo(registrationCount),
             $"Expected {registrationCount} registration(s) for {serviceType.Name} with lifetime {specificLifetime} " +
-            $"but found {found.Count}. " 
+            $"but found {found.Count}. "
             + GetDescriptionOfAllServicesOfType(services, serviceType));
-        
+
     }
-    
+
     /// <summary>
     /// Verifies service registration for a serviceType and lifetime.
     /// </summary>
@@ -68,17 +68,17 @@ public static class ServiceCollectionAssertions
         IReadOnlyList<ServiceDescriptor> found = services.Where(x =>
             x.ServiceType == serviceType).ToList();
 
-        Assert.That(found.Count, Is.EqualTo(registrationCount), 
+        Assert.That(found.Count, Is.EqualTo(registrationCount),
             $"Expected {registrationCount} registration(s) for {serviceType.Name} with any any lifetime " +
-            $"and implementation {implementationType.Name} but found {found.Count}. " 
+            $"and implementation {implementationType.Name} but found {found.Count}. "
             + GetDescriptionOfAllServicesOfType(services, serviceType));
     }
-    
+
     private static string GetDescriptionOfAllServicesOfType(ServiceCollection services, Type serviceType)
     {
         IReadOnlyList<ServiceDescriptor> allOfType = services
             .Where(x => x.ServiceType == serviceType).ToList();
-        
+
         string serviceTypesFound = $"{(allOfType.Count == 0 ? "No other " : allOfType.Count)} registrations found for {serviceType.Name}";
         if (allOfType.Count > 0)
         {
@@ -87,11 +87,11 @@ public static class ServiceCollectionAssertions
         return serviceTypesFound;
     }
 
-    
+
 
     internal static string FormatServiceDescriptor(ServiceDescriptor descriptor)
     {
         return descriptor.ToString();
     }
-    
+
 }

@@ -1,5 +1,5 @@
-﻿using System.Linq.Expressions;
 using Odin.System;
+using System.Linq.Expressions;
 
 namespace Odin.BackgroundProcessing
 {
@@ -25,8 +25,8 @@ namespace Odin.BackgroundProcessing
         /// <param name="enqueueIn"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        ResultValue<JobDetails>  ScheduleJob<T>(Expression<Action<T>> taskExpression, TimeSpan enqueueIn);
-        
+        ResultValue<JobDetails> ScheduleJob<T>(Expression<Action<T>> taskExpression, TimeSpan enqueueIn);
+
         /// <summary>
         /// Schedules a once-off job
         /// </summary>
@@ -43,7 +43,7 @@ namespace Odin.BackgroundProcessing
         /// <param name="enqueueIn"></param>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        ResultValue<JobDetails>  ScheduleJob<T>(Expression<Func<T, Task>> taskExpression, TimeSpan enqueueIn);
+        ResultValue<JobDetails> ScheduleJob<T>(Expression<Func<T, Task>> taskExpression, TimeSpan enqueueIn);
 
         /// <summary>
         /// Ensures a recurring job is registered.
@@ -56,7 +56,7 @@ namespace Odin.BackgroundProcessing
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         Result AddOrUpdateRecurringJob<T>(Expression<Action<T>> methodCall, string recurringJobName, string cronExpression, TimeZoneInfo timeZoneInfo, string queueName = "default");
-        
+
         /// <summary>
         /// Ensures a recurring job is deleted, if it exists...
         /// </summary>

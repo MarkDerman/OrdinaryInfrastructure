@@ -1,6 +1,6 @@
-﻿using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Odin.System;
+using System.Text.Json;
 
 namespace Tests.Odin.System
 {
@@ -31,11 +31,11 @@ namespace Tests.Odin.System
 
             if (shouldThrow)
             {
-                Assert.Throws<ArgumentException>(() => ResultEx.Failure(message,LogLevel.Error,exception));
+                Assert.Throws<ArgumentException>(() => ResultEx.Failure(message, LogLevel.Error, exception));
             }
             else
             {
-                ResultEx sut = ResultEx.Failure(message,LogLevel.Error,exception);
+                ResultEx sut = ResultEx.Failure(message, LogLevel.Error, exception);
                 Assert.False(sut.IsSuccess);
                 Assert.Equal(1, sut.Messages.Count);
             }
@@ -76,7 +76,7 @@ namespace Tests.Odin.System
         [Fact]
         public void ResultEx_serialises_with_system_dot_text_dot_json()
         {
-            ResultEx sut = ResultEx.Success("cool man",LogLevel.Trace);
+            ResultEx sut = ResultEx.Success("cool man", LogLevel.Trace);
 
             string result = JsonSerializer.Serialize(sut);
 
@@ -87,7 +87,7 @@ namespace Tests.Odin.System
         [MemberData(nameof(LogLevels))]
         public void ResultEx_deserialises_with_system_dot_text_dot_json(LogLevel severity)
         {
-            string level = ((short) severity).ToString();
+            string level = ((short)severity).ToString();
             string serialised = """{"IsSuccess":true,"Messages":[{"Message":"cool man","Severity":""" + level + ""","Error":null}]}""";
 
             ResultEx result = JsonSerializer.Deserialize<ResultEx>(serialised)!;
@@ -98,14 +98,14 @@ namespace Tests.Odin.System
             Assert.Equal(severity, result.Messages[0].Severity);
             Assert.Null(result.Messages[0].Error);
         }
-        
+
         [Fact]
         public void Combine_with_success_and_failures()
         {
             ResultEx r1 = ResultEx.Success();
-            ResultEx r2 = ResultEx.Failure("r2",LogLevel.Critical);
-            ResultEx r3 = ResultEx.Failure("r3",LogLevel.Warning);
-            
+            ResultEx r2 = ResultEx.Failure("r2", LogLevel.Critical);
+            ResultEx r3 = ResultEx.Failure("r3", LogLevel.Warning);
+
             ResultEx sut = ResultEx.Combine(r1, r2, r3);
 
             Assert.False(sut.IsSuccess);
@@ -121,7 +121,7 @@ namespace Tests.Odin.System
             ResultEx r1 = ResultEx.Success("r1");
             ResultEx r2 = ResultEx.Success("r2");
             ResultEx r3 = ResultEx.Success("r3");
-            
+
             ResultEx sut = ResultEx.Combine(r1, r2, r3);
 
             Assert.True(sut.IsSuccess);
@@ -135,6 +135,6 @@ namespace Tests.Odin.System
                 yield return [severity];
             }
         }
-        
+
     }
 }

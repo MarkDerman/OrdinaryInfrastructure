@@ -12,14 +12,14 @@ public class FakeServiceProvider : IServiceProvider
     /// <param name="services">The initial collection of services.</param>
     public FakeServiceProvider(IEnumerable<object>? services = null)
     {
-        Services = services==null ? [] : services.ToList();
+        Services = services == null ? [] : services.ToList();
     }
-    
+
     /// <summary>
     /// Gets or sets the collection of services.
     /// Any service that you want GetService to find must be added in here.
     /// </summary>
-    public List<object> Services { get; set; } 
+    public List<object> Services { get; set; }
 
     /// <summary>
     /// Gets the service object of the specified type.

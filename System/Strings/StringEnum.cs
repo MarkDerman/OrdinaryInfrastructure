@@ -12,13 +12,13 @@ namespace Odin.System;
 /// Use HasValue(string value) to find out whether a particular string value is a member of Values.
 /// </summary>
 /// <typeparam name="TEnum"></typeparam>
-public abstract class StringEnum<TEnum> where TEnum: StringEnum<TEnum> 
+public abstract class StringEnum<TEnum> where TEnum : StringEnum<TEnum>
 {
     /// <summary>
     /// Static field in generic type is fine since we'll get a different one for each TEnum when StringEnum is reified.
     /// </summary>
     private static ImmutableHashSet<string>? _values;
-    
+
     // ReSharper disable once StaticMemberInGenericType
     private static readonly object ValuesReflectionLock = new();
 
@@ -70,7 +70,7 @@ public abstract class StringEnum<TEnum> where TEnum: StringEnum<TEnum>
         }
         return Result.Success();
     }
-    
+
     /// <summary>
     /// Returns true if the value exists as one of the members of Values.
     /// Comparison is case-sensitive.
@@ -89,5 +89,5 @@ public abstract class StringEnum<TEnum> where TEnum: StringEnum<TEnum>
 
     private static string NotAMemberMessage(string? value) =>
         $"\"{value}\" is not a valid member of StringEnum {typeof(TEnum)}. Valid members: {string.Join(", ", Values)}";
-    
+
 }

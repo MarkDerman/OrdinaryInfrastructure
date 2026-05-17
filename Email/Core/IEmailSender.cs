@@ -1,4 +1,4 @@
-﻿using Odin.System;
+using Odin.System;
 
 namespace Odin.Email
 {
@@ -13,6 +13,6 @@ namespace Odin.Email
         /// <param name="email"></param>
         /// <returns>Success and the Mailgun messageId populated in the Value of the Outcome if available.</returns>
         Task<ResultValue<string>> SendEmail(IEmailMessage email);
-        
+
     }
 }

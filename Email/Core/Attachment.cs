@@ -1,5 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using Odin.DesignContracts;
+using System.Text.Json.Serialization;
 
 namespace Odin.Email
 {
@@ -17,14 +16,14 @@ namespace Odin.Email
         /// <param name="contentType"></param>
         public Attachment(string fileName, Stream data, string contentType)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(fileName));    
-            Precondition.Requires(!string.IsNullOrWhiteSpace(contentType));    
-            Precondition.RequiresNotNull(data);
+            ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
+            ArgumentException.ThrowIfNullOrWhiteSpace(contentType);
+            ArgumentNullException.ThrowIfNull(data);
             FileName = fileName;
             Data = data;
             ContentType = contentType;
         }
-        
+
         // /// <summary>
         // /// IsInline
         // /// </summary>

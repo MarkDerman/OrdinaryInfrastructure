@@ -8,10 +8,10 @@
     public class Result : Result<string>
     {
         /// <inheritdoc />
-        public Result() 
+        public Result()
         {
         }
-        
+
         /// <summary>
         /// Default constructor.
         /// Use ResultValue.Succeed() for a successful Outcome with no message.
@@ -34,10 +34,10 @@
         /// <returns></returns>
         public new static Result Failure(string message)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
+            ArgumentException.ThrowIfNullOrWhiteSpace(message);
             return new Result(false, message);
         }
-        
+
         /// <summary>
         /// Failure
         /// </summary>
@@ -45,12 +45,15 @@
         /// <returns></returns>
         public new static Result Failure(IEnumerable<string> messages)
         {
-            Precondition.RequiresNotNull(messages);
+            ArgumentNullException.ThrowIfNull(messages);
             List<string> list = messages.ToList();
-            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
+            if (!list.Any(s => !string.IsNullOrWhiteSpace(s)))
+            {
+                throw new ArgumentException("At least 1 message is required.", nameof(messages));
+            }
             return new Result(false, list);
         }
-        
+
         /// <summary>
         /// Success
         /// </summary>
@@ -59,7 +62,7 @@
         {
             return new Result(true, null as string);
         }
-        
+
         /// <summary>
         /// Success
         /// </summary>
@@ -69,7 +72,7 @@
         {
             return new Result(true, message);
         }
-        
+
         /// <summary>
         /// Success
         /// </summary>
@@ -79,7 +82,7 @@
         {
             return new Result(true, messages);
         }
-        
+
         /// <summary>
         /// Returns Success only if all succeed, else returns the first failure.
         /// </summary>

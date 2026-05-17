@@ -1,5 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
 using Azure.Storage;
+using System.ComponentModel.DataAnnotations;
 
 namespace Odin.Configuration;
 
@@ -12,7 +12,7 @@ public record AzureBlobJsonConfigurationOptions
     /// Set to true to for the provider to effectively do nothing.
     /// </summary>
     public bool IsDisabled { get; init; }
-    
+
     /// <summary>
     /// Frequency that the provider should reload.
     /// Default is 10 minutes.
@@ -25,7 +25,7 @@ public record AzureBlobJsonConfigurationOptions
     /// </summary>
     [Required]
     public required Uri BlobUri { get; init; }
-    
+
     public SharedKeyCredentialOptions? SharedKeyCredential { get; init; }
 }
 
@@ -39,6 +39,3 @@ public record SharedKeyCredentialOptions
         return new StorageSharedKeyCredential(AccountName, AccountKey);
     }
 }
-
-
-

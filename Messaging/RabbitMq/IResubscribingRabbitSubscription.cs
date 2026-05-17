@@ -1,6 +1,6 @@
 namespace Odin.Messaging.RabbitMq;
 
-public interface IResubscribingRabbitSubscription: IAsyncDisposable
+public interface IResubscribingRabbitSubscription : IAsyncDisposable
 {
     /// <summary>
     /// Raised for messages consumed. See documentation of IRabbitService.Subscription

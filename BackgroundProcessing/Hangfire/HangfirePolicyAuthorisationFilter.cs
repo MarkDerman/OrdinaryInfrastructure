@@ -1,9 +1,8 @@
-﻿using Hangfire.Annotations;
+using Hangfire.Annotations;
 using Hangfire.Dashboard;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Odin.DesignContracts;
 
 namespace Odin.BackgroundProcessing
 {
@@ -20,7 +19,7 @@ namespace Odin.BackgroundProcessing
         /// <param name="policyName"></param>
         public HangfirePolicyAuthorisationFilter(string policyName)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(policyName));
+            ArgumentException.ThrowIfNullOrWhiteSpace(policyName);
             _policyName = policyName.Trim();
         }
 

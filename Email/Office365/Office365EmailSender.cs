@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Graph;
 using Microsoft.Graph.Models;
 using Microsoft.Graph.Users.Item.SendMail;
-using Odin.DesignContracts;
 using Odin.Logging;
 using Odin.System;
 
@@ -25,15 +24,15 @@ public class Office365EmailSender : IEmailSender
     /// <param name="office365Options"></param>
     /// <param name="emailSettings"></param>
     /// <param name="logger">Microsoft UserId</param>
-    public Office365EmailSender(Office365Options office365Options, EmailSendingOptions emailSettings , ILoggerWrapper<Office365EmailSender> logger)
+    public Office365EmailSender(Office365Options office365Options, EmailSendingOptions emailSettings, ILoggerWrapper<Office365EmailSender> logger)
     {
-        Precondition.RequiresNotNull(office365Options);
-        Precondition.RequiresNotNull(emailSettings);
-        Precondition.RequiresNotNull(logger);
+        ArgumentNullException.ThrowIfNull(office365Options);
+        ArgumentNullException.ThrowIfNull(emailSettings);
+        ArgumentNullException.ThrowIfNull(logger);
 
         _emailSettings = emailSettings;
         _logger = logger;
-        
+
         ClientSecretCredentialOptions credentialOptions = new ClientSecretCredentialOptions
         {
             AuthorityHost = AzureAuthorityHosts.AzurePublicCloud,
@@ -53,19 +52,21 @@ public class Office365EmailSender : IEmailSender
 
 
     const string MicrosoftGraphFileAttachmentOdataType = "#microsoft.graph.fileAttachment";
-    
+
     /// <inheritdoc />
     public async Task<ResultValue<string>> SendEmail(IEmailMessage email)
     {
         if (email.From is null)
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(_emailSettings.DefaultFromAddress), "Cannot fall back to the default from address, since it is missing.");
+            ArgumentException.ThrowIfNullOrWhiteSpace(
+                _emailSettings.DefaultFromAddress,
+                "Cannot fall back to the default from address, since it is missing.");
             email.From = new EmailAddress(_emailSettings.DefaultFromAddress!, _emailSettings.DefaultFromName);
         }
         email.Subject = string.Concat(_emailSettings.SubjectPrefix, email.Subject,
             _emailSettings.SubjectPostfix);
-        
-       // string userId = email.From?.Address ?? defaultSenderUserId;
+
+        // string userId = email.From?.Address ?? defaultSenderUserId;
         try
         {
             SendMailPostRequestBody requestBody = new SendMailPostRequestBody()
@@ -113,7 +114,7 @@ public class Office365EmailSender : IEmailSender
                         ContentType = a.ContentType,
                         ContentBytes = ToByteArray(a.Data),
                     } as Microsoft.Graph.Models.Attachment).ToList(),
-                    Categories = _emailSettings.DefaultTags == null ? 
+                    Categories = _emailSettings.DefaultTags == null ?
                         email.Tags : email.Tags.Concat(_emailSettings.DefaultTags)
                             .Distinct().ToList(),
                 }
@@ -133,7 +134,7 @@ public class Office365EmailSender : IEmailSender
 
     static byte[] ToByteArray(Stream inputStream)
     {
-        Precondition.RequiresNotNull(inputStream);
+        ArgumentNullException.ThrowIfNull(inputStream);
 
         if (inputStream.CanSeek)
         {
@@ -144,7 +145,7 @@ public class Office365EmailSender : IEmailSender
         inputStream.CopyTo(memoryStream);
         return memoryStream.ToArray();
     }
-    
+
     private void LogSendEmailResult(IEmailMessage email, bool isSuccess, LogLevel level, string message, Exception? exception = null)
     {
         string to = "";
@@ -155,7 +156,7 @@ public class Office365EmailSender : IEmailSender
                 to = string.Join(',', email.To.Select(c => c.Address).ToList());
             }
         }
-        catch 
+        catch
         {
         }
 

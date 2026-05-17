@@ -1,4 +1,4 @@
-﻿using Odin.Utility;
+using Odin.Utility;
 
 namespace Tests.Odin.Utility
 {
@@ -8,13 +8,13 @@ namespace Tests.Odin.Utility
         public void Create_DateOnly_and_Decimal_value_change()
         {
             ValueChange<DateOnly, decimal> sut = new ValueChange<DateOnly, Decimal>(new DateOnly(2025, 5, 1), 15.5m);
-                
+
             Assert.NotNull(sut);
             Assert.Equal(new DateOnly(2025, 5, 1), sut.From);
             Assert.Equal(15.5m, sut.Value);
         }
-        
-         // [Test]
+
+        // [Test]
         // public void Create_various_value_changes([ValueSource(nameof(GetVaryingDimensionTypeTestValues))] object varyingDimensionValue, 
         //     [ValueSource(nameof(GetValueTypeTestValues))] object testValue)
         // {
@@ -31,12 +31,12 @@ namespace Tests.Odin.Utility
 
         private static List<object?> GetVaryingDimensionTypeTestValues()
         {
-            return new List<object?>() { new DateOnly(2025, 5, 1), 2, 45.3m, "FooBar", DateTimeOffset.Now, DateTime.Now } ;
+            return new List<object?>() { new DateOnly(2025, 5, 1), 2, 45.3m, "FooBar", DateTimeOffset.Now, DateTime.Now };
         }
 
-        private static List<object?> GetValueTypeTestValues()  
+        private static List<object?> GetValueTypeTestValues()
         {
-            return new List<object?>() { 15.0m, 5, null as Decimal?} ;
+            return new List<object?>() { 15.0m, 5, null as Decimal? };
         }
 
     }

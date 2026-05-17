@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Configuration;
-using Odin.DesignContracts;
 
 namespace Odin.Utility;
 
@@ -25,7 +24,7 @@ public class TaxUtility : ITaxUtility
     /// <param name="taxRatesAsPercentageHistory">Note that tax rates must be expressed as a percentage number, not a fraction.</param>
     public TaxUtility(IEnumerable<ValueChange<DateOnly, decimal>> taxRatesAsPercentageHistory)
     {
-        Precondition.Requires(taxRatesAsPercentageHistory!=null!);
+        ArgumentNullException.ThrowIfNull(taxRatesAsPercentageHistory);
         _taxValues = new ValueChangesListProvider<DateOnly, decimal>(taxRatesAsPercentageHistory);
     }
 
@@ -38,7 +37,7 @@ public class TaxUtility : ITaxUtility
     {
         _taxValues = new ValueChangesListProvider<DateOnly, decimal>(taxValuesConfig.GetSection(taxHistorySectionName));
     }
-    
+
     /// <summary>
     /// Load tax rates from IConfigurationSection
     /// </summary>
@@ -67,7 +66,7 @@ public class TaxUtility : ITaxUtility
     {
         return _taxValues.GetValue(asAtDate) * 0.01m;
     }
-   
+
     /// <summary>
     /// Calculates the tax part of a tax inclusive amount as at a certain date.
     /// </summary>
@@ -93,7 +92,7 @@ public class TaxUtility : ITaxUtility
     /// <returns></returns>
     public decimal CalculateTaxOnTaxExclusiveAmount(decimal amountExcludingTax, DateOnly asAtDate, int roundToDecimalPlaces = 10)
     {
-        decimal taxAmount =  amountExcludingTax * GetTaxRateAsFraction(asAtDate);
+        decimal taxAmount = amountExcludingTax * GetTaxRateAsFraction(asAtDate);
         return RoundTowardsZeroToDecimalPlaces(taxAmount, roundToDecimalPlaces);
     }
 
@@ -121,5 +120,5 @@ public class TaxUtility : ITaxUtility
             ? minifyingFactor * decimal.Floor(n * magnifyingFactor)
             : minifyingFactor * decimal.Ceiling(n * magnifyingFactor);
     }
-    
+
 }

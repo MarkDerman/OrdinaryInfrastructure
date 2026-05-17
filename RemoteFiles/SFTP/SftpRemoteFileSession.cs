@@ -1,8 +1,7 @@
-using System.Text;
-using System.Text.RegularExpressions;
-using Odin.DesignContracts;
 using Renci.SshNet;
 using Renci.SshNet.Sftp;
+using System.Text;
+using System.Text.RegularExpressions;
 
 
 namespace Odin.RemoteFiles
@@ -21,8 +20,8 @@ namespace Odin.RemoteFiles
         /// <param name="connectionInfo"></param>
         public SftpRemoteFileSession(SftpConnectionSettings connectionInfo)
         {
-            Precondition.Requires(connectionInfo!=null!);
-            _connectionInfo = connectionInfo!;
+            ArgumentNullException.ThrowIfNull(connectionInfo);
+            _connectionInfo = connectionInfo;
         }
 
         /// <summary>
@@ -98,8 +97,8 @@ namespace Odin.RemoteFiles
         /// <returns></returns>
         public void UploadFile(string textFileContents, string fileName)
         {
-            Precondition.Requires<ArgumentNullException>(textFileContents != null, nameof(textFileContents));
-            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(fileName), nameof(fileName));
+            ArgumentNullException.ThrowIfNull(textFileContents);
+            ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
 
             EnsureConnected();
             MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(textFileContents));
@@ -115,7 +114,7 @@ namespace Odin.RemoteFiles
         /// <returns></returns>
         public void DownloadFile(string fileName, in Stream output)
         {
-            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(fileName), nameof(fileName));
+            ArgumentException.ThrowIfNullOrWhiteSpace(fileName);
 
             EnsureConnected();
             _client!.BufferSize = 4096;
@@ -148,7 +147,7 @@ namespace Odin.RemoteFiles
         /// <param name="path"></param>
         public void ChangeDirectory(string path)
         {
-            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path);
             EnsureConnected();
             _client.ChangeDirectory(path);
         }
@@ -159,7 +158,7 @@ namespace Odin.RemoteFiles
         /// <param name="path"></param>
         public void CreateDirectory(string path)
         {
-            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path);
             EnsureConnected();
             _client!.CreateDirectory(path);
         }
@@ -170,7 +169,7 @@ namespace Odin.RemoteFiles
         /// <param name="filePath"></param>
         public void Delete(string filePath)
         {
-            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(filePath), nameof(filePath));
+            ArgumentException.ThrowIfNullOrWhiteSpace(filePath);
             EnsureConnected();
             _client!.DeleteFile(filePath);
         }
@@ -183,8 +182,11 @@ namespace Odin.RemoteFiles
         /// <returns></returns>
         public IEnumerable<IRemoteFileInfo> GetFiles(string path, string? searchPattern = null)
         {
-            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
-            Precondition.Requires(!(path!.Contains('*') || path.Contains('?')));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path);
+            if (path.Contains('*') || path.Contains('?'))
+            {
+                throw new ArgumentException("Path cannot contain wildcard characters.", nameof(path));
+            }
             EnsureConnected();
             //return results
             IEnumerable<ISftpFile> files = _client.ListDirectory(path);
@@ -210,7 +212,7 @@ namespace Odin.RemoteFiles
         /// <returns></returns>
         public bool Exists(string path, int? timeoutInSeconds = null)
         {
-            Precondition.Requires<ArgumentNullException>(!string.IsNullOrWhiteSpace(path), nameof(path));
+            ArgumentException.ThrowIfNullOrWhiteSpace(path);
             EnsureConnected(timeoutInSeconds);
             return _client.Exists(path);
         }

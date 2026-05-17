@@ -16,7 +16,7 @@ public static class StringExtensions
     /// <returns></returns>
     public static string? Truncate(this string? aString, int maxLength, bool trimSpaces = true)
     {
-        if (maxLength<0) throw new ArgumentException("maxLength must be non-negative.");
+        if (maxLength < 0) throw new ArgumentException("maxLength must be non-negative.");
         if (aString == null) return null;
         if (trimSpaces)
         {
@@ -28,7 +28,7 @@ public static class StringExtensions
         }
         return aString;
     }
-    
+
     /// <summary>
     /// Splits a string using the passed separator characters (, and ; by default),
     /// removing any whitespace lines, and trimming all lines.
@@ -48,5 +48,5 @@ public static class StringExtensions
             .Where(s => !string.IsNullOrWhiteSpace(s))
             .ToList();
     }
-    
+
 }

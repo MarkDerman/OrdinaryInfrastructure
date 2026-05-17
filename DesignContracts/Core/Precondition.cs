@@ -1,4 +1,4 @@
-﻿namespace Odin.DesignContracts;
+namespace Odin.DesignContracts;
 
 /// <summary>
 /// Provides methods for runtime validation and enforcement of preconditions.

@@ -5,9 +5,9 @@ namespace Odin.Messaging.RabbitMq;
 /// <summary>
 /// Helper client for a single RabbitMQ Connection (which corresponds to a single TCP connection). Each RabbitMQ Connection must correspond to a singleton RabbitConnectionService.
 /// </summary>
-public class RabbitConnectionService: IRabbitConnectionService
+public class RabbitConnectionService : IRabbitConnectionService
 {
-    
+
     private ConnectionFactory _connectionFactory;
 
     private long _maxChannels;
@@ -37,23 +37,23 @@ public class RabbitConnectionService: IRabbitConnectionService
             ClientProvidedName = settings.ConnectionName,
         };
     }
-    
+
     private IConnection? _connection;
 
     private readonly SemaphoreSlim _createConnectionSemaphore = new(1);
-    
+
     private async Task<IConnection> GetConnection()
     {
         await _createConnectionSemaphore.WaitAsync();
         try
-        {        
+        {
             ObjectDisposedException.ThrowIf(_isDisposing, typeof(RabbitConnectionService));
-            
+
             if (_connection is not null)
             {
                 return _connection;
             }
-            
+
             _connection = await _connectionFactory.CreateConnectionAsync();
 
             return _connection;
@@ -65,13 +65,13 @@ public class RabbitConnectionService: IRabbitConnectionService
     }
 
     private readonly Dictionary<string, SingleExchangeSender> _senders = new();
-    
+
     private readonly Dictionary<string, SingleQueueListener> _listeners = new();
-    
+
     private readonly SemaphoreSlim _sendersSemaphore = new(1);
 
     private readonly SemaphoreSlim _listenersSemaphore = new(1);
-    
+
     private long GetChannelsCount()
     {
         return _senders.Count + _listeners.Count;
@@ -80,34 +80,34 @@ public class RabbitConnectionService: IRabbitConnectionService
 
     private async Task<SingleExchangeSender> GetSingleExchangeSender(string exchangeName)
     {
-        
+
         await _sendersSemaphore.WaitAsync();
-        
+
         try
         {
             ObjectDisposedException.ThrowIf(_isDisposing, typeof(RabbitConnectionService));
-            
+
             if (_senders.TryGetValue(exchangeName, out SingleExchangeSender? c))
             {
                 return c;
             }
-            
+
             long channelsCount = GetChannelsCount();
-            
+
             if (channelsCount >= _maxChannels)
             {
                 throw new Exception($"Will not create new SingleExchangeSender for exchange {exchangeName} as the MaxChannels limit, {_maxChannels}, has been reached.");
             }
-            
+
             IConnection connection = await GetConnection();
 
             SingleExchangeSender sender = new SingleExchangeSender(
                 exchangeName: exchangeName,
                 connection: connection,
                 sendTimeout: _sendTimeout);
-            
+
             _senders.Add(exchangeName, sender);
-            
+
             return sender;
         }
         finally
@@ -125,7 +125,7 @@ public class RabbitConnectionService: IRabbitConnectionService
         try
         {
             ObjectDisposedException.ThrowIf(_isDisposing, typeof(RabbitConnectionService));
-            
+
             if (_listeners.TryGetValue(queueName, out _))
             {
                 throw new ApplicationException($"Listener for queue {queueName} already exists.");
@@ -164,7 +164,7 @@ public class RabbitConnectionService: IRabbitConnectionService
                 }
                 catch
                 {
-                    
+
                 }
             }
         }
@@ -211,7 +211,7 @@ public class RabbitConnectionService: IRabbitConnectionService
             subscription.RaiseOnFailure(ex);
             return Task.CompletedTask;
         };
-        
+
         return subscription;
     }
 
@@ -223,15 +223,15 @@ public class RabbitConnectionService: IRabbitConnectionService
     }
 
     private bool _isDisposing = false;
-    
+
     public async ValueTask DisposeAsync()
     {
         await _sendersSemaphore.WaitAsync();
         await _listenersSemaphore.WaitAsync();
         await _createConnectionSemaphore.WaitAsync();
-        
+
         _isDisposing = true;
-        
+
         foreach (SingleExchangeSender sender in _senders.Values)
         {
             try
@@ -264,7 +264,7 @@ public class RabbitConnectionService: IRabbitConnectionService
         catch
         {
         }
-        
+
         _sendersSemaphore.Release();
         _listenersSemaphore.Release();
         _createConnectionSemaphore.Release();

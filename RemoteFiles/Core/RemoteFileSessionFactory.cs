@@ -1,4 +1,3 @@
-using Odin.DesignContracts;
 using Odin.System;
 
 namespace Odin.RemoteFiles;
@@ -10,21 +9,21 @@ namespace Odin.RemoteFiles;
 public class RemoteFileSessionFactory : IRemoteFileSessionFactory
 {
     private readonly Dictionary<string, Dictionary<string, string>> _fileSourceConnections;
-    
+
     /// <summary>
     /// Default constructor
     /// </summary>
     /// <param name="remoteFilesOptions"></param>
     public RemoteFileSessionFactory(RemoteFilesOptions remoteFilesOptions)
     {
-        Precondition.Requires<ArgumentNullException>(remoteFilesOptions != null, "remoteFileConfiguration cannot be null");
-        Precondition.Requires<ArgumentNullException>(remoteFilesOptions.ConnectionStrings != null, "remoteFileConfiguration connection strings cannot null");
-        
+        ArgumentNullException.ThrowIfNull(remoteFilesOptions);
+        ArgumentNullException.ThrowIfNull(remoteFilesOptions.ConnectionStrings);
+
         _fileSourceConnections = remoteFilesOptions.ConnectionStrings.ToDictionary(
-            kv => kv.Key, 
+            kv => kv.Key,
             kv => ConnectionSettingsHelper.ParseConnectionString(kv.Value, ';'));
     }
-    
+
     /// <summary>
     /// Create a new remote file session based on the configuration for the connectionName passed.
     /// At the moment we are only supporting SFTP.
@@ -37,7 +36,7 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
     /// <returns></returns>
     public ResultValue<IRemoteFileSession> CreateRemoteFileSession(string connectionName)
     {
-        Precondition.Requires<ArgumentNullException>(!string.IsNullOrEmpty(connectionName), "connectionName cannot be null");
+        ArgumentException.ThrowIfNullOrEmpty(connectionName);
 
         if (!_fileSourceConnections.ContainsKey(connectionName))
             return ResultValue<IRemoteFileSession>.Failure($"Connection name not supported or configured: {connectionName}");
@@ -51,7 +50,7 @@ public class RemoteFileSessionFactory : IRemoteFileSessionFactory
         {
             ConnectionProtocol.Sftp => ResultValue<IRemoteFileSession>.Success(
                 new SftpRemoteFileSession(ConnectionSettingsHelper.ConstructSftpSettings(_fileSourceConnections[connectionName]))),
-            
+
             ConnectionProtocol.Ftp => ResultValue<IRemoteFileSession>.Failure($"Protocol is not supported: {protocol}"),
             ConnectionProtocol.Https => ResultValue<IRemoteFileSession>.Failure($"Protocol is not supported: {protocol}"),
             _ => ResultValue<IRemoteFileSession>.Failure($"Protocol is not supported: {protocol}")

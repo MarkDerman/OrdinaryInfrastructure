@@ -22,7 +22,7 @@ public class Office365EmailSenderTests : IntegrationTest
         Office365Options options = new Office365Options();
         office365Options.Bind(options);
         _fromTestEmail = options.SenderUserId!;
-        
+
     }
 
     private EmailSendingOptions GetEmailOptionsForOffice365()
@@ -41,6 +41,7 @@ public class Office365EmailSenderTests : IntegrationTest
     [InlineData("1-Attachment")]
     [InlineData("2-Attachments")]
     [InlineData("Plain-Text-Body")]
+    [Trait("Category", "IntegrationTest")]
     public async Task Send_various_emails(string testCase)
     {
         EmailMessage email = new EmailMessage()
@@ -90,7 +91,7 @@ public class Office365EmailSenderTests : IntegrationTest
             .WithOffice365OptionsFromTestConfiguration(config)
             .WithEmailSendingOptionsFromTestConfiguration(config);
         Office365EmailSender sut = scenario.Build();
-        
+
         ResultValue<string> result = await sut.SendEmail(email);
 
         VerifySuccessfulSendAndLogging(scenario, email, result);
@@ -104,6 +105,7 @@ public class Office365EmailSenderTests : IntegrationTest
     [InlineData("No-default-from-does-not-throw")]
     [InlineData("1-tag")]
     [InlineData("2-tags")]
+    [Trait("Category", "IntegrationTest")]
     public async Task Send_correctly_implements_email_options(string testCase)
     {
         EmailSendingOptions emailSendingOptions = new EmailSendingOptions();

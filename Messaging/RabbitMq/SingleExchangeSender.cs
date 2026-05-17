@@ -7,23 +7,23 @@ namespace Odin.Messaging.RabbitMq;
 /// Automatically re-opens the Channel if it closed.
 /// </summary>
 internal class SingleExchangeSender(
-    string exchangeName, 
+    string exchangeName,
     IConnection connection,
     TimeSpan sendTimeout
-    ): IDisposable
+    ) : IDisposable
 {
     private static TimeSpan RedeclareExchangeInterval { get; } = TimeSpan.FromSeconds(60);
-    
+
     public void Dispose()
     {
         Channel?.CloseAsync().GetAwaiter().GetResult();
     }
-    
+
     private IChannel? Channel;
 
     private DateTimeOffset? ExchangeRedeclaredAt;
-    
-    
+
+
     public async Task PublishMessage(string routingKey, Dictionary<string, object> headers, string contentType, byte[] body, bool persistentDelivery, bool mandatory)
     {
         IChannel channel = await GetOpenChannel();
@@ -47,8 +47,8 @@ internal class SingleExchangeSender(
             cancellationToken: cts.Token
         );
     }
-    
-    private CreateChannelOptions _createChannelOptions = new (
+
+    private CreateChannelOptions _createChannelOptions = new(
         publisherConfirmationsEnabled: true,
         publisherConfirmationTrackingEnabled: true,
         outstandingPublisherConfirmationsRateLimiter: new ThrottlingRateLimiter(256)
@@ -71,7 +71,7 @@ internal class SingleExchangeSender(
                 ExchangeRedeclaredAt = DateTimeOffset.Now;
             }
         }
-        
+
         if (!Channel.IsOpen)
         {
             throw new Exception($"Failed to open channel for exchange {exchangeName}. Reason: {Channel.CloseReason?.ReplyText}");

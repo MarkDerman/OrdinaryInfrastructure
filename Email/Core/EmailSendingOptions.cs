@@ -1,5 +1,4 @@
-﻿using Odin.DesignContracts;
-using Odin.System;
+﻿using Odin.System;
 
 
 namespace Odin.Email
@@ -15,7 +14,7 @@ namespace Odin.Email
         /// Name of the default EmailSending configuration section in application IConfiguration
         /// </summary>
         public const string DefaultConfigurationSectionName = "EmailSending";
-        
+
         /// <summary>
         /// Default from emailAddress for the generic IEmailSender in DI
         /// </summary>
@@ -25,18 +24,18 @@ namespace Odin.Email
         /// Default from name for the generic IEmailSender in DI
         /// </summary>
         public string? DefaultFromName { get; set; }
-        
+
         /// <summary>
         /// Text to prefix the Subject of every email sent.
         /// Useful for marking emails sent from different testing environments. 
         /// </summary>
         public string? SubjectPrefix { get; set; }
-        
+
         /// <summary>
         /// Text to postfix the Subject of every email sent.
         /// Useful for marking emails sent from different testing environments. 
         /// </summary>
-        public string? SubjectPostfix { get;  set; }
+        public string? SubjectPostfix { get; set; }
 
         /// <summary>
         /// Default tags (i.e. Office365 Categories) for the generic IEmailSender in DI
@@ -52,9 +51,8 @@ namespace Odin.Email
             get => _provider;
             init
             {
-                Precondition.Requires(!string.IsNullOrWhiteSpace(value));
-                // Ensure MailgunEmailSender is changed to Mailgun for backwards compatibility
-                _provider = value.Replace("EmailSender", "", StringComparison.OrdinalIgnoreCase);   
+                ArgumentException.ThrowIfNullOrWhiteSpace(value);
+                _provider = value.Replace("EmailSender", "", StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -73,6 +71,6 @@ namespace Odin.Email
             }
             return new Result(!errors.Any(), errors);
         }
-        
+
     }
 }

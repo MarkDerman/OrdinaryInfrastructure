@@ -1,4 +1,4 @@
-﻿namespace Odin.System
+namespace Odin.System
 {
     /// <summary>
     /// Represents the success or failure of an operation that returns a Value\Result on success,
@@ -16,7 +16,7 @@
         {
             IsSuccess = false;
         }
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -44,14 +44,14 @@
             Value = value;
             _messages = message != null ? [message] : null;
         }
-        
+
         /// <summary>
         /// Success.
         /// </summary>
         /// <param name="messages">Normally included as best practice for failed operations, but not mandatory.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public new static ResultValueEx<TValue> Failure(IEnumerable<MessageEx> messages, TValue? value = default(TValue) )
+        public new static ResultValueEx<TValue> Failure(IEnumerable<MessageEx> messages, TValue? value = default(TValue))
         {
             return new ResultValueEx<TValue>(false, value, messages);
         }
@@ -62,11 +62,11 @@
         /// <param name="message">Required for failed operations.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public new static ResultValueEx<TValue> Failure(MessageEx message, TValue? value = default(TValue) )
+        public new static ResultValueEx<TValue> Failure(MessageEx message, TValue? value = default(TValue))
         {
             return new ResultValueEx<TValue>(false, value, new List<MessageEx>() { message });
         }
-        
+
         /// <summary>
         /// Creates a successful Result with Value set.
         /// </summary>
@@ -76,7 +76,7 @@
         {
             return new ResultValueEx<TValue>(true, value, null as MessageEx);
         }
-        
+
         /// <summary>
         /// Creates a successful Result with Value set and a single Message.
         /// </summary>
@@ -87,7 +87,7 @@
         {
             return new ResultValueEx<TValue>(true, value, message);
         }
-        
+
         /// <summary>
         /// Creates a successful Result with Value set, and several Messages.
         /// </summary>

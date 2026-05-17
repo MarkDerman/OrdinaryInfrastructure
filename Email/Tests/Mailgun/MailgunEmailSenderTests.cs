@@ -1,9 +1,9 @@
-﻿using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Odin.Email;
 using Odin.System;
+using System.Text;
 
 namespace Tests.Odin.Email.Mailgun
 {
@@ -11,7 +11,7 @@ namespace Tests.Odin.Email.Mailgun
     public sealed class MailgunEmailSenderTests : IntegrationTest
     {
         private string _toTestEmail = null!;
-        private string _fromTestEmail= null!;
+        private string _fromTestEmail = null!;
 
         public MailgunEmailSenderTests()
         {
@@ -125,7 +125,7 @@ namespace Tests.Odin.Email.Mailgun
             string expectedLogMessage =
                 $"SendEmail to {_toTestEmail} succeeded. Subject - '{message.Subject}'. Sent with Mailgun reference {result.Value}.";
 
-            scenario.LoggerMock!.Verify(c => c.Log(LogLevel.Information, expectedLogMessage), Times.Once);
+            scenario.LoggerMock!.Verify(c => c.Log(LogLevel.Information, expectedLogMessage, null as Exception), Times.Once);
 
         }
 
@@ -154,7 +154,7 @@ namespace Tests.Odin.Email.Mailgun
             ResultValue<string> result = await mailgunSender.SendEmail(message);
 
             // 3 retries
-            scenario.LoggerMock!.Verify(c => c.Log(LogLevel.Error, expectedLogMessage), Times.Exactly(4));
+            scenario.LoggerMock!.Verify(c => c.Log(LogLevel.Error, expectedLogMessage, It.IsAny<Exception>()), Times.Exactly(4));
             Assert.False(result.IsSuccess);
             Assert.NotEmpty(result.Messages);
             Assert.Contains("401", result.Messages[0]);

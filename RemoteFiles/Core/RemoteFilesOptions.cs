@@ -12,7 +12,7 @@ public sealed record RemoteFilesOptions
     /// The default configuration section name for RemoteFiles options.
     /// </summary>
     public const string DefaultConfigurationSectionName = "RemoteFiles";
-    
+
     /// <summary>
     /// transfer.flash.co.za and any other FTP\SFTP file sources
     /// connection strings must be in the form of key-value pairs

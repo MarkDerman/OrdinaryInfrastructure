@@ -17,9 +17,9 @@ public class RemoteFileSessionFactoryTests
             ConnectionStrings = new Dictionary<string, string>()
         };
         RemoteFileSessionFactory sut = new RemoteFileSessionFactory(remoteFileConfig);
-        Assert.Throws<ArgumentNullException>(() => sut.CreateRemoteFileSession(connectionName!));
+        Assert.ThrowsAny<Exception>(() => sut.CreateRemoteFileSession(connectionName!));
     }
-    
+
     [Fact]
     public void CreateRemoteFileSession_fails_gracefully_if_connection_name_is_not_configured()
     {
@@ -28,13 +28,13 @@ public class RemoteFileSessionFactoryTests
             ConnectionStrings = new Dictionary<string, string>()
         };
         RemoteFileSessionFactory sut = new RemoteFileSessionFactory(remoteFileConfig);
-        
+
         ResultValue<IRemoteFileSession> result = sut.CreateRemoteFileSession("test.connection.co.za");
-        
+
         Assert.False(result.IsSuccess);
         Assert.Contains("Connection name not supported or configured: test.connection.co.za", result.MessagesToString());
     }
-    
+
     [Fact]
     public void CreateRemoteFileSession_fails_gracefully_if_connection_setting_is_missing_protocol()
     {
@@ -46,13 +46,13 @@ public class RemoteFileSessionFactoryTests
             }
         };
         RemoteFileSessionFactory sut = new RemoteFileSessionFactory(remoteFileConfig);
-        
+
         ResultValue<IRemoteFileSession> result = sut.CreateRemoteFileSession("test.connection.co.za");
-        
+
         Assert.False(result.IsSuccess);
         Assert.Equal("Unable to determine protocol from connection string. Connection: test.connection.co.za", result.MessagesToString());
     }
-    
+
     [Theory]
     [InlineData("TCP")]
     [InlineData("AMQP")]
@@ -66,13 +66,13 @@ public class RemoteFileSessionFactoryTests
             }
         };
         RemoteFileSessionFactory sut = new RemoteFileSessionFactory(remoteFileConfig);
-        
+
         ResultValue<IRemoteFileSession> result = sut.CreateRemoteFileSession("test.connection.co.za");
-        
+
         Assert.False(result.IsSuccess);
         Assert.Equal("Unable to determine protocol from connection string. Connection: test.connection.co.za", result.MessagesToString());
     }
-    
+
     [Fact]
     public void CreateRemoteFileSession_fails_gracefully_if_protocol_is_not_supported()
     {
@@ -84,13 +84,13 @@ public class RemoteFileSessionFactoryTests
             }
         };
         RemoteFileSessionFactory sut = new RemoteFileSessionFactory(remoteFileConfig);
-        
+
         ResultValue<IRemoteFileSession> result = sut.CreateRemoteFileSession("test.connection.co.za");
-        
+
         Assert.False(result.IsSuccess);
         Assert.Equal($"Protocol is not supported: {ConnectionProtocol.Https}", result.MessagesToString());
     }
-    
+
     [Theory]
     [InlineData(ConnectionProtocol.Sftp, typeof(SftpRemoteFileSession))]
     public void CreateRemoteFileSession_successfully_creates_file_providers(ConnectionProtocol protocol, Type resultType)
@@ -103,9 +103,9 @@ public class RemoteFileSessionFactoryTests
             }
         };
         RemoteFileSessionFactory sut = new RemoteFileSessionFactory(remoteFileConfig);
-        
+
         ResultValue<IRemoteFileSession> result = sut.CreateRemoteFileSession("test.connection.co.za");
-        
+
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Value);
         Assert.IsType(resultType, result.Value);

@@ -1,4 +1,4 @@
-﻿using Odin.DesignContracts;
+using Odin.DesignContracts;
 
 namespace Tests.Odin.DesignContracts
 {
@@ -18,7 +18,7 @@ namespace Tests.Odin.DesignContracts
         [InlineData(null, "(arg==0)", "Precondition failed: (arg==0)")]
         public void Requires_throws_exception_with_correct_message_on_precondition_failure(string? conditionDescription, string? conditionText, string expectedExceptionMessage)
         {
-            ContractException ex = Assert.Throws<ContractException>(() => Precondition.Requires(false, conditionDescription,conditionText));
+            ContractException ex = Assert.Throws<ContractException>(() => Precondition.Requires(false, conditionDescription, conditionText));
             Assert.Equal(expectedExceptionMessage, ex.Message);
         }
 

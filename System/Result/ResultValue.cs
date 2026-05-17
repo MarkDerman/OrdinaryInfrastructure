@@ -15,7 +15,7 @@
         {
             IsSuccess = false;
         }
-        
+
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -24,7 +24,10 @@
         /// <param name="messages">Optional, but good practice is to provide messages for failed results.</param>
         public ResultValue(bool isSuccess, TValue? value, IEnumerable<string>? messages)
         {
-            Precondition.Requires(!(value == null && isSuccess), "Value is required for a successful result.");
+            if (value == null && isSuccess)
+            {
+                throw new ArgumentException("Value is required for a successful result.", nameof(value));
+            }
             IsSuccess = isSuccess;
             Value = value;
             _messages = messages?.ToList();
@@ -38,23 +41,29 @@
         /// <param name="message">Optional, but good practice is to provide messages for failed results.</param>
         public ResultValue(bool isSuccess, TValue? value, string? message = null)
         {
-            Precondition.Requires(!(value == null && isSuccess), "A value is required for a successful result.");
+            if (value == null && isSuccess)
+            {
+                throw new ArgumentException("A value is required for a successful result.", nameof(value));
+            }
             IsSuccess = isSuccess;
             Value = value;
             _messages = message != null ? [message] : null;
         }
-        
+
         /// <summary>
         /// Success.
         /// </summary>
         /// <param name="messages">Normally included as best practice for failed operations, but not mandatory.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public new static ResultValue<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue) )
+        public new static ResultValue<TValue> Failure(IEnumerable<string> messages, TValue? value = default(TValue))
         {
-            Precondition.RequiresNotNull(messages);
+            ArgumentNullException.ThrowIfNull(messages);
             List<string> list = messages.ToList();
-            Precondition.Requires(list.Any(s => !string.IsNullOrWhiteSpace(s)),"At least 1 message is required.");
+            if (!list.Any(s => !string.IsNullOrWhiteSpace(s)))
+            {
+                throw new ArgumentException("At least 1 message is required.", nameof(messages));
+            }
             return new ResultValue<TValue>(false, value, list);
         }
 
@@ -64,12 +73,12 @@
         /// <param name="message">Required for failed operations.</param>
         /// <param name="value">Normally null\default for a failure, but not necessarily.</param>
         /// <returns></returns>
-        public new static ResultValue<TValue> Failure(string message, TValue? value = default(TValue) )
+        public new static ResultValue<TValue> Failure(string message, TValue? value = default(TValue))
         {
-            Precondition.Requires(!string.IsNullOrWhiteSpace(message), $"{nameof(message)} is required.");
+            ArgumentException.ThrowIfNullOrWhiteSpace(message);
             return new ResultValue<TValue>(false, value, new List<string>() { message });
         }
-        
+
         /// <summary>
         /// Creates a successful Result with Value set.
         /// </summary>
@@ -79,7 +88,7 @@
         {
             return new ResultValue<TValue>(true, value, null as string);
         }
-        
+
         /// <summary>
         /// Creates a successful Result with Value set and a single Message.
         /// </summary>
@@ -90,7 +99,7 @@
         {
             return new ResultValue<TValue>(true, value, message);
         }
-        
+
         /// <summary>
         /// Creates a successful Result with Value set, and several Messages.
         /// </summary>
@@ -115,7 +124,7 @@
                 throw new ArgumentException($"Cannot convert a successful result of type {GetType().FullName} " +
                                             $"to a failed result of type {typeof(ResultValue<TOtherValue>).FullName}.");
             }
-            
+
             return ResultValue<TOtherValue>.Failure(Messages);
         }
     }

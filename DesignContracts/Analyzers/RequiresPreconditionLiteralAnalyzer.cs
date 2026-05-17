@@ -1,8 +1,8 @@
-using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
+using System.Collections.Immutable;
 
 namespace Odin.DesignContracts.Analyzers
 {
@@ -68,7 +68,7 @@ namespace Odin.DesignContracts.Analyzers
                 return;
 
             // Resolve the symbol to ensure it's Odin.DesignContracts.Contract.Requires
-            SymbolInfo symbolInfo  = context.SemanticModel.GetSymbolInfo(memberAccess);
+            SymbolInfo symbolInfo = context.SemanticModel.GetSymbolInfo(memberAccess);
             IMethodSymbol? methodSymbol = symbolInfo.Symbol as IMethodSymbol;
 
             if (methodSymbol is null)

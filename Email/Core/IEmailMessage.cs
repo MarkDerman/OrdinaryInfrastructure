@@ -1,4 +1,4 @@
-﻿namespace Odin.Email
+namespace Odin.Email
 {
     /// <summary>
     /// Default IEmailMessage for .NET
@@ -9,7 +9,7 @@
         /// From email address
         /// </summary>
         EmailAddress? From { get; set; }
-        
+
         /// <summary>
         /// To email addresses
         /// </summary>
@@ -40,7 +40,7 @@
         /// </summary>
         /// <param name="attachment"></param>
         void Attach(Attachment attachment);
-        
+
         /// <summary>
         /// Email subject
         /// </summary>
@@ -50,7 +50,7 @@
         /// Email body
         /// </summary>
         string Body { get; set; }
-        
+
         /// <summary>
         /// Email priority
         /// </summary>
@@ -72,4 +72,3 @@
         Dictionary<string, string> Headers { get; set; }
     }
 }
-    

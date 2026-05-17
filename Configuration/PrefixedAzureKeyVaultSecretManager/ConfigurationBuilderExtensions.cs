@@ -27,13 +27,13 @@ public static class ConfigurationBuilderExtensions
         ArgumentException.ThrowIfNullOrWhiteSpace(vaultNameOrUri);
         ArgumentNullException.ThrowIfNull(prefix);
         ArgumentNullException.ThrowIfNull(credential);
-    
+
         // Process inputs
         vaultNameOrUri = vaultNameOrUri.Trim().TrimEnd('/');
         prefix = prefix?.Trim() ?? string.Empty;
-    
-        var vaultUri = vaultNameOrUri.StartsWith("https://") 
-            ? new Uri(vaultNameOrUri) 
+
+        var vaultUri = vaultNameOrUri.StartsWith("https://")
+            ? new Uri(vaultNameOrUri)
             : new Uri($"https://{vaultNameOrUri}.vault.azure.net/");
 
         options ??= new AzureKeyVaultConfigurationOptions();

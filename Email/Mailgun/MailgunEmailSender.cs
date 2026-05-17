@@ -1,13 +1,12 @@
-﻿using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text;
-using Microsoft.Extensions.Logging;
-using Odin.DesignContracts;
+﻿using Microsoft.Extensions.Logging;
 using Odin.Logging;
 using Odin.System;
 using Polly;
 using Polly.Retry;
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using System.Text;
 
 namespace Odin.Email
 {
@@ -21,7 +20,7 @@ namespace Odin.Email
         private readonly EmailSendingOptions _emailSettings;
         private readonly ILoggerWrapper<MailgunEmailSender> _logger;
         private HttpClient _httpClient;
-        
+
         private static ResiliencePipeline _resiliencePipeline = new ResiliencePipelineBuilder()
             .AddTimeout(TimeSpan.FromSeconds(20))
             .AddRetry(new RetryStrategyOptions()
@@ -32,7 +31,7 @@ namespace Odin.Email
                 UseJitter = true,
             })
             .Build();
-        
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -42,9 +41,9 @@ namespace Odin.Email
         public MailgunEmailSender(MailgunOptions mailgunSettings,
             EmailSendingOptions emailSettings, ILoggerWrapper<MailgunEmailSender> logger)
         {
-            Precondition.RequiresNotNull(mailgunSettings);
-            Precondition.RequiresNotNull(emailSettings);
-            Precondition.RequiresNotNull(logger);
+            ArgumentNullException.ThrowIfNull(mailgunSettings);
+            ArgumentNullException.ThrowIfNull(emailSettings);
+            ArgumentNullException.ThrowIfNull(logger);
             _mailgunSettings = mailgunSettings;
             _emailSettings = emailSettings;
             _logger = logger;
@@ -52,14 +51,17 @@ namespace Odin.Email
             string endPoint = _mailgunSettings.Region.Equals(MailgunOptions.RegionEU, StringComparison.OrdinalIgnoreCase)
                     ? "https://api.eu.mailgun.net/v3"
                     : "https://api.mailgun.net/v3";
-            
+
             // Trailing slash required so that the /v3 isn't replaced by /{domain}
             if (endPoint.Last() != '/')
             {
                 endPoint += "/";
             }
 
-            Precondition.Requires(!string.IsNullOrWhiteSpace(_mailgunSettings.Domain), "Domain missing in MailgunOptions");
+            if (string.IsNullOrWhiteSpace(_mailgunSettings.Domain))
+            {
+                throw new ArgumentException("Domain missing in MailgunOptions", nameof(mailgunSettings));
+            }
             string subPath = $"{_mailgunSettings.Domain}/messages";
             // Leading slash will replace the /v3
             if (subPath[0] == '/')
@@ -67,12 +69,15 @@ namespace Odin.Email
                 subPath = subPath.Substring(1);
             }
             _httpClient.BaseAddress = new Uri(new Uri(endPoint), subPath);
-            
-            Precondition.Requires(!string.IsNullOrWhiteSpace(_mailgunSettings.ApiKey), "ApiKey missing in MailgunOptions");
-            
+
+            if (string.IsNullOrWhiteSpace(_mailgunSettings.ApiKey))
+            {
+                throw new ArgumentException("ApiKey missing in MailgunOptions", nameof(mailgunSettings));
+            }
+
             byte[] byteArray = Encoding.ASCII.GetBytes($"api:{_mailgunSettings.ApiKey}");
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
-                "Basic", 
+                "Basic",
                 Convert.ToBase64String(byteArray));
         }
 
@@ -85,9 +90,11 @@ namespace Odin.Email
 
         private static ByteArrayContent ToByteArrayContent(Stream stream)
         {
-            Precondition.RequiresNotNull(stream);
-            Precondition.Requires(stream.CanRead, "Stream.CanRead must be true");
-            Precondition.Requires(stream.CanSeek, "Stream.CanSeek must be true");
+            ArgumentNullException.ThrowIfNull(stream);
+            if (!stream.CanRead || !stream.CanSeek)
+            {
+                throw new ArgumentException("Stream.CanRead and Stream.CanSeek must be true", nameof(stream));
+            }
 
             try
             {
@@ -101,7 +108,7 @@ namespace Odin.Email
             {
                 throw new InvalidOperationException("Could not convert stream to ByteArrayContent.", e);
             }
-            
+
         }
 
         /// <summary>
@@ -112,23 +119,26 @@ namespace Odin.Email
         /// <exception cref="HttpRequestException"></exception>
         public async Task<ResultValue<string>> SendEmail(IEmailMessage email)
         {
-            Precondition.RequiresNotNull(email);
-            Precondition.Requires(email.To.Any(), "Mailgun requires one or more to addresses.");
-            Precondition.Requires(!string.IsNullOrWhiteSpace(email.Subject), "Mailgun requires an email subject");
-            
+            ArgumentNullException.ThrowIfNull(email);
+            if (!email.To.Any())
+            {
+                throw new ArgumentException("Mailgun requires one or more to addresses.", nameof(email));
+            }
+            ArgumentException.ThrowIfNullOrWhiteSpace(email.Subject,"Mailgun requires an email subject");
+
             try
             {
                 MultipartFormDataContent content = new MultipartFormDataContent();
 
                 if (email.From is null)
                 {
-                    if (string.IsNullOrWhiteSpace(_emailSettings.DefaultFromAddress)) 
+                    if (string.IsNullOrWhiteSpace(_emailSettings.DefaultFromAddress))
                         throw new Exception("Cannot fall back to using the DefaultFromAddress. It is not set in configuration.");
                     email.From = new EmailAddress(_emailSettings.DefaultFromAddress!, _emailSettings.DefaultFromName);
                 }
                 email.Subject = string.Concat(_emailSettings.SubjectPrefix, email.Subject,
                     _emailSettings.SubjectPostfix);
-                
+
                 content.Add(new StringContent(email.From.ToString()), "from");
                 content.Add(new StringContent(string.Join(",", email.To.Select(a => a.ToString()))), "to");
                 content.Add(new StringContent(email.Subject), "subject");
@@ -190,7 +200,7 @@ namespace Odin.Email
             }
 
         }
-        
+
         private void LogSendEmailResult(IEmailMessage email, bool isSuccess, LogLevel level, string message, Exception? exception = null)
         {
             string to = "";
@@ -201,7 +211,7 @@ namespace Odin.Email
                     to = string.Join(',', email.To.Select(c => c.Address).ToList());
                 }
             }
-            catch 
+            catch
             {
             }
 
@@ -216,7 +226,7 @@ namespace Odin.Email
                     exception);
             }
         }
-        
+
         private static string GetEmailAsString(string email, string? name)
         {
             if (string.IsNullOrWhiteSpace(name))

@@ -20,6 +20,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Configuration", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Logging", "Logging\Tests\Tests.Odin.Logging.csproj", "{8453ADDD-53C2-4CCC-8C9C-7FC335087F60}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.DDD", "DomainDrivenDesign\Tests\Tests.Odin.DDD.csproj", "{1365B0DE-C19E-4604-86D9-E9BBDC606DC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Commands", "Commands\Tests\Tests.Odin.Commands.csproj", "{56673414-CC5F-4F03-9DEE-2D7F75A14047}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Release|Any CPU = Release|Any CPU
@@ -45,5 +49,9 @@ Global
 		{64F3DBAD-2D32-42FC-9559-39C12BFB3E86}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8453ADDD-53C2-4CCC-8C9C-7FC335087F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8453ADDD-53C2-4CCC-8C9C-7FC335087F60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1365B0DE-C19E-4604-86D9-E9BBDC606DC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1365B0DE-C19E-4604-86D9-E9BBDC606DC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56673414-CC5F-4F03-9DEE-2D7F75A14047}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56673414-CC5F-4F03-9DEE-2D7F75A14047}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

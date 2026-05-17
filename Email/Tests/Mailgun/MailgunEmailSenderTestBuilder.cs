@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Moq;
-using Odin.DesignContracts;
 using Odin.Email;
 using Odin.Logging;
 using Odin.System;
@@ -15,13 +14,13 @@ namespace Tests.Odin.Email.Mailgun
         public Mock<EmailSendingOptions>? EmailSendingOptionsMock;
         public MailgunOptions MailgunOptions = null!;
         public Mock<MailgunOptions>? MailgunOptionsMock;
-    
+
         public MailgunEmailSender Build()
         {
             EnsureNullDependenciesAreMocked();
-            return new MailgunEmailSender(MailgunOptions,EmailSendingOptions,Logger);
+            return new MailgunEmailSender(MailgunOptions, EmailSendingOptions, Logger);
         }
-        
+
         public MailgunEmailSenderTestBuilder EnsureNullDependenciesAreMocked()
         {
             if (MailgunOptions is null)
@@ -41,10 +40,10 @@ namespace Tests.Odin.Email.Mailgun
             }
             return this;
         }
-    
+
         public MailgunEmailSenderTestBuilder WithEmailSendingOptionsFromTestConfiguration(IConfiguration configuration)
         {
-            Precondition.RequiresNotNull(configuration);
+            ArgumentNullException.ThrowIfNull(configuration);
             string testerEmail = EmailTestConfiguration.GetTestEmailAddressFromConfig(configuration);
             string testerName = EmailTestConfiguration.GetTestFromNameFromConfig(configuration);
             EmailSendingOptions = new EmailSendingOptions()
@@ -56,7 +55,7 @@ namespace Tests.Odin.Email.Mailgun
             EmailSendingOptionsMock = null;
             return this;
         }
-        
+
         public MailgunEmailSenderTestBuilder WithMailgunOptionsFromTestConfiguration(IConfiguration configuration)
         {
             MailgunOptions options = GetMailgunOptionsFromConfig(configuration);
@@ -64,10 +63,10 @@ namespace Tests.Odin.Email.Mailgun
             MailgunOptionsMock = null;
             return this;
         }
-        
+
         public static MailgunOptions GetMailgunOptionsFromConfig(IConfiguration config)
         {
-            Precondition.RequiresNotNull(config);
+            ArgumentNullException.ThrowIfNull(config);
             IConfigurationSection section = config.GetSection("Email-MailgunOptions");
             MailgunOptions options = new MailgunOptions();
             section.Bind(options);
@@ -77,6 +76,6 @@ namespace Tests.Odin.Email.Mailgun
                     $"Invalid Email-MailgunOptions configuration. {optionsAreValid.MessagesToString()}");
             return options;
         }
-        
+
     }
 }

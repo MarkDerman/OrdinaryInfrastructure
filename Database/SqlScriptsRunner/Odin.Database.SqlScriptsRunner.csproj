@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+        
+    <ImplicitUsings>true</ImplicitUsings>
+    <PackageIcon>icon.png</PackageIcon>
+    <RootNamespace>Odin.Database</RootNamespace>
+    <Description>Provides a SqlScriptsRunner that supports journalled and unjournalled execution of SQL database change and other scripts. 
+      Useful for running database migration scripts at application deployment time.
+      
+    </Description>
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="dbup" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions"  />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder"  />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../Assets/icon.png" Pack="true" PackagePath=""/>
+    <None Include="README.md" Pack="true" PackagePath=""/>
+  </ItemGroup>
+</Project>

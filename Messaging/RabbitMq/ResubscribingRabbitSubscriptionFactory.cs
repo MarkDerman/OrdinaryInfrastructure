@@ -16,24 +16,24 @@ public interface IResubscribingRabbitSubscriptionFactory
 /// <param name="checkChannelPeriod"></param>
 /// <param name="attemptReconnectPeriod"></param>
 public class ResubscribingRabbitSubscriptionFactory(
-    IRabbitConnectionService rabbitConnectionService, 
-    string queueName, 
-    bool autoAck, 
-    bool exclusive, 
+    IRabbitConnectionService rabbitConnectionService,
+    string queueName,
+    bool autoAck,
+    bool exclusive,
     ushort prefetchCount = 200,
-    TimeSpan? checkChannelPeriod = null, 
+    TimeSpan? checkChannelPeriod = null,
     TimeSpan? attemptReconnectPeriod = null
-    ): IResubscribingRabbitSubscriptionFactory
+    ) : IResubscribingRabbitSubscriptionFactory
 {
     public IResubscribingRabbitSubscription Create()
     {
         return new ResubscribingRabbitSubscription(
             rabbitConnectionService,
             queueName,
-            autoAck, 
-            exclusive, 
-            prefetchCount, 
-            checkChannelPeriod, 
+            autoAck,
+            exclusive,
+            prefetchCount,
+            checkChannelPeriod,
             attemptReconnectPeriod
         );
 

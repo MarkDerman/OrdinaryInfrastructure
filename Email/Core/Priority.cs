@@ -1,4 +1,4 @@
-﻿namespace Odin.Email
+namespace Odin.Email
 {
     /// <summary>
     /// Email priority

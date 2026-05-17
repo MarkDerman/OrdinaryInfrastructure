@@ -4,7 +4,7 @@ namespace Odin.Utility;
 /// <summary>
 /// Supports convenience tax operations and a date-aware knowledge of historical tax rate changes.
 /// </summary>
-public interface ITaxUtility 
+public interface ITaxUtility
 {
     /// <summary>
     /// Returns the tax rate as a percentage.
@@ -13,7 +13,7 @@ public interface ITaxUtility
     /// <param name="asAtDate"></param>
     /// <returns></returns>
     decimal GetTaxRateAsPercentage(DateOnly asAtDate);
-    
+
     /// <summary>
     /// Returns the tax rate as a fraction.
     /// Eg 0.15m

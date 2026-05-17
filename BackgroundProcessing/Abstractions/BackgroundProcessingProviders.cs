@@ -1,4 +1,4 @@
-﻿using Odin.System;
+using Odin.System;
 
 namespace Odin.BackgroundProcessing
 {
@@ -11,7 +11,7 @@ namespace Odin.BackgroundProcessing
         /// Null provider. Does nothing.
         /// </summary>
         public const string Null = "Null";
-        
+
         /// <summary>
         /// Hangfire
         /// </summary>
@@ -25,7 +25,7 @@ namespace Odin.BackgroundProcessing
         // {
         //      return new List<string> {Hangfire,Fake};
         // }
-        
+
         // /// <summary>
         // /// Returns a list of supported providers...
         // /// </summary>

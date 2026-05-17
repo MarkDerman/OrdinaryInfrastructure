@@ -23,7 +23,7 @@ public class FakeServiceScope : IServiceScope
     {
         ServiceProvider = new FakeServiceProvider();
     }
-    
+
     /// <summary>
     /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
     /// </summary>
@@ -34,5 +34,5 @@ public class FakeServiceScope : IServiceScope
     /// <summary>
     /// Gets or sets the <see cref="IServiceProvider"/> used to resolve dependencies from the scope.
     /// </summary>
-    public IServiceProvider ServiceProvider { get; set; } 
+    public IServiceProvider ServiceProvider { get; set; }
 }

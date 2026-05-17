@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Odin.DesignContracts;
 using Odin.Email;
 using Odin.System;
 
@@ -41,7 +40,7 @@ namespace Microsoft.Extensions.DependencyInjection
         public static void AddOdinEmailSending(
             this IServiceCollection serviceCollection, IConfigurationSection configurationSection)
         {
-            Precondition.RequiresNotNull(configurationSection);
+            ArgumentNullException.ThrowIfNull(configurationSection);
 
             EmailSendingOptions emailOptions = new EmailSendingOptions();
             configurationSection.Bind(emailOptions);

@@ -1,9 +1,8 @@
-﻿using System.Linq.Expressions;
-using Hangfire;
+﻿using Hangfire;
 using Hangfire.Annotations;
-using Odin.DesignContracts;
 using Odin.Logging;
 using Odin.System;
+using System.Linq.Expressions;
 
 
 namespace Odin.BackgroundProcessing
@@ -25,13 +24,13 @@ namespace Odin.BackgroundProcessing
         /// <param name="logger"></param>
         public HangfireBackgroundProcessor(IRecurringJobManagerV2 recurringJobManager, IBackgroundJobClient jobClient, ILoggerWrapper<HangfireBackgroundProcessor> logger)
         {
-            Precondition.RequiresNotNull(recurringJobManager);
-            Precondition.RequiresNotNull(jobClient);
-            Precondition.RequiresNotNull(logger);
+            ArgumentNullException.ThrowIfNull(recurringJobManager);
+            ArgumentNullException.ThrowIfNull(jobClient);
+            ArgumentNullException.ThrowIfNull(logger);
             _recurringJobManager = recurringJobManager;
             _jobClient = jobClient;
             _logger = logger;
-            
+
         }
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace Odin.BackgroundProcessing
                 return ResultValue<JobDetails>.Failure(message);
             }
         }
-        
+
         /// <summary>
         /// Schedules a once-off job in Hangfire
         /// </summary>
@@ -94,7 +93,7 @@ namespace Odin.BackgroundProcessing
         {
             try
             {
-                _recurringJobManager.AddOrUpdate<T>(recurringJobId, queueName, methodCall, cronExpression, new RecurringJobOptions(){ TimeZone = timeZoneInfo});
+                _recurringJobManager.AddOrUpdate<T>(recurringJobId, queueName, methodCall, cronExpression, new RecurringJobOptions() { TimeZone = timeZoneInfo });
                 return Result.Success();
             }
             catch (Exception err)
@@ -136,7 +135,7 @@ namespace Odin.BackgroundProcessing
         {
             return ScheduleJob(methodCall, DateTimeOffset.Now.Add(enqueueIn));
         }
-        
+
         /// <summary>
         /// Schedules a once-off job in Hangfire
         /// </summary>

@@ -1,7 +1,6 @@
-﻿using System.Reflection;
-using Odin.System;
+﻿using Odin.System;
 using Odin.Templating;
-using Xunit;
+using System.Reflection;
 
 namespace Tests.Odin.Templating.Razor
 {
@@ -22,7 +21,7 @@ namespace Tests.Odin.Templating.Razor
         {
             Assembly testsAssembly = typeof(RazorTemplateRendererTests).Assembly;
             RazorTemplateRenderer sut = new RazorTemplateRenderer(testsAssembly, rootNamespace);
-            ResultValue<string> result = await sut.RenderAsync(templateKey, new TestViewModel(){ Title = "World"});
+            ResultValue<string> result = await sut.RenderAsync(templateKey, new TestViewModel() { Title = "World" });
 
             Assert.True(result.IsSuccess == shouldSucceed, result.MessagesToString());
             if (shouldSucceed)

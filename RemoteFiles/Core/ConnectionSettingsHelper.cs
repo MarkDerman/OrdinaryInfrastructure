@@ -1,4 +1,3 @@
-using Odin.DesignContracts;
 
 namespace Odin.RemoteFiles;
 
@@ -18,7 +17,7 @@ public static class ConnectionSettingsHelper
     private const string PasswordKey = "password";
     private const string PrivateKeyKey = "privatekey";
     private const string PrivateKeyPassphraseKey = "privatekeypassphrase";
-    
+
     /// <summary>
     /// Parse a connection string in the format 'key=value;key=value...' to a dictionary
     /// </summary>
@@ -27,7 +26,7 @@ public static class ConnectionSettingsHelper
     /// <returns></returns>
     public static Dictionary<string, string> ParseConnectionString(string connectionString, char delimiter)
     {
-        Precondition.Requires<ArgumentNullException>(!string.IsNullOrEmpty(connectionString), "connectionString cannot be null.");
+        ArgumentException.ThrowIfNullOrWhiteSpace(connectionString);
 
         Dictionary<string, string> result = new Dictionary<string, string>();
         string[] keyValuePairs = connectionString.Trim(delimiter).Split(delimiter)
@@ -39,7 +38,7 @@ public static class ConnectionSettingsHelper
             string key = split[0].Trim().ToLower();
 
             if (result.ContainsKey(key)) continue;
-            
+
             string value = String.Join('=', split.Skip(1)).Trim();
             result.Add(key, value);
         }
@@ -57,26 +56,26 @@ public static class ConnectionSettingsHelper
         // safeguard if called with keys containing upper case
         Dictionary<string, string> lowerCaseSettings =
             connectionSettings.ToDictionary(kv => kv.Key.ToLower(), kv => kv.Value);
-        
-        SftpConnectionSettings sftpSettings = new SftpConnectionSettings();
 
-        if (lowerCaseSettings.ContainsKey(HostKey))
-            sftpSettings.Host = lowerCaseSettings[HostKey];
+        SftpConnectionSettings sftpSettings = new ();
+
+        if (lowerCaseSettings.TryGetValue(HostKey, out string? setting))
+            sftpSettings.Host = setting;
 
         if (lowerCaseSettings.TryGetValue(PortKey, out string? value) && int.TryParse(value, out int port))
             sftpSettings.Port = port;
 
-        if (lowerCaseSettings.ContainsKey(UsernameKey))
-            sftpSettings.UserName = lowerCaseSettings[UsernameKey];
-        
-        if (lowerCaseSettings.ContainsKey(PasswordKey))
-            sftpSettings.Password = lowerCaseSettings[PasswordKey];
-        
-        if (lowerCaseSettings.ContainsKey(PrivateKeyKey))
-            sftpSettings.PrivateKey = lowerCaseSettings[PrivateKeyKey];
-        
-        if (lowerCaseSettings.ContainsKey(PrivateKeyPassphraseKey))
-            sftpSettings.PrivateKeyPassphrase = lowerCaseSettings[PrivateKeyPassphraseKey];
+        if (lowerCaseSettings.TryGetValue(UsernameKey, out string? caseSetting))
+            sftpSettings.UserName = caseSetting;
+
+        if (lowerCaseSettings.TryGetValue(PasswordKey, out string? lowerCaseSetting))
+            sftpSettings.Password = lowerCaseSetting;
+
+        if (lowerCaseSettings.TryGetValue(PrivateKeyKey, out string? pvtKey))
+            sftpSettings.PrivateKey = pvtKey;
+
+        if (lowerCaseSettings.TryGetValue(PrivateKeyPassphraseKey, out string? pvtPassphrase))
+            sftpSettings.PrivateKeyPassphrase = pvtPassphrase;
 
         return sftpSettings;
     }

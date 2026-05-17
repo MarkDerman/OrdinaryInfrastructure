@@ -11,12 +11,12 @@ public class MessageEx
     /// Message content. Can be null.
     /// </summary>
     public string? Message { get; init; }
-    
+
     /// <summary>
     /// Message severity: Error, Warning, Information, etc...
     /// </summary>
     public LogLevel Severity { get; init; } = LogLevel.Information;
-    
+
     /// <summary>
     /// Exception, if present.
     /// </summary>
@@ -28,6 +28,6 @@ public class MessageEx
     /// <returns></returns>
     public override string ToString()
     {
-        return $"{Severity}:{(Message!=null ? " " + Message : null)}{(Error!=null ? " " + Error.Message : null)}";
+        return $"{Severity}:{(Message != null ? " " + Message : null)}{(Error != null ? " " + Error.Message : null)}";
     }
 }

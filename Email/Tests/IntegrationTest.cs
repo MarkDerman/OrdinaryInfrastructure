@@ -1,4 +1,4 @@
-﻿namespace Tests.Odin.Email;
+namespace Tests.Odin.Email;
 
 /// <summary>
 ///  Base class for integration tests or any test needing application

@@ -18,7 +18,7 @@ public class PrefixedAzureKeyVaultSecretManager : KeyVaultSecretManager
     {
         _prefix = prefix;
     }
-    
+
     /// <summary>
     /// Only load secrets that start with the prefix
     /// </summary>

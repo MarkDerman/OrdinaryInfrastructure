@@ -1,7 +1,7 @@
-﻿using System.Collections.Immutable;
-using Odin.System;
+﻿using Odin.System;
+using System.Collections.Immutable;
 
-namespace Tests.Odin.System.StringEnum
+namespace Tests.Odin.System.Strings
 {
     public sealed class StringEnumTests
     {
@@ -15,7 +15,7 @@ namespace Tests.Odin.System.StringEnum
 
             Assert.Equal(expectedResult, sut);
         }
-        
+
         [Theory]
         [InlineData("val1", true)]
         [InlineData("VAL1", false)]
@@ -26,45 +26,45 @@ namespace Tests.Odin.System.StringEnum
 
             Assert.True(sut.IsSuccess == expectedResult, sut.MessagesToString());
         }
-        
+
         [Fact]
         public void Values_operation()
         {
             ImmutableHashSet<string> sut = FourValsStringEnum.Values;
-            
+
             Assert.Equal(4, sut.Count);
-            Assert.True(sut.Contains("val1"));
-            Assert.True(sut.Contains("val2"));
-            Assert.True(sut.Contains("val3"));
-            Assert.True(sut.Contains("val4"));
-            Assert.False(sut.Contains("Rusty"));
+            Assert.Contains("val1", sut);
+            Assert.Contains("val2", sut);
+            Assert.Contains("val3", sut);
+            Assert.Contains("val4", sut);
+            Assert.DoesNotContain("Rusty", sut);
         }
-        
+
         [Fact]
         public void Duplicate_values_are_prohibited()
         {
             ImmutableHashSet<string> sut = FourValsStringEnum.Values;
-            
+
             Assert.Equal(4, sut.Count);
-            Assert.True(sut.Contains("val1"));
-            Assert.True(sut.Contains("val2"));
-            Assert.True(sut.Contains("val3"));
-            Assert.True(sut.Contains("val4"));
-            Assert.False(sut.Contains("Rusty"));
+            Assert.Contains("val1", sut);
+            Assert.Contains("val2", sut);
+            Assert.Contains("val3", sut);
+            Assert.Contains("val4", sut);
+            Assert.DoesNotContain("Rusty", sut);
         }
-        
+
         [Fact]
         public void Values_with_duplicates_are_not_supported()
         {
             Assert.Throws<NotSupportedException>(() => DuplicateValsStringEnum.Values);
         }
-        
+
         [Fact]
         public void HasValue_with_duplicates_are_not_supported()
         {
             Assert.Throws<NotSupportedException>(() => DuplicateValsStringEnum.HasValue("123"));
         }
-        
+
         [Fact]
         public void Values_with_duplicates_by_case_only_are_supported()
         {
@@ -74,7 +74,7 @@ namespace Tests.Odin.System.StringEnum
             });
             Assert.Null(ex);
         }
-        
+
         [Fact]
         public void HasValue_with_duplicates_by_case_only_are_supported()
         {
@@ -87,23 +87,23 @@ namespace Tests.Odin.System.StringEnum
     public sealed class FourValsStringEnum : StringEnum<FourValsStringEnum>
     {
         public const string Val1 = "val1";
-        public const string Val2 = "val2";  
-        public const string Val3 = "val3"; 
+        public const string Val2 = "val2";
+        public const string Val3 = "val3";
         public const string Val4 = "val4";
     }
-    
+
     public sealed class DuplicateValsStringEnum : StringEnum<DuplicateValsStringEnum>
     {
         public const string Val1 = "val";
-        public const string Val2 = "val";  
-        public const string Val3 = "val3"; 
+        public const string Val2 = "val";
+        public const string Val3 = "val3";
     }
-    
+
     public sealed class DuplicateValsByCaseOnlyStringEnum : StringEnum<DuplicateValsByCaseOnlyStringEnum>
     {
         public const string Val1 = "val";
-        public const string Val2 = "VAL";  
-        public const string Val3 = "val3"; 
+        public const string Val2 = "VAL";
+        public const string Val3 = "val3";
     }
-    
+
 }

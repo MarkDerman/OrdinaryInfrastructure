@@ -1,4 +1,4 @@
-﻿namespace Odin.Email
+namespace Odin.Email
 {
     /// <summary>
     /// Used for To, CC and BCC in EmailAddress
@@ -20,7 +20,7 @@
         {
             if (string.IsNullOrWhiteSpace(emailAddresses)) return;
 
-            string[] emails = emailAddresses.Split(new char[] {',', ';'});
+            string[] emails = emailAddresses.Split(new char[] { ',', ';' });
             foreach (string email in emails)
             {
                 if (!string.IsNullOrWhiteSpace(email))

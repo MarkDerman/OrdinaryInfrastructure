@@ -5,7 +5,7 @@ namespace Odin.Utility;
 /// </summary>
 /// <typeparam name="TVaryingDimensionType"></typeparam>
 /// <typeparam name="TValueType"></typeparam>
-public interface IVaryingValueProvider<in TVaryingDimensionType, out TValueType> where TVaryingDimensionType : IComparable 
+public interface IVaryingValueProvider<in TVaryingDimensionType, out TValueType> where TVaryingDimensionType : IComparable
 {
     /// <summary>
     /// Gets the relevant Value from the ValueChange which occurs on or before 'atPointAlongDimension' (which is most often time).

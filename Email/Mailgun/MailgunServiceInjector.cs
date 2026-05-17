@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Odin.DesignContracts;
 using Odin.System;
 
 namespace Odin.Email
@@ -15,7 +14,7 @@ namespace Odin.Email
         public void TryAddEmailSender(IServiceCollection serviceCollection,
             IConfigurationSection emailConfigurationSection)
         {
-            Precondition.RequiresNotNull(emailConfigurationSection);
+            ArgumentNullException.ThrowIfNull(emailConfigurationSection);
 
             MailgunOptions mailGunSenderSettings = new MailgunOptions();
             emailConfigurationSection.Bind(MailgunOptions.MailgunName,

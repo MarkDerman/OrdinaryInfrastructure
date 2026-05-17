@@ -16,22 +16,22 @@ namespace Odin.RemoteFiles
         /// Port number (22 by default)
         /// </summary>
         public int Port { get; set; } = 22;
-        
+
         /// <summary>
         /// UserName 
         /// </summary>
         public string? UserName { get; set; }
-        
+
         /// <summary>
         /// Password (optional)
         /// </summary>
         public string? Password { get; set; }
-        
+
         /// <summary>
         /// PrivateKey  (optional)
         /// </summary>
         public string? PrivateKey { get; set; }
-        
+
         /// <summary>
         /// PrivateKeyPassphrase (optional)
         /// </summary>
@@ -62,8 +62,8 @@ namespace Odin.RemoteFiles
         public Result IsConfigurationValid()
         {
             List<string> errors = new List<string>();
-            if (string.IsNullOrWhiteSpace(Host)) errors.Add("SFTP Host is not specified"); 
-            if (Port<=0) errors.Add("SFTP Port is not specified"); 
+            if (string.IsNullOrWhiteSpace(Host)) errors.Add("SFTP Host is not specified");
+            if (Port <= 0) errors.Add("SFTP Port is not specified");
             return new Result(!errors.Any(), errors);
         }
 

@@ -1,9 +1,9 @@
-using System.Runtime.ExceptionServices;
 using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Json;
+using System.Runtime.ExceptionServices;
 
 namespace Odin.Configuration;
 
@@ -14,7 +14,7 @@ public class AzureBlobJsonConfigurationProvider : JsonConfigurationProvider
 {
     private readonly Timer? _timer;
     private readonly bool _isDisabled;
-    
+
     public AzureBlobJsonConfigurationProvider(AzureBlobJsonConfigurationSource source) : base(source)
     {
         _isDisabled = source.Options.IsDisabled;
@@ -78,7 +78,7 @@ public class AzureBlobJsonConfigurationProvider : JsonConfigurationProvider
         try
         {
             BlobClient client = GetBlobClient();
-            
+
             Response<BlobProperties>? attributes = await client.GetPropertiesAsync();
 
             if (attributes.HasValue && attributes.Value.ETag == _mostRecentEtag)

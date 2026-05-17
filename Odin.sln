@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Configuration.AzureBlobJson", "Configuration\AzureBlobJson\Odin.Configuration.AzureBlobJson.csproj", "{220850A1-9524-7FE7-B680-B58A6384939A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Data.SqlScriptsRunner", "Data\SqlScriptsRunner\Odin.Data.SqlScriptsRunner.csproj", "{5460CA02-468D-B729-DBED-DC892DACB296}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Database.SqlScriptsRunner", "Database\SqlScriptsRunner\Odin.Database.SqlScriptsRunner.csproj", "{5460CA02-468D-B729-DBED-DC892DACB296}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DesignContracts", "DesignContracts\Core\Odin.DesignContracts.csproj", "{2B952295-4016-E1DA-8A6A-A0084F2049DF}"
 EndProject
@@ -139,7 +139,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DDD.Experimental", "Do
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.DDD.Repositories.EF", "DomainDrivenDesign\Repositories-EF\Odin.DDD.Repositories.EF.csproj", "{ED3985AF-DA87-4D96-900F-59ED2FD02A25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Database", "Data\Tests\Tests.Odin.Database.csproj", "{BB8FEDA2-08E6-472D-9ABD-244D550D1E87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Database", "Database\Tests\Tests.Odin.Database.csproj", "{BB8FEDA2-08E6-472D-9ABD-244D550D1E87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

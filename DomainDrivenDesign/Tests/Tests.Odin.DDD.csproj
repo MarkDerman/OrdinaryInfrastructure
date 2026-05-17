@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Data\SqlScriptsRunner\Odin.Data.SqlScriptsRunner.csproj" />
+    <ProjectReference Include="..\..\Database\SqlScriptsRunner\Odin.Database.SqlScriptsRunner.csproj" />
     <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
     <ProjectReference Include="..\Core\Odin.DDD.csproj" />
   </ItemGroup>

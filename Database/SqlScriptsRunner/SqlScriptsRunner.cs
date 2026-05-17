@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Odin.System;
 using System.Reflection;
 
-namespace Odin.Data
+namespace Odin.Database
 {
     /// <summary>
     /// Represents 

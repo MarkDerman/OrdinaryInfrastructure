@@ -65,7 +65,7 @@ jobs:
         dotnet pack ./Commands/Core/Odin.Commands.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Queries/Abstractions/Odin.Queries.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Queries/Core/Odin.Queries.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Notifications/Odin.Patterns.Notifications.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
+        dotnet pack ./Notifications/Odin.Notifications.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./RemoteFiles/Abstractions/Odin.RemoteFiles.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./RemoteFiles/SFTP/Odin.RemoteFiles.SFTP.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./RemoteFiles/Core/Odin.RemoteFiles.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR

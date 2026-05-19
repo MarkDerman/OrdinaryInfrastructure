@@ -16,6 +16,7 @@
     
     <ItemGroup>
         <ProjectReference Include="..\PrefixedAzureKeyVaultSecretManager\Odin.Configuration.PrefixedAzureKeyVaultSecretManager.csproj" />
+        <ProjectReference Include="..\Hosting\Odin.Configuration.Hosting.csproj" />
     </ItemGroup>
 
     <ItemGroup>

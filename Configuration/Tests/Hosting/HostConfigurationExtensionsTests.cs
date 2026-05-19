@@ -1,4 +1,7 @@
+using Azure.Identity;
 using Microsoft.Extensions.Configuration;
+using Odin.Configuration.Hosting;
+using System.Reflection;
 
 namespace Tests.Odin.Configuration.Hosting;
 
@@ -83,7 +86,7 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
         {
             options.UserSecretsId = null;
             options.AddEnvironmentVariables = false;
-            options.AdditionalConfigurationSources = configuration =>
+            options.ConfigureAdditionalSources = configuration =>
                 configuration.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     [TestSettingName] = "additional"
@@ -105,7 +108,7 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
         manager.AddHostConfiguration("Test.App", options =>
         {
             options.UserSecretsId = null;
-            options.AdditionalConfigurationSources = configuration =>
+            options.ConfigureAdditionalSources = configuration =>
                 configuration.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     [TestSettingName] = "additional"
@@ -113,6 +116,27 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
         });
 
         Assert.Equal("environment", manager[TestSettingName]);
+    }
+
+    [Fact]
+    public void AddHostConfiguration_prefers_config_folder_from_configuration_base_path()
+    {
+        using TemporaryConfigurationDirectory currentDirectory = TemporaryConfigurationDirectory.Create();
+        currentDirectory.WriteJson(Path.Combine("config", "appSettings.json"), TestSettingName, "current");
+
+        using TemporaryConfigurationDirectory basePathDirectory = TemporaryConfigurationDirectory.Create(useAsCurrentDirectory: false);
+        basePathDirectory.WriteJson("appSettings.json", TestSettingName, "base-root");
+        basePathDirectory.WriteJson(Path.Combine("config", "appSettings.json"), TestSettingName, "base-config");
+
+        ConfigurationManager manager = new();
+        manager.SetBasePath(basePathDirectory.DirectoryPath);
+        manager.AddHostConfiguration("Test.App", options =>
+        {
+            options.UserSecretsId = null;
+            options.AddEnvironmentVariables = false;
+        });
+
+        Assert.Equal("base-config", manager[TestSettingName]);
     }
 
     [Fact]
@@ -161,6 +185,65 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
     }
 
     [Fact]
+    public void Whitespace_configured_client_secret_falls_back_to_environment_client_secret()
+    {
+        Environment.SetEnvironmentVariable(AzureKeyVaultClientId, "environment-client-id");
+        Environment.SetEnvironmentVariable(AzureKeyVaultSecret, "environment-secret");
+        Environment.SetEnvironmentVariable(AzureKeyVaultTenantId, "tenant-id");
+
+        ConfigurationManager manager = CreateConfiguration(new Dictionary<string, string?>
+        {
+            ["AzureKeyVault:KeyVaultClientSecret"] = " "
+        });
+
+        object? credential = CreateKeyVaultCredential(manager);
+
+        Assert.IsType<ClientSecretCredential>(credential);
+    }
+
+    [Fact]
+    public void Configured_client_secret_prefers_configured_client_id()
+    {
+        Environment.SetEnvironmentVariable(AzureKeyVaultClientId, "environment-client-id");
+        ConfigurationManager manager = CreateConfiguration(new Dictionary<string, string?>
+        {
+            ["AzureKeyVault:KeyVaultClientId"] = "configured-client-id"
+        });
+
+        string? clientId = GetClientIdForClientSecret(manager, preferConfiguredClientId: true);
+
+        Assert.Equal("configured-client-id", clientId);
+    }
+
+    [Fact]
+    public void Environment_client_secret_prefers_environment_client_id()
+    {
+        Environment.SetEnvironmentVariable(AzureKeyVaultClientId, "environment-client-id");
+        ConfigurationManager manager = CreateConfiguration(new Dictionary<string, string?>
+        {
+            ["AzureKeyVault:KeyVaultClientId"] = "configured-client-id"
+        });
+
+        string? clientId = GetClientIdForClientSecret(manager, preferConfiguredClientId: false);
+
+        Assert.Equal("environment-client-id", clientId);
+    }
+
+    [Fact]
+    public void Configured_key_vault_prefix_overrides_default_prefix()
+    {
+        ConfigurationManager manager = CreateConfiguration(new Dictionary<string, string?>
+        {
+            ["Environment"] = "Production",
+            ["AzureKeyVault:Prefix"] = " Pinned- "
+        });
+
+        string prefix = GetKeyVaultPrefix(manager, "Test.App");
+
+        Assert.Equal("Pinned-", prefix);
+    }
+
+    [Fact]
     public void Development_without_key_vault_credential_skips_key_vault_configuration()
     {
         ConfigurationManager manager = CreateConfiguration(new Dictionary<string, string?>
@@ -198,6 +281,39 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
         return manager;
     }
 
+    private static object? CreateKeyVaultCredential(ConfigurationManager manager)
+    {
+        MethodInfo method = typeof(HostConfigurationExtensions).GetMethod(
+            "CreateKeyVaultCredential",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        return method.Invoke(null, [manager, new KeyVaultConfigurationOptions()]);
+    }
+
+    private static string? GetClientIdForClientSecret(
+        ConfigurationManager manager,
+        bool preferConfiguredClientId)
+    {
+        MethodInfo method = typeof(HostConfigurationExtensions).GetMethod(
+            "GetClientIdForClientSecret",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        return (string?)method.Invoke(
+            null,
+            [manager.GetSection("AzureKeyVault"), preferConfiguredClientId]);
+    }
+
+    private static string GetKeyVaultPrefix(ConfigurationManager manager, string applicationName)
+    {
+        MethodInfo method = typeof(HostConfigurationExtensions).GetMethod(
+            "GetKeyVaultPrefix",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        return (string)method.Invoke(
+            null,
+            [manager.GetSection("AzureKeyVault"), manager, applicationName, new KeyVaultConfigurationOptions()])!;
+    }
+
     private void CaptureAndClear(string name)
     {
         _originalEnvironmentValues[name] = Environment.GetEnvironmentVariable(name);
@@ -215,11 +331,15 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
             _path = path;
         }
 
-        public static TemporaryConfigurationDirectory Create()
+        public static TemporaryConfigurationDirectory Create(bool useAsCurrentDirectory = true)
         {
             string path = Path.Combine(Path.GetTempPath(), $"host-config-{Guid.NewGuid():N}");
             Directory.CreateDirectory(path);
-            Environment.CurrentDirectory = path;
+            if (useAsCurrentDirectory)
+            {
+                Environment.CurrentDirectory = path;
+            }
+
             return new TemporaryConfigurationDirectory(path);
         }
 

@@ -79,7 +79,7 @@ public class PrefixedAzureKeyVaultSecretManagerTests
 
     /// <summary>
     /// Verifies that <see cref="PrefixedAzureKeyVaultSecretManager.GetKey"/> strips the prefix 
-    /// and replaces hyphens with colons correctly.
+    /// and replaces every remaining hyphen with a colon.
     /// </summary>
     [Fact]
     public void GetKey_StripsPrefixAndReplacesHyphens_ReturnsTransformedKey()
@@ -92,17 +92,11 @@ public class PrefixedAzureKeyVaultSecretManagerTests
         // Act
         var key = manager.GetKey(secret);
 
-        // Assert
         Assert.Equal("ConnectionStrings::DefaultConnection", key);
-        // Note: The requirement said replace -- with :, but the code replaces - with :. 
-        // So ConnectionStrings--DefaultConnection becomes ConnectionStrings::DefaultConnection.
-        // If the implementation used Replace("--", ":"), it would be ConnectionStrings:DefaultConnection.
-        // Based on current implementation (key.Replace("-", ":")), it replaces every single hyphen.
     }
 
     /// <summary>
-    /// Verifies that <see cref="PrefixedAzureKeyVaultSecretManager.GetKey"/> handles multiple hyphens 
-    /// by replacing them all with colons after stripping the prefix.
+    /// Verifies that <see cref="PrefixedAzureKeyVaultSecretManager.GetKey"/> replaces every remaining hyphen.
     /// </summary>
     [Fact]
     public void GetKey_HandlesMultipleHyphens_ReturnsColons()
@@ -233,11 +227,10 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     #region Integration/Configuration Tests
 
     /// <summary>
-    /// Verifies that the extension method correctly sets an instance of <see cref="PrefixedAzureKeyVaultSecretManager"/>
-    /// in the <see cref="AzureKeyVaultConfigurationOptions.Manager"/> property.
+    /// Verifies that the extension method configures a prefix-aware secret manager.
     /// </summary>
     [Fact]
-    public void AddPrefixedAzureKeyVault_SetsManagerInOptions_Correctly()
+    public void AddPrefixedAzureKeyVault_ConfiguresPrefixedSecretManager()
     {
         // Arrange
         var prefix = "my-prefix";
@@ -246,13 +239,14 @@ public class PrefixedAzureKeyVaultSecretManagerTests
         var options = new AzureKeyVaultConfigurationOptions();
         _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault("my-vault", prefix, _credentialMock.Object, options);
 
-        // Assert
-        Assert.IsType<PrefixedAzureKeyVaultSecretManager>(options.Manager);
+        var loadedSecret = InternalModelFactory.SecretProperties(name: "my-prefixSecret");
+        var ignoredSecret = InternalModelFactory.SecretProperties(name: "other-prefixSecret");
+        var secret = InternalModelFactory.KeyVaultSecret(name: "my-prefixConnectionStrings--Default", value: "secret-value");
 
-        // Use reflection to check the private _prefix field in the manager
-        var field = typeof(PrefixedAzureKeyVaultSecretManager).GetField("_prefix", BindingFlags.NonPublic | BindingFlags.Instance);
-        var actualPrefix = (string?)field?.GetValue(options.Manager);
-        Assert.Equal(prefix, actualPrefix);
+        Assert.IsType<PrefixedAzureKeyVaultSecretManager>(options.Manager);
+        Assert.True(options.Manager.Load(loadedSecret));
+        Assert.False(options.Manager.Load(ignoredSecret));
+        Assert.Equal("ConnectionStrings::Default", options.Manager.GetKey(secret));
     }
 
     #endregion

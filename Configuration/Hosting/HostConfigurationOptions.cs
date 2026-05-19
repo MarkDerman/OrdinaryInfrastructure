@@ -61,7 +61,7 @@ public sealed class HostConfigurationOptions
     /// The action runs after the main app settings file and before user secrets, environment variables, and Key Vault.
     /// Use this for extra files such as <c>serviceSettings.json</c>.
     /// </remarks>
-    public Action<ConfigurationManager>? AdditionalConfigurationSources { get; set; }
+    public Action<ConfigurationManager>? ConfigureAdditionalSources { get; set; }
 
     /// <summary>
     /// Gets Azure Key Vault configuration options.

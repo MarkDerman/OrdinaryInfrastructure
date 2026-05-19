@@ -4,39 +4,38 @@ using Azure.Security.KeyVault.Secrets;
 namespace Odin.Configuration;
 
 /// <summary>
-/// Custom manager to handle shared Key Vaults where secrets are prefixed with e.g. {Project}-{Environment}-
+/// Loads secrets from shared Key Vaults when secret names start with an application/environment prefix.
 /// </summary>
 public class PrefixedAzureKeyVaultSecretManager : KeyVaultSecretManager
 {
     private readonly string _prefix;
 
     /// <summary>
-    /// Use custom prefix to handle shared Key Vaults where secrets are prefixed with e.g. {Project}-{Environment}-
+    /// Creates a manager for secrets prefixed with values such as <c>{Project}-{Environment}-</c>.
     /// </summary>
-    /// <param name="prefix"></param>
+    /// <param name="prefix">The secret name prefix to load and strip from configuration keys.</param>
     public PrefixedAzureKeyVaultSecretManager(string prefix)
     {
         _prefix = prefix;
     }
 
     /// <summary>
-    /// Only load secrets that start with the prefix
+    /// Loads only secrets whose names start with the configured prefix.
     /// </summary>
-    /// <param name="secret"></param>
-    /// <returns></returns>
+    /// <param name="secret">The Key Vault secret metadata.</param>
+    /// <returns><c>true</c> when the secret name starts with the prefix; otherwise <c>false</c>.</returns>
     public override bool Load(SecretProperties secret)
     {
         return secret.Name.StartsWith(_prefix);
     }
 
     /// <summary>
-    /// Strip the prefix and replace "--" with ":"
+    /// Strips the prefix and maps every hyphen in the remaining secret name to a configuration key delimiter.
     /// </summary>
-    /// <param name="secret"></param>
-    /// <returns></returns>
+    /// <param name="secret">The Key Vault secret.</param>
+    /// <returns>The configuration key produced from the secret name.</returns>
     public override string GetKey(KeyVaultSecret secret)
     {
-        // Strip prefix and map "-" to ":"
         var key = secret.Name.Substring(_prefix.Length);
         return key.Replace("-", ":");
     }

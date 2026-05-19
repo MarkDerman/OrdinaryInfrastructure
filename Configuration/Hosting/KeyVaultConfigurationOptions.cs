@@ -14,7 +14,8 @@ public sealed class KeyVaultConfigurationOptions
     /// </summary>
     /// <remarks>
     /// Defaults to <c>AzureKeyVault</c>. Expected child keys include <c>Name</c>, <c>Prefix</c>,
-    /// <c>SkipKeyVaultConfigInjection</c>, <c>ManagedIdentityClientId</c>, and <c>ClientSecret</c>.
+    /// <c>SkipKeyVaultConfigInjection</c>, <c>ManagedIdentityClientId</c>, <c>KeyVaultClientId</c>,
+    /// <c>ClientId</c>, <c>KeyVaultClientSecret</c>, and <c>Secret</c>.
     /// </remarks>
     public string SectionName { get; set; } = "AzureKeyVault";
 

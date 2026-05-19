@@ -28,6 +28,19 @@ public static class HostConfigurationExtensions
         "Configure client secret credentials, configure AzureKeyVault:" + ManagedIdentityClientIdKey + ", " +
         "set AzureKeyVault:" + SkipKeyVaultConfigInjectionKey + "=true, or remove AzureKeyVault:" + KeyVaultNameKey + ".";
 
+    /// <summary>
+    /// Adds the standard host configuration sources used by Soulv applications.
+    /// </summary>
+    /// <param name="configuration">The host configuration manager to add sources to.</param>
+    /// <param name="applicationName">
+    /// The logical application name. This is used as the default user secrets id and to derive the default Key Vault prefix.
+    /// </param>
+    /// <param name="configure">An optional action used to override source names, user secrets, environment variables, or Key Vault behavior.</param>
+    /// <returns>The same <see cref="ConfigurationManager"/> so calls can be chained.</returns>
+    /// <remarks>
+    /// This method centralises the normal host startup pattern: load app settings first, then host-specific sources,
+    /// then user secrets, environment variables, and finally Azure Key Vault. Later sources override earlier sources.
+    /// </remarks>
     public static ConfigurationManager AddHostConfiguration(
         this ConfigurationManager configuration,
         string applicationName,

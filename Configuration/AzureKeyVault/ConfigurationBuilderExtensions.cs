@@ -97,7 +97,7 @@ public static class ConfigurationBuilderExtensions
         ArgumentNullException.ThrowIfNull(configBuilder);
         ArgumentNullException.ThrowIfNull(credential);
         ArgumentException.ThrowIfNullOrWhiteSpace(azureKeyVaultName);
-        Uri vaultUri = new Uri($"https://{azureKeyVaultName}.vault.azure.net/");
+        Uri vaultUri = new Uri($"https://{azureKeyVaultName.Trim()}.vault.azure.net/");
         return AddOdinPrefixedAzureKeyVault(configBuilder, vaultUri, prefix, credential, options);
     }
 

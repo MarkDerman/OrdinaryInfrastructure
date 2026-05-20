@@ -86,7 +86,7 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
         {
             options.UserSecretsId = null;
             options.AddEnvironmentVariables = false;
-            options.ConfigureAdditionalSources = configuration =>
+            options.AddExtraConfigurationSources = configuration =>
                 configuration.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     [TestSettingName] = "additional"
@@ -108,7 +108,7 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
         manager.AddHostConfiguration("Test.App", options =>
         {
             options.UserSecretsId = null;
-            options.ConfigureAdditionalSources = configuration =>
+            options.AddExtraConfigurationSources = configuration =>
                 configuration.AddInMemoryCollection(new Dictionary<string, string?>
                 {
                     [TestSettingName] = "additional"

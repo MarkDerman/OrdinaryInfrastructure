@@ -59,9 +59,20 @@ public sealed class HostConfigurationOptions
     /// </summary>
     /// <remarks>
     /// The action runs after the main app settings file and before user secrets, environment variables, and Key Vault.
+    /// It refines app defaults, not deployment secrets.
     /// Use this for extra files such as <c>serviceSettings.json</c>.
     /// </remarks>
-    public Action<ConfigurationManager>? ConfigureAdditionalSources { get; set; }
+    /// <example>
+    /// e.g. a Windows service host can load shared app settings first, then layer service-specific defaults:
+    /// <code>
+    /// builder.Configuration.AddHostConfiguration("Flash.FinanceRecons", options =>
+    /// {
+    ///     options.AddExtraConfigurationSources = configuration =>
+    ///         configuration.AddJsonFile("serviceSettings.json", optional: true, reloadOnChange: true);
+    /// });
+    /// </code>
+    /// </example>
+    public Action<ConfigurationManager>? AddExtraConfigurationSources { get; set; }
 
     /// <summary>
     /// Gets Azure Key Vault configuration options.

@@ -55,8 +55,7 @@ public static class HostConfigurationExtensions
 
         AddPrimaryJsonConfiguration(configuration, options);
 
-        // Host-specific sources load before secrets/env vars; they refine app defaults, not deployment secrets.
-        options.ConfigureAdditionalSources?.Invoke(configuration);
+        options.AddExtraConfigurationSources?.Invoke(configuration);
 
         AddUserSecretsIfConfigured(configuration, options);
         AddEnvironmentVariablesIfEnabled(configuration, options);

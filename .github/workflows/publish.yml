@@ -72,6 +72,7 @@ jobs:
         dotnet pack ./Testing/NUnitUtility/Odin.Testing.NUnitUtility.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Testing/XUnitUtility/Odin.Testing.XUnitUtility.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Testing/XUnitV2Utility/Odin.Testing.XUnitV2Utility.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
+        dotnet pack ./Testing/Core/Odin.Testing.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Testing/Fakes/Odin.Testing.Fakes.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Templating/Razor.Abstractions/Odin.Templating.Razor.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
         dotnet pack ./Templating/Razor/Odin.Templating.Razor.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR

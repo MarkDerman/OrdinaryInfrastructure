@@ -3,10 +3,11 @@
         <ImplicitUsings>true</ImplicitUsings>
         <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <Description>Implementation of a command dispatch pattern.
+        <Description>Implementation of ICommandDispatcher, and dependency injection extensions.
 
         </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
+        <RootNamespace>Odin.Commands</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

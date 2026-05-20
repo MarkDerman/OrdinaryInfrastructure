@@ -135,7 +135,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Queries", "Queries\Cor
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Commands", "Commands", "{21FDD309-C771-4DE5-8BDD-64556BA01C58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Commands", "Commands\Core\Odin.Commands.csproj", "{49389C27-BD09-4F31-B399-59D2AF31E7D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Commands.Core", "Commands\Core\Odin.Commands.Core.csproj", "{49389C27-BD09-4F31-B399-59D2AF31E7D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Commands.Abstractions", "Commands\Abstractions\Odin.Commands.Abstractions.csproj", "{8B45A90B-AE4D-4905-ABA1-B9FC586795DE}"
 EndProject

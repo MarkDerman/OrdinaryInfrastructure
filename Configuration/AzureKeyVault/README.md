@@ -10,26 +10,31 @@ This is often used to store secrets for multiple Environments and\or Systems in 
 
 ## Adding to IConfiguration in Application Startup
 
-1 - Add configuration
+1 - Add configuration from json \ environment variables \ configmaps.
 
 ```json
 {
     "AzureKeyVault": {
-        "Enabled": false,
+        "Enabled": true, // defaults to true if missing or invalid.
         "VaultName": "MyVault",
         "VaultUri": "https://MyVault.vault.azure.net", // either of the 'VaultXXX' properties can be used.
-        "TenantId": "XXXX",
-        "ClientId": "YYYY",
-        "Secret": "ZZZZ~~~~",
-        "Prefix": "Treasury-QA-"
+        "TenantId": "XXXX", // required
+        "ClientId": "YYYY", // required
+        "Secret": "ZZZZ~~~~", // required
+        "Prefix": "Treasury-QA-" // optional~~~~
     }
 }
 ```
 
-2 - Add package references to Odin.Email, and in this case Odin.Email.Mailgun
+2 - Add Nuget package Odin.Configuration.AzureKeyVault to your project.
 
-3 - Add IEmailSender to DI in your startup code...
+3 - After adding whatever configuration sources contain the 'AzureKeyVault' configuration needed in 1 above, 
+load your prefixed configuration from Azure KeyVault
 
 ```csharp
-    builder.Services.AddOdinEmailSending();
+    builder.Configuration.AddOdinPrefixedAzureKeyVault("AzureKeyVault");
+    // or
+    builder.Configuration.AddOdinPrefixedAzureKeyVault(IConfigurationSection configSection);
+    // or
+    builder.Configuration.AddOdinPrefixedAzureKeyVault(string keyVaultName, string prefix, TokenCredential creds);
 ```

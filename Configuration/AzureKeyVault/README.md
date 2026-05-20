@@ -20,8 +20,8 @@ This is often used to store secrets for multiple Environments and\or Systems in 
         "VaultUri": "https://MyVault.vault.azure.net", // either of the 'VaultXXX' properties can be used.
         "TenantId": "XXXX", // required
         "ClientId": "YYYY", // required
-        "Secret": "ZZZZ~~~~", // required
-        "Prefix": "Treasury-QA-" // optional~~~~
+        "Secret": "ZZZZ", // required
+        "Prefix": "Treasury-QA-" // optional
     }
 }
 ```

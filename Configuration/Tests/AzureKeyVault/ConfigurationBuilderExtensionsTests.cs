@@ -1,5 +1,6 @@
 namespace Tests.Odin.Configuration.AzureKeyVault;
 
-public class PrefixedAzureKeyVaultSecretManagerTests
+
+public class ConfigurationBuilderExtensionsTests
 {
 }

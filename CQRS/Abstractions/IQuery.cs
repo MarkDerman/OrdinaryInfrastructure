@@ -1,4 +1,4 @@
-namespace Odin.Queries;
+namespace Odin.CQRS;
 
 /// <summary>
 /// Defines a query request that returns

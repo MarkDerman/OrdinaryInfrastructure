@@ -1,4 +1,4 @@
-namespace Odin.Queries;
+namespace Odin.CQRS;
 
 /// <summary>
 /// Dispatches queries to their registered query handlers.

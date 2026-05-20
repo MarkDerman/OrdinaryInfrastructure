@@ -1,13 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <ImplicitUsings>true</ImplicitUsings>
-        <PackageIcon>icon.png</PackageIcon>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>CQRS;CommandBus;CommandDispatch;QueryBus;QueryDispatch;DDD;CommandQueryResponsibilitySegregation</PackageTags>
         <Description>Implementation of ICommandDispatcher, and dependency injection extensions.
 
         </Description>
+        <ImplicitUsings>true</ImplicitUsings>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
-        <RootNamespace>Odin.Commands</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,7 +18,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj"/>
-        <ProjectReference Include="..\Abstractions\Odin.Commands.Abstractions.csproj"/>
+        <ProjectReference Include="..\Abstractions\Odin.CQRS.Abstractions.csproj"/>
     </ItemGroup>
 
     <ItemGroup>

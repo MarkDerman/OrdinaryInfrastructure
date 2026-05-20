@@ -1,7 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Odin.Logging;
 
-namespace Odin.Commands;
+namespace Odin.CQRS;
 
 /// <summary>
 /// Dispatches commands by resolving their matching command handler from an <see cref="IServiceProvider"/>.

@@ -1,4 +1,4 @@
-namespace Odin.Commands;
+namespace Odin.CQRS;
 
 /// <summary>
 /// Generic treatment of ICommandHandler for use in testing and other scenarios.

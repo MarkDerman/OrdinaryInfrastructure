@@ -1,4 +1,4 @@
-namespace Odin.Commands;
+namespace Odin.CQRS;
 
 /// <summary>
 ///  Defines a command request that returns an operation result

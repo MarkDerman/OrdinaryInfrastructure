@@ -1,4 +1,4 @@
-namespace Odin.Commands;
+namespace Odin.CQRS;
 
 /// <summary>
 /// Dispatches commands to their registered command handlers.

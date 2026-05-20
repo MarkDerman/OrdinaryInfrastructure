@@ -1,12 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
+        <PackageTags>CQRS;CommandBus;CommandDispatch;QueryBus;QueryDispatch;DDD;CommandQueryResponsibilitySegregation</PackageTags>
+        <Description>Exposes all CQRS abstractions for use at domain level, namely:
+            - ICommand, ICommandHandler, ICommandDispatcher
+            - IQuery, IQueryHandler, IQueryDispatcher
+        </Description>
         <ImplicitUsings>true</ImplicitUsings>
         <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RootNamespace>Odin.Queries</RootNamespace>
-        <Description>All abstractions for the query dispatch pattern.
-
-        </Description>
+        <RootNamespace>Odin.CQRS</RootNamespace>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
 

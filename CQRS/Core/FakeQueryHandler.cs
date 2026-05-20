@@ -1,4 +1,4 @@
-namespace Odin.Queries;
+namespace Odin.CQRS;
 
 /// <summary>
 /// Returns the result passed in via the constructor.

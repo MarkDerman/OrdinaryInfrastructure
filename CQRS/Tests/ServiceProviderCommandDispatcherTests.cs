@@ -1,8 +1,8 @@
 using Moq;
-using Odin.Commands;
+using Odin.CQRS;
 using Odin.Logging;
 
-namespace Tests.Odin.Commands;
+namespace Tests.Odin.CQRS;
 
 public sealed class ServiceProviderCommandDispatcherTests
 {

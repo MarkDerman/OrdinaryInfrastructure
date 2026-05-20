@@ -24,7 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Testing\XUnitUtility\Odin.Testing.XUnitUtility.csproj" />
-    <ProjectReference Include="..\Core\Odin.Commands.Core.csproj" />
+    <ProjectReference Include="..\Core\Odin.CQRS.csproj" />
     <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />
   </ItemGroup>
 </Project>

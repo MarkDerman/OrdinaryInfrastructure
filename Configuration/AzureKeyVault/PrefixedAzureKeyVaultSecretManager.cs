@@ -11,16 +11,17 @@ public class PrefixedAzureKeyVaultSecretManager : KeyVaultSecretManager
     private readonly string _prefix;
 
     /// <summary>
-    /// Use custom prefix to handle shared Key Vaults where secrets are prefixed with e.g. {Project}-{Environment}-
+    /// Use custom prefix to handle shared Key Vaults where
+    /// secret names are prefixed with e.g. '{System}-{Environment}-'
     /// </summary>
-    /// <param name="prefix"></param>
-    public PrefixedAzureKeyVaultSecretManager(string prefix)
+    /// <param name="namePrefix">Optional secret name prefix</param>
+    public PrefixedAzureKeyVaultSecretManager(string? namePrefix)
     {
-        _prefix = prefix;
+        _prefix = string.IsNullOrWhiteSpace(namePrefix) ? string.Empty : namePrefix;
     }
 
     /// <summary>
-    /// Only load secrets that start with the prefix
+    /// Only load secrets with a Name that starts with the prefix
     /// </summary>
     /// <param name="secret"></param>
     /// <returns></returns>
@@ -37,7 +38,7 @@ public class PrefixedAzureKeyVaultSecretManager : KeyVaultSecretManager
     public override string GetKey(KeyVaultSecret secret)
     {
         // Strip prefix and map "-" to ":"
-        var key = secret.Name.Substring(_prefix.Length);
+        string key = secret.Name.Substring(_prefix.Length);
         return key.Replace("-", ":");
     }
 }

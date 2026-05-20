@@ -14,13 +14,14 @@ public static class ConfigurationBuilderExtensions
     /// Adds Azure Key Vault secrets filtered by a prefix to configuration.
     /// </summary>
     /// <param name="configBuilder">The configuration builder.</param>
-    /// <param name="azureKeyVaultConfigurationSectionName">Name of the AzureKeyVault configuration section.
-    /// The section must contain these string properties:
-    ///  - VaultName or VaultUri
-    ///  - TenantId
-    ///  - ClientId
-    ///  - Secret
-    ///  - Prefix (optional)
+    /// <param name="azureKeyVaultConfigurationSectionName">Name of the configuration section, 'AzureKeyVault' by default..
+    /// The IConfiguration section must have been previously populated to contain entries to satisfy the below:
+    ///  - bool Enabled (optional, defaults to true)
+    ///  - string VaultName or VaultUri (required)
+    ///  - string TenantId (required)
+    ///  - string ClientId (required)
+    ///  - string Secret (required)
+    ///  - string Prefix (optional)
     /// </param>
     /// <param name="options">The optional configuration options for AzureKeyVault load.
     /// If passed, the Manager property is set to PrefixedAzureKeyVaultSecretManager.</param>
@@ -31,7 +32,11 @@ public static class ConfigurationBuilderExtensions
     {
         IConfigurationRoot tempConfig = configBuilder.Build();
         IConfigurationSection? section = tempConfig.GetSection(azureKeyVaultConfigurationSectionName);
-        if (section == null!) return configBuilder;
+        if (section == null!)
+        {
+            throw new InvalidOperationException(
+                $"{nameof(AddOdinPrefixedAzureKeyVault)}: {azureKeyVaultConfigurationSectionName} configuration section not found.");
+        }
         return AddOdinPrefixedAzureKeyVault(configBuilder, section, options);
     }
 
@@ -48,6 +53,13 @@ public static class ConfigurationBuilderExtensions
         AzureKeyVaultConfigurationOptions? options = null)
     {
         ArgumentNullException.ThrowIfNull(akvConfigSection);
+        string? keyVaultEnabledSetting = akvConfigSection["Enabled"];
+        if (!bool.TryParse(keyVaultEnabledSetting, out bool enabled))
+        {
+            enabled = true; // Default scenario is enabled, unless Enabled is explicitly set to false;
+        }
+        if (!enabled) return configBuilder; // Abort if disabled.
+        
         string? keyVaultName = akvConfigSection["VaultName"]!;
         string? keyVaultUri = akvConfigSection["VaultUri"]!;
         string? tenantId = akvConfigSection["TenantId"]!;
@@ -61,7 +73,9 @@ public static class ConfigurationBuilderExtensions
         if (!nameOrUriExists || string.IsNullOrWhiteSpace(tenantId) || string.IsNullOrWhiteSpace(clientId)
             || string.IsNullOrWhiteSpace(secret))
         {
-            return configBuilder;
+                throw new InvalidOperationException(
+                    $"{nameof(AddOdinPrefixedAzureKeyVault)}: Configuration section requires all of " +
+                    $"TenantId, ClientId, Secret and either of VaultName or VaultUri.");
         }
 
         ClientSecretCredential secretCredentials = new ClientSecretCredential(tenantId, clientId, secret);
@@ -70,7 +84,7 @@ public static class ConfigurationBuilderExtensions
             return configBuilder.AddOdinPrefixedAzureKeyVault(keyVaultName, prefix, secretCredentials, options);
         }
 
-        Uri akvUri = new Uri(keyVaultUri);
+        Uri akvUri = new Uri(keyVaultUri); // Allow an invalid VaultUri to throw an Exception.
         return configBuilder.AddOdinPrefixedAzureKeyVault(akvUri, prefix, secretCredentials, options);
     }
 

@@ -109,7 +109,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{51D0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.NUnitUtility", "Testing\NUnitUtility\Odin.Testing.NUnitUtility.csproj", "{46BCDE44-FA4E-4AE0-A6C0-9AFAE1BE09DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Configuration.PrefixedAzureKeyVaultSecretManager", "Configuration\PrefixedAzureKeyVaultSecretManager\Odin.Configuration.PrefixedAzureKeyVaultSecretManager.csproj", "{92E365EC-AC42-4F5D-AC55-E9020CD631ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Configuration.AzureKeyVault", "Configuration\AzureKeyVault\Odin.Configuration.AzureKeyVault.csproj", "{92E365EC-AC42-4F5D-AC55-E9020CD631ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Odin.Testing.Fakes", "Testing\Fakes\Odin.Testing.Fakes.csproj", "{9B70E469-CF39-45B0-B88E-7B28943BF2FE}"
 EndProject

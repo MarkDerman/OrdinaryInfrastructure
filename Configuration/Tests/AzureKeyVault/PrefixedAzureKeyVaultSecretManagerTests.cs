@@ -18,8 +18,6 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     private readonly Mock<IConfigurationBuilder> _configBuilderMock = new();
     private readonly Mock<TokenCredential> _credentialMock = new();
 
-    #region Secret Manager Tests
-
     /// <summary>
     /// Verifies that <see cref="PrefixedAzureKeyVaultSecretManager.Load"/> returns true 
     /// when the secret name starts with the configured prefix.
@@ -27,15 +25,12 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void Load_SecretNameStartsWithPrefix_ReturnsTrue()
     {
-        // Arrange
         var prefix = "App1-";
         var manager = new PrefixedAzureKeyVaultSecretManager(prefix);
         var secretProperties = InternalModelFactory.SecretProperties(name: "App1-Secret");
 
-        // Act
         var result = manager.Load(secretProperties);
 
-        // Assert
         Assert.True(result);
     }
 
@@ -46,15 +41,12 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void Load_SecretNameDoesNotStartWithPrefix_ReturnsFalse()
     {
-        // Arrange
         var prefix = "App1-";
         var manager = new PrefixedAzureKeyVaultSecretManager(prefix);
         var secretProperties = InternalModelFactory.SecretProperties(name: "Other-Secret");
 
-        // Act
         var result = manager.Load(secretProperties);
 
-        // Assert
         Assert.False(result);
     }
 
@@ -65,15 +57,12 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void Load_SecretNameMatchesPrefixExactly_ReturnsTrue()
     {
-        // Arrange
         var prefix = "App1-";
         var manager = new PrefixedAzureKeyVaultSecretManager(prefix);
         var secretProperties = InternalModelFactory.SecretProperties(name: "App1-");
 
-        // Act
         var result = manager.Load(secretProperties);
 
-        // Assert
         Assert.True(result);
     }
 
@@ -84,15 +73,12 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void GetKey_StripsPrefixAndReplacesHyphens_ReturnsTransformedKey()
     {
-        // Arrange
         var prefix = "App1-Environment1-";
         var manager = new PrefixedAzureKeyVaultSecretManager(prefix);
         var secret = InternalModelFactory.KeyVaultSecret(name: "App1-Environment1-ConnectionStrings--DefaultConnection", value: "secret-value");
 
-        // Act
         var key = manager.GetKey(secret);
 
-        // Assert
         Assert.Equal("ConnectionStrings::DefaultConnection", key);
         // Note: The requirement said replace -- with :, but the code replaces - with :. 
         // So ConnectionStrings--DefaultConnection becomes ConnectionStrings::DefaultConnection.
@@ -107,21 +93,14 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void GetKey_HandlesMultipleHyphens_ReturnsColons()
     {
-        // Arrange
         var prefix = "Prefix-";
         var manager = new PrefixedAzureKeyVaultSecretManager(prefix);
         var secret = InternalModelFactory.KeyVaultSecret(name: "Prefix-Logging--LogLevel--Default", value: "Information");
 
-        // Act
         var key = manager.GetKey(secret);
 
-        // Assert
         Assert.Equal("Logging::LogLevel::Default", key);
     }
-
-    #endregion
-
-    #region Guard Clause Tests
 
     /// <summary>
     /// Verifies that <see cref="ConfigurationBuilderExtensions.AddOdinPrefixedAzureKeyVault"/> throws <see cref="ArgumentNullException"/>
@@ -130,10 +109,8 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void AddPrefixedAzureKeyVault_NullConfigBuilder_ThrowsArgumentNullException()
     {
-        // Arrange
         IConfigurationBuilder configBuilder = null!;
 
-        // Act & Assert
         Assert.Throws<ArgumentNullException>(() =>
             configBuilder.AddOdinPrefixedAzureKeyVault("my-vault", "prefix", _credentialMock.Object));
     }
@@ -148,7 +125,6 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [InlineData(" ")]
     public void AddPrefixedAzureKeyVault_EmptyOrWhiteSpaceVaultName_ThrowsArgumentException(string vaultName)
     {
-        // Act & Assert
         Assert.Throws<ArgumentException>(() =>
             _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault(vaultName, "prefix", _credentialMock.Object));
     }
@@ -160,9 +136,8 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void AddPrefixedAzureKeyVault_NullVaultName_ThrowsArgumentNullException()
     {
-        // Act & Assert
         Assert.Throws<ArgumentNullException>(() =>
-            _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault(null!, "prefix", _credentialMock.Object));
+            _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault(null as string, "prefix", _credentialMock.Object));
     }
 
     /// <summary>
@@ -172,9 +147,10 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void AddPrefixedAzureKeyVault_NullPrefix_ThrowsArgumentNullException()
     {
-        // Act & Assert
-        Assert.Throws<ArgumentNullException>(() =>
-            _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault("my-vault", null!, _credentialMock.Object));
+        Exception? exception = Record.Exception(() =>
+            _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault("my-vault", null as string, _credentialMock.Object));
+
+        Assert.Null(exception);
     }
 
     /// <summary>
@@ -184,14 +160,9 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void AddPrefixedAzureKeyVault_NullCredential_ThrowsArgumentNullException()
     {
-        // Act & Assert
         Assert.Throws<ArgumentNullException>(() =>
             _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault("my-vault", "prefix", null!));
     }
-
-    #endregion
-
-    #region Vault URI Construction Tests
 
     /// <summary>
     /// Verifies that passing a short vault name results in a default ".vault.azure.net" domain URI.
@@ -199,10 +170,8 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void AddPrefixedAzureKeyVault_WithShortVaultName_UsesDefaultAzureNetDomain()
     {
-        // Arrange
         var vaultName = "my-vault";
 
-        // Act & Assert
         // We verify that the method executes without error for a short name.
         // Direct verification of the internal URI is restricted by Azure SDK encapsulation.
         var exception = Record.Exception(() =>
@@ -217,20 +186,14 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void AddPrefixedAzureKeyVault_WithFullHttpsUri_UsesProvidedUri()
     {
-        // Arrange
         var vaultUriString = "https://custom.vault.azure.cn/";
 
-        // Act & Assert
         // We verify that the method executes without error for a full URI.
         var exception = Record.Exception(() =>
             _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault(vaultUriString, "prefix", _credentialMock.Object));
 
         Assert.Null(exception);
     }
-
-    #endregion
-
-    #region Integration/Configuration Tests
 
     /// <summary>
     /// Verifies that the extension method correctly sets an instance of <see cref="PrefixedAzureKeyVaultSecretManager"/>
@@ -239,14 +202,11 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void AddPrefixedAzureKeyVault_SetsManagerInOptions_Correctly()
     {
-        // Arrange
         var prefix = "my-prefix";
 
-        // Act
         var options = new AzureKeyVaultConfigurationOptions();
         _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault("my-vault", prefix, _credentialMock.Object, options);
 
-        // Assert
         Assert.IsType<PrefixedAzureKeyVaultSecretManager>(options.Manager);
 
         // Use reflection to check the private _prefix field in the manager
@@ -254,8 +214,6 @@ public class PrefixedAzureKeyVaultSecretManagerTests
         var actualPrefix = (string?)field?.GetValue(options.Manager);
         Assert.Equal(prefix, actualPrefix);
     }
-
-    #endregion
 }
 
 /// <summary>

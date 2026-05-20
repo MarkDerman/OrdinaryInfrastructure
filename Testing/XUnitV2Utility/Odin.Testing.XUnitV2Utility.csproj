@@ -11,6 +11,9 @@
         <PackageReference Include="xunit.assert"/>
     </ItemGroup>
     <ItemGroup>
+        <ProjectReference Include="..\Core\Odin.Testing.csproj" />
+    </ItemGroup>
+    <ItemGroup>
         <None Include="../../Assets/icon.png" Pack="true" PackagePath=""/>
     </ItemGroup>
 </Project>

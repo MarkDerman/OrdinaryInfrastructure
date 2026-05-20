@@ -53,12 +53,19 @@ public static class HostConfigurationExtensions
         options.UserSecretsId = applicationName;
         configure?.Invoke(options);
 
-        AddPrimaryJsonConfiguration(configuration, options);
+        configuration.AddJsonFile(GetAppSettingsPath(configuration, options), false, true);
 
         options.AddExtraConfigurationSources?.Invoke(configuration);
 
-        AddUserSecretsIfConfigured(configuration, options);
-        AddEnvironmentVariablesIfEnabled(configuration, options);
+        if (!string.IsNullOrWhiteSpace(options.UserSecretsId))
+        {
+            configuration.AddUserSecrets(options.UserSecretsId);
+        }
+
+        if (options.AddEnvironmentVariables)
+        {
+            configuration.AddEnvironmentVariables();
+        }
 
         // Key Vault loads last so real secret values replace placeholders such as KEYVAULT.
         AddKeyVaultConfiguration(configuration, applicationName, options.KeyVault);
@@ -98,7 +105,7 @@ public static class HostConfigurationExtensions
         }
 
         string prefix = GetKeyVaultPrefix(section, configuration, applicationName, options);
-        TokenCredential? credential = CreateKeyVaultCredential(configuration, options);
+        TokenCredential? credential = CreateKeyVaultCredential(configuration, section, options);
         if (credential == null)
         {
             return configuration;
@@ -108,28 +115,36 @@ public static class HostConfigurationExtensions
         return configuration;
     }
 
-    private static TokenCredential? CreateKeyVaultCredential(
+    internal static TokenCredential? CreateKeyVaultCredential(
         IConfiguration configuration,
+        IConfigurationSection section,
         KeyVaultConfigurationOptions options)
     {
-        IConfigurationSection section = configuration.GetSection(options.SectionName);
         string? configuredClientSecret = FirstNonBlank(section[KeyVaultClientSecretKey], section[SecretKey]);
-        string? environmentClientSecret = FirstNonBlank(
-            Environment.GetEnvironmentVariable(AzureKeyVaultSecretEnvironmentVariable));
-
-        string? clientSecret = FirstNonBlank(configuredClientSecret, environmentClientSecret);
-        if (!string.IsNullOrWhiteSpace(clientSecret))
+        if (configuredClientSecret != null)
         {
             return CreateClientSecretCredential(
                 configuration,
                 section,
                 options,
                 configuredClientSecret,
-                clientSecret);
+                useConfiguredClientIdFirst: true);
+        }
+
+        string? environmentClientSecret = FirstNonBlank(
+            Environment.GetEnvironmentVariable(AzureKeyVaultSecretEnvironmentVariable));
+        if (environmentClientSecret != null)
+        {
+            return CreateClientSecretCredential(
+                configuration,
+                section,
+                options,
+                environmentClientSecret,
+                useConfiguredClientIdFirst: false);
         }
 
         string? managedIdentityClientId = FirstNonBlank(section[ManagedIdentityClientIdKey]);
-        if (!string.IsNullOrWhiteSpace(managedIdentityClientId))
+        if (managedIdentityClientId != null)
         {
             return new ManagedIdentityCredential(
                 ManagedIdentityId.FromUserAssignedClientId(managedIdentityClientId));
@@ -148,8 +163,8 @@ public static class HostConfigurationExtensions
         IConfiguration configuration,
         IConfigurationSection section,
         KeyVaultConfigurationOptions options,
-        string? configuredClientSecret,
-        string clientSecret)
+        string clientSecret,
+        bool useConfiguredClientIdFirst)
     {
         string? tenantId = FirstNonBlank(
             configuration[options.AzureAdTenantIdKey],
@@ -158,7 +173,7 @@ public static class HostConfigurationExtensions
 
         string? clientId = GetClientIdForClientSecret(
             section,
-            preferConfiguredClientId: !string.IsNullOrWhiteSpace(configuredClientSecret));
+            useConfiguredClientIdFirst);
 
         if (string.IsNullOrWhiteSpace(tenantId) || string.IsNullOrWhiteSpace(clientId))
         {
@@ -168,15 +183,15 @@ public static class HostConfigurationExtensions
         return new ClientSecretCredential(tenantId, clientId, clientSecret);
     }
 
-    private static string? GetClientIdForClientSecret(
+    internal static string? GetClientIdForClientSecret(
         IConfigurationSection section,
-        bool preferConfiguredClientId)
+        bool useConfiguredClientIdFirst)
     {
         string? configuredClientId = FirstNonBlank(section[KeyVaultClientIdKey], section[ClientIdKey]);
         string? environmentClientId = FirstNonBlank(
             Environment.GetEnvironmentVariable(AzureKeyVaultClientIdEnvironmentVariable));
 
-        return preferConfiguredClientId
+        return useConfiguredClientIdFirst
             ? FirstNonBlank(configuredClientId, environmentClientId)
             : FirstNonBlank(environmentClientId, configuredClientId);
     }
@@ -187,44 +202,10 @@ public static class HostConfigurationExtensions
     {
         string runtimeEnvironment = FirstNonBlank(
             configuration[options.EnvironmentKey],
-            options.DefaultEnvironmentName)!;
+            options.DefaultEnvironmentName)!.Trim();
 
         return options.LocalEnvironmentNames.Any(
-            localName => runtimeEnvironment.Equals(localName, StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static void AddPrimaryJsonConfiguration(
-        ConfigurationManager configuration,
-        HostConfigurationOptions options)
-    {
-        // Base JSON loads first so later sources can override placeholders and environment defaults.
-        configuration.AddJsonFile(GetAppSettingsPath(configuration, options), false, true);
-    }
-
-    private static void AddUserSecretsIfConfigured(
-        ConfigurationManager configuration,
-        HostConfigurationOptions options)
-    {
-        if (string.IsNullOrWhiteSpace(options.UserSecretsId))
-        {
-            return;
-        }
-
-        // User secrets default to applicationName, but hosts can use a separate local secret bucket.
-        configuration.AddUserSecrets(options.UserSecretsId);
-    }
-
-    private static void AddEnvironmentVariablesIfEnabled(
-        ConfigurationManager configuration,
-        HostConfigurationOptions options)
-    {
-        if (!options.AddEnvironmentVariables)
-        {
-            return;
-        }
-
-        // Environment variables override JSON and user secrets for deployment-time configuration.
-        configuration.AddEnvironmentVariables();
+            localName => runtimeEnvironment.Equals(localName?.Trim(), StringComparison.OrdinalIgnoreCase));
     }
 
     private static string GetAppSettingsPath(
@@ -242,14 +223,13 @@ public static class HostConfigurationExtensions
         string applicationName,
         KeyVaultConfigurationOptions options)
     {
-        string prefixApplicationName = string.IsNullOrWhiteSpace(options.PrefixApplicationName)
-            ? GetDefaultPrefixApplicationName(applicationName)
-            : options.PrefixApplicationName;
-        string environment = configuration[options.EnvironmentKey] ?? options.DefaultEnvironmentName;
+        string prefixApplicationName = FirstNonBlank(options.PrefixApplicationName)?.Trim()
+            ?? GetDefaultPrefixApplicationName(applicationName);
+        string environment = FirstNonBlank(configuration[options.EnvironmentKey], options.DefaultEnvironmentName)!.Trim();
         return $"{prefixApplicationName}-{environment}-";
     }
 
-    private static string GetKeyVaultPrefix(
+    internal static string GetKeyVaultPrefix(
         IConfigurationSection section,
         IConfiguration configuration,
         string applicationName,
@@ -271,7 +251,7 @@ public static class HostConfigurationExtensions
         {
             if (!string.IsNullOrWhiteSpace(value))
             {
-                return value;
+                return value.Trim();
             }
         }
 

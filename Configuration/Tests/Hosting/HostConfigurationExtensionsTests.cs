@@ -1,7 +1,6 @@
 using Azure.Identity;
 using Microsoft.Extensions.Configuration;
 using Odin.Configuration.Hosting;
-using System.Reflection;
 
 namespace Tests.Odin.Configuration.Hosting;
 
@@ -210,9 +209,25 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
             ["AzureKeyVault:KeyVaultClientId"] = "configured-client-id"
         });
 
-        string? clientId = GetClientIdForClientSecret(manager, preferConfiguredClientId: true);
+        string? clientId = GetClientIdForClientSecret(manager, useConfiguredClientIdFirst: true);
 
         Assert.Equal("configured-client-id", clientId);
+    }
+
+    [Fact]
+    public void Client_id_values_are_trimmed()
+    {
+        Environment.SetEnvironmentVariable(AzureKeyVaultClientId, " environment-client-id ");
+        ConfigurationManager manager = CreateConfiguration(new Dictionary<string, string?>
+        {
+            ["AzureKeyVault:KeyVaultClientId"] = " configured-client-id "
+        });
+
+        string? configuredClientId = GetClientIdForClientSecret(manager, useConfiguredClientIdFirst: true);
+        string? environmentClientId = GetClientIdForClientSecret(manager, useConfiguredClientIdFirst: false);
+
+        Assert.Equal("configured-client-id", configuredClientId);
+        Assert.Equal("environment-client-id", environmentClientId);
     }
 
     [Fact]
@@ -224,7 +239,7 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
             ["AzureKeyVault:KeyVaultClientId"] = "configured-client-id"
         });
 
-        string? clientId = GetClientIdForClientSecret(manager, preferConfiguredClientId: false);
+        string? clientId = GetClientIdForClientSecret(manager, useConfiguredClientIdFirst: false);
 
         Assert.Equal("environment-client-id", clientId);
     }
@@ -244,11 +259,39 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
     }
 
     [Fact]
+    public void Default_key_vault_prefix_trims_configured_parts()
+    {
+        ConfigurationManager manager = CreateConfiguration(new Dictionary<string, string?>
+        {
+            ["Environment"] = " Production "
+        });
+
+        string prefix = GetKeyVaultPrefix(manager, "Test.App", options =>
+            options.PrefixApplicationName = " App ");
+
+        Assert.Equal("App-Production-", prefix);
+    }
+
+    [Fact]
     public void Development_without_key_vault_credential_skips_key_vault_configuration()
     {
         ConfigurationManager manager = CreateConfiguration(new Dictionary<string, string?>
         {
             ["Environment"] = "Development",
+            ["AzureKeyVault:Name"] = "test-vault"
+        });
+
+        Exception? exception = Record.Exception(() => manager.AddKeyVaultConfiguration("Test.App"));
+
+        Assert.Null(exception);
+    }
+
+    [Fact]
+    public void Local_environment_names_ignore_surrounding_whitespace()
+    {
+        ConfigurationManager manager = CreateConfiguration(new Dictionary<string, string?>
+        {
+            ["Environment"] = " Development ",
             ["AzureKeyVault:Name"] = "test-vault"
         });
 
@@ -283,35 +326,39 @@ public sealed class HostConfigurationExtensionsTests : IDisposable
 
     private static object? CreateKeyVaultCredential(ConfigurationManager manager)
     {
-        MethodInfo method = typeof(HostConfigurationExtensions).GetMethod(
-            "CreateKeyVaultCredential",
-            BindingFlags.NonPublic | BindingFlags.Static)!;
-
-        return method.Invoke(null, [manager, new KeyVaultConfigurationOptions()]);
+        return HostConfigurationExtensions.CreateKeyVaultCredential(
+            manager,
+            manager.GetSection("AzureKeyVault"),
+            new KeyVaultConfigurationOptions());
     }
 
     private static string? GetClientIdForClientSecret(
         ConfigurationManager manager,
-        bool preferConfiguredClientId)
+        bool useConfiguredClientIdFirst)
     {
-        MethodInfo method = typeof(HostConfigurationExtensions).GetMethod(
-            "GetClientIdForClientSecret",
-            BindingFlags.NonPublic | BindingFlags.Static)!;
-
-        return (string?)method.Invoke(
-            null,
-            [manager.GetSection("AzureKeyVault"), preferConfiguredClientId]);
+        return HostConfigurationExtensions.GetClientIdForClientSecret(
+            manager.GetSection("AzureKeyVault"),
+            useConfiguredClientIdFirst);
     }
 
     private static string GetKeyVaultPrefix(ConfigurationManager manager, string applicationName)
     {
-        MethodInfo method = typeof(HostConfigurationExtensions).GetMethod(
-            "GetKeyVaultPrefix",
-            BindingFlags.NonPublic | BindingFlags.Static)!;
+        return GetKeyVaultPrefix(manager, applicationName, _ => { });
+    }
 
-        return (string)method.Invoke(
-            null,
-            [manager.GetSection("AzureKeyVault"), manager, applicationName, new KeyVaultConfigurationOptions()])!;
+    private static string GetKeyVaultPrefix(
+        ConfigurationManager manager,
+        string applicationName,
+        Action<KeyVaultConfigurationOptions> configure)
+    {
+        KeyVaultConfigurationOptions options = new();
+        configure(options);
+
+        return HostConfigurationExtensions.GetKeyVaultPrefix(
+            manager.GetSection("AzureKeyVault"),
+            manager,
+            applicationName,
+            options);
     }
 
     private void CaptureAndClear(string name)

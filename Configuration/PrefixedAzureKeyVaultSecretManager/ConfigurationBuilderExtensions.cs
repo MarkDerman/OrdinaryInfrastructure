@@ -7,6 +7,9 @@ namespace Microsoft.Extensions.Configuration;
 
 public static class ConfigurationBuilderExtensions
 {
+    public const string VaultUriMustUseHttpsMessage = "Azure Key Vault URI must use HTTPS.";
+    public const string VaultUriMustNotIncludePathMessage = "Azure Key Vault URI must not include a path or query string.";
+
     /// <summary>
     /// Adds Azure Key Vault secrets filtered by a prefix to configuration.
     /// </summary>
@@ -18,17 +21,14 @@ public static class ConfigurationBuilderExtensions
     /// <returns>The configuration builder.</returns>
     public static IConfigurationBuilder AddOdinPrefixedAzureKeyVault(this IConfigurationBuilder configBuilder,
         string vaultNameOrUri,
-        string? prefix,
+        string prefix,
         TokenCredential credential,
         AzureKeyVaultConfigurationOptions? options = null)
     {
-        // Guard Clauses
         ArgumentNullException.ThrowIfNull(configBuilder);
         ArgumentException.ThrowIfNullOrWhiteSpace(vaultNameOrUri);
         ArgumentNullException.ThrowIfNull(prefix);
         ArgumentNullException.ThrowIfNull(credential);
-
-        prefix = prefix?.Trim() ?? string.Empty;
 
         options ??= new AzureKeyVaultConfigurationOptions();
         options.Manager = new PrefixedAzureKeyVaultSecretManager(prefix);
@@ -36,11 +36,24 @@ public static class ConfigurationBuilderExtensions
         return configBuilder.AddAzureKeyVault(CreateVaultUri(vaultNameOrUri), credential, options);
     }
 
-    private static Uri CreateVaultUri(string vaultNameOrUri)
+    internal static Uri CreateVaultUri(string vaultNameOrUri)
     {
         string trimmedVaultNameOrUri = vaultNameOrUri.Trim().TrimEnd('/');
-        return trimmedVaultNameOrUri.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
-            ? new Uri(trimmedVaultNameOrUri)
-            : new Uri($"https://{trimmedVaultNameOrUri}.vault.azure.net/");
+        if (!Uri.TryCreate(trimmedVaultNameOrUri, UriKind.Absolute, out Uri? vaultUri))
+        {
+            return new Uri($"https://{trimmedVaultNameOrUri}.vault.azure.net/");
+        }
+
+        if (!vaultUri.Scheme.Equals(Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new ArgumentException(VaultUriMustUseHttpsMessage, nameof(vaultNameOrUri));
+        }
+
+        if (vaultUri.AbsolutePath != "/" || !string.IsNullOrEmpty(vaultUri.Query))
+        {
+            throw new ArgumentException(VaultUriMustNotIncludePathMessage, nameof(vaultNameOrUri));
+        }
+
+        return vaultUri;
     }
 }

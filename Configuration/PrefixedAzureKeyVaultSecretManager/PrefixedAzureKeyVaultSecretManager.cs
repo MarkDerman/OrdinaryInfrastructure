@@ -16,7 +16,8 @@ public class PrefixedAzureKeyVaultSecretManager : KeyVaultSecretManager
     /// <param name="prefix">The secret name prefix to load and strip from configuration keys.</param>
     public PrefixedAzureKeyVaultSecretManager(string prefix)
     {
-        _prefix = prefix;
+        ArgumentNullException.ThrowIfNull(prefix);
+        _prefix = prefix.Trim();
     }
 
     /// <summary>
@@ -26,7 +27,7 @@ public class PrefixedAzureKeyVaultSecretManager : KeyVaultSecretManager
     /// <returns><c>true</c> when the secret name starts with the prefix; otherwise <c>false</c>.</returns>
     public override bool Load(SecretProperties secret)
     {
-        return secret.Name.StartsWith(_prefix);
+        return secret.Name.StartsWith(_prefix, StringComparison.Ordinal);
     }
 
     /// <summary>

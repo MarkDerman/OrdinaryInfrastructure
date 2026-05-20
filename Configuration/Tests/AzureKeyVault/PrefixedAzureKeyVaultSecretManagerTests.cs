@@ -77,6 +77,17 @@ public class PrefixedAzureKeyVaultSecretManagerTests
         Assert.True(result);
     }
 
+    [Fact]
+    public void Load_SecretNameUsesDifferentCase_ReturnsFalse()
+    {
+        var manager = new PrefixedAzureKeyVaultSecretManager("App1-");
+        var secretProperties = InternalModelFactory.SecretProperties(name: "app1-Secret");
+
+        var result = manager.Load(secretProperties);
+
+        Assert.False(result);
+    }
+
     /// <summary>
     /// Verifies that <see cref="PrefixedAzureKeyVaultSecretManager.GetKey"/> strips the prefix 
     /// and replaces every remaining hyphen with a colon.
@@ -111,6 +122,17 @@ public class PrefixedAzureKeyVaultSecretManagerTests
 
         // Assert
         Assert.Equal("Logging::LogLevel::Default", key);
+    }
+
+    [Fact]
+    public void GetKey_TrimsPrefixBeforeRemovingIt()
+    {
+        var manager = new PrefixedAzureKeyVaultSecretManager(" Prefix- ");
+        var secret = InternalModelFactory.KeyVaultSecret(name: "Prefix-Logging--LogLevel", value: "Information");
+
+        var key = manager.GetKey(secret);
+
+        Assert.Equal("Logging::LogLevel", key);
     }
 
     #endregion
@@ -193,16 +215,9 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void AddPrefixedAzureKeyVault_WithShortVaultName_UsesDefaultAzureNetDomain()
     {
-        // Arrange
-        var vaultName = "my-vault";
+        Uri vaultUri = ConfigurationBuilderExtensions.CreateVaultUri(" my-vault/ ");
 
-        // Act & Assert
-        // We verify that the method executes without error for a short name.
-        // Direct verification of the internal URI is restricted by Azure SDK encapsulation.
-        var exception = Record.Exception(() =>
-            _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault(vaultName, "prefix", _credentialMock.Object));
-
-        Assert.Null(exception);
+        Assert.Equal("https://my-vault.vault.azure.net/", vaultUri.ToString());
     }
 
     /// <summary>
@@ -211,15 +226,33 @@ public class PrefixedAzureKeyVaultSecretManagerTests
     [Fact]
     public void AddPrefixedAzureKeyVault_WithFullHttpsUri_UsesProvidedUri()
     {
-        // Arrange
-        var vaultUriString = "https://custom.vault.azure.cn/";
+        Uri vaultUri = ConfigurationBuilderExtensions.CreateVaultUri("https://custom.vault.azure.cn/");
 
-        // Act & Assert
-        // We verify that the method executes without error for a full URI.
-        var exception = Record.Exception(() =>
-            _configBuilderMock.Object.AddOdinPrefixedAzureKeyVault(vaultUriString, "prefix", _credentialMock.Object));
+        Assert.Equal("https://custom.vault.azure.cn/", vaultUri.ToString());
+    }
 
-        Assert.Null(exception);
+    [Fact]
+    public void AddPrefixedAzureKeyVault_WithHttpUri_ThrowsClearError()
+    {
+        ArgumentException exception = Assert.Throws<ArgumentException>(
+            () => ConfigurationBuilderExtensions.CreateVaultUri("http://custom.vault.azure.net/"));
+
+        Assert.Equal(
+            ConfigurationBuilderExtensions.VaultUriMustUseHttpsMessage + " (Parameter 'vaultNameOrUri')",
+            exception.Message);
+    }
+
+    [Theory]
+    [InlineData("https://custom.vault.azure.net/secrets/name")]
+    [InlineData("https://custom.vault.azure.net/?api-version=1")]
+    public void AddPrefixedAzureKeyVault_WithPathOrQuery_ThrowsClearError(string vaultUri)
+    {
+        ArgumentException exception = Assert.Throws<ArgumentException>(
+            () => ConfigurationBuilderExtensions.CreateVaultUri(vaultUri));
+
+        Assert.Equal(
+            ConfigurationBuilderExtensions.VaultUriMustNotIncludePathMessage + " (Parameter 'vaultNameOrUri')",
+            exception.Message);
     }
 
     #endregion

@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <ImplicitUsings>true</ImplicitUsings>
-        <PackageIcon>icon.png</PackageIcon>
+            <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <Description>Provides ILoggerWrapper that extends .NET's ILogger of T
             with all the LogXXX(...) calls as provided by the .NET LoggerExtensions extension methods.

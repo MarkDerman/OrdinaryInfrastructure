@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                <ImplicitUsings>true</ImplicitUsings>
-        
+                    
         <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Utility</RootNamespace>
         <Description>Simple support for storing tax rate changes over time in application configuration, 

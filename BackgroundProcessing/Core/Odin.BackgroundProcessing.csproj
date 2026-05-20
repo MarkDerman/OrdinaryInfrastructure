@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                <ImplicitUsings>true</ImplicitUsings>
-        
+                    
         <PackageIcon>icon.png</PackageIcon>
         <Description>A now redundant abstraction of Hangfire's job processing functionality
             for the original purpose of mocking Hangfire. Abstracts background processing related use cases via

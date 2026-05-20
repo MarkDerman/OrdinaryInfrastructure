@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
         
-    <ImplicitUsings>true</ImplicitUsings>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Provides an IResubscribingRabbitSubscription concept useful for resilient queue consumption 
       from RabbitMQ, that is not provided by RabbitMQ.Client.

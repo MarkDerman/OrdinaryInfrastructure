@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <RootNamespace>Odin.System</RootNamespace>
-        <ImplicitUsings>true</ImplicitUsings>
-        <PackageIcon>icon.png</PackageIcon>
+            <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <Description>Provides 2 'result' records that supporting returning a value or not, as well as a generic messages Type,
             should string[] Result.Messages not match a use case.

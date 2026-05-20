@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
                 
-        <ImplicitUsings>true</ImplicitUsings>
-        <PackageIcon>icon.png</PackageIcon>
+            <PackageIcon>icon.png</PackageIcon>
         <Description>Office365 support for IEmailSender via Microsoft Graph (not SMTP).
 
 

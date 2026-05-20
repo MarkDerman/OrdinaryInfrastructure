@@ -4,8 +4,7 @@
         <Description>Implementation of ICommandDispatcher, and dependency injection extensions.
 
         </Description>
-        <ImplicitUsings>true</ImplicitUsings>
-        <PackageIcon>icon.png</PackageIcon>
+            <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
 
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->

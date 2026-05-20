@@ -2,7 +2,6 @@
   <PropertyGroup>
         
     <RootNamespace>Odin.Templating</RootNamespace>
-    <ImplicitUsings>true</ImplicitUsings>
     <PackageIcon>icon.png</PackageIcon>
     <Description>Provides OrDINary use case rendering of embedded '.cshtml' templates using Razor syntax outside
       the context of ASP.Net, via IRazorTemplateRenderer.RenderAsync-TModel(string templateKey, TModel viewModel)

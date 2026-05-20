@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
         <UserSecretsId>Tests.Odin</UserSecretsId>
-    <ImplicitUsings>true</ImplicitUsings>
     <NoWarn>1591;CS0618</NoWarn>
         
     

@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                <ImplicitUsings>true</ImplicitUsings>
-        
+                    
         <PackageIcon>icon.png</PackageIcon>
         <Description>Intended to support Design by Contract by providing facilities
             to support pre-conditions, post-conditions and class invariant implementations.

@@ -3,7 +3,6 @@
         
     <UserSecretsId>Tests.Odin.Messaging</UserSecretsId>
     <GenerateProgramFile>false</GenerateProgramFile>
-    <ImplicitUsings>true</ImplicitUsings>
     <NoWarn>1591;</NoWarn>
   </PropertyGroup>
 

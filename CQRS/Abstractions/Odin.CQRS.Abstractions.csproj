@@ -5,8 +5,7 @@
             - ICommand, ICommandHandler, ICommandDispatcher
             - IQuery, IQueryHandler, IQueryDispatcher
         </Description>
-        <ImplicitUsings>true</ImplicitUsings>
-        <PackageIcon>icon.png</PackageIcon>
+            <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RootNamespace>Odin.CQRS</RootNamespace>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->

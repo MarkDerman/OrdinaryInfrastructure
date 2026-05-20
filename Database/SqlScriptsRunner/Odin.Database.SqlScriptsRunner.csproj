@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
         
-    <ImplicitUsings>true</ImplicitUsings>
     <PackageIcon>icon.png</PackageIcon>
     <RootNamespace>Odin.Database</RootNamespace>
     <Description>Provides a SqlScriptsRunner that supports journalled and unjournalled execution of SQL database change and other scripts. 

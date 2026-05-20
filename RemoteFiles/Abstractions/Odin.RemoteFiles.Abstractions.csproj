@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <RootNamespace>Odin.RemoteFiles</RootNamespace>
-        <ImplicitUsings>true</ImplicitUsings>
-        <PackageIcon>icon.png</PackageIcon>
+            <PackageIcon>icon.png</PackageIcon>
         <Description>An exploratory abstraction of SFTP and FTPS file operations.
             Provides IRemoteFileSession, IRemoteFileSessionFactory and RemoteFileInfo concepts.
 

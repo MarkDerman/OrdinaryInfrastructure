@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <ImplicitUsings>true</ImplicitUsings>
-        <PackageId>Odin.BackgroundProcessing.Abstractions</PackageId>
+            <PackageId>Odin.BackgroundProcessing.Abstractions</PackageId>
         <RootNamespace>Odin.BackgroundProcessing</RootNamespace>
         <PackageIcon>icon.png</PackageIcon>
         <Description>A now redundant abstraction of Hangfire's job processing functionality 

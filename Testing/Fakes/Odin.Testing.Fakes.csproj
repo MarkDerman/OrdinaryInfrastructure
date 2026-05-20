@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                <ImplicitUsings>true</ImplicitUsings>
-        
+                    
         <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Testing</RootNamespace>
         <Description>Fakes and other utility classes supporting testing.

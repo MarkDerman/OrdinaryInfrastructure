@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                <ImplicitUsings>true</ImplicitUsings>
-        
+                    
         <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Utility</RootNamespace>
         <Description>Utility classes, primarily to provide support for configuration values of type TVal that vary over a

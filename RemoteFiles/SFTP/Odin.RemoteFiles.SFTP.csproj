@@ -1,7 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
         
-    <ImplicitUsings>true</ImplicitUsings>
     <PackageIcon>icon.png</PackageIcon>
     <RootNamespace>Odin.RemoteFiles</RootNamespace>
     <Description>Provides SFTP remote file session support.

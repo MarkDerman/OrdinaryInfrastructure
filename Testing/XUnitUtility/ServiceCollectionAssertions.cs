@@ -89,12 +89,5 @@ public static class ServiceCollectionAssertions
         }
         return serviceTypesFound;
     }
-
-
-
-    internal static string FormatServiceDescriptor(ServiceDescriptor descriptor)
-    {
-        return descriptor.ToString();
-    }
-
+    
 }

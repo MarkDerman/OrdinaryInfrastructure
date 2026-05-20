@@ -1,6 +1,9 @@
-using NUnit.Framework;
+
 
 // ReSharper disable once CheckNamespace
+
+using Xunit;
+
 namespace Microsoft.Extensions.DependencyInjection;
 
 /// <summary>
@@ -25,7 +28,7 @@ public static class ServiceCollectionAssertions
             x.ImplementationType == implementationType &&
             x.Lifetime == specificLifetime).ToList();
 
-        Assert.That(found.Count, Is.EqualTo(registrationCount),
+        Assert.True(found.Count == registrationCount,
             $"Expected {registrationCount} registration(s) for {serviceType.Name} with lifetime {specificLifetime} " +
             $"and implementation {implementationType.Name} but found {found.Count}. "
             + GetDescriptionOfAllServicesOfType(services, serviceType));
@@ -47,7 +50,7 @@ public static class ServiceCollectionAssertions
             x.ServiceType == serviceType &&
             x.Lifetime == specificLifetime).ToList();
 
-        Assert.That(found.Count, Is.EqualTo(registrationCount),
+        Assert.True(found.Count == registrationCount,
             $"Expected {registrationCount} registration(s) for {serviceType.Name} with lifetime {specificLifetime} " +
             $"but found {found.Count}. "
             + GetDescriptionOfAllServicesOfType(services, serviceType));
@@ -68,7 +71,7 @@ public static class ServiceCollectionAssertions
         IReadOnlyList<ServiceDescriptor> found = services.Where(x =>
             x.ServiceType == serviceType).ToList();
 
-        Assert.That(found.Count, Is.EqualTo(registrationCount),
+        Assert.True(found.Count == registrationCount,
             $"Expected {registrationCount} registration(s) for {serviceType.Name} with any any lifetime " +
             $"and implementation {implementationType.Name} but found {found.Count}. "
             + GetDescriptionOfAllServicesOfType(services, serviceType));
@@ -86,5 +89,5 @@ public static class ServiceCollectionAssertions
         }
         return serviceTypesFound;
     }
-    
+
 }

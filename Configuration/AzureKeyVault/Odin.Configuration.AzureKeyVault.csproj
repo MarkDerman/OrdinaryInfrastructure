@@ -1,10 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <PackageTags>Configuration;AzureKeyVault;Secrets;IConfiguration;Azure</PackageTags>
+        <!-- Updated Description -->
+        <Description>Provides the PrefixedAzureKeyVaultSecretManager and AddPrefixedAzureKeyVault extension 
+            method to load IConfiguration secrets from Azure Key Vault using a prefix-based filtering strategy.</Description>
         <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Configuration</RootNamespace>
-        <!-- Updated Description -->
-        <Description>Provides the PrefixedAzureKeyVaultSecretManager and AddPrefixedAzureKeyVault extension method to load IConfiguration secrets from Azure Key Vault using a prefix-based filtering strategy.</Description>
         <NoWarn>CS1591;CS1573</NoWarn>
     </PropertyGroup>
     

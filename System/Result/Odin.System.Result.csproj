@@ -3,7 +3,8 @@
         <RootNamespace>Odin.System</RootNamespace>
             <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <Description>Provides 2 'result' records that supporting returning a value or not, as well as a generic messages Type,
+        <PackageTags>Result;ResultPattern;ErrorHandling;Outcome</PackageTags>
+        <Description>Provides 'Result' concepts that support returning a value or not, as well as a generic messages Type,
             should string[] Result.Messages not match a use case.
             Result, Result of TMessage, ResultValue of TValue, and ResultValue of TValue and TMessage.
 

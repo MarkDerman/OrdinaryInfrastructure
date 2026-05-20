@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-            <PackageId>Odin.BackgroundProcessing.Abstractions</PackageId>
+        <PackageId>Odin.BackgroundProcessing.Abstractions</PackageId>
         <RootNamespace>Odin.BackgroundProcessing</RootNamespace>
         <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>BackgroundProcessing;BackgroundJobs;BackgroundProcessor;Jobs;Hangfire</PackageTags>
         <Description>A now redundant abstraction of Hangfire's job processing functionality 
             for the original purpose of mocking Hangfire. Abstracts background processing related use cases via
             an IBackgroundProcessor interface, required in the days that Hangfire still 

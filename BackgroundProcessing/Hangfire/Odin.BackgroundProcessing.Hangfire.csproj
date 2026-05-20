@@ -3,6 +3,7 @@
     <PackageId>Odin.BackgroundProcessing.Hangfire</PackageId>
     <RootNamespace>Odin.BackgroundProcessing</RootNamespace>
     <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>BackgroundProcessing;BackgroundJobs;BackgroundProcessor;Jobs;Hangfire</PackageTags>
     <Description>Concrete implementation of IBackgroundProcessor via Hangfire.
     </Description>
   </PropertyGroup>

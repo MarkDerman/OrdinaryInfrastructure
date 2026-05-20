@@ -2,6 +2,7 @@
     <PropertyGroup>
         <RootNamespace>Odin.RemoteFiles</RootNamespace>
             <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>RemoteFiles;SFTP;FTPS;FileTransfer;Abstractions</PackageTags>
         <Description>An exploratory abstraction of SFTP and FTPS file operations.
             Provides IRemoteFileSession, IRemoteFileSessionFactory and RemoteFileInfo concepts.
 

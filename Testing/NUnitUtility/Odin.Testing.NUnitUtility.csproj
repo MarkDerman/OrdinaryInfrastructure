@@ -4,6 +4,7 @@
         </Description>
         <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Testing</RootNamespace>
+        <PackageTags>Testing;NUnit;Assertions;UnitTesting;TestUtilities</PackageTags>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
     <ItemGroup>

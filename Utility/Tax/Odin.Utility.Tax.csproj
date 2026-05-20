@@ -3,6 +3,7 @@
                     
         <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Utility</RootNamespace>
+        <PackageTags>Tax;TaxRates;Configuration;VaryingValues;Utilities</PackageTags>
         <Description>Simple support for storing tax rate changes over time in application configuration, 
             and then getting tax rates as at any date.
 

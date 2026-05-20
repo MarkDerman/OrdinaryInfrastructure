@@ -3,6 +3,7 @@
         
     <PackageIcon>icon.png</PackageIcon>
     <RootNamespace>Odin.RemoteFiles</RootNamespace>
+    <PackageTags>RemoteFiles;SFTP;SSH.NET;FileTransfer</PackageTags>
     <Description>Provides SFTP remote file session support.
 
 

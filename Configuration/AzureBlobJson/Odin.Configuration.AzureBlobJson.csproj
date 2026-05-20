@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-                
-        
-        <PackageIcon>icon.png</PackageIcon>
-        <RootNamespace>Odin.Configuration</RootNamespace>
+        <PackageTags>Configuration;AzureBlobStorage;AzureBlob;JsonConfiguration;IConfiguration</PackageTags>
         <Description>Provides support for Azure Blob located json configuration sources.
         </Description>
+        <PackageIcon>icon.png</PackageIcon>
+        <RootNamespace>Odin.Configuration</RootNamespace>
         <NoWarn>CS1591</NoWarn>
     </PropertyGroup>
 

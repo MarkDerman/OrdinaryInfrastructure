@@ -2,6 +2,7 @@
   <PropertyGroup>
         
     <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>Messaging;RabbitMQ;Queues;Resilience;Subscriptions</PackageTags>
     <Description>Provides an IResubscribingRabbitSubscription concept useful for resilient queue consumption 
       from RabbitMQ, that is not provided by RabbitMQ.Client.
 

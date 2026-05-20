@@ -3,6 +3,7 @@
             <PackageIcon>icon.png</PackageIcon>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RootNamespace>Odin.DDD</RootNamespace>
+        <PackageTags>DDD;DomainDrivenDesign;EntityFrameworkCore;Repositories;Experimental</PackageTags>
         <Description>
 
         </Description>

@@ -1,11 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-            <PackageIcon>icon.png</PackageIcon>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
-        <RootNamespace>Odin.DDD.Repositories</RootNamespace>
-        <Description>
+        <PackageTags>DDD;DomainDrivenDesign;Repositories;RepositoryPattern;EntityFrameworkCore;AggregateRoots</PackageTags>
+        <Description>Provides a base EntityFramework implementation of IRepository of TAggregateRoot.
 
         </Description>
+        <RootNamespace>Odin.DDD.Repositories</RootNamespace>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
 

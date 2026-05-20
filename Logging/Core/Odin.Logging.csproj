@@ -1,12 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-            <PackageIcon>icon.png</PackageIcon>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageTags>Logging;ILogger;ILoggerWrapper;LoggerExtensions</PackageTags>
         <Description>Provides ILoggerWrapper that extends .NET's ILogger of T
             with all the LogXXX(...) calls as provided by the .NET LoggerExtensions extension methods.
             The primary reason being for much more convenient assertions of logger calls compared to mocking ILogger,
             and asserting ILogger -&gt; Log(LogLevel logLevel, EventId eventId, TState state, Exception? exception, etc...
         </Description>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
 

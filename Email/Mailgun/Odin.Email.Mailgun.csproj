@@ -1,12 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                
-            <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>Mailgun;Email;EmailSender;Relay;MailgunSender</PackageTags>
+        <Description>Mailgun V3 API support for IEmailSender.
+        </Description>
+        <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Email</RootNamespace>
-        <Description>Mailgun support for IEmailSender.
-
-
-            </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
     <ItemGroup>

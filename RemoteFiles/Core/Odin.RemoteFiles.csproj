@@ -2,6 +2,7 @@
   <PropertyGroup>
         
     <PackageIcon>icon.png</PackageIcon>
+    <PackageTags>RemoteFiles;SFTP;FTPS;FileTransfer;Configuration</PackageTags>
     <Description>An exploratory abstraction of SFTP and FTPS file operations. 
       Provides IRemoteFileSession, IRemoteFileSessionFactory and RemoteFileInfo concepts.
 

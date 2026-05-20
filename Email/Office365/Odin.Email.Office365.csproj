@@ -1,11 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                
-            <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>Email;EmailSender;Office365;MicrosoftGraph;MSGraph</PackageTags>
         <Description>Office365 support for IEmailSender via Microsoft Graph (not SMTP).
-
-
-            </Description>
+        </Description>
+        <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Email</RootNamespace>
     </PropertyGroup>
 

@@ -3,6 +3,7 @@
                     
         <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Utility</RootNamespace>
+        <PackageTags>VaryingValues;Configuration;Ranges;DateRanges;Utilities</PackageTags>
         <Description>Utility classes, primarily to provide support for configuration values of type TVal that vary over a
             range of value of type TRange. A good example would be to support a tax rate that has changed over the course
             of time.

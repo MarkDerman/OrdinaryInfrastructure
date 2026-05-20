@@ -2,6 +2,7 @@
     <PropertyGroup>
         <PackageIcon>icon.png</PackageIcon>
         <RootNamespace>Odin.Testing</RootNamespace>
+        <PackageTags>Testing;XUnit;XUnitV3;Assertions;UnitTesting;TestUtilities</PackageTags>
         <Description>Assertion and other utility extension methods for xunit based tests...
         </Description>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->

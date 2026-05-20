@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-        
-    <PackageIcon>icon.png</PackageIcon>
-    <RootNamespace>Odin.Database</RootNamespace>
+    <PackageTags>Database;SqlScripts;Migrations;DbUp;Deployment;Scripts;ScriptRunner;SqlServer</PackageTags>
     <Description>Provides a SqlScriptsRunner that supports journalled and unjournalled execution of SQL database change and other scripts. 
       Useful for running database migration scripts at application deployment time.
-      
     </Description>
+      <PackageIcon>icon.png</PackageIcon>
+      <RootNamespace>Odin.Database</RootNamespace>
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
   <ItemGroup>

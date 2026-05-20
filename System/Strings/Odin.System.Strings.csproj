@@ -4,6 +4,7 @@
     
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>StringEnum;Enumeration;Strings;Validation;Utilities</PackageTags>
     <Description>Provides enum-like behaviour for a set of string values.
       Usage: Inherit from StringEnum and add only public const string members.
       Use the Values static property to work with a list of all the string values.

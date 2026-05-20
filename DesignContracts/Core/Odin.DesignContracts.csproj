@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                    
-        <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>DesignByContract;Contracts;Preconditions;Postconditions;Invariants;ClassInvariants;Validation</PackageTags>
         <Description>Intended to support Design by Contract by providing facilities
             to support pre-conditions, post-conditions and class invariant implementations.
             As at Q4 2025, only pre-conditions are supported.
         </Description>
+        <PackageIcon>icon.png</PackageIcon>
         <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
     </PropertyGroup>
     <ItemGroup>

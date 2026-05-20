@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <UserSecretsId>Tests.Odin.Database</UserSecretsId>
+    <UserSecretsId>Tests.Odin</UserSecretsId>
     <NoWarn>1591;</NoWarn>
   </PropertyGroup>
 

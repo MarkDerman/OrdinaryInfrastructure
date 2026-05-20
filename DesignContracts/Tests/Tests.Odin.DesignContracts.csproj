@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
         
-    <UserSecretsId>Tests.Odin.DesignContracts</UserSecretsId>
+    <UserSecretsId>Tests.Odin</UserSecretsId>
     <GenerateProgramFile>false</GenerateProgramFile>
     <NoWarn>1591;</NoWarn>
   </PropertyGroup>

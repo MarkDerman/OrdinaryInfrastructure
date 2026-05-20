@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <PackageTags>Mailgun;Email;EmailSender;Relay;MailgunSender</PackageTags>
+        <Description>Mailgun V3 API support for IEmailSender.
+        </Description>
+        <PackageIcon>icon.png</PackageIcon>
+        <RootNamespace>Odin.Emailing</RootNamespace>
+        <WarningsAsErrors>1591;1573;</WarningsAsErrors> <!-- Not to be removed. Documentation is required. -->
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />
+        <ProjectReference Include="..\Core\Odin.Emailing.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Polly.Core" />
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="../../Assets/icon.png" Pack="true" PackagePath="" />
+    </ItemGroup>
+</Project>

@@ -17,32 +17,18 @@ public interface IQuerySpecification<TAggregateRoot>
     Expression<Func<TAggregateRoot, bool>>? Criteria { get; }
 
     /// <summary>
+    /// Ordering clauses for the query.
+    /// </summary>
+    IReadOnlyList<QueryOrdering<TAggregateRoot>>? Orderings { get; }
+
+    /// <summary>
+    /// Whether to retrieve a specific page in the results of the query.
+    /// </summary>
+    Pagination? Page { get; }
+    
+    /// <summary>
     /// Eager loading (Include clauses)
     /// </summary>
     IReadOnlyList<Expression<Func<TAggregateRoot, object>>>? Includes { get; }
 
-    /// <summary>
-    /// Ordering ascending
-    /// </summary>
-    Expression<Func<TAggregateRoot, object>>? OrderBy { get; }
-
-    /// <summary>
-    /// Ordering descending
-    /// </summary>
-    Expression<Func<TAggregateRoot, object>>? OrderByDescending { get; }
-
-    /// <summary>
-    /// Pagination - Take
-    /// </summary>
-    int Take { get; }
-
-    /// <summary>
-    /// Pagination - Skip
-    /// </summary>
-    int Skip { get; }
-
-    /// <summary>
-    /// Whether pagination is enabled
-    /// </summary>
-    bool IsPagingEnabled { get; }
 }

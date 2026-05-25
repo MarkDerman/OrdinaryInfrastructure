@@ -119,19 +119,35 @@ namespace Odin.DDD.Repositories
             }
 
             // Apply ordering
-            if (spec.OrderBy != null)
+            if (spec.Orderings != null)
             {
-                query = query.OrderBy(spec.OrderBy);
-            }
-            else if (spec.OrderByDescending != null)
-            {
-                query = query.OrderByDescending(spec.OrderByDescending);
+                IOrderedQueryable<TAggregateRoot>? orderedQuery = null;
+
+                for (int i = 0; i < spec.Orderings.Count; i++)
+                {
+                    QueryOrdering<TAggregateRoot> ordering = spec.Orderings[i];
+
+                    if (i == 0)
+                    {
+                        orderedQuery = ordering.Direction == SortDirection.Ascending
+                            ? query.OrderBy(ordering.Expression)
+                            : query.OrderByDescending(ordering.Expression);
+                    }
+                    else
+                    {
+                        orderedQuery = ordering.Direction == SortDirection.Ascending
+                            ? orderedQuery!.ThenBy(ordering.Expression)
+                            : orderedQuery!.ThenByDescending(ordering.Expression);
+                    }
+                }
+
+                query = orderedQuery ?? query;
             }
 
             // Apply paging
-            if (spec.IsPagingEnabled)
+            if (spec.Page != null)
             {
-                query = query.Skip(spec.Skip).Take(spec.Take);
+                query = query.Skip(spec.Page.Skip).Take(spec.Page.Take);
             }
 
             return query;

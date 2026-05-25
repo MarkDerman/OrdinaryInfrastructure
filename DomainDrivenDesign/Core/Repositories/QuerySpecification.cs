@@ -8,23 +8,23 @@ public class QuerySpecification<TAggregateRoot>
     where TAggregateRoot : class, IAggregateRoot
 {
     /// <summary>
-    /// Default constructor for QuerySpecification
+    /// At a minimum, Criteria are needed for a QuerySpecification (even if no cr
     /// </summary>
     /// <param name="criteria"></param>
-    protected QuerySpecification(Expression<Func<TAggregateRoot, bool>>? criteria)
+    public QuerySpecification(Expression<Func<TAggregateRoot, bool>> criteria)
     {
         Criteria = criteria;
     }
 
     /// <summary>
-    /// 
+    /// Creates a query specification with no criteria. THis will return all entities.
     /// </summary>
-    protected QuerySpecification()
+    public QuerySpecification()
     {
     }
 
     /// <inheritdoc />
-    public Expression<Func<TAggregateRoot, bool>>? Criteria { get; protected set; }
+    public Expression<Func<TAggregateRoot, bool>>? Criteria { get; private set; }
 
     /// <inheritdoc />
     public IReadOnlyList<Expression<Func<TAggregateRoot, object>>>? Includes => _includes;

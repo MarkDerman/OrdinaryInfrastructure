@@ -82,7 +82,7 @@ Run integration tests only when the change explicitly needs them or the user ask
 ## Package Publish to Nuget
 
 - All packages in the Odin libraries are published to Nuget by the Github Action defined in '.github/workflows/publish.yml'
-- When changing the path to a package, or adding a new package, ensure the corresponding publish.yml step is updated to reflect the new path.
+- When changing the path to a package, ensure the corresponding publish.yml step is updated to reflect the new path.
 
 ## Git Hygiene
 

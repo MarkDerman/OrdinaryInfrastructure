@@ -17,5 +17,6 @@
     <ItemGroup>
       <PackageReference Include="Azure.Core" />
       <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" />
+      <PackageReference Include="Azure.Identity" />
     </ItemGroup>
 </Project>

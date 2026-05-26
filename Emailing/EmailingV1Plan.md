@@ -18,34 +18,43 @@ This will be an evolution of the work done previously in Odin.Email.
 ## B - Project Plan
 
 1 - Isolate the most popular providers and document their API surface areas
+
 1.1 - Tabulate and research popularity of all potential emailing providers in the .NET ecosystem.
-1.2 - Tabulate and research the top 5-10 providers API and email message object models
+
+1.2 - Research the top 10 providers API and email message object models.
 
 2 - Create a new expanded provider abstraction API surface: IEmailMessage model, revised email sending models and maybe more.
+
 2.1 - Create a new IEmailMessage model with expanded properties and methods
+
 2.2 - Implement a new email sending interface, that will separate email send\dispath from a Provider sending adaptor. The overall surface area of this may need to expand to accommodate 'email merge' or other Provider functionality not known yet.  
+
 2.3- Evaluate whether 'mail merge' needs a distinct API?
 
 3 - IEmailSender configuration handling 
+
 3.1 - Create an object model for IConfiguration injection of a dictionary of 
 provider-specific options. Keep the settings for 'defaults' used in Odin.Email, but introduce allowing > 1 providers.
 
 4 - IEmailDispatcher implementations
+
 4.1 - Research and tabulate what dispatching features are or would be popular: Eg queueing, retries, concurrency, logging to database, etc.
+
 4.2 - Choose dispatching features for this V1.
+
 4.3 - TBA...
+
 4.4 - Create extensive unit tests
 
 5 - Email sending integration testing
+
 5.1 - Research and tabulate options to actually test delivery of email through temporary concrete inboxes, eg  Mailinator, Mailosaur, Mailtrap
+
 5.2 - Create email send and receive integration testing scaffolding.
 
 6 - Provider implementations
-6.1 - Mailgun
-6.2 - Sendgrid
-6.3 - SMTP
-6.4 - Office365
-6.5 - Amazon SES
+
+
 
 
 # 1  New IEmailMessage model and revised email sending model
@@ -85,3 +94,124 @@ The table therefore uses a broad, qualitative popularity evidence column. It is 
 | 18 | Azure Communication Services Email | [Email Send REST API](https://learn.microsoft.com/en-us/rest/api/communication/email/email/send?tabs=HTTP&view=rest-communication-email-2023-03-31) | Important for Azure-native and Microsoft-aligned applications, but public broad-market popularity signals are weaker than SendGrid, SES, Mailgun, and Postmark. | Azure-first apps, enterprise LOB apps, teams replacing old authenticated SMTP | Yes, [ACS SMTP support](https://learn.microsoft.com/en-us/azure/communication-services/concepts/email/email-smtp-overview) | Azure-hosted outbound email, modern SMTP auth through Entra, SDK/API sending, centralized Azure control |
 | 19 | Infobip Email | [Email over HTTP API](https://www.infobip.com/docs/email/email-over-api/send-email-over-http-api) | Strong CPaaS/enterprise provider, but general developer email-provider mindshare is lower than its SMS/omnichannel footprint. Relevant for teams already using Infobip. | Enterprise and global brands using omnichannel CPaaS | Yes, [SMTP API](https://www.infobip.com/docs/email/smtp-specification) | Omnichannel messaging, transactional and marketing email, global delivery, SMS/WhatsApp adjacency |
 | 20 | Oracle Cloud Infrastructure Email Delivery | [Email Delivery HTTP API guide](https://docs.oracle.com/en/learn/send-email-with-ociemaildelivery-http/index.html) | Platform-native OCI option. Important inside Oracle Cloud environments, but smaller broad developer mindshare and public detected footprint than AWS SES or the specialist providers. | OCI-hosted workloads, enterprise cloud apps, Oracle customers | Yes, [SMTP or HTTPS submission](https://docs.oracle.com/en-us/iaas/Content/Email/Reference/gettingstarted_topic-Begin_sending_email.htm) | Managed outbound relay for transactional and high-volume email in OCI |
+
+## 1.2 Provider API and Message Object Model Comparison
+
+This table compares the top 10 provider/protocol entries from the 1.1 popularity research and maps them to a suggested `IEmailMessage` property model. The top 10 are interpreted as:
+
+1. Standard SMTP / MimeKit
+2. Twilio SendGrid
+3. Amazon SES
+4. Mailgun
+5. Mailchimp Transactional
+6. Google Workspace / Gmail
+7. Microsoft 365 / Exchange Online
+8. Mailjet
+9. Brevo
+10. Postmark
+
+The table focuses on message construction and send-time API fields, not account configuration or post-send event/webhook models. Blank or `n/a` cells mean the provider does not expose a close first-class equivalent in the send API. Some providers can still support the concept through raw MIME, custom headers, or provider-specific options.
+
+Primary references:
+
+- [MimeKit `MimeMessage` properties](https://mimekit.net/docs/html/Properties_T_MimeKit_MimeMessage.htm)
+- [Twilio SendGrid Mail Send API](https://www.twilio.com/docs/sendgrid/api-reference/mail-send) and [personalizations](https://www.twilio.com/docs/sendgrid/for-developers/sending-email/personalizations)
+- [Amazon SES v2 `SendEmail`](https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_SendEmail.html)
+- [Mailgun Messages API](https://documentation.mailgun.com/docs/mailgun/api-reference/send/mailgun/messages)
+- [Mailchimp Transactional Messages API](https://mailchimp.com/developer/transactional/api/messages/)
+- [Gmail `users.messages` resource](https://developers.google.com/workspace/gmail/api/reference/rest/v1/users.messages)
+- [Microsoft Graph `message` resource](https://learn.microsoft.com/en-us/graph/api/resources/message?view=graph-rest-1.0) and [`sendMail` action](https://learn.microsoft.com/en-us/graph/api/user-sendmail?view=graph-rest-1.0)
+- [Mailjet Send API v3.1](https://dev.mailjet.com/email/guides/send-api-v31/)
+- [Brevo `sendTransacEmail`](https://developers.brevo.com/reference/send-transac-email)
+- [Postmark Email API](https://postmarkapp.com/developer/api/email-api)
+
+| Suggested `IEmailMessage` property | Suggested Odin type | SMTP / MimeKit | SendGrid | Amazon SES v2 | Mailgun | Mailchimp Transactional | Gmail API | Microsoft Graph | Mailjet | Brevo | Postmark |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `From` | `EmailAddress?` | `MimeMessage.From: InternetAddressList` | `from: EmailAddress` | `FromEmailAddress: string` | `from: string` | `message.from_email: string`, `message.from_name: string` | `raw` MIME `From` header | `message.from: recipient` | `Messages[].From: object` | `sender: object` | `From: string` |
+| `Sender` | `EmailAddress?` | `MimeMessage.Sender: MailboxAddress` | n/a | n/a | `h:Sender: string` header | n/a | `raw` MIME `Sender` header | `message.sender: recipient` | `Messages[].Sender: object` | n/a | custom `Headers[]` |
+| `ReplyTo` | `IReadOnlyList<EmailAddress>` | `MimeMessage.ReplyTo: InternetAddressList` | `reply_to: EmailAddress`, `reply_to_list: EmailAddress[]` | `ReplyToAddresses: string[]` | `h:Reply-To: string` header | `message.headers["Reply-To"]: string` | `raw` MIME `Reply-To` header | `message.replyTo: recipient[]` | `Messages[].ReplyTo: object` | `replyTo: object` | `ReplyTo: string` |
+| `To` | `IReadOnlyList<EmailAddress>` | `MimeMessage.To: InternetAddressList` | `personalizations[].to: EmailAddress[]` | `Destination.ToAddresses: string[]` | `to: string[]` | `message.to[].type = "to"` | `raw` MIME `To` header | `message.toRecipients: recipient[]` | `Messages[].To: object[]` | `to: object[]` | `To: string` |
+| `Cc` | `IReadOnlyList<EmailAddress>` | `MimeMessage.Cc: InternetAddressList` | `personalizations[].cc: EmailAddress[]` | `Destination.CcAddresses: string[]` | `cc: string[]` | `message.to[].type = "cc"` | `raw` MIME `Cc` header | `message.ccRecipients: recipient[]` | `Messages[].Cc: object[]` | `cc: object[]` | `Cc: string` |
+| `Bcc` | `IReadOnlyList<EmailAddress>` | `MimeMessage.Bcc: InternetAddressList` | `personalizations[].bcc: EmailAddress[]` | `Destination.BccAddresses: string[]` | `bcc: string[]` | `message.to[].type = "bcc"`, or `message.bcc_address: string` | `raw` MIME `Bcc` header | `message.bccRecipients: recipient[]` | `Messages[].Bcc: object[]` | `bcc: object[]` | `Bcc: string` |
+| `Subject` | `string?` | `MimeMessage.Subject: string` | `subject: string`, or `personalizations[].subject` | `Content.Simple.Subject.Data: string` | `subject: string` | `message.subject: string` | `raw` MIME `Subject` header | `message.subject: string` | `Messages[].Subject: string` | `subject: string` | `Subject: string` |
+| `TextBody` | `string?` | `BodyBuilder.TextBody: string` | `content[].type = "text/plain"`, `content[].value: string` | `Content.Simple.Body.Text.Data: string` | `text: string` | `message.text: string` | `raw` MIME `text/plain` part | `message.body.content` when `contentType = "text"` | `Messages[].TextPart: string` | `textContent: string` | `TextBody: string` |
+| `HtmlBody` | `string?` | `BodyBuilder.HtmlBody: string` | `content[].type = "text/html"`, `content[].value: string` | `Content.Simple.Body.Html.Data: string` | `html: string` | `message.html: string` | `raw` MIME `text/html` part | `message.body.content` when `contentType = "html"` | `Messages[].HTMLPart: string` | `htmlContent: string` | `HtmlBody: string` |
+| `AmpHtmlBody` | `string?` | MIME `text/x-amp-html` part | n/a | raw MIME only | `amp-html: string` | n/a | `raw` MIME `text/x-amp-html` part | raw MIME only | n/a | n/a | n/a |
+| `RawMime` | `ReadOnlyMemory<byte>?` | `MimeMessage` serialized with `WriteTo` | n/a | `Content.Raw.Data: blob` | `/messages.mime` MIME upload | `/messages/send-raw raw_message: string` | `raw: base64url string` | MIME send supported separately from `message` JSON | n/a | n/a | n/a |
+| `Attachments` | `IReadOnlyList<EmailAttachment>` | `BodyBuilder.Attachments: AttachmentCollection` | `attachments[]: object` | `Content.Simple.Attachments[]` or `Content.Template.Attachments[]` | `attachment: binary[]` | `message.attachments[]: object[]` | `raw` MIME parts, or `payload.parts[]` when reading | `message.attachments: attachment[]` | `Messages[].Attachments: object[]` | `attachment: object[]` | `Attachments: object[]` |
+| `InlineAttachments` | `IReadOnlyList<EmailAttachment>` | `BodyBuilder.LinkedResources: AttachmentCollection` | `attachments[].disposition = "inline"`, `content_id: string` | attachment `ContentDisposition = "INLINE"`, `ContentId: string` | `inline: binary[]` | `message.images[]: object[]` | `raw` MIME parts with `Content-ID` | `fileAttachment.isInline: bool`, `contentId: string` | `Messages[].InlinedAttachments: object[]` | inline via attachment plus content IDs in HTML, no strong first-class split | `Attachments[].ContentID: string` |
+| `Headers` | `IReadOnlyDictionary<string, string>` | `MimeMessage.Headers: HeaderList` | `headers: object`, or `personalizations[].headers` | `Content.Simple.Headers[]` or `Content.Template.Headers[]` | `h:*` form fields | `message.headers: object` | `raw` MIME headers, read via `payload.headers[]` | `message.internetMessageHeaders: internetMessageHeader[]` on create | `Messages[].Headers: object` | `headers: object` | `Headers: object[]` |
+| `Tags` | `IReadOnlyList<string>` | custom headers, for example `X-Tag` | `categories: string[]` | `EmailTags: MessageTag[]` | `o:tag: string[]` | `message.tags: string[]` | custom headers or labels after send, not send API | `categories: string[]` | `Messages[].CustomCampaign: string` | `tags: string[]` | `Tag: string` |
+| `Metadata` | `IReadOnlyDictionary<string, string>` | custom headers | `custom_args: object`, or `personalizations[].custom_args` | `EmailTags: MessageTag[]` for event tags | `v:*` custom variables | `message.metadata: object`, `recipient_metadata[]` | custom headers in raw MIME | `extensions`, `singleValueExtendedProperties`, or custom headers | `Messages[].Variables: object` | `params: object` | `Metadata: object` |
+| `TemplateId` | `string?` | n/a | `template_id: string` | `Content.Template.TemplateName: string` or `TemplateArn: string` | `template: string` | `/messages/send-template template_name: string` | n/a | n/a | `Messages[].TemplateID: integer` | `templateId: integer` | template endpoint uses `TemplateId` or `TemplateAlias` |
+| `TemplateModel` | `object?` | n/a | `personalizations[].dynamic_template_data: object` | `Content.Template.TemplateData: string` JSON | `t:variables: string` JSON, or `recipient-variables: string` JSON | `global_merge_vars[]`, `merge_vars[]` | n/a | n/a | `Messages[].Variables: object`, `TemplateLanguage: bool` | `params: object` | template endpoint `TemplateModel: object` |
+| `Personalizations` | `IReadOnlyList<EmailPersonalization>` | n/a | `personalizations[]: object[]` | bulk send uses `BulkEmailEntry[]` with replacement content | `recipient-variables: string` JSON | `merge_vars[]`, `recipient_metadata[]` | n/a | n/a | multiple `Messages[]` entries or `Variables` per message | `messageVersions[]: object[]` | batch send uses one object per recipient/message |
+| `SendAt` | `DateTimeOffset?` | no provider scheduling; MIME `Date` is only the message date | `send_at: integer` Unix time, or `personalizations[].send_at` | n/a | `o:deliverytime: string` | top-level `send_at: string` | n/a | n/a | n/a | `scheduledAt: string` | n/a |
+| `Tracking` | `EmailTrackingOptions?` | n/a | `tracking_settings: object` | via configuration set events, not message body tracking flags | `o:tracking`, `o:tracking-clicks`, `o:tracking-opens` | `track_opens: bool`, `track_clicks: bool` | n/a | `isReadReceiptRequested`, `isDeliveryReceiptRequested` | account/campaign settings; limited message-level equivalents | provider/account settings, no simple message-level equivalent in basic send body | `TrackOpens: bool`, `TrackLinks: string` |
+| `MessageStream` | `string?` | n/a | `asm.group_id` for unsubscribe grouping, `ip_pool_name` for IP pool | `ConfigurationSetName: string`, `ListManagementOptions: object` | `o:campaign: string`, route/domain determines stream | `subaccount: string`, `signing_domain`, `return_path_domain` | Gmail label/thread concepts are not send streams | mailbox/user route rather than message stream | `CustomCampaign: string` | `batchId: string`, tags for grouping | `MessageStream: string` |
+| `Priority` | `EmailPriority?` | `MimeMessage.Priority`, `Importance`, `XPriority` | custom headers only | custom headers only | `h:Importance`, `h:X-Priority` headers | `message.important: bool`, or custom headers | raw MIME priority headers | `message.importance: importance` | custom headers only | `headers` only | custom `Headers[]` |
+| `ProviderOptions` | `IReadOnlyDictionary<string, object>` | SMTP client delivery options outside message | `mail_settings`, `asm`, `batch_id`, `ip_pool_name` | `TenantName`, identity ARNs, feedback forwarding, endpoint ID | `o:*`, `t:*`, domain route options | `async`, `ip_pool`, domains, analytics options | `threadId`, `labelIds` for draft/import workflows | `saveToSentItems`, mailbox user route, extensions | `DeduplicateCampaign`, template error settings | `batchId`, `messageVersions`, provider constraints | server token/stream/template endpoint details |
+
+### Suggested Shape
+
+The common model should make the basic RFC email envelope and body first-class, because every provider supports that path either directly or through raw MIME. Provider-specific delivery controls should stay out of the core `IEmailMessage` until they are common across several providers.
+
+Recommended V2 core surface:
+
+```csharp
+public interface IEmailMessage
+{
+    EmailAddress? From { get; }
+    EmailAddress? Sender { get; }
+    IReadOnlyList<EmailAddress> ReplyTo { get; }
+    IReadOnlyList<EmailAddress> To { get; }
+    IReadOnlyList<EmailAddress> Cc { get; }
+    IReadOnlyList<EmailAddress> Bcc { get; }
+    string? Subject { get; }
+    string? TextBody { get; }
+    string? HtmlBody { get; }
+    string? AmpHtmlBody { get; }
+    IReadOnlyList<EmailAttachment> Attachments { get; }
+    IReadOnlyList<EmailAttachment> InlineAttachments { get; }
+    IReadOnlyDictionary<string, string> Headers { get; }
+    IReadOnlyList<string> Tags { get; }
+    IReadOnlyDictionary<string, string> Metadata { get; }
+    string? TemplateId { get; }
+    object? TemplateModel { get; }
+    IReadOnlyList<EmailPersonalization> Personalizations { get; }
+    DateTimeOffset? SendAt { get; }
+    EmailTrackingOptions? Tracking { get; }
+    string? MessageStream { get; }
+    EmailPriority? Priority { get; }
+    ReadOnlyMemory<byte>? RawMime { get; }
+    IReadOnlyDictionary<string, object> ProviderOptions { get; }
+}
+```
+
+Likely supporting value objects:
+
+```csharp
+public sealed record EmailAddress(string Address, string? DisplayName = null);
+
+public sealed record EmailAttachment(
+    string FileName,
+    string ContentType,
+    ReadOnlyMemory<byte> Content,
+    string? ContentId = null,
+    bool IsInline = false);
+
+public sealed record EmailTrackingOptions(
+    bool? TrackOpens = null,
+    bool? TrackClicks = null,
+    bool? RequestReadReceipt = null,
+    bool? RequestDeliveryReceipt = null);
+
+public sealed record EmailPersonalization(
+    IReadOnlyList<EmailAddress> To,
+    IReadOnlyList<EmailAddress>? Cc = null,
+    IReadOnlyList<EmailAddress>? Bcc = null,
+    string? Subject = null,
+    object? TemplateModel = null,
+    IReadOnlyDictionary<string, string>? Metadata = null,
+    DateTimeOffset? SendAt = null);
+```

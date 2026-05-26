@@ -2,7 +2,7 @@
 
 ## Repository Overview
 
-Odin is a multi-package .NET library solution for ordinary line-of-business infrastructure components.
+Odin, short for 'OrDinary INfrastructure', is a multi-package mono-repo containing packages for .NET line-of-business application development concerns.
 The root solution is `Odin.sln`; `TestsOnly.sln` is used for test validation.
 
 Primary component folders include:
@@ -78,6 +78,11 @@ Run integration tests only when the change explicitly needs them or the user ask
 - When adding a new project, ensure it is included in the appropriate solution file and follows existing naming patterns:
   - Production packages: `Odin.<Area>[.<Feature>]`
   - Tests: `Tests.Odin.<Area>`
+
+## Package Publish to Nuget
+
+- All packages in the Odin libraries are published to Nuget by the Github Action defined in '.github/workflows/publish.yml'
+- When changing the path to a package, ensure the corresponding publish.yml step is updated to reflect the new path.
 
 ## Git Hygiene
 

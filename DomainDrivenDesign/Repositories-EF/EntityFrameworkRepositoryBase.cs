@@ -20,12 +20,12 @@ namespace Odin.DDD.Repositories
         protected readonly TDbContext DbContext;
 
         /// <summary>
-        /// The DbSet for the aggregate root type
+        /// The DbSet for the aggregate root type, TAggregateRoot.
         /// </summary>
         protected readonly DbSet<TAggregateRoot> DbSet;
 
         /// <summary>
-        /// 
+        /// EntityFrameworkRepositoryBase constructor.
         /// </summary>
         /// <param name="dbContext"></param>
         /// <exception cref="ArgumentNullException"></exception>
@@ -52,7 +52,7 @@ namespace Odin.DDD.Repositories
         protected async Task<IReadOnlyList<TAggregateRoot>> FetchManyAsync(
             IQuerySpecification<TAggregateRoot> fetchManySpec, CancellationToken ct = default)
         {
-            return await AsQueryable(fetchManySpec).ToListAsync(ct);
+            return await ApplySpecification(fetchManySpec).ToListAsync(ct);
         }
 
         /// <summary>
@@ -98,34 +98,39 @@ namespace Odin.DDD.Repositories
         }
 
         /// <summary>
-        /// 
+        /// Applies the query specification to the EF DbSet for TAggregateRoot
+        /// and returns the resulting IQueryable of TAggregateRoot.
         /// </summary>
-        /// <param name="spec"></param>
+        /// <param name="querySpecification"></param>
         /// <returns></returns>
-        protected IQueryable<TAggregateRoot> AsQueryable(IQuerySpecification<TAggregateRoot> spec)
+        protected IQueryable<TAggregateRoot> ApplySpecification(IQuerySpecification<TAggregateRoot> querySpecification)
         {
+            ArgumentNullException.ThrowIfNull(querySpecification);
             IQueryable<TAggregateRoot> query = DbSet.AsQueryable();
 
-            // Apply includes
-            foreach (var include in spec.Includes)
+            // Apply criteria
+            if (querySpecification.Criteria != null)
             {
-                query = query.Include(include);
+                query = query.Where(querySpecification.Criteria);
             }
 
-            // Apply criteria
-            if (spec.Criteria != null)
+            // Apply includes
+            if (querySpecification.Includes != null)
             {
-                query = query.Where(spec.Criteria);
+                foreach (var include in querySpecification.Includes)
+                {
+                    query = query.Include(include);
+                }
             }
 
             // Apply ordering
-            if (spec.Orderings != null)
+            if (querySpecification.Orderings != null)
             {
                 IOrderedQueryable<TAggregateRoot>? orderedQuery = null;
 
-                for (int i = 0; i < spec.Orderings.Count; i++)
+                for (int i = 0; i < querySpecification.Orderings.Count; i++)
                 {
-                    QueryOrdering<TAggregateRoot> ordering = spec.Orderings[i];
+                    QueryOrdering<TAggregateRoot> ordering = querySpecification.Orderings[i];
 
                     if (i == 0)
                     {
@@ -140,14 +145,13 @@ namespace Odin.DDD.Repositories
                             : orderedQuery!.ThenByDescending(ordering.Expression);
                     }
                 }
-
                 query = orderedQuery ?? query;
             }
 
             // Apply paging
-            if (spec.Page != null)
+            if (querySpecification.Page != null)
             {
-                query = query.Skip(spec.Page.Skip).Take(spec.Page.Take);
+                query = query.Skip(querySpecification.Page.Skip).Take(querySpecification.Page.Take);
             }
 
             return query;
@@ -164,8 +168,6 @@ namespace Odin.DDD.Repositories
         {
             DbSet.Remove(entity);
         }
-
-
 
         /// <inheritdoc />
         public void Add(TAggregateRoot entity)
@@ -196,6 +198,5 @@ namespace Odin.DDD.Repositories
         {
             await DbContext.DisposeAsync();
         }
-
     }
 }

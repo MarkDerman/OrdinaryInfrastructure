@@ -1,0 +1,19 @@
+{
+    "Emailing": {
+        "ToAddress": "UserSecrets",
+        "FromAddress": "UserSecrets",
+        "MailgunOptions": {
+            "ApiKey": "UserSecrets",
+            "Domain": "UserSecrets",
+            "Region": "EU"
+        },
+        "Office365Options": {
+            "SenderUserId": "UserSecrets",
+            "MicrosoftGraphClientSecretCredentials": {
+                "ClientId": "UserSecrets",
+                "TenantId": "UserSecrets",
+                "ClientSecret": "UserSecrets"
+            }
+        }
+    }
+}

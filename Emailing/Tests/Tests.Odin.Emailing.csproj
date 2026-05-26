@@ -1,37 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-        
-    <UserSecretsId>Tests.Odin</UserSecretsId>
-    <GenerateProgramFile>false</GenerateProgramFile>
-    <NoWarn>1591;</NoWarn>
-  </PropertyGroup>
+    <PropertyGroup>
+        <UserSecretsId>Tests.Odin</UserSecretsId>
+        <GenerateProgramFile>false</GenerateProgramFile>
+        <NoWarn>1591;</NoWarn>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="xunit.v3"/>
-    <PackageReference Include="Moq"  />
-    <PackageReference Include="xunit.runner.visualstudio">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk"/> 
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="xunit.v3"/>
+        <PackageReference Include="Moq"/>
+        <PackageReference Include="xunit.runner.visualstudio">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
-  <!-- IMPORTANT: match Mvc.Testing major version to the TFM -->
-  <ItemGroup >
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Odin.Emailing.csproj" />
-    <ProjectReference Include="..\Mailgun\Odin.Emailing.Mailgun.csproj" />
-    <ProjectReference Include="..\Office365\Odin.Emailing.Office365.csproj" />
-   </ItemGroup>
-  <ItemGroup>
-    <None Update="appSettings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <Using Include="Xunit"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Core\Odin.Emailing.csproj"/>
+        <ProjectReference Include="..\Mailgun\Odin.Emailing.Mailgun.csproj"/>
+        <ProjectReference Include="..\Office365\Odin.Emailing.Office365.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Update="testSettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 </Project>

@@ -1,30 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <UserSecretsId>Tests.Odin</UserSecretsId>
-    <NoWarn>1591;</NoWarn>
-  </PropertyGroup>
+    <PropertyGroup>
+        <UserSecretsId>Tests.Odin</UserSecretsId>
+        <NoWarn>1591;</NoWarn>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="xunit.v3" />
-    <PackageReference Include="Moq" />
-    <PackageReference Include="xunit.runner.visualstudio">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk"  />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    <PackageReference Include="Respawn" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="xunit.v3"/>
+        <PackageReference Include="Moq"/>
+        <PackageReference Include="xunit.runner.visualstudio">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
+        <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
+        <PackageReference Include="Respawn"/>
+        <PackageReference Include="Testcontainers.MsSql"/>
+        <PackageReference Include="Testcontainers.PostgreSql" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Using Include="Xunit"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\Database\SqlScriptsRunner\Odin.Database.SqlScriptsRunner.csproj"/>
+        <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj"/>
+        <ProjectReference Include="..\Core\Odin.DDD.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Database\SqlScriptsRunner\Odin.Database.SqlScriptsRunner.csproj" />
-    <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
-    <ProjectReference Include="..\Core\Odin.DDD.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Repositories\DB\" />
+    </ItemGroup>
 
 </Project>

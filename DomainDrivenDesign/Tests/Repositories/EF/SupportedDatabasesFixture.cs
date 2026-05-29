@@ -5,13 +5,13 @@ using Odin.Database;
 using Odin.System;
 using Respawn;
 
-namespace Tests.Odin.DDD.DB;
+namespace Tests.Odin.DDD.Repositories.EF;
 
 /// <summary>
-/// For XUnit shared DatabaseFixture
+/// For XUnit shared SupportedDatabasesFixture per test run
 /// </summary>
-[CollectionDefinition(nameof(DatabaseCollection))]
-public class DatabaseCollection : ICollectionFixture<DatabaseFixture>
+[CollectionDefinition(nameof(SupportedDatabasesCollection))]
+public class SupportedDatabasesCollection : ICollectionFixture<SupportedDatabasesFixture>
 {
     // This class has no code, and is never created. Its purpose is simply
     // to be the place to apply [CollectionDefinition] and all the
@@ -21,13 +21,12 @@ public class DatabaseCollection : ICollectionFixture<DatabaseFixture>
 /// <summary>
 /// Initializes once, rolling back and migrating the target AVT database.
 /// ResetDatabaseAsync() is used in IntegrationTestBase
-/// to reset all application data tables in the Billing schema only, using Respawn.
 /// </summary>
-public class DatabaseFixture : IAsyncLifetime
+public class SupportedDatabasesFixture : IAsyncLifetime
 {
     private Respawner _respawner = null!;
 
-    public DatabaseFixture()
+    public SupportedDatabasesFixture()
     {
         IConfiguration config = new ConfigurationBuilder()
             .AddJsonFile("appsettings.json").Build();
@@ -38,10 +37,6 @@ public class DatabaseFixture : IAsyncLifetime
 
     public async ValueTask InitializeAsync()
     {
-        Result rollback = RollbackDatabaseSchema();
-        if (!rollback.IsSuccess)
-            throw new Exception($"Database rollback scripts failed: {rollback.MessagesToString()}");
-
         Result migrations = MigrateDatabaseSchema();
         if (!migrations.IsSuccess)
             throw new Exception($"Database migration scripts failed: {migrations.MessagesToString()}");
@@ -56,32 +51,14 @@ public class DatabaseFixture : IAsyncLifetime
             [
                 "dbo"
             ],
-            TablesToInclude = [ // Note, this implicitly excludes all other tables...
-                "BillingEntity", "BillingPeriod"
-            ],
-            WithReseed = true // Sets the seeds of 'Id' identity columns back to 1.
+            WithReseed = true // Sets the seeds of identity PK columns back to their beginning.
         });
-    }
-
-    internal Result RollbackDatabaseSchema()
-    {
-        ResultValue<SqlScriptsRunner> runnerCreate =
-            SqlScriptsRunner.CreateFromConnectionString(ConnectionString, typeof(DatabaseFixture).Assembly);
-        if (!runnerCreate.IsSuccess) return Result.Failure(runnerCreate.Messages);
-
-        SqlScriptsRunner runner = runnerCreate.Value;
-        runner.EnsureDatabaseCreated = false;
-        runner.JournalMode = JournalModeEnum.AlwaysRunAllScripts;
-        runner.ScriptsLocationType = ScriptsLocationTypeEnum.EmbeddedResourcePath;
-        runner.ScriptsLocation = ".DB.SqlServer.Rollback.";
-        runner.TransactionHandling = TransactionMode.TransactionPerScript;
-        return runner.Run();
     }
 
     internal Result MigrateDatabaseSchema()
     {
         ResultValue<SqlScriptsRunner> runnerCreate =
-            SqlScriptsRunner.CreateFromConnectionString(ConnectionString, typeof(DatabaseFixture).Assembly);
+            SqlScriptsRunner.CreateFromConnectionString(ConnectionString, typeof(SupportedDatabasesFixture).Assembly);
         if (!runnerCreate.IsSuccess) return Result.Failure(runnerCreate.Messages);
 
         SqlScriptsRunner runner = runnerCreate.Value;
@@ -89,7 +66,7 @@ public class DatabaseFixture : IAsyncLifetime
         runner.JournalMode = JournalModeEnum.RunOnlyScriptsNotRunBefore;
         runner.JournalToTableName = "DatabaseMigrations";
         runner.ScriptsLocationType = ScriptsLocationTypeEnum.EmbeddedResourcePath;
-        runner.ScriptsLocation = ".DB.SqlServer.Migrate.";
+        runner.ScriptsLocation = "Repositories.EF.SqlServer.";
         runner.TransactionHandling = TransactionMode.TransactionPerScript;
         return runner.Run();
     }

@@ -1,16 +1,15 @@
 using Microsoft.Extensions.DependencyInjection;
-using Tests.Odin.DDD.DB;
 
-namespace Tests.Odin.DDD;
+namespace Tests.Odin.DDD.Repositories.EF;
 
-[Collection(nameof(DatabaseCollection))]
-public abstract class IntegrationTestBase : IClassFixture<AppFactory>, IAsyncLifetime
+[Collection(nameof(SupportedDatabasesCollection))]
+public abstract class DatabaseTestBase : IClassFixture<AppFactory>, IAsyncLifetime
 {
     private readonly IServiceScope _scope;
     private readonly AppFactory _appFactory;
-    protected readonly DatabaseFixture Database;
+    protected readonly SupportedDatabasesFixture Database;
 
-    protected IntegrationTestBase(AppFactory appFactory, DatabaseFixture database)
+    protected DatabaseTestBase(AppFactory appFactory, SupportedDatabasesFixture database)
     {
         _appFactory = appFactory;
         _scope = _appFactory.Services.CreateScope();

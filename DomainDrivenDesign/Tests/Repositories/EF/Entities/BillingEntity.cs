@@ -1,10 +1,12 @@
 
+using Odin.DDD;
+
 namespace Tests.Odin.DDD.Repositories.EF.Entities;
 
 /// <summary>
-/// Test
+/// Test entity 1
 /// </summary>
-public class BillingEntity
+public class BillingEntity : IIdentityAggregateRoot<int>
 {
     /// <summary>
     /// Id

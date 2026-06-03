@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Testcontainers.MsSql;
+using Tests.Odin.DDD.Repositories.EF;
 
-namespace Tests.Odin.DDD.Repositories.EF.SqlServer;
+namespace Tests.Odin.DDD.Repositories.Database;
 
-
-public sealed class DatabaseContainerFixture : IAsyncLifetime
+public sealed class SqlServerContainerFixture : IDatabaseFixture
 {
     private readonly MsSqlContainer _container =
         new MsSqlBuilder("mcr.microsoft.com/mssql/server:2022-latest")
@@ -29,5 +29,10 @@ public sealed class DatabaseContainerFixture : IAsyncLifetime
             .Options;
 
         return new TestDatabaseContext(options);
+    }
+
+    public string ProviderName
+    {
+        get { return "SqlServer2022"; }
     }
 }

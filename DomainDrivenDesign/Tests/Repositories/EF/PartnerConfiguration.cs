@@ -21,7 +21,8 @@ namespace Tests.Odin.DDD.Repositories.EF
                 .HasMaxLength(500)
                 .IsUnicode();
             builder.Property(x => x.VatNumber)
-                .HasColumnType("varchar(50)");
+                .HasMaxLength(50)
+                .IsUnicode();
         }
     }
 }

@@ -19,8 +19,8 @@ public class SupportedDatabasesCollection : ICollectionFixture<SupportedDatabase
 }
 
 /// <summary>
-/// Initializes once, rolling back and migrating the target AVT database.
-/// ResetDatabaseAsync() is used in IntegrationTestBase
+/// The intention is to keep a dictionary of supported database servers using TestContainers
+/// for testing
 /// </summary>
 public class SupportedDatabasesFixture : IAsyncLifetime
 {

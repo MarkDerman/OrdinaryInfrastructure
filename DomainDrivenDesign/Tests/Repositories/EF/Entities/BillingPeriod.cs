@@ -1,9 +1,11 @@
+using Odin.DDD;
+
 namespace Tests.Odin.DDD.Repositories.EF.Entities
 {
     /// <summary>
     ///    Testing entity
     /// </summary>
-    public class BillingPeriod
+    public class BillingPeriod : IAggregateRoot
     {
         /// <summary>
         /// For EF
@@ -58,7 +60,7 @@ namespace Tests.Odin.DDD.Repositories.EF.Entities
         /// <summary>
         ///  The current Stage of processing
         /// </summary>
-        public short Stage { get; set; }
+        public int Stage { get; set; }
 
         public BillingPeriodStatus Status { get; set; }
 
@@ -67,25 +69,9 @@ namespace Tests.Odin.DDD.Repositories.EF.Entities
     
     public enum BillingPeriodStatus : short
     {
-        /// <summary>
-        ///     One or more emails failed to send, or one or more auto transactions failed. Will not be retried.
-        /// </summary>
         Failed = -1,
-
-        /// <summary>
-        ///     Reporting of the BillingPeriod has not yet been attempted.
-        /// </summary>
         NotProcessed = 0,
-
-        /// <summary>
-        ///     All report emails sent successfully and transactions carried out.
-        /// </summary>
         Completed = 3,
-
-        /// <summary>
-        ///     An invocation of BillingPeriodReporter.Report() is busy with this BillingPeriod, and other code (such as concurrent invocations of
-        ///     BillingPeriodReporter.Report() ) should not interfere with it by modifying the BillingPeriod.
-        /// </summary>
         Processing = 4,
     }
 }

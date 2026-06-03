@@ -1,8 +1,10 @@
+using Tests.Odin.DDD.Repositories.EF;
+
 namespace Tests.Odin.DDD.Repositories;
 
-public class EntityFrameworkRepositoryBaseTests : SupportedDatabasesTestBase
+public class EntityFrameworkRepositoryBaseTests : DatabaseTestBase
 {
-    public EntityFrameworkRepositoryBaseTests(AppFactory appFactory, DatabaseFixture database) 
+    public EntityFrameworkRepositoryBaseTests(AppFactory appFactory, SupportedDatabasesFixture database) 
         : base(appFactory, database)
     {
     }

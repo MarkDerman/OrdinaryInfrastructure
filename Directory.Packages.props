@@ -3,6 +3,7 @@
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     </PropertyGroup>
     <ItemGroup>
+        <PackageVersion Include="Ardalis.SmartEnum" Version="8.2.0"/>
         <PackageVersion Include="Azure.Core" Version="[1.55.0,)"/>
         <PackageVersion Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="[1.5.1,)"/>
         <PackageVersion Include="Azure.Identity" Version="[1.21.0,)"/>

@@ -5,6 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Ardalis.SmartEnum" />
         <PackageReference Include="xunit.v3"/>
         <PackageReference Include="Moq"/>
         <PackageReference Include="xunit.runner.visualstudio">
@@ -27,11 +28,12 @@
     <ItemGroup>
         <ProjectReference Include="..\..\Database\SqlScriptsRunner\Odin.Database.SqlScriptsRunner.csproj"/>
         <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj"/>
+        <ProjectReference Include="..\..\System\Strings\Odin.System.Strings.csproj" />
         <ProjectReference Include="..\Core\Odin.DDD.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Repositories\DB\" />
+      <Folder Include="Repositories\EF\Fixtures\" />
     </ItemGroup>
 
 </Project>

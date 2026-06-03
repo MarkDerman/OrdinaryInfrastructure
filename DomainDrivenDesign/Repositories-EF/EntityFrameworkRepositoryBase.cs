@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Odin.DDD.Repositories
 {
@@ -14,6 +15,7 @@ namespace Odin.DDD.Repositories
         where TDbContext : DbContext, IUnitOfWork
         where TAggregateRoot : class, IAggregateRoot
     {
+
         /// <summary>
         /// The context for database operations
         /// </summary>
@@ -53,6 +55,44 @@ namespace Odin.DDD.Repositories
             IQuerySpecification<TAggregateRoot> fetchManySpec, CancellationToken ct = default)
         {
             return await ApplySpecification(fetchManySpec).ToListAsync(ct);
+        }
+
+        /// <summary>
+        /// Queries the repository based on the query specification, projecting TAggregateRoot
+        /// to TProjection.
+        /// </summary>
+        /// <param name="specification"></param>
+        /// <param name="projection"></param>
+        /// <param name="ct"></param>
+        /// <typeparam name="TProjection"></typeparam>
+        /// <returns></returns>
+        protected async Task<IReadOnlyList<TProjection>> FetchManyAsync<TProjection>(
+            IQuerySpecification<TAggregateRoot> specification,
+            Expression<Func<TAggregateRoot, TProjection>> projection,
+            CancellationToken ct = default)
+        {
+            ArgumentNullException.ThrowIfNull(projection);
+
+            return await ApplySpecification(specification)
+                .Select(projection)
+                .ToListAsync(ct);
+        }
+
+        /// <summary>
+        /// Queries the repository based on the projection query specification, projecting TAggregateRoot
+        /// to TProjection.
+        /// </summary>
+        /// <param name="specification"></param>
+        /// <param name="ct"></param>
+        /// <typeparam name="TProjection"></typeparam>
+        /// <returns></returns>
+        protected async Task<IReadOnlyList<TProjection>> FetchManyAsync<TProjection>(
+            IProjectedQuerySpecification<TAggregateRoot, TProjection> specification,
+            CancellationToken ct = default)
+        {
+            ArgumentNullException.ThrowIfNull(specification);
+
+            return await FetchManyAsync(specification, specification.Projection, ct);
         }
 
         /// <summary>

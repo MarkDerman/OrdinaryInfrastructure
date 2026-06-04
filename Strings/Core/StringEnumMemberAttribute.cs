@@ -1,6 +1,7 @@
+using Odin.System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Odin.System;
+namespace Odin.Strings;
 
 /// <summary>
 /// Used to validate an attribute as being a member of a class derived from StringEnum.

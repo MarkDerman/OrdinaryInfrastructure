@@ -17,7 +17,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
-      <ProjectReference Include="..\..\System\Strings\Odin.System.Strings.csproj" />
+      <ProjectReference Include="..\..\Strings\Core\Odin.Strings.csproj" />
     </ItemGroup>
     <ItemGroup>
         <None Include="../../Assets/icon.png" Pack="true" PackagePath="" />

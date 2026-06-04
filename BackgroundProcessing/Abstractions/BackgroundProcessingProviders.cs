@@ -1,3 +1,4 @@
+﻿using Odin.Strings;
 using Odin.System;
 
 namespace Odin.BackgroundProcessing

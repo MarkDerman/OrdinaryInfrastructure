@@ -1,7 +1,8 @@
-﻿using Odin.System;
+﻿using Odin.Strings;
+using Odin.System;
 using System.Collections.Immutable;
 
-namespace Tests.Odin.System.Strings
+namespace Tests.Odin.Strings
 {
     public sealed class StringEnumTests
     {

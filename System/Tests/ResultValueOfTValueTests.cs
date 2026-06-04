@@ -5,113 +5,107 @@ namespace Tests.Odin.System
 {
     public sealed class ResultValueOfTValueTests
     {
-        [Fact]
+        [Test]
         public void Succeed_with_object_value()
         {
             object obj = new object();
             ResultValue<object> sut = ResultValue<object>.Success(obj);
 
-            Assert.True(sut.IsSuccess);
-            Assert.True(string.IsNullOrEmpty(sut.MessagesToString()));
-            Assert.Empty(sut.Messages);
-            Assert.Same(obj, sut.Value);
+            Assert.That(sut.IsSuccess, Is.True);
+            Assert.That(string.IsNullOrEmpty(sut.MessagesToString()), Is.True);
+            Assert.That(sut.Messages, Is.Empty);
+            Assert.That(sut.Value, Is.SameAs(obj));
         }
 
-        [Fact]
+        [Test]
         public void Succeed_with_string_value_and_no_message()
         {
             string stringVal = "123";
             ResultValue<string> sut = ResultValue<string>.Success(stringVal);
 
-            Assert.True(sut.IsSuccess);
-            Assert.True(string.IsNullOrEmpty(sut.MessagesToString()));
-            Assert.Empty(sut.Messages);
-            Assert.Equal(stringVal, sut.Value);
-            Assert.Equal(stringVal, sut.Value);
+            Assert.That(sut.IsSuccess, Is.True);
+            Assert.That(string.IsNullOrEmpty(sut.MessagesToString()), Is.True);
+            Assert.That(sut.Messages, Is.Empty);
+            Assert.That(sut.Value, Is.EqualTo(stringVal));
+            Assert.That(sut.Value, Is.EqualTo(stringVal));
         }
 
-        [Fact]
+        [Test]
         public void Succeed_with_string_value_and_message()
         {
             string stringVal = "123";
             ResultValue<string> sut = ResultValue<string>.Success(stringVal, "message");
 
-            Assert.True(sut.IsSuccess);
-            Assert.Equal("message", sut.MessagesToString());
-            Assert.Single(sut.Messages);
-            Assert.Equal(stringVal, sut.Value);
+            Assert.That(sut.IsSuccess, Is.True);
+            Assert.That(sut.MessagesToString(), Is.EqualTo("message"));
+            sut.Messages.Single();
+            Assert.That(sut.Value, Is.EqualTo(stringVal));
 
         }
 
-        [Fact]
+        [Test]
         public void Succeed_with_struct_value_and_message()
         {
             double num = 13.8;
             ResultValue<double> sut = ResultValue<double>.Success(num, "message");
 
-            Assert.True(sut.IsSuccess);
-            Assert.Equal("message", sut.MessagesToString());
-            Assert.Single(sut.Messages);
-            Assert.Equal(num, sut.Value);
+            Assert.That(sut.IsSuccess, Is.True);
+            Assert.That(sut.MessagesToString(), Is.EqualTo("message"));
+            sut.Messages.Single();
+            Assert.That(sut.Value, Is.EqualTo(num));
         }
 
 
-        [Fact]
+        [Test]
         public void Result_of_T_serialises_with_system_dot_text_dot_json()
         {
             ResultValue<int> sut = ResultValue<int>.Success(3, "cool man");
 
             string result = JsonSerializer.Serialize(sut);
 
-            Assert.Equal("{\"IsSuccess\":true,\"Value\":3,\"Messages\":[\"cool man\"]}", result);
+            Assert.That(result, Is.EqualTo("{\"IsSuccess\":true,\"Value\":3,\"Messages\":[\"cool man\"]}"));
         }
 
-        [Fact]
+        [Test]
         public void Result_of_T_deserialises_with_system_dot_text_dot_json()
         {
             string serialised = "{\"Value\":3,\"IsSuccess\":true,\"Messages\":[\"cool man\"]}";
 
             ResultValue<int>? result = JsonSerializer.Deserialize<ResultValue<int>>(serialised);
 
-            Assert.NotNull(result);
-            Assert.True(result!.IsSuccess);
-            Assert.Equal(3, result.Value);
-            Assert.Equal("cool man", result.Messages[0]);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result!.IsSuccess, Is.True);
+            Assert.That(result.Value, Is.EqualTo(3));
+            Assert.That(result.Messages[0], Is.EqualTo("cool man"));
         }
-
-        [Theory]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData("test")]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase("test")]
         public void String_as_TValue_success(string testValue)
         {
             ResultValue<string> success = ResultValue<string>.Success(testValue);
 
-            Assert.True(success.IsSuccess);
-            Assert.Empty(success.Messages);
-            Assert.Equal(testValue, success.Value);
+            Assert.That(success.IsSuccess, Is.True);
+            Assert.That(success.Messages, Is.Empty);
+            Assert.That(success.Value, Is.EqualTo(testValue));
         }
 
-        [Fact]
+        [Test]
         public void Success_requires_a_value()
         {
             Assert.Throws<ArgumentException>(() => ResultValue<string>.Success((null as string)!));
         }
-
-
-
-        [Theory]
-        [InlineData("")]
-        [InlineData(" ")]
-        [InlineData(null)]
-        [InlineData("test")]
+        [TestCase("")]
+        [TestCase(" ")]
+        [TestCase(null)]
+        [TestCase("test")]
         public void String_as_TValue_fail(string? testValue)
         {
             ResultValue<string> fail = ResultValue<string>.Failure("message", testValue);
 
-            Assert.False(fail.IsSuccess);
-            Assert.Single(fail.Messages);
-            Assert.Equal(testValue, fail.Value);
+            Assert.That(fail.IsSuccess, Is.False);
+            fail.Messages.Single();
+            Assert.That(fail.Value, Is.EqualTo(testValue));
         }
     }
 }

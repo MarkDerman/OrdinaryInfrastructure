@@ -5,15 +5,15 @@ namespace Tests.Odin.Logging;
 
 public sealed class LoggerWrapperTests
 {
-    [Fact]
+    [Test]
     public void Constructor_requires_an_inner_logger()
     {
         ArgumentNullException ex = Assert.Throws<ArgumentNullException>(() => new LoggerWrapper<TestCategory>(null!));
 
-        Assert.Equal("logger", ex.ParamName);
+        Assert.That(ex.ParamName, Is.EqualTo("logger"));
     }
 
-    [Fact]
+    [Test]
     public void Log_generic_overload_forwards_the_original_state_and_formatter()
     {
         RecordingLogger<TestCategory> innerLogger = new();
@@ -24,16 +24,14 @@ public sealed class LoggerWrapperTests
 
         sut.Log(LogLevel.Information, eventId, state, exception, static (value, _) => $"Hello {value.Name}");
 
-        LogEntry entry = Assert.Single(innerLogger.Entries);
-        Assert.Equal(LogLevel.Information, entry.Level);
-        Assert.Equal(eventId, entry.EventId);
-        Assert.Same(state, entry.State);
-        Assert.Same(exception, entry.Exception);
-        Assert.Equal("Hello Arthur", entry.RenderedMessage);
+        LogEntry entry = innerLogger.Entries.Single();
+        Assert.That(entry.Level, Is.EqualTo(LogLevel.Information));
+        Assert.That(entry.EventId, Is.EqualTo(eventId));
+        Assert.That(entry.State, Is.SameAs(state));
+        Assert.That(entry.Exception, Is.SameAs(exception));
+        Assert.That(entry.RenderedMessage, Is.EqualTo("Hello Arthur"));
     }
-
-    [Theory]
-    [MemberData(nameof(ExceptionOnlyLogCases))]
+    [TestCaseSource(nameof(ExceptionOnlyLogCases))]
     public void Exception_only_overloads_forward_the_expected_log_level(Action<LoggerWrapper<TestCategory>, Exception> logAction, LogLevel expectedLevel)
     {
         RecordingLogger<TestCategory> innerLogger = new();
@@ -42,13 +40,13 @@ public sealed class LoggerWrapperTests
 
         logAction(sut, exception);
 
-        LogEntry entry = Assert.Single(innerLogger.Entries);
-        Assert.Equal(expectedLevel, entry.Level);
-        Assert.Equal(default, entry.EventId);
-        Assert.Same(exception, entry.Exception);
+        LogEntry entry = innerLogger.Entries.Single();
+        Assert.That(entry.Level, Is.EqualTo(expectedLevel));
+        Assert.That(entry.EventId, Is.EqualTo(default(EventId)));
+        Assert.That(entry.Exception, Is.SameAs(exception));
     }
 
-    [Fact]
+    [Test]
     public void Convenience_message_overloads_preserve_event_id_exception_and_message_template()
     {
         RecordingLogger<TestCategory> innerLogger = new();
@@ -58,15 +56,15 @@ public sealed class LoggerWrapperTests
 
         sut.LogWarning(eventId, exception, "Ship {ShipName} lost power at sector {Sector}", "Heart of Gold", 5);
 
-        LogEntry entry = Assert.Single(innerLogger.Entries);
-        Assert.Equal(LogLevel.Warning, entry.Level);
-        Assert.Equal(eventId, entry.EventId);
-        Assert.Same(exception, entry.Exception);
-        Assert.Equal("Ship Heart of Gold lost power at sector 5", entry.RenderedMessage);
-        Assert.Equal("Ship {ShipName} lost power at sector {Sector}", entry.OriginalFormat);
+        LogEntry entry = innerLogger.Entries.Single();
+        Assert.That(entry.Level, Is.EqualTo(LogLevel.Warning));
+        Assert.That(entry.EventId, Is.EqualTo(eventId));
+        Assert.That(entry.Exception, Is.SameAs(exception));
+        Assert.That(entry.RenderedMessage, Is.EqualTo("Ship Heart of Gold lost power at sector 5"));
+        Assert.That(entry.OriginalFormat, Is.EqualTo("Ship {ShipName} lost power at sector {Sector}"));
     }
 
-    [Fact]
+    [Test]
     public void IsEnabled_returns_the_inner_logger_result()
     {
         RecordingLogger<TestCategory> innerLogger = new() { IsEnabledResult = false };
@@ -74,10 +72,10 @@ public sealed class LoggerWrapperTests
 
         bool result = sut.IsEnabled(LogLevel.Debug);
 
-        Assert.False(result);
+        Assert.That(result, Is.False);
     }
 
-    [Fact]
+    [Test]
     public void BeginScope_generic_overload_forwards_the_original_state_and_scope()
     {
         RecordingLogger<TestCategory> innerLogger = new();
@@ -86,11 +84,11 @@ public sealed class LoggerWrapperTests
 
         IDisposable? scope = sut.BeginScope(state);
 
-        Assert.Same(innerLogger.Scope, scope);
-        Assert.Same(state, Assert.Single(innerLogger.ScopeStates));
+        Assert.That(scope, Is.SameAs(innerLogger.Scope));
+        Assert.That(innerLogger.ScopeStates.Single(), Is.SameAs(state));
     }
 
-    [Fact]
+    [Test]
     public void BeginScope_message_template_overload_formats_the_scope_state()
     {
         RecordingLogger<TestCategory> innerLogger = new();
@@ -98,21 +96,26 @@ public sealed class LoggerWrapperTests
 
         IDisposable? scope = sut.BeginScope("Travelling with {Passenger}", "Trillian");
 
-        object scopeState = Assert.Single(innerLogger.ScopeStates);
-        Assert.Same(innerLogger.Scope, scope);
-        Assert.Equal("Travelling with Trillian", scopeState.ToString());
-        Assert.Equal("Travelling with {Passenger}", GetOriginalFormat(scopeState));
+        object scopeState = innerLogger.ScopeStates.Single();
+        Assert.That(scope, Is.SameAs(innerLogger.Scope));
+        Assert.That(scopeState.ToString(), Is.EqualTo("Travelling with Trillian"));
+        Assert.That(GetOriginalFormat(scopeState), Is.EqualTo("Travelling with {Passenger}"));
     }
 
-    public static TheoryData<Action<LoggerWrapper<TestCategory>, Exception>, LogLevel> ExceptionOnlyLogCases()
+    public static IEnumerable<TestCaseData> ExceptionOnlyLogCases()
     {
-        return new TheoryData<Action<LoggerWrapper<TestCategory>, Exception>, LogLevel>
-        {
-            { static (logger, exception) => logger.Log(LogLevel.Trace, exception), LogLevel.Trace },
-            { static (logger, exception) => logger.LogWarning(exception), LogLevel.Warning },
-            { static (logger, exception) => logger.LogError(exception), LogLevel.Error },
-            { static (logger, exception) => logger.LogCritical(exception), LogLevel.Critical }
-        };
+        yield return new TestCaseData(
+            new Action<LoggerWrapper<TestCategory>, Exception>(static (logger, exception) => logger.Log(LogLevel.Trace, exception)),
+            LogLevel.Trace);
+        yield return new TestCaseData(
+            new Action<LoggerWrapper<TestCategory>, Exception>(static (logger, exception) => logger.LogWarning(exception)),
+            LogLevel.Warning);
+        yield return new TestCaseData(
+            new Action<LoggerWrapper<TestCategory>, Exception>(static (logger, exception) => logger.LogError(exception)),
+            LogLevel.Error);
+        yield return new TestCaseData(
+            new Action<LoggerWrapper<TestCategory>, Exception>(static (logger, exception) => logger.LogCritical(exception)),
+            LogLevel.Critical);
     }
 
     private static string? GetOriginalFormat(object state)

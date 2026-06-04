@@ -7,7 +7,7 @@ namespace Tests.Odin.CQRS;
 
 public sealed class DependencyInjectionExtensionsTests
 {
-    [Fact]
+    [Test]
     public void AddOdinCommandDispatcher_registers_CommandDispatcher_and_LoggerWrapper()
     {
         ServiceCollection services = new();
@@ -22,7 +22,7 @@ public sealed class DependencyInjectionExtensionsTests
     }
 
 
-    [Fact]
+    [Test]
     public void AddOdinCommandHandlers_registers_scanned_handlers()
     {
         ServiceCollection services = new();
@@ -37,7 +37,7 @@ public sealed class DependencyInjectionExtensionsTests
 
     }
 
-    [Fact]
+    [Test]
     public void AddOdinCommandHandlers_requires_specific_assemblies_to_scan()
     {
         ServiceCollection services = new();

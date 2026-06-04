@@ -4,14 +4,14 @@ namespace Tests.Odin.Utility
 {
     public sealed class ValueChangeTests
     {
-        [Fact]
+        [Test]
         public void Create_DateOnly_and_Decimal_value_change()
         {
             ValueChange<DateOnly, decimal> sut = new ValueChange<DateOnly, Decimal>(new DateOnly(2025, 5, 1), 15.5m);
 
-            Assert.NotNull(sut);
-            Assert.Equal(new DateOnly(2025, 5, 1), sut.From);
-            Assert.Equal(15.5m, sut.Value);
+            Assert.That(sut, Is.Not.Null);
+            Assert.That(sut.From, Is.EqualTo(new DateOnly(2025, 5, 1)));
+            Assert.That(sut.Value, Is.EqualTo(15.5m));
         }
 
         // [Test]

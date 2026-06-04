@@ -14,10 +14,11 @@ public class RabbitConnectionServiceTests
         public required string ThreadIdentifier { get; init; }
     }
 
-    [Fact(Skip = "So far, RabbitConnectionService is tested manually only.")]
+    [Test]
+    [Ignore("So far, RabbitConnectionService is tested manually only.")]
     public async Task Publish_Works()
     {
-        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        CancellationToken cancellationToken = CancellationToken.None;
         RabbitConnectionService box = new RabbitConnectionService(new RabbitConnectionServiceSettings
         {
             Host = "localhost",
@@ -124,10 +125,11 @@ public class RabbitConnectionServiceTests
         await Task.WhenAll(sendingTasks);
     }
 
-    [Fact(Skip = "So far, RabbitConnectionService is tested manually only.")]
+    [Test]
+    [Ignore("So far, RabbitConnectionService is tested manually only.")]
     public async Task QueueSubscription_Works()
     {
-        CancellationToken cancellationToken = TestContext.Current.CancellationToken;
+        CancellationToken cancellationToken = CancellationToken.None;
         RabbitConnectionService box = new RabbitConnectionService(new RabbitConnectionServiceSettings
         {
             Host = "localhost",

@@ -6,25 +6,25 @@ namespace Tests.Odin.DDD.Repositories;
 
 public sealed class SingleEntityQuerySpecificationTests
 {
-    [Fact]
+    [Test]
     public void SingleEntityQuerySpecification_requires_criteria()
     {
         Assert.Throws<ArgumentNullException>(() => new SingleEntityQuerySpecification<TestAggregateRoot>(null!));
     }
 
-    [Fact]
+    [Test]
     public void SingleEntityQuerySpecification_stores_criteria()
     {
         Expression<Func<TestAggregateRoot, bool>> criteria = aggregateRoot => aggregateRoot.Name == "test";
 
         SingleEntityQuerySpecification<TestAggregateRoot> sut = new SingleEntityQuerySpecification<TestAggregateRoot>(criteria);
 
-        Assert.Same(criteria, sut.Criteria);
-        Assert.True(sut.Criteria.Compile()(new TestAggregateRoot { Name = "test" }));
-        Assert.Null(sut.Includes);
+        Assert.That(sut.Criteria, Is.SameAs(criteria));
+        Assert.That(sut.Criteria.Compile()(new TestAggregateRoot { Name = "test" }), Is.True);
+        Assert.That(sut.Includes, Is.Null);
     }
 
-    [Fact]
+    [Test]
     public void SingleEntityQuerySpecification_stores_constructor_includes()
     {
         Expression<Func<TestAggregateRoot, object>> nameInclude = aggregateRoot => aggregateRoot.Name;
@@ -34,11 +34,11 @@ public sealed class SingleEntityQuerySpecificationTests
             aggregateRoot => aggregateRoot.Id == 1,
             [nameInclude, idInclude]);
 
-        Assert.NotNull(sut.Includes);
-        Assert.Equal([nameInclude, idInclude], sut.Includes);
+        Assert.That(sut.Includes, Is.Not.Null);
+        Assert.That(sut.Includes, Is.EqualTo([nameInclude, idInclude]));
     }
 
-    [Fact]
+    [Test]
     public void SingleEntityQuerySpecification_adds_includes()
     {
         Expression<Func<TestAggregateRoot, object>> include = aggregateRoot => aggregateRoot.Name;
@@ -47,9 +47,9 @@ public sealed class SingleEntityQuerySpecificationTests
 
         sut.AddInclude(include);
 
-        Assert.NotNull(sut.Includes);
-        Assert.Single(sut.Includes);
-        Assert.Same(include, sut.Includes[0]);
+        Assert.That(sut.Includes, Is.Not.Null);
+        sut.Includes.Single();
+        Assert.That(sut.Includes[0], Is.SameAs(include));
     }
 
     private sealed class TestAggregateRoot : IIdentityAggregateRoot<int>

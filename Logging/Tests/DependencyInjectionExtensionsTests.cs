@@ -6,7 +6,7 @@ namespace Tests.Odin.Logging;
 
 public sealed class DependencyInjectionExtensionsTests
 {
-    [Fact]
+    [Test]
     public void AddOdinLoggerWrapper_registers_LoggerWrapper_as_an_open_generic_singleton()
     {
         ServiceCollection services = new();
@@ -17,7 +17,7 @@ public sealed class DependencyInjectionExtensionsTests
         services.AssertServiceRegistration(typeof(ILogger<>), ServiceLifetime.Singleton);
     }
 
-    [Fact]
+    [Test]
     public void AddOdinLoggerWrapper_does_not_duplicate_the_wrapper_registration()
     {
         ServiceCollection services = new();

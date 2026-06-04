@@ -8,21 +8,10 @@ using Respawn;
 namespace Tests.Odin.DDD.Repositories.EF;
 
 /// <summary>
-/// For XUnit shared SupportedDatabasesFixture per test run
-/// </summary>
-[CollectionDefinition(nameof(SupportedDatabasesCollection))]
-public class SupportedDatabasesCollection : ICollectionFixture<SupportedDatabasesFixture>
-{
-    // This class has no code, and is never created. Its purpose is simply
-    // to be the place to apply [CollectionDefinition] and all the
-    // ICollectionFixture<> interfaces.
-}
-
-/// <summary>
 /// The intention is to keep a dictionary of supported database servers using TestContainers
 /// for testing
 /// </summary>
-public class SupportedDatabasesFixture : IAsyncLifetime
+public class SupportedDatabasesFixture : IAsyncDisposable
 {
     private Respawner _respawner = null!;
 

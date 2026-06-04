@@ -6,29 +6,29 @@ namespace Tests.Odin.DDD.Repositories;
 
 public sealed class QuerySpecificationBaseTests
 {
-    [Fact]
+    [Test]
     public void QuerySpecification_defaults_to_no_filtering_or_paging()
     {
         TestQuerySpecificationBase sut = new TestQuerySpecificationBase();
 
-        Assert.Null(sut.Criteria);
-        Assert.Null(sut.Includes);
-        Assert.Null(sut.Orderings);
-        Assert.Null(sut.Page);
+        Assert.That(sut.Criteria, Is.Null);
+        Assert.That(sut.Includes, Is.Null);
+        Assert.That(sut.Orderings, Is.Null);
+        Assert.That(sut.Page, Is.Null);
     }
 
-    [Fact]
+    [Test]
     public void QuerySpecification_stores_criteria()
     {
         Expression<Func<TestAggregateRoot, bool>> criteria = aggregateRoot => aggregateRoot.Id == 123;
 
         TestQuerySpecificationBase sut = new TestQuerySpecificationBase(criteria);
 
-        Assert.Same(criteria, sut.Criteria);
-        Assert.True(sut.Criteria!.Compile()(new TestAggregateRoot { Id = 123 }));
+        Assert.That(sut.Criteria, Is.SameAs(criteria));
+        Assert.That(sut.Criteria!.Compile()(new TestAggregateRoot { Id = 123 }), Is.True);
     }
 
-    [Fact]
+    [Test]
     public void QuerySpecification_adds_include_expressions()
     {
         Expression<Func<TestAggregateRoot, object>> include = aggregateRoot => aggregateRoot.Name;
@@ -36,12 +36,12 @@ public sealed class QuerySpecificationBaseTests
 
         sut.Include(include);
 
-        Assert.NotNull(sut.Includes);
-        Assert.Single(sut.Includes);
-        Assert.Same(include, sut.Includes[0]);
+        Assert.That(sut.Includes, Is.Not.Null);
+        sut.Includes.Single();
+        Assert.That(sut.Includes[0], Is.SameAs(include));
     }
 
-    [Fact]
+    [Test]
     public void QuerySpecification_applies_incremental_ordering()
     {
         Expression<Func<TestAggregateRoot, object>> orderBy = aggregateRoot => aggregateRoot.Name;
@@ -51,15 +51,15 @@ public sealed class QuerySpecificationBaseTests
         sut.OrderAscending(orderBy);
         sut.ThenDescending(thenByDescending);
 
-        Assert.NotNull(sut.Orderings);
-        Assert.Equal(2, sut.Orderings.Count);
-        Assert.Same(orderBy, sut.Orderings[0].Expression);
-        Assert.Equal(SortDirection.Ascending, sut.Orderings[0].Direction);
-        Assert.Same(thenByDescending, sut.Orderings[1].Expression);
-        Assert.Equal(SortDirection.Descending, sut.Orderings[1].Direction);
+        Assert.That(sut.Orderings, Is.Not.Null);
+        Assert.That(sut.Orderings.Count, Is.EqualTo(2));
+        Assert.That(sut.Orderings[0].Expression, Is.SameAs(orderBy));
+        Assert.That(sut.Orderings[0].Direction, Is.EqualTo(SortDirection.Ascending));
+        Assert.That(sut.Orderings[1].Expression, Is.SameAs(thenByDescending));
+        Assert.That(sut.Orderings[1].Direction, Is.EqualTo(SortDirection.Descending));
     }
 
-    [Fact]
+    [Test]
     public void QuerySpecification_applies_batch_ordering()
     {
         Expression<Func<TestAggregateRoot, object>> orderByDescending = aggregateRoot => aggregateRoot.Name;
@@ -70,48 +70,46 @@ public sealed class QuerySpecificationBaseTests
             QueryOrdering<TestAggregateRoot>.Descending(orderByDescending),
             QueryOrdering<TestAggregateRoot>.Ascending(thenBy));
 
-        Assert.NotNull(sut.Orderings);
-        Assert.Equal(2, sut.Orderings.Count);
-        Assert.Same(orderByDescending, sut.Orderings[0].Expression);
-        Assert.Equal(SortDirection.Descending, sut.Orderings[0].Direction);
-        Assert.Same(thenBy, sut.Orderings[1].Expression);
-        Assert.Equal(SortDirection.Ascending, sut.Orderings[1].Direction);
+        Assert.That(sut.Orderings, Is.Not.Null);
+        Assert.That(sut.Orderings.Count, Is.EqualTo(2));
+        Assert.That(sut.Orderings[0].Expression, Is.SameAs(orderByDescending));
+        Assert.That(sut.Orderings[0].Direction, Is.EqualTo(SortDirection.Descending));
+        Assert.That(sut.Orderings[1].Expression, Is.SameAs(thenBy));
+        Assert.That(sut.Orderings[1].Direction, Is.EqualTo(SortDirection.Ascending));
     }
 
-    [Fact]
+    [Test]
     public void QuerySpecification_applies_paging()
     {
         TestQuerySpecificationBase sut = new TestQuerySpecificationBase();
 
         sut.ApplyPage(new Pagination(pageNumber: 3, pageSize: 25));
 
-        Assert.NotNull(sut.Page);
-        Assert.Equal(3, sut.Page.PageNumber);
-        Assert.Equal(25, sut.Page.PageSize);
+        Assert.That(sut.Page, Is.Not.Null);
+        Assert.That(sut.Page.PageNumber, Is.EqualTo(3));
+        Assert.That(sut.Page.PageSize, Is.EqualTo(25));
     }
 
-    [Fact]
+    [Test]
     public void Pagination_stores_page_number_and_page_size()
     {
         Pagination sut = new Pagination(pageNumber: 3, pageSize: 25);
 
-        Assert.Equal(3, sut.PageNumber);
-        Assert.Equal(25, sut.PageSize);
+        Assert.That(sut.PageNumber, Is.EqualTo(3));
+        Assert.That(sut.PageSize, Is.EqualTo(25));
     }
 
-    [Fact]
+    [Test]
     public void Pagination_calculates_skip_and_take_from_page_number_and_page_size()
     {
         Pagination sut = new Pagination(pageNumber: 3, pageSize: 25);
 
-        Assert.Equal(50, sut.Skip);
-        Assert.Equal(25, sut.Take);
+        Assert.That(sut.Skip, Is.EqualTo(50));
+        Assert.That(sut.Take, Is.EqualTo(25));
     }
-
-    [Theory]
-    [InlineData(0, 25)]
-    [InlineData(1, 0)]
-    [InlineData(1, -1)]
+    [TestCase(0, 25)]
+    [TestCase(1, 0)]
+    [TestCase(1, -1)]
     public void Pagination_rejects_invalid_page_number_or_page_size(int pageNumber, int pageSize)
     {
         Assert.Throws<ArgumentOutOfRangeException>(() => new Pagination(pageNumber, pageSize));

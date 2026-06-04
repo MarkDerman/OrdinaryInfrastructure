@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Tests.Odin.Email.Mailgun
 {
-    [Trait("Category", "IntegrationTest")]
+    [Category("IntegrationTest")]
     public sealed class MailgunEmailSenderTests : IntegrationTest
     {
         private string _toTestEmail = null!;
@@ -19,17 +19,14 @@ namespace Tests.Odin.Email.Mailgun
             _toTestEmail = config["Email-TestToAddress"] ?? throw new Exception("Email-TestToAddress required in configuration");
             _fromTestEmail = config["Email-TestFromAddress"] ?? throw new Exception("Email-TestFromAddress required in configuration");
         }
-
-
-        [Theory]
-        [InlineData("Subject-prefix")]
-        [InlineData("Subject-postfix")]
-        [InlineData("Default-from-is-used")]
-        [InlineData("Default-from-and-name-are-used")]
-        [InlineData("No-default-from-does-not-throw")]
-        [InlineData("1-tag")]
-        [InlineData("2-tags")]
-        [Trait("Category", "IntegrationTest")]
+        [TestCase("Subject-prefix")]
+        [TestCase("Subject-postfix")]
+        [TestCase("Default-from-is-used")]
+        [TestCase("Default-from-and-name-are-used")]
+        [TestCase("No-default-from-does-not-throw")]
+        [TestCase("1-tag")]
+        [TestCase("2-tags")]
+        [Category("IntegrationTest")]
         public async Task Sending_using_various_email_options(string testCase)
         {
             EmailSendingOptions emailSendingOptions = new EmailSendingOptions();
@@ -85,8 +82,8 @@ namespace Tests.Odin.Email.Mailgun
             VerifySuccessfulSendAndLogging(scenario, email, result);
         }
 
-        [Fact]
-        [Trait("Category", "IntegrationTest")]
+        [Test]
+        [Category("IntegrationTest")]
         public async Task Send_with_attachment()
         {
             IConfiguration config = AppFactory.GetConfiguration();
@@ -114,9 +111,9 @@ namespace Tests.Odin.Email.Mailgun
         private void VerifySuccessfulSendAndLogging(MailgunEmailSenderTestBuilder scenario, EmailMessage message, ResultValue<string> result)
         {
             // Result
-            Assert.True(result.IsSuccess, result.MessagesToString());
-            Assert.NotNull(result.Value);
-            Assert.False(string.IsNullOrWhiteSpace(result.Value), "Message Id expected from Mailgun");
+            Assert.That(result.IsSuccess, Is.True, result.MessagesToString());
+            Assert.That(result.Value, Is.Not.Null);
+            Assert.That(string.IsNullOrWhiteSpace(result.Value), Is.False, "Message Id expected from Mailgun");
 
             // Should be no warnings, errors
             scenario.LoggerMock!.Verify(c => c.Log(It.IsNotIn(LogLevel.Information), It.IsAny<string>(), It.IsAny<Exception>()), Times.Never);
@@ -132,8 +129,8 @@ namespace Tests.Odin.Email.Mailgun
         /// <summary>
         /// Ensure send does not succeed, and that appropriate logging is called.
         /// </summary>
-        [Fact]
-        [Trait("Category", "IntegrationTest")]
+        [Test]
+        [Category("IntegrationTest")]
         public async Task Send_handles_and_logs_for_bad_Mailgun_api_key()
         {
             IConfiguration config = AppFactory.GetConfiguration();
@@ -155,10 +152,10 @@ namespace Tests.Odin.Email.Mailgun
 
             // 3 retries
             scenario.LoggerMock!.Verify(c => c.Log(LogLevel.Error, expectedLogMessage, It.IsAny<Exception>()), Times.Exactly(4));
-            Assert.False(result.IsSuccess);
-            Assert.NotEmpty(result.Messages);
-            Assert.Contains("401", result.Messages[0]);
-            Assert.Contains("Unauthorized", result.Messages[0]);
+            Assert.That(result.IsSuccess, Is.False);
+            Assert.That(result.Messages, Is.Not.Empty);
+            Assert.That(result.Messages[0], Does.Contain("401"));
+            Assert.That(result.Messages[0], Does.Contain("Unauthorized"));
         }
     }
 }

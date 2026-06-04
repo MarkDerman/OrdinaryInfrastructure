@@ -5,31 +5,31 @@ namespace Tests.Odin.System
     public abstract class ResultOfTMessageTests<TMessage> where TMessage : class
     {
 
-        [Fact]
+        [Test]
         public void Success()
         {
             Result<TMessage> sut = Result<TMessage>.Success();
 
-            Assert.True(sut.IsSuccess);
-            Assert.Empty(sut.Messages);
+            Assert.That(sut.IsSuccess, Is.True);
+            Assert.That(sut.Messages, Is.Empty);
         }
 
-        [Fact]
+        [Test]
         public void Failure_without_TMessage()
         {
             Result<TMessage> sut = Result<TMessage>.Failure((null as TMessage)!);
 
-            Assert.False(sut.IsSuccess);
-            Assert.Empty(sut.Messages);
+            Assert.That(sut.IsSuccess, Is.False);
+            Assert.That(sut.Messages, Is.Empty);
         }
 
-        [Fact]
+        [Test]
         public void Default_result_is_a_failure()
         {
             Result<TMessage> sut = new Result<TMessage>();
 
-            Assert.False(sut.IsSuccess);
-            Assert.Empty(sut.Messages);
+            Assert.That(sut.IsSuccess, Is.False);
+            Assert.That(sut.Messages, Is.Empty);
         }
     }
 

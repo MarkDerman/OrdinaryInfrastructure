@@ -17,7 +17,7 @@
 ... are a collection born after years of building many line-of-business applications on .NET...  
 The result of componentising various recurring ordinary use-cases that we kept repeating in client systems at [Soulv Software](https://soulv.co.za/).
 
-As at Dec 2025, the library is a hodge-podge of miscellaneous bits and bobs.
+Current the collection is quite an assortment, have a look below...
 
 With .Net Core almost 10 years old now, I have never stopped missing using invariants on my domain entities with 
 the old Code Contracts from .NET Framework days, so I am now putting my attention to creating some form of runtime 
@@ -31,7 +31,7 @@ Coming soon... :construction:
 
 <p>&nbsp;</p>
 
-## Result Pattern: Result and ResultValue
+## Result Pattern
 
 [![NuGet](https://img.shields.io/nuget/v/Odin.System.Result.svg)](https://www.nuget.org/packages/Odin.System.Result)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.Result)
 
@@ -63,7 +63,7 @@ provides several **'Result'** classes, which all encapsulate the success of an o
 ```
 [Result documentation...](System/Result)
 
-## Email Sending :email:
+## Emailing :email:
 
 [Odin.Email](https://www.nuget.org/packages/Odin.Email) provides an IEmailSender with email sending support currently for Mailgun and Office365.
 
@@ -116,11 +116,11 @@ provides several **'Result'** classes, which all encapsulate the success of an o
 
 <p>&nbsp;</p>
 
-## Odin.Logging :clipboard:
+## Logging :clipboard:
 
 [![NuGet](https://img.shields.io/nuget/v/Odin.Logging.svg)](https://www.nuget.org/packages/Odin.Logging)            ![Nuget](https://img.shields.io/nuget/dt/Odin.Logging)   
 
-Provides an **ILoggerWrapper of T** that extends .NET's ILogger of T with all the LogXXX(...) calls as provided by the .NET LoggerExtensions extension methods (and a few more), for simpler logging assertion verifications. 
+[Odin.Logging](Logging/) provides an **ILoggerWrapper of T** that extends .NET's ILogger of T with all the LogXXX(...) calls as provided by the .NET LoggerExtensions extension methods (and a few more), for simpler logging assertion verifications. 
 
 [Read more...](Logging/)
 
@@ -146,7 +146,7 @@ Provides an **ILoggerWrapper of T** that extends .NET's ILogger of T with all th
 
 <p>&nbsp;</p>
 
-## Razor Templating
+## Razor Template Rendering
 
 Provides an IRazorTemplateRenderer for rendering .cshtml Razor files outside of the context of ASP.Net. 
 
@@ -167,7 +167,7 @@ Provides an IRazorTemplateRenderer for rendering .cshtml Razor files outside of 
 
 <p>&nbsp;</p>
 
-## StringEnum
+## Strings
 
 [![NuGet](https://img.shields.io/nuget/v/Odin.System.StringEnum.svg)](https://www.nuget.org/packages/Odin.System.StringEnum)            ![Nuget](https://img.shields.io/nuget/dt/Odin.System.StringEnum)
 

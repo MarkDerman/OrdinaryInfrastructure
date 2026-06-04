@@ -2,13 +2,11 @@
 
 [![NuGet](https://img.shields.io/nuget/v/Odin.Logging.svg)](https://www.nuget.org/packages/Odin.Logging)  ![Nuget](https://img.shields.io/nuget/dt/Odin.Logging)
 
-Odin.Logging, part of the [OrDinary INfrastructure](https://github.com/MarkDerman/OrdinaryInfrastructure) libraries,  provides an **ILoggerWrapper of T** that extends .NET's ILogger of T with all the LogXXX(...) calls as provided by the .NET LoggerExtensions extension methods (and a few more), for simpler logging assertion verifications.
+Odin.Logging, part of the [OrDinary INfrastructure](https://github.com/MarkDerman/OrdinaryInfrastructure) libraries,  provides an **ILoggerWrapper of T** that wraps .NET's ILogger of T with all the LogXXX(...) calls as provided by the .NET LoggerExtensions extension methods (and a few more), for simpler logging assertion verifications.
 
 ## Getting Started
 
-### 1 - Add package
-
-Add the Odin.Logging package from NuGet to your project using the command...
+### 1 - Add the 'Odin.Logging' package
 
 ```shell
    dotnet add package Odin.Logging
@@ -21,9 +19,11 @@ Add the Odin.Logging package from NuGet to your project using the command...
     builder.Services.AddOdinLoggerWrapper();
 ```    
 
+NOTE: AddOdinLoggerWrapper() requires ILogger ensure this by calling AddLogging()
+
 ### 3 - Configure .NET Logging and ILogger 
 
-As you normally would in startup code and configuration. Eg...
+As you normally would in startup code and\or configuration. Eg...
 
 ```json
 {
@@ -77,7 +77,7 @@ As you normally would in startup code and configuration. Eg...
 Some musings on why I consider validation by unit testing of appropriate logging (of 1000s of out-of-scope to be handled application situations) 
 to be an important contributor towards excellence with respect to **Robustness**. 
 
-**Correctness**, the prime quality of excellent software, reflects the ability of software to perform its intended exact behaviour. 
+**Correctness**, 1 of the 2 prime qualities of truly excellent software IMHO, reflects the ability of software to perform its intended exact behaviour. 
 While 'exact behaviour' can range anywhere from a grey area of implicitly agreed-in-conversation-with-stakeholders rough functionality, to well-defined 
 clearly written (and usually emerging) specifications (if you are lucky and have excellent product ownership).
 

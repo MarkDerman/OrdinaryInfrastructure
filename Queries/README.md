@@ -1,2 +1,0 @@
-## About Odin.Queries
-~~~~~~~~

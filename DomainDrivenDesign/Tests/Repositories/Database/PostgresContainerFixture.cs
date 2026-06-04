@@ -12,6 +12,18 @@ public sealed class PostgresContainerFixture : IDatabaseFixture
 
     public string ConnectionString => _container.GetConnectionString();
 
+    public DbContextOptions<TestDatabaseContext> CreateOptions() 
+    {
+        return new DbContextOptionsBuilder<TestDatabaseContext>()
+            .UseNpgsql(ConnectionString)
+            .Options;
+    }
+
+    public ValueTask ResetDatabaseAsync()
+    {
+        return ValueTask.CompletedTask;
+    }
+
     public async ValueTask InitializeAsync()
     {
         await _container.StartAsync();
@@ -20,19 +32,5 @@ public sealed class PostgresContainerFixture : IDatabaseFixture
     public async ValueTask DisposeAsync()
     {
         await _container.DisposeAsync();
-    }
-
-    public TestDatabaseContext CreateDbContext()
-    {
-        var options = new DbContextOptionsBuilder<TestDatabaseContext>()
-            .UseNpgsql(ConnectionString)
-            .Options;
-
-        return new TestDatabaseContext(options);
-    }
-
-    public string ProviderName
-    {
-        get { return "Postgres18"; }
     }
 }

@@ -21,18 +21,16 @@ public sealed class SqlServerContainerFixture : IDatabaseFixture
     {
         await _container.DisposeAsync();
     }
-
-    public TestDatabaseContext CreateDbContext()
+    
+    public ValueTask ResetDatabaseAsync()
     {
-        var options = new DbContextOptionsBuilder<TestDatabaseContext>()
-            .UseSqlServer(ConnectionString)
-            .Options;
-
-        return new TestDatabaseContext(options);
+        return ValueTask.CompletedTask;
     }
 
-    public string ProviderName
+    public DbContextOptions<TestDatabaseContext> CreateOptions() 
     {
-        get { return "SqlServer2022"; }
+        return new DbContextOptionsBuilder<TestDatabaseContext>()
+            .UseSqlServer(ConnectionString)
+            .Options;
     }
 }

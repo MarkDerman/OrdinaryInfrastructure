@@ -8,7 +8,7 @@ namespace Tests.Odin.BackgroundProcessing
 {
     public sealed class DependencyInjectionExtensionsTests
     {
-        [Fact]
+        [Test]
         public void AddBackgroundProcessing_adds_FakeBackgroundProcessor_to_application_from_configuration()
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder();
@@ -19,12 +19,12 @@ namespace Tests.Odin.BackgroundProcessing
             IBackgroundProcessor? provider = sut.Services.GetService<IBackgroundProcessor>();
             BackgroundProcessingOptions? config = sut.Services.GetService<BackgroundProcessingOptions>();
 
-            Assert.NotNull(provider);
-            Assert.IsType<NullBackgroundProcessor>(provider);
-            Assert.NotNull(config);
+            Assert.That(provider, Is.Not.Null);
+            Assert.That(provider, Is.TypeOf<NullBackgroundProcessor>());
+            Assert.That(config, Is.Not.Null);
         }
 
-        [Fact]
+        [Test]
         public void AddBackgroundProcessing_adds_HangfireBackgroundProcessor_to_application_from_configuration()
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder();
@@ -37,9 +37,9 @@ namespace Tests.Odin.BackgroundProcessing
             // We don't put HangfireOptions into config... It is only used to start Hangfire on app start only.
             // HangfireOptions providerConfig = sut.Services.GetService<HangfireOptions>();
 
-            Assert.NotNull(provider);
-            Assert.IsType<HangfireBackgroundProcessor>(provider);
-            Assert.NotNull(config);
+            Assert.That(provider, Is.Not.Null);
+            Assert.That(provider, Is.TypeOf<HangfireBackgroundProcessor>());
+            Assert.That(config, Is.Not.Null);
         }
 
         public static string GetNullBackgroundProcessorConfigJson()

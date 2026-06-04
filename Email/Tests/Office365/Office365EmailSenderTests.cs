@@ -7,7 +7,7 @@ using Odin.System;
 
 namespace Tests.Odin.Email.Office365;
 
-[Trait("Category", "IntegrationTest")]
+[Category("IntegrationTest")]
 public class Office365EmailSenderTests : IntegrationTest
 {
     private string _toTestEmail = null!;
@@ -32,16 +32,14 @@ public class Office365EmailSenderTests : IntegrationTest
             Provider = EmailSendingProviders.Office365
         };
     }
-
-    [Theory]
-    [InlineData("1-Tag")]
-    [InlineData("Null-Tags")]
-    [InlineData("Empty-Tags")]
-    [InlineData("Many-Tags")]
-    [InlineData("1-Attachment")]
-    [InlineData("2-Attachments")]
-    [InlineData("Plain-Text-Body")]
-    [Trait("Category", "IntegrationTest")]
+    [TestCase("1-Tag")]
+    [TestCase("Null-Tags")]
+    [TestCase("Empty-Tags")]
+    [TestCase("Many-Tags")]
+    [TestCase("1-Attachment")]
+    [TestCase("2-Attachments")]
+    [TestCase("Plain-Text-Body")]
+    [Category("IntegrationTest")]
     public async Task Send_various_emails(string testCase)
     {
         EmailMessage email = new EmailMessage()
@@ -96,16 +94,14 @@ public class Office365EmailSenderTests : IntegrationTest
 
         VerifySuccessfulSendAndLogging(scenario, email, result);
     }
-
-    [Theory]
-    [InlineData("Subject-prefix")]
-    [InlineData("Subject-postfix")]
-    [InlineData("Default-from-is-used")]
-    [InlineData("Default-from-and-name-are-used")]
-    [InlineData("No-default-from-does-not-throw")]
-    [InlineData("1-tag")]
-    [InlineData("2-tags")]
-    [Trait("Category", "IntegrationTest")]
+    [TestCase("Subject-prefix")]
+    [TestCase("Subject-postfix")]
+    [TestCase("Default-from-is-used")]
+    [TestCase("Default-from-and-name-are-used")]
+    [TestCase("No-default-from-does-not-throw")]
+    [TestCase("1-tag")]
+    [TestCase("2-tags")]
+    [Category("IntegrationTest")]
     public async Task Send_correctly_implements_email_options(string testCase)
     {
         EmailSendingOptions emailSendingOptions = new EmailSendingOptions();
@@ -166,9 +162,9 @@ public class Office365EmailSenderTests : IntegrationTest
         ResultValue<string> result)
     {
         // Result
-        Assert.True(result.IsSuccess, result.MessagesToString());
-        Assert.NotNull(result.Value);
-        Assert.False(string.IsNullOrWhiteSpace(result.Value), "Message Id expected from Office365");
+        Assert.That(result.IsSuccess, Is.True, result.MessagesToString());
+        Assert.That(result.Value, Is.Not.Null);
+        Assert.That(string.IsNullOrWhiteSpace(result.Value), Is.False, "Message Id expected from Office365");
 
         // Should be no warnings, errors
         scenario.LoggerMock!.Verify(

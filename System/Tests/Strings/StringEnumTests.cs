@@ -5,81 +5,79 @@ namespace Tests.Odin.System.Strings
 {
     public sealed class StringEnumTests
     {
-        [Theory]
-        [InlineData("val1", true)]
-        [InlineData("VAL1", false)]
-        [InlineData("Elephant", false)]
+        [TestCase("val1", true)]
+        [TestCase("VAL1", false)]
+        [TestCase("Elephant", false)]
         public void HasValue(string? testValue, bool expectedResult)
         {
             bool sut = FourValsStringEnum.HasValue(testValue);
 
-            Assert.Equal(expectedResult, sut);
+            Assert.That(sut, Is.EqualTo(expectedResult));
         }
-
-        [Theory]
-        [InlineData("val1", true)]
-        [InlineData("VAL1", false)]
-        [InlineData("Elephant", false)]
+        [TestCase("val1", true)]
+        [TestCase("VAL1", false)]
+        [TestCase("Elephant", false)]
         public void ValidateValue(string? testValue, bool expectedResult)
         {
             Result sut = FourValsStringEnum.ValidateValue(testValue);
 
-            Assert.True(sut.IsSuccess == expectedResult, sut.MessagesToString());
+            Assert.That(sut.IsSuccess == expectedResult, Is.True, sut.MessagesToString());
         }
 
-        [Fact]
+        [Test]
         public void Values_operation()
         {
             ImmutableHashSet<string> sut = FourValsStringEnum.Values;
 
-            Assert.Equal(4, sut.Count);
-            Assert.Contains("val1", sut);
-            Assert.Contains("val2", sut);
-            Assert.Contains("val3", sut);
-            Assert.Contains("val4", sut);
-            Assert.DoesNotContain("Rusty", sut);
+            Assert.That(sut.Count, Is.EqualTo(4));
+            Assert.That(sut, Does.Contain("val1"));
+            Assert.That(sut, Does.Contain("val2"));
+            Assert.That(sut, Does.Contain("val3"));
+            Assert.That(sut, Does.Contain("val4"));
+            Assert.That(sut, Does.Not.Contain("Rusty"));
         }
 
-        [Fact]
+        [Test]
         public void Duplicate_values_are_prohibited()
         {
             ImmutableHashSet<string> sut = FourValsStringEnum.Values;
 
-            Assert.Equal(4, sut.Count);
-            Assert.Contains("val1", sut);
-            Assert.Contains("val2", sut);
-            Assert.Contains("val3", sut);
-            Assert.Contains("val4", sut);
-            Assert.DoesNotContain("Rusty", sut);
+            Assert.That(sut.Count, Is.EqualTo(4));
+            Assert.That(sut, Does.Contain("val1"));
+            Assert.That(sut, Does.Contain("val2"));
+            Assert.That(sut, Does.Contain("val3"));
+            Assert.That(sut, Does.Contain("val4"));
+            Assert.That(sut, Does.Not.Contain("Rusty"));
         }
 
-        [Fact]
+        [Test]
         public void Values_with_duplicates_are_not_supported()
         {
-            Assert.Throws<NotSupportedException>(() => DuplicateValsStringEnum.Values);
+            Assert.Throws<NotSupportedException>(() =>
+            {
+                ImmutableHashSet<string> _ = DuplicateValsStringEnum.Values;
+            });
         }
 
-        [Fact]
+        [Test]
         public void HasValue_with_duplicates_are_not_supported()
         {
             Assert.Throws<NotSupportedException>(() => DuplicateValsStringEnum.HasValue("123"));
         }
 
-        [Fact]
+        [Test]
         public void Values_with_duplicates_by_case_only_are_supported()
         {
-            Exception? ex = Record.Exception(() =>
+            Assert.DoesNotThrow(() =>
             {
                 ImmutableHashSet<string> _ = DuplicateValsByCaseOnlyStringEnum.Values;
             });
-            Assert.Null(ex);
         }
 
-        [Fact]
+        [Test]
         public void HasValue_with_duplicates_by_case_only_are_supported()
         {
-            Exception? ex = Record.Exception(() => DuplicateValsByCaseOnlyStringEnum.HasValue("123"));
-            Assert.Null(ex);
+            Assert.DoesNotThrow(() => DuplicateValsByCaseOnlyStringEnum.HasValue("123"));
         }
     }
 

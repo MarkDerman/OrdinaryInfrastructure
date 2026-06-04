@@ -6,9 +6,8 @@ namespace Tests.Odin.Email
 {
     public sealed class EmailSendingOptionsTests
     {
-        [Theory]
-        [InlineData("Mailgun", true)]
-        [InlineData("Null", true)]
+        [TestCase("Mailgun", true)]
+        [TestCase("Null", true)]
         public void IsConfigurationValid_requires_valid_provider(string provider, bool isValidConfig)
         {
             EmailSendingOptions sut = new EmailSendingOptions()
@@ -20,7 +19,7 @@ namespace Tests.Odin.Email
 
             Result result = sut.Validate();
 
-            Assert.Equal(isValidConfig, result.IsSuccess);
+            Assert.That(result.IsSuccess, Is.EqualTo(isValidConfig));
         }
     }
 }

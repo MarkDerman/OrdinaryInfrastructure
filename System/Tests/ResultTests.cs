@@ -5,72 +5,66 @@ namespace Tests.Odin.System
 {
     public sealed class ResultTests
     {
-        [Fact]
+        [Test]
         public void Simple_Success()
         {
             Result sut = Result.Success();
 
-            Assert.True(sut.IsSuccess);
-            Assert.Equal(string.Empty, sut.MessagesToString());
-            Assert.Empty(sut.Messages);
+            Assert.That(sut.IsSuccess, Is.True);
+            Assert.That(sut.MessagesToString(), Is.EqualTo(string.Empty));
+            Assert.That(sut.Messages, Is.Empty);
         }
-
-        [Theory]
-        [InlineData("Reason", false)]
-        [InlineData(null, true)]
-        [InlineData(" ", true)]
-        [InlineData("", true)]
+        [TestCase("Reason", false)]
+        [TestCase(null, true)]
+        [TestCase(" ", true)]
+        [TestCase("", true)]
         public void Failure_requires_a_non_whitespace_message(string? message, bool shouldThrow)
         {
             if (shouldThrow)
             {
-                ArgumentException error = Assert.ThrowsAny<ArgumentException>(() => Result.Failure(message!));
-                Assert.NotNull(error);
+                ArgumentException error = Assert.Catch<ArgumentException>(() => Result.Failure(message!));
+                Assert.That(error, Is.Not.Null);
             }
             else
             {
                 Result sut = Result.Failure(message!);
-                Assert.False(sut.IsSuccess);
-                Assert.Equal(message, sut.MessagesToString());
-                Assert.Equal(message, sut.Messages[0]);
-                Assert.Single(sut.Messages);
+                Assert.That(sut.IsSuccess, Is.False);
+                Assert.That(sut.MessagesToString(), Is.EqualTo(message));
+                Assert.That(sut.Messages[0], Is.EqualTo(message));
+                sut.Messages.Single();
             }
         }
 
-        [Fact]
+        [Test]
         public void Succeed_with_message()
         {
             Result sut = Result.Success("lovely");
 
-            Assert.True(sut.IsSuccess);
-            Assert.Equal("lovely", sut.MessagesToString());
-            Assert.Equal("lovely", sut.Messages[0]);
-            Assert.Single(sut.Messages);
+            Assert.That(sut.IsSuccess, Is.True);
+            Assert.That(sut.MessagesToString(), Is.EqualTo("lovely"));
+            Assert.That(sut.Messages[0], Is.EqualTo("lovely"));
+            sut.Messages.Single();
         }
-
-        [Theory]
-        [InlineData("message", true)]
-        [InlineData("message", false)]
-        [InlineData("", false)]
-        [InlineData(null, false)]
+        [TestCase("message", true)]
+        [TestCase("message", false)]
+        [TestCase("", false)]
+        [TestCase(null, false)]
         public void Constructor_with_success_and_failure(string? message, bool isSuccess)
         {
             Result sut = new Result(isSuccess, message);
 
-            Assert.Equal(isSuccess, sut.IsSuccess);
+            Assert.That(sut.IsSuccess, Is.EqualTo(isSuccess));
         }
 
-        [Fact]
+        [Test]
         public void Default_result_is_a_failure()
         {
             Result sut = new Result();
 
-            Assert.False(sut.IsSuccess);
-            Assert.Empty(sut.Messages);
+            Assert.That(sut.IsSuccess, Is.False);
+            Assert.That(sut.Messages, Is.Empty);
         }
-
-        [Theory]
-        [MemberData(nameof(ResultCaseData))]
+        [TestCaseSource(nameof(ResultCaseData))]
         public void Result_serialises(bool success, string message, string serializer)
         {
             if (!success && string.IsNullOrWhiteSpace(message))
@@ -88,12 +82,10 @@ namespace Tests.Odin.System
                 result = JsonSerializer.Serialize(sut);
             }
 
-            Assert.NotNull(result);
-            Assert.Equal(ResultJsonFor(success, message), result);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.EqualTo(ResultJsonFor(success, message)));
         }
-
-        [Theory]
-        [MemberData(nameof(ResultCaseData))]
+        [TestCaseSource(nameof(ResultCaseData))]
         public void Result_deserialises(bool success, string message, string serializer)
         {
             if (!success && string.IsNullOrWhiteSpace(message))
@@ -111,12 +103,12 @@ namespace Tests.Odin.System
                 sut = JsonSerializer.Deserialize<Result>(json)!;
             }
 
-            Assert.NotNull(sut);
-            Assert.Equal(success, sut.IsSuccess);
-            Assert.Equal(message, sut.Messages[0]);
+            Assert.That(sut, Is.Not.Null);
+            Assert.That(sut.IsSuccess, Is.EqualTo(success));
+            Assert.That(sut.Messages[0], Is.EqualTo(message));
         }
 
-        [Fact]
+        [Test]
         public void Combine_with_success_and_failures()
         {
             Result r1 = Result.Success();
@@ -125,12 +117,12 @@ namespace Tests.Odin.System
 
             Result sut = Result.Combine(r1, r2, r3);
 
-            Assert.False(sut.IsSuccess);
+            Assert.That(sut.IsSuccess, Is.False);
             // First failure is returned...
-            Assert.Equal("r2", sut.Messages[0]);
+            Assert.That(sut.Messages[0], Is.EqualTo("r2"));
         }
 
-        [Fact]
+        [Test]
         public void Combine_with_only_success()
         {
             Result r1 = Result.Success("r1");
@@ -139,8 +131,8 @@ namespace Tests.Odin.System
 
             Result sut = Result.Combine(r1, r2, r3);
 
-            Assert.True(sut.IsSuccess);
-            Assert.Empty(sut.Messages);
+            Assert.That(sut.IsSuccess, Is.True);
+            Assert.That(sut.Messages, Is.Empty);
         }
 
         internal string ResultJsonFor(bool isSuccess, string? message)

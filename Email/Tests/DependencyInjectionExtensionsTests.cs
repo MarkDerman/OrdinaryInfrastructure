@@ -8,7 +8,7 @@ namespace Tests.Odin.Email
 {
     public sealed class DependencyInjectionExtensionsTests
     {
-        [Fact]
+        [Test]
         public void Add_Null_provider()
         {
             WebApplicationBuilder Builder = WebApplication.CreateBuilder();
@@ -19,12 +19,12 @@ namespace Tests.Odin.Email
             IEmailSender? mailSender = sut.Services.GetService<IEmailSender>();
             EmailSendingOptions? config = sut.Services.GetService<EmailSendingOptions>();
 
-            Assert.NotNull(mailSender);
-            Assert.IsType<NullEmailSender>(mailSender);
-            Assert.NotNull(config);
+            Assert.That(mailSender, Is.Not.Null);
+            Assert.That(mailSender, Is.TypeOf<NullEmailSender>());
+            Assert.That(config, Is.Not.Null);
         }
 
-        [Fact]
+        [Test]
         public void Add_Mailgun_provider()
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder();
@@ -36,13 +36,13 @@ namespace Tests.Odin.Email
             EmailSendingOptions? config = sut.Services.GetService<EmailSendingOptions>();
             MailgunOptions? mailgunConfig = sut.Services.GetService<MailgunOptions>();
 
-            Assert.NotNull(provider);
-            Assert.IsType<MailgunEmailSender>(provider);
-            Assert.NotNull(config);
-            Assert.NotNull(mailgunConfig);
+            Assert.That(provider, Is.Not.Null);
+            Assert.That(provider, Is.TypeOf<MailgunEmailSender>());
+            Assert.That(config, Is.Not.Null);
+            Assert.That(mailgunConfig, Is.Not.Null);
         }
 
-        [Fact]
+        [Test]
         public void Add_Office365_provider()
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder();
@@ -54,10 +54,10 @@ namespace Tests.Odin.Email
             EmailSendingOptions? config = sut.Services.GetService<EmailSendingOptions>();
             Office365Options? providerConfig = sut.Services.GetService<Office365Options>();
 
-            Assert.NotNull(provider);
-            Assert.IsType<Office365EmailSender>(provider);
-            Assert.NotNull(config);
-            Assert.NotNull(providerConfig);
+            Assert.That(provider, Is.Not.Null);
+            Assert.That(provider, Is.TypeOf<Office365EmailSender>());
+            Assert.That(config, Is.Not.Null);
+            Assert.That(providerConfig, Is.Not.Null);
         }
 
 

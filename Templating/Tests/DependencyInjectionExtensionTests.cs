@@ -8,7 +8,7 @@ namespace Tests.Odin.Templating
 {
     public sealed class DependencyInjectionExtensionTests
     {
-        [Fact]
+        [Test]
         public void AddRazorTemplating_succeeds()
         {
             WebApplicationBuilder builder = WebApplication.CreateBuilder();
@@ -19,9 +19,9 @@ namespace Tests.Odin.Templating
             IRazorTemplateRenderer? result = sut.Services.GetService<IRazorTemplateRenderer>();
             IRazorLightEngine? dependency = sut.Services.GetService<IRazorLightEngine>();
 
-            Assert.NotNull(result);
-            Assert.NotNull(dependency);
-            Assert.IsType<RazorTemplateRenderer>(result);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(dependency, Is.Not.Null);
+            Assert.That(result, Is.TypeOf<RazorTemplateRenderer>());
         }
 
     }

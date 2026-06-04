@@ -3,7 +3,7 @@ using Tests.Odin.DDD.Repositories.Database;
 
 namespace Tests.Odin.DDD.Repositories.EF;
 
-public abstract class DatabaseTestBase : IClassFixture<AppFactory>
+public abstract class DatabaseTestBase : IAsyncDisposable
 {
     private readonly IServiceScope _scope;
     private readonly AppFactory _appFactory;

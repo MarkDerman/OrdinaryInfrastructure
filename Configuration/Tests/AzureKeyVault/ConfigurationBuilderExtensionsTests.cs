@@ -7,7 +7,7 @@ namespace Tests.Odin.Configuration.AzureKeyVault;
 
 public class ConfigurationBuilderExtensionsTests
 {
-    [Fact]
+    [Test]
     public void AddOdinPrefixedAzureKeyVault_with_disabled_section_returns_the_same_builder_without_adding_a_source()
     {
         IConfigurationRoot config = CreateConfiguration(new Dictionary<string, string?>
@@ -18,11 +18,11 @@ public class ConfigurationBuilderExtensionsTests
 
         IConfigurationBuilder result = builder.AddOdinPrefixedAzureKeyVault(config.GetSection("AzureKeyVault"));
 
-        Assert.Same(builder, result);
-        Assert.Empty(builder.Sources);
+        Assert.That(result, Is.SameAs(builder));
+        Assert.That(builder.Sources, Is.Empty);
     }
 
-    [Fact]
+    [Test]
     public void AddOdinPrefixedAzureKeyVault_with_missing_required_section_values_throws()
     {
         IConfigurationRoot config = CreateConfiguration(new Dictionary<string, string?>
@@ -32,14 +32,13 @@ public class ConfigurationBuilderExtensionsTests
         });
         IConfigurationBuilder builder = new ConfigurationBuilder();
 
-        InvalidOperationException result = Assert.Throws<InvalidOperationException>(
-            () => builder.AddOdinPrefixedAzureKeyVault(config.GetSection("AzureKeyVault")));
+        InvalidOperationException result = Assert.Throws<InvalidOperationException>(() => builder.AddOdinPrefixedAzureKeyVault(config.GetSection("AzureKeyVault")));
 
-        Assert.Contains("TenantId, ClientId, Secret", result.Message);
-        Assert.Empty(builder.Sources);
+        Assert.That(result.Message, Does.Contain("TenantId, ClientId, Secret"));
+        Assert.That(builder.Sources, Is.Empty);
     }
 
-    [Fact]
+    [Test]
     public void AddOdinPrefixedAzureKeyVault_with_section_name_reads_configuration_from_the_builder()
     {
         AzureKeyVaultConfigurationOptions options = new();
@@ -48,14 +47,15 @@ public class ConfigurationBuilderExtensionsTests
 
         IConfigurationBuilder result = builder.AddOdinPrefixedAzureKeyVault(options: options);
 
-        Assert.Same(builder, result);
-        Assert.Single(builder.Sources.OfType<AzureKeyVaultConfigurationSource>());
-        PrefixedAzureKeyVaultSecretManager manager = Assert.IsType<PrefixedAzureKeyVaultSecretManager>(options.Manager);
-        Assert.True(manager.Load(new("MyApp-Production-ConnectionStrings-Default")));
-        Assert.False(manager.Load(new("OtherApp-Production-ConnectionStrings-Default")));
+        Assert.That(result, Is.SameAs(builder));
+        builder.Sources.OfType<AzureKeyVaultConfigurationSource>().Single();
+        Assert.That(options.Manager, Is.TypeOf<PrefixedAzureKeyVaultSecretManager>());
+        PrefixedAzureKeyVaultSecretManager manager = (PrefixedAzureKeyVaultSecretManager)options.Manager;
+        Assert.That(manager.Load(new("MyApp-Production-ConnectionStrings-Default")), Is.True);
+        Assert.That(manager.Load(new("OtherApp-Production-ConnectionStrings-Default")), Is.False);
     }
 
-    [Fact]
+    [Test]
     public void AddOdinPrefixedAzureKeyVault_with_section_uses_vault_uri_when_vault_name_is_not_configured()
     {
         AzureKeyVaultConfigurationOptions options = new();
@@ -67,12 +67,12 @@ public class ConfigurationBuilderExtensionsTests
 
         IConfigurationBuilder result = builder.AddOdinPrefixedAzureKeyVault(config.GetSection("AzureKeyVault"), options);
 
-        Assert.Same(builder, result);
-        Assert.Single(builder.Sources.OfType<AzureKeyVaultConfigurationSource>());
-        Assert.IsType<PrefixedAzureKeyVaultSecretManager>(options.Manager);
+        Assert.That(result, Is.SameAs(builder));
+        builder.Sources.OfType<AzureKeyVaultConfigurationSource>().Single();
+        Assert.That(options.Manager, Is.TypeOf<PrefixedAzureKeyVaultSecretManager>());
     }
 
-    [Fact]
+    [Test]
     public void AddOdinPrefixedAzureKeyVault_with_uri_adds_key_vault_source_and_replaces_the_options_manager()
     {
         AzureKeyVaultConfigurationOptions options = new()
@@ -87,15 +87,16 @@ public class ConfigurationBuilderExtensionsTests
             new TestTokenCredential(),
             options);
 
-        Assert.Same(builder, result);
-        Assert.Single(builder.Sources.OfType<AzureKeyVaultConfigurationSource>());
-        Assert.Equal(TimeSpan.FromMinutes(5), options.ReloadInterval);
-        PrefixedAzureKeyVaultSecretManager manager = Assert.IsType<PrefixedAzureKeyVaultSecretManager>(options.Manager);
-        Assert.True(manager.Load(new("MyApp-Production-ConnectionStrings-Default")));
-        Assert.False(manager.Load(new("OtherApp-Production-ConnectionStrings-Default")));
+        Assert.That(result, Is.SameAs(builder));
+        builder.Sources.OfType<AzureKeyVaultConfigurationSource>().Single();
+        Assert.That(options.ReloadInterval, Is.EqualTo(TimeSpan.FromMinutes(5)));
+        Assert.That(options.Manager, Is.TypeOf<PrefixedAzureKeyVaultSecretManager>());
+        PrefixedAzureKeyVaultSecretManager manager = (PrefixedAzureKeyVaultSecretManager)options.Manager;
+        Assert.That(manager.Load(new("MyApp-Production-ConnectionStrings-Default")), Is.True);
+        Assert.That(manager.Load(new("OtherApp-Production-ConnectionStrings-Default")), Is.False);
     }
 
-    [Fact]
+    [Test]
     public void AddOdinPrefixedAzureKeyVault_with_vault_name_adds_key_vault_source()
     {
         AzureKeyVaultConfigurationOptions options = new();
@@ -107,64 +108,57 @@ public class ConfigurationBuilderExtensionsTests
             new TestTokenCredential(),
             options);
 
-        Assert.Same(builder, result);
-        Assert.Single(builder.Sources.OfType<AzureKeyVaultConfigurationSource>());
-        Assert.IsType<PrefixedAzureKeyVaultSecretManager>(options.Manager);
+        Assert.That(result, Is.SameAs(builder));
+        builder.Sources.OfType<AzureKeyVaultConfigurationSource>().Single();
+        Assert.That(options.Manager, Is.TypeOf<PrefixedAzureKeyVaultSecretManager>());
     }
 
-    [Fact]
+    [Test]
     public void AddOdinPrefixedAzureKeyVault_with_section_throws_when_section_is_null()
     {
         IConfigurationBuilder builder = new ConfigurationBuilder();
 
-        Assert.Throws<ArgumentNullException>(
-            () => builder.AddOdinPrefixedAzureKeyVault(akvConfigSection: null!));
+        Assert.Throws<ArgumentNullException>(() => builder.AddOdinPrefixedAzureKeyVault(akvConfigSection: null!));
     }
 
-    [Fact]
+    [Test]
     public void AddOdinPrefixedAzureKeyVault_with_vault_name_throws_for_invalid_arguments()
     {
         IConfigurationBuilder builder = new ConfigurationBuilder();
         TestTokenCredential credential = new();
 
-        Assert.Throws<ArgumentNullException>(
-            () => Microsoft.Extensions.Configuration.ConfigurationBuilderExtensions.AddOdinPrefixedAzureKeyVault(
+        Assert.Throws<ArgumentNullException>(() => Microsoft.Extensions.Configuration.ConfigurationBuilderExtensions.AddOdinPrefixedAzureKeyVault(
                 null!,
                 "odin-test-vault",
                 "MyApp-Production-",
                 credential));
-        Assert.Throws<ArgumentException>(
-            () => builder.AddOdinPrefixedAzureKeyVault(
+        Assert.Throws<ArgumentException>(() => builder.AddOdinPrefixedAzureKeyVault(
                 "   ",
                 "MyApp-Production-",
                 credential));
-        Assert.Throws<ArgumentNullException>(
-            () => builder.AddOdinPrefixedAzureKeyVault(
+        Assert.Throws<ArgumentNullException>(() => builder.AddOdinPrefixedAzureKeyVault(
                 "odin-test-vault",
                 "MyApp-Production-",
                 credential: null!));
     }
 
-    [Fact]
+    [Test]
     public void AddOdinPrefixedAzureKeyVault_with_uri_throws_for_invalid_arguments()
     {
         IConfigurationBuilder builder = new ConfigurationBuilder();
         Uri vaultUri = new("https://odin-test-vault.vault.azure.net/");
         TestTokenCredential credential = new();
 
-        Assert.Throws<ArgumentNullException>(
-            () => Microsoft.Extensions.Configuration.ConfigurationBuilderExtensions.AddOdinPrefixedAzureKeyVault(
+        Assert.Throws<ArgumentNullException>(() => Microsoft.Extensions.Configuration.ConfigurationBuilderExtensions.AddOdinPrefixedAzureKeyVault(
                 null!,
                 vaultUri,
                 "MyApp-Production-",
                 credential));
-        Assert.Throws<ArgumentNullException>(
-            () => builder.AddOdinPrefixedAzureKeyVault(
+        Assert.Throws<ArgumentNullException>(() => builder.AddOdinPrefixedAzureKeyVault(
                 azureKeyVaultUri: null!,
                 prefix: "MyApp-Production-",
                 credential: credential));
-        Assert.Throws<ArgumentNullException>(
-            () => builder.AddOdinPrefixedAzureKeyVault(
+        Assert.Throws<ArgumentNullException>(() => builder.AddOdinPrefixedAzureKeyVault(
                 vaultUri,
                 "MyApp-Production-",
                 credential: null!));

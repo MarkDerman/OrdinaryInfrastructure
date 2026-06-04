@@ -6,13 +6,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="Xunit" />
+    <Using Include="NUnit.Framework" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="xunit.v3" />
     <PackageReference Include="Moq" />
-    <PackageReference Include="xunit.runner.visualstudio">
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="NUnit.Analyzers">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -21,7 +25,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Testing\XUnitUtility\Odin.Testing.XUnitUtility.csproj" />
+    <ProjectReference Include="..\..\Testing\NUnitUtility\Odin.Testing.NUnitUtility.csproj" />
     <ProjectReference Include="..\..\Logging\Core\Odin.Logging.csproj" />
   </ItemGroup>
 </Project>

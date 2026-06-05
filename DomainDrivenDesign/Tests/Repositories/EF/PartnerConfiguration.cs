@@ -23,6 +23,9 @@ namespace Tests.Odin.DDD.Repositories.EF
             builder.Property(x => x.VatNumber)
                 .HasMaxLength(50)
                 .IsUnicode();
+            builder.Property(x => x.Status)
+                .HasConversion<short>()
+                .HasColumnType("smallint");
         }
     }
 }

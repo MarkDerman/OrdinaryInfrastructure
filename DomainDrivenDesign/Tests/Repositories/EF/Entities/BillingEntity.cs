@@ -1,4 +1,3 @@
-
 using Odin.DDD;
 
 namespace Tests.Odin.DDD.Repositories.EF.Entities;
@@ -27,4 +26,12 @@ public class BillingEntity : IIdentityAggregateRoot<int>
 
     public string? VatNumber { get; set; }
 
+    public BillingEntityStatus Status { get; set; } = BillingEntityStatus.Active;
+
+}
+
+public enum BillingEntityStatus : short
+{
+    NotActive = 0,
+    Active = 1,
 }

@@ -38,6 +38,13 @@ alter table dbo.BillingPeriod
     add constraint DF_BillingPeriod_BillingStatus default 0 for BillingStatus
 go
 
+insert into dbo.BillingPeriodBillingStatus (Id, Name)
+values  (-1, N'Failed'),
+        (0, N'Not processed'),
+        (3, N'Completed'),
+        (4, N'Processing')
+go
+
 create index IX_BillingPeriod_BillingEntityIdPeriodEnding
     on dbo.BillingPeriod (BillingEntityId, PeriodEnding)
 go
@@ -58,7 +65,7 @@ create index IX_BillingPeriod_Stage
     on dbo.BillingPeriod (Stage)
 go
 
-create table dbo.DataTypes
+create table dbo.DataType
 (
     Id   smallint     not null
         primary key,
@@ -66,7 +73,7 @@ create table dbo.DataTypes
 )
 go
 
-insert into dbo.DataTypes (Id, Name)
+insert into dbo.DataType (Id, Name)
 values  (0, N'String'),
         (1, N'Guid'),
         (2, N'DateTime'),
@@ -74,27 +81,27 @@ values  (0, N'String'),
         (4, N'Int64');
 go
 
-create table dbo.BillingPeriodProperties
+create table dbo.BillingPeriodProperty
 (
     Id   bigint identity
         primary key,
     BillingPeriodId bigint          not null
-        constraint FK_BillingPeriodProperties_BillingPeriod
+        constraint FK_BillingPeriodProperty_BillingPeriod
             references dbo.BillingPeriod
             on delete cascade,
     PropertyName    nvarchar(50) not null,
     DataType        smallint     not null
-        constraint FK_BillingPeriodProperties_DataType
-            references dbo.DataTypes,
+        constraint FK_BillingPeriodProperty_DataType
+            references dbo.DataType,
     DataValue       nvarchar(max)
 )
 go
 
-create unique index IX_BillingPeriodProperties_BillingPeriodId_PropertyName
-    on dbo.BillingPeriodProperties (BillingPeriodId, PropertyName)
+create unique index IX_BillingPeriodProperty_BillingPeriodId_PropertyName
+    on dbo.BillingPeriodProperty (BillingPeriodId, PropertyName)
 go
 
-create table dbo.BillingPeriodTaskStatuses
+create table dbo.BillingPeriodTaskStatus
 (
     Id          smallint     not null
         constraint PK_BillingPeriodTaskStatus
@@ -103,7 +110,7 @@ create table dbo.BillingPeriodTaskStatuses
 )
 go
 
-create table dbo.BillingPeriodTaskTypes
+create table dbo.BillingPeriodTaskType
 (
     Id          smallint     not null
         constraint PK_BillingPeriodTaskType
@@ -112,49 +119,49 @@ create table dbo.BillingPeriodTaskTypes
 )
 go
 
-create table dbo.BillingPeriodTasks
+create table dbo.BillingPeriodTask
 (
     Id   bigint identity (1, 1)
-        constraint PK_BillingPeriodTask2
+        constraint PK_BillingPeriodTask
             primary key nonclustered,
     BillingPeriodId bigint                        not null
-        constraint FK_BillingPeriodTasks_BillingPeriod
+        constraint FK_BillingPeriodTask_BillingPeriod
             references dbo.BillingPeriod
             on delete cascade,
     TaskType            smallint                   not null
-        constraint FK_BillingPeriodTasks_BillingPeriodTaskType
-            references dbo.BillingPeriodTaskTypes,
+        constraint FK_BillingPeriodTask_BillingPeriodTaskType
+            references dbo.BillingPeriodTaskType,
     Status          smallint                   not null
-        constraint FK_BillingPeriodTasks_BillingPeriodTaskStatus
-            references dbo.BillingPeriodTaskStatuses,
+        constraint FK_BillingPeriodTask_BillingPeriodTaskStatus
+            references dbo.BillingPeriodTaskStatus,
     DependsOn       varchar(1000)                          not null,
     CreatedAt       datetimeoffset                         not null,
     LastAttemptedAt datetimeoffset,
     WaitUntil       datetimeoffset,
     Data            nvarchar(max),
     Stage           smallint                   not null
-        constraint FK_BillingPeriodTasks_Stage
+        constraint FK_BillingPeriodTask_Stage
             references dbo.BillingPeriodStage
 )
 go
 
-alter table dbo.BillingPeriodTasks
-    add constraint DF_BillingPeriodTasks_DependsOn default '[]' for DependsOn
+alter table dbo.BillingPeriodTask
+    add constraint DF_BillingPeriodTask_DependsOn default '[]' for DependsOn
 go
 
-create index IX_BillingPeriodTasks_Status
-    on dbo.BillingPeriodTasks (Status)
+create index IX_BillingPeriodTask_Status
+    on dbo.BillingPeriodTask (Status)
 go
 
-create index IX_BillingPeriodTasks_WaitUntil
-    on dbo.BillingPeriodTasks (WaitUntil)
+create index IX_BillingPeriodTask_WaitUntil
+    on dbo.BillingPeriodTask (WaitUntil)
 go
 
-create index IX_BillingPeriodTasks_Type
-    on dbo.BillingPeriodTasks (TaskType)
+create index IX_BillingPeriodTask_Type
+    on dbo.BillingPeriodTask (TaskType)
 go
 
-insert into dbo.BillingPeriodTaskStatuses (Id, Description)
+insert into dbo.BillingPeriodTaskStatus (Id, Description)
 values  (-2, N'Failed'),
         (-1, N'Failed (to be retried)'),
         (0, N'New'),
@@ -172,7 +179,7 @@ values  (0, N'Period in progress'),
 
 go
 
-insert into dbo.BillingPeriodTaskTypes (Id, Description)
+insert into dbo.BillingPeriodTaskType (Id, Description)
 values  (20, N'Refresh Sales Fees and Commission Totals by Billing Code'),
         (40, N'Create EoBP Sage ARCustomerInvoice'),
         (41, N'Post EoBP Sage ARCustomerInvoice'),

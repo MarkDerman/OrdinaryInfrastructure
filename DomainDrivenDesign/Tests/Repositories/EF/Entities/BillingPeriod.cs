@@ -22,7 +22,7 @@ namespace Tests.Odin.DDD.Repositories.EF.Entities
         /// <param name="endInclusive"></param>
         /// <param name="initialStage"></param>
         public BillingPeriod(BillingEntity billingEntity, DateOnly startInclusive,
-            DateOnly endInclusive, short initialStage)
+            DateOnly endInclusive, BillingPeriodStage initialStage)
         {
             ArgumentNullException.ThrowIfNull(billingEntity);
             BillingEntity = billingEntity;
@@ -60,18 +60,65 @@ namespace Tests.Odin.DDD.Repositories.EF.Entities
         /// <summary>
         ///  The current Stage of processing
         /// </summary>
-        public int Stage { get; set; }
+        public BillingPeriodStage Stage { get; set; }
 
-        public BillingPeriodStatus Status { get; set; }
+        public BillingPeriodBillingStatus BillingStatus { get; set; }
 
+        public ICollection<BillingPeriodProperty> Properties { get; protected set; } = new List<BillingPeriodProperty>();
+
+        public ICollection<BillingPeriodTask> Tasks { get; protected set; } = new List<BillingPeriodTask>();
 
     }
     
-    public enum BillingPeriodStatus : short
+    public enum BillingPeriodBillingStatus : short
     {
         Failed = -1,
         NotProcessed = 0,
         Completed = 3,
         Processing = 4,
+    }
+
+    public enum BillingPeriodStage : short
+    {
+        PeriodInProgress = 0,
+        RecordBillables = 20,
+        PostCustomerInvoice = 40,
+        PostVendorBill = 50,
+        SettleVendorBill = 60,
+        Done = 100,
+    }
+
+    public enum DataType : short
+    {
+        String = 0,
+        Guid = 1,
+        DateTime = 2,
+        DateTimeOffset = 3,
+        Int64 = 4,
+    }
+
+    public enum BillingPeriodTaskStatus : short
+    {
+        Failed = -2,
+        FailedToBeRetried = -1,
+        New = 0,
+        Succeeded = 2,
+    }
+
+    public enum BillingPeriodTaskType : short
+    {
+        RefreshSalesFeesAndCommissionTotalsByBillingCode = 20,
+        CreateEndOfBillingPeriodSageARCustomerInvoice = 40,
+        PostEndOfBillingPeriodSageARCustomerInvoice = 41,
+        CreateEndOfBillingPeriodSageAPVendorInvoice = 50,
+        PostEndOfBillingPeriodSageAPVendorInvoice = 51,
+        CreateEndOfBillingPeriodSageARCustomerCreditNote = 60,
+        PostEndOfBillingPeriodSageARCustomerCreditNote = 61,
+        CreateEndOfBillingPeriodSageARReceiptAndAdjustment = 62,
+        PostEndOfBillingPeriodSageARReceiptAndAdjustment = 63,
+        CreateEndOfBillingPeriodSageAPVendorCreditNote = 64,
+        PostEndOfBillingPeriodSageAPVendorCreditNote = 65,
+        CreateEndOfBillingPeriodSageAPPaymentAndAdjustment = 66,
+        PostEndOfBillingPeriodSageAPPaymentAndAdjustment = 67,
     }
 }

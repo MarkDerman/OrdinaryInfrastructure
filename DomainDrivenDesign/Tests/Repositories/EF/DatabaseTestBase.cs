@@ -1,32 +1,51 @@
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 using Tests.Odin.DDD.Repositories.Database;
 
 namespace Tests.Odin.DDD.Repositories.EF;
 
-public abstract class DatabaseTestBase : IAsyncDisposable
+public abstract class DatabaseTestBase
 {
-    private readonly IServiceScope _scope;
-    private readonly AppFactory _appFactory;
     protected readonly TestDatabaseFixture TestDatabase;
 
-    protected DatabaseTestBase(AppFactory appFactory, TestDatabaseFixture testDatabase)
+    protected DatabaseTestBase(TestDatabaseFixture testDatabase)
     {
-        _appFactory = appFactory;
-        _scope = _appFactory.Services.CreateScope();
+        ArgumentNullException.ThrowIfNull(testDatabase);
         TestDatabase = testDatabase;
     }
 
-    public IServiceScope TestScope => _scope;
-
-    public async ValueTask InitializeAsync()
+    protected DatabaseTestBase(AppFactory appFactory, TestDatabaseFixture testDatabase)
+        : this(testDatabase)
     {
-        // Ensure database is reset before each test
+        ArgumentNullException.ThrowIfNull(appFactory);
+    }
+
+    [OneTimeSetUp]
+    public async Task InitializeDatabaseAsync()
+    {
+        await TestDatabase.InitializeAsync();
+    }
+
+    [SetUp]
+    public async Task ResetDatabaseAsync()
+    {
         await TestDatabase.ResetDatabaseAsync();
     }
 
-    public ValueTask DisposeAsync()
+    [OneTimeTearDown]
+    public async Task DisposeDatabaseAsync()
     {
-        _scope.Dispose();
-        return ValueTask.CompletedTask;
+        await TestDatabase.DisposeAsync();
+    }
+
+    protected TestDatabaseContext CreateContext()
+    {
+        DbContextOptionsBuilder<TestDatabaseContext> optionsBuilder = new DbContextOptionsBuilder<TestDatabaseContext>();
+        TestDatabase.DatabaseProvider.ConfigureDbContext(optionsBuilder, TestDatabase.ConnectionString);
+        return new TestDatabaseContext(optionsBuilder.Options);
+    }
+
+    protected Seeder CreateSeeder(TestDatabaseContext context)
+    {
+        return new Seeder(context);
     }
 }

@@ -1,9 +1,9 @@
 using DbUp.Engine.Transactions;
 using DotNet.Testcontainers.Containers;
-using Microsoft.Data.SqlClient;
 using Odin.Database;
 using Odin.System;
 using Respawn;
+using System.Data.Common;
 
 namespace Tests.Odin.DDD.Repositories.Database;
 
@@ -12,21 +12,20 @@ namespace Tests.Odin.DDD.Repositories.Database;
 /// </summary>
 public class TestDatabaseFixture : IAsyncDisposable
 {
-    public TestDatabaseFixture(IDatabaseContainerBuilder containerBuilder, IDbAdapter respawnAdaptor)
+    public TestDatabaseFixture(IDatabaseProviderAdapter databaseProvider)
     {
-        ArgumentNullException.ThrowIfNull(containerBuilder);
-        ArgumentNullException.ThrowIfNull(respawnAdaptor);
-        Image = containerBuilder.Image;
-        Server = containerBuilder.DatabaseProvider;
-        RespawnAdaptor = respawnAdaptor;
-        Container = containerBuilder.Build();
+        ArgumentNullException.ThrowIfNull(databaseProvider);
+        DatabaseProvider = databaseProvider;
+        Image = databaseProvider.Image;
+        Server = databaseProvider.DatabaseProvider;
+        Container = databaseProvider.BuildContainer();
     }
 
     private Respawner _respawner = null!;
+    public IDatabaseProviderAdapter DatabaseProvider { get; }
     public IDatabaseContainer Container { get;  }
     public string Image { get;  }
     public string Server { get;  }
-    public IDbAdapter RespawnAdaptor { get; }
     
     public string ConnectionString => Container.GetConnectionString();
     
@@ -34,16 +33,16 @@ public class TestDatabaseFixture : IAsyncDisposable
     {
         await Container.StartAsync();
         
-        Result migrations = RunMigrations(ConnectionString);
+        Result migrations = RunMigrations(ConnectionString, DatabaseProvider.MigrationScriptsLocation);
         if (!migrations.IsSuccess)
             throw new Exception($"Database migration scripts failed: {migrations.MessagesToString()}");
 
-        await using var connection = new SqlConnection(ConnectionString);
+        await using DbConnection connection = DatabaseProvider.CreateConnection(ConnectionString);
         await connection.OpenAsync();
 
         _respawner = await Respawner.CreateAsync(connection, new RespawnerOptions
         {
-            DbAdapter = RespawnAdaptor,
+            DbAdapter = DatabaseProvider.RespawnAdapter,
             SchemasToInclude = // Note, this implicitly excludes all other schemas...
             [
                 "dbo"
@@ -58,7 +57,7 @@ public class TestDatabaseFixture : IAsyncDisposable
     /// </summary>
     public async Task ResetDatabaseAsync()
     {
-        await using var connection = new SqlConnection(ConnectionString);
+        await using DbConnection connection = DatabaseProvider.CreateConnection(ConnectionString);
         await connection.OpenAsync();
         await _respawner.ResetAsync(connection);
     }
@@ -69,7 +68,7 @@ public class TestDatabaseFixture : IAsyncDisposable
         await Container.DisposeAsync();
     }
     
-    public static Result RunMigrations(string connectionString)
+    public static Result RunMigrations(string connectionString, string scriptsLocation)
     {
         ResultValue<SqlScriptsRunner> migrationsRunner =
             SqlScriptsRunner.CreateFromConnectionString(connectionString, typeof(TestDatabaseFixture).Assembly);
@@ -80,7 +79,7 @@ public class TestDatabaseFixture : IAsyncDisposable
         runner.JournalMode = JournalModeEnum.RunOnlyScriptsNotRunBefore;
         runner.JournalToTableName = "DatabaseMigrations";
         runner.ScriptsLocationType = ScriptsLocationTypeEnum.EmbeddedResourcePath;
-        runner.ScriptsLocation = ".EF.SqlServer.";
+        runner.ScriptsLocation = scriptsLocation;
         runner.TransactionHandling = TransactionMode.TransactionPerScript;
         return runner.Run();
     }

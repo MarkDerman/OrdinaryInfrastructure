@@ -1,7 +1,4 @@
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
-using Odin.System;
-using Respawn;
 using Tests.Odin.DDD.Repositories.Database;
 
 namespace Tests.Odin.DDD.Repositories.EF;

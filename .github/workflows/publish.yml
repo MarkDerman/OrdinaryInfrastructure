@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 env:
-  SOLUTION: './Odin.sln'
+  SOLUTION: './Odin.Publish.slnf'
   BUILD_CONFIGURATION: Release
   PACKAGE_DIR: Packaging
   NUGET_SOURCE: https://api.nuget.org/v3/index.json
@@ -48,38 +48,9 @@ jobs:
     
     - name: Package for Nuget
       run: |
-        dotnet pack ./BackgroundProcessing/Abstractions/Odin.BackgroundProcessing.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./BackgroundProcessing/Hangfire/Odin.BackgroundProcessing.Hangfire.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR 
-        dotnet pack ./BackgroundProcessing/Core/Odin.BackgroundProcessing.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./CQRS/Abstractions/Odin.CQRS.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./CQRS/Core/Odin.CQRS.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Configuration/AzureBlobJson/Odin.Configuration.AzureBlobJson.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Configuration/AzureKeyVault/Odin.Configuration.AzureKeyVault.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Database/SqlScriptsRunner/Odin.Database.SqlScriptsRunner.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./DesignContracts/Core/Odin.DesignContracts.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./DomainDrivenDesign/Core/Odin.DDD.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./DomainDrivenDesign/Repositories-EF/Odin.DDD.Repositories.EF.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Email/Mailgun/Odin.Email.Mailgun.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Email/Office365/Odin.Email.Office365.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Email/Core/Odin.Email.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Logging/Core/Odin.Logging.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Messaging/RabbitMq/Odin.Messaging.RabbitMq.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./RemoteFiles/Abstractions/Odin.RemoteFiles.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./RemoteFiles/SFTP/Odin.RemoteFiles.SFTP.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./RemoteFiles/Core/Odin.RemoteFiles.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./System/Activator2/Odin.System.Activator2.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Strings/Core/Odin.Strings.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./System/Result/Odin.System.Result.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Testing/NUnitUtility/Odin.Testing.NUnitUtility.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Testing/XUnitUtility/Odin.Testing.XUnitUtility.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Testing/XUnitV2Utility/Odin.Testing.XUnitV2Utility.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Testing/Core/Odin.Testing.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Testing/Fakes/Odin.Testing.Fakes.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Templating/Razor.Abstractions/Odin.Templating.Razor.Abstractions.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Templating/Razor/Odin.Templating.Razor.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Utility/VaryingValues/Odin.Utility.VaryingValues.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
-        dotnet pack ./Utility/Tax/Odin.Utility.Tax.csproj --configuration $CONFIGURATION --output $PACKAGE_DIR
+        dotnet pack $SOLUTION --configuration $CONFIGURATION --output $PACKAGE_DIR
       env:
+        SOLUTION: ${{env.SOLUTION}}
         CONFIGURATION: ${{env.BUILD_CONFIGURATION}}
         PACKAGE_DIR: ${{env.PACKAGE_DIR}}
         VERSION: ${{env.GitVersion_SemVer}}

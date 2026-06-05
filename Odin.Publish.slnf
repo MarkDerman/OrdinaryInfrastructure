@@ -1,0 +1,38 @@
+{
+  "solution": {
+    "path": "Odin.sln",
+    "projects": [
+      "BackgroundProcessing/Abstractions/Odin.BackgroundProcessing.Abstractions.csproj",
+      "BackgroundProcessing/Hangfire/Odin.BackgroundProcessing.Hangfire.csproj",
+      "BackgroundProcessing/Core/Odin.BackgroundProcessing.csproj",
+      "CQRS/Abstractions/Odin.CQRS.Abstractions.csproj",
+      "CQRS/Core/Odin.CQRS.csproj",
+      "Configuration/AzureBlobJson/Odin.Configuration.AzureBlobJson.csproj",
+      "Configuration/AzureKeyVault/Odin.Configuration.AzureKeyVault.csproj",
+      "Database/SqlScriptsRunner/Odin.Database.SqlScriptsRunner.csproj",
+      "DesignContracts/Core/Odin.DesignContracts.csproj",
+      "DomainDrivenDesign/Core/Odin.DDD.csproj",
+      "DomainDrivenDesign/Repositories-EF/Odin.DDD.Repositories.EF.csproj",
+      "Email/Mailgun/Odin.Email.Mailgun.csproj",
+      "Email/Office365/Odin.Email.Office365.csproj",
+      "Email/Core/Odin.Email.csproj",
+      "Logging/Core/Odin.Logging.csproj",
+      "Messaging/RabbitMq/Odin.Messaging.RabbitMq.csproj",
+      "RemoteFiles/Abstractions/Odin.RemoteFiles.Abstractions.csproj",
+      "RemoteFiles/SFTP/Odin.RemoteFiles.SFTP.csproj",
+      "RemoteFiles/Core/Odin.RemoteFiles.csproj",
+      "System/Activator2/Odin.System.Activator2.csproj",
+      "Strings/Core/Odin.Strings.csproj",
+      "System/Result/Odin.System.Result.csproj",
+      "Testing/NUnitUtility/Odin.Testing.NUnitUtility.csproj",
+      "Testing/XUnitUtility/Odin.Testing.XUnitUtility.csproj",
+      "Testing/XUnitV2Utility/Odin.Testing.XUnitV2Utility.csproj",
+      "Testing/Core/Odin.Testing.csproj",
+      "Testing/Fakes/Odin.Testing.Fakes.csproj",
+      "Templating/Razor.Abstractions/Odin.Templating.Razor.Abstractions.csproj",
+      "Templating/Razor/Odin.Templating.Razor.csproj",
+      "Utility/VaryingValues/Odin.Utility.VaryingValues.csproj",
+      "Utility/Tax/Odin.Utility.Tax.csproj"
+    ]
+  }
+}

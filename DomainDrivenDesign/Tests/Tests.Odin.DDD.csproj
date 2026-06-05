@@ -31,6 +31,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\Database\SqlScriptsRunner\Odin.Database.SqlScriptsRunner.csproj"/>
+        <ProjectReference Include="..\..\Strings\Core\Odin.Strings.csproj" />
         <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj"/>
         <ProjectReference Include="..\..\System\Strings\Odin.System.Strings.csproj" />
         <ProjectReference Include="..\Core\Odin.DDD.csproj"/>

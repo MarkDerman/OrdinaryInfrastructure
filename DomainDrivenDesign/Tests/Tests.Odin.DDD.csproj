@@ -30,6 +30,11 @@
     </ItemGroup>
 
     <ItemGroup>
+        <EmbeddedResource Include="Repositories\EF\Postgres\*.sql" />
+        <EmbeddedResource Include="Repositories\EF\SqlServer\*.sql" />
+    </ItemGroup>
+
+    <ItemGroup>
         <ProjectReference Include="..\..\Database\SqlScriptsRunner\Odin.Database.SqlScriptsRunner.csproj"/>
         <ProjectReference Include="..\..\Strings\Core\Odin.Strings.csproj" />
         <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj"/>

@@ -18,6 +18,12 @@ public class BillingEntity : IIdentityAggregateRoot<int>
     protected BillingEntity()
     {}
 
+    public BillingEntity(string name)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        Name = name;
+    }
+
     public string Name { get; set; } = null!;
     
     public string? BillingName { get; set; }

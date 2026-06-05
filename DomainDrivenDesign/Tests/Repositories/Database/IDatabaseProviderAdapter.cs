@@ -1,7 +1,9 @@
 using DotNet.Testcontainers.Containers;
 using Microsoft.EntityFrameworkCore;
+using Odin.System;
 using Respawn;
 using System.Data.Common;
+using System.Reflection;
 using Tests.Odin.DDD.Repositories.EF;
 
 namespace Tests.Odin.DDD.Repositories.Database;
@@ -50,4 +52,12 @@ public interface IDatabaseProviderAdapter
     /// <param name="options">The context options builder.</param>
     /// <param name="connectionString">The provider-specific connection string.</param>
     void ConfigureDbContext(DbContextOptionsBuilder<TestDatabaseContext> options, string connectionString);
+
+    /// <summary>
+    /// Runs this provider's embedded migration scripts.
+    /// </summary>
+    /// <param name="connectionString">The provider-specific connection string.</param>
+    /// <param name="assemblyWithEmbeddedScripts">The assembly containing embedded SQL scripts.</param>
+    /// <returns>The migration result.</returns>
+    Task<Result> RunMigrationsAsync(string connectionString, Assembly assemblyWithEmbeddedScripts);
 }

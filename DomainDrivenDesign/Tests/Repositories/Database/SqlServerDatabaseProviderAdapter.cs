@@ -45,4 +45,24 @@ public class SqlServerDatabaseProviderAdapter : DatabaseProviderAdapterBase
     {
         return $"mcr.microsoft.com/mssql/server:{year}-latest";
     }
+
+    protected override IEnumerable<string> SplitScript(string script)
+    {
+        StringReader reader = new StringReader(script);
+        StringWriter batch = new StringWriter();
+
+        while (reader.ReadLine() is { } line)
+        {
+            if (string.Equals(line.Trim(), "go", StringComparison.OrdinalIgnoreCase))
+            {
+                yield return batch.ToString();
+                batch.GetStringBuilder().Clear();
+                continue;
+            }
+
+            batch.WriteLine(line);
+        }
+
+        yield return batch.ToString();
+    }
 }

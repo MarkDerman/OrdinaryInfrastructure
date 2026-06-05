@@ -1,6 +1,4 @@
-using DbUp.Engine.Transactions;
 using DotNet.Testcontainers.Containers;
-using Odin.Database;
 using Odin.System;
 using Respawn;
 using System.Data.Common;
@@ -33,7 +31,7 @@ public class TestDatabaseFixture : IAsyncDisposable
     {
         await Container.StartAsync();
         
-        Result migrations = RunMigrations(ConnectionString, DatabaseProvider.MigrationScriptsLocation);
+        Result migrations = await DatabaseProvider.RunMigrationsAsync(ConnectionString, typeof(TestDatabaseFixture).Assembly);
         if (!migrations.IsSuccess)
             throw new Exception($"Database migration scripts failed: {migrations.MessagesToString()}");
 
@@ -66,21 +64,5 @@ public class TestDatabaseFixture : IAsyncDisposable
     {
         await Container.StopAsync();
         await Container.DisposeAsync();
-    }
-    
-    public static Result RunMigrations(string connectionString, string scriptsLocation)
-    {
-        ResultValue<SqlScriptsRunner> migrationsRunner =
-            SqlScriptsRunner.CreateFromConnectionString(connectionString, typeof(TestDatabaseFixture).Assembly);
-        if (!migrationsRunner.IsSuccess) return Result.Failure(migrationsRunner.Messages);
-
-        SqlScriptsRunner runner = migrationsRunner.Value;
-        runner.EnsureDatabaseCreated = true;
-        runner.JournalMode = JournalModeEnum.RunOnlyScriptsNotRunBefore;
-        runner.JournalToTableName = "DatabaseMigrations";
-        runner.ScriptsLocationType = ScriptsLocationTypeEnum.EmbeddedResourcePath;
-        runner.ScriptsLocation = scriptsLocation;
-        runner.TransactionHandling = TransactionMode.TransactionPerScript;
-        return runner.Run();
     }
 }

@@ -34,6 +34,7 @@
         <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj"/>
         <ProjectReference Include="..\..\System\Strings\Odin.System.Strings.csproj" />
         <ProjectReference Include="..\Core\Odin.DDD.csproj"/>
+        <ProjectReference Include="..\Repositories-EF\Odin.DDD.Repositories.EF.csproj" />
     </ItemGroup>
 
     <ItemGroup>

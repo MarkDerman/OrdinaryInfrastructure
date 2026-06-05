@@ -1,10 +1,10 @@
 namespace Odin.DDD.Repositories
 {
     /// <summary>
-    /// Represents a repository for persisting entities to a data store.
+    /// Represents a read-write repository for persisting aggregate roots to a data store.
     /// </summary>
     /// <typeparam name="TAggregateRoot">The type of the aggregate root.</typeparam>
-    public interface IRepository<TAggregateRoot> : IAsyncDisposable
+    public interface IRepository<TAggregateRoot> : IReadOnlyRepository<TAggregateRoot>
         where TAggregateRoot : class, IAggregateRoot
     {
         /// <summary>

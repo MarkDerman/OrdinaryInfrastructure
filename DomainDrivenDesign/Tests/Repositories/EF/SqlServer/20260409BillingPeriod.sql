@@ -1,4 +1,4 @@
-create table dbo.BillingPeriodBillingStatuses
+create table dbo.BillingPeriodBillingStatus
 (
     Id   smallint     not null
         primary key,
@@ -6,7 +6,7 @@ create table dbo.BillingPeriodBillingStatuses
 )
 go
 
-create table dbo.BillingPeriodStages
+create table dbo.BillingPeriodStage
 (
     Id   smallint     not null
         primary key,
@@ -14,48 +14,48 @@ create table dbo.BillingPeriodStages
 )
 go
 
-create table dbo.BillingPeriods
+create table dbo.BillingPeriod
 (
     Id             bigint identity
-        constraint BillingPeriods_pk
+        constraint BillingPeriod_pk
             primary key nonclustered,
-    PartnerId     int                                      not null
-        constraint FK_BillingPeriods_PartnerId
-            references dbo.Partner,
+    BillingEntityId     int                                      not null
+        constraint FK_BillingPeriod_BillingEntityId
+            references dbo.BillingEntity,
     PeriodStarting date                                     not null,
     PeriodEnding   date                                     not null,
     RowVersion     timestamp                                not null,
     Stage          smallint                                 not null
-        constraint FK_BillingPeriods_Stage
-            references dbo.BillingPeriodStages,
+        constraint FK_BillingPeriod_Stage
+            references dbo.BillingPeriodStage,
     BillingStatus  smallint                                 not null
-        constraint FK_BillingPeriods_BillingStatus
-            references dbo.BillingPeriodBillingStatuses
+        constraint FK_BillingPeriod_BillingStatus
+            references dbo.BillingPeriodBillingStatus
 )
 go
 
-alter table dbo.BillingPeriods
-    add constraint DF_BillingPeriods_BillingStatus default 0 for BillingStatus
+alter table dbo.BillingPeriod
+    add constraint DF_BillingPeriod_BillingStatus default 0 for BillingStatus
 go
 
-create index IX_BillingPeriods_PartnerIdPeriodEnding
-    on dbo.BillingPeriods (PartnerId, PeriodEnding)
+create index IX_BillingPeriod_BillingEntityIdPeriodEnding
+    on dbo.BillingPeriod (BillingEntityId, PeriodEnding)
 go
 
-create index IX_BillingPeriods_PeriodEnding
-    on dbo.BillingPeriods (PeriodEnding)
+create index IX_BillingPeriod_PeriodEnding
+    on dbo.BillingPeriod (PeriodEnding)
 go
 
-create index IX_BillingPeriods_PeriodStarting
-    on dbo.BillingPeriods (PeriodStarting)
+create index IX_BillingPeriod_PeriodStarting
+    on dbo.BillingPeriod (PeriodStarting)
 go
 
-create index IX_BillingPeriods_BillingStatus
-    on dbo.BillingPeriods (BillingStatus)
+create index IX_BillingPeriod_BillingStatus
+    on dbo.BillingPeriod (BillingStatus)
 go
 
-create index IX_BillingPeriods_Stage
-    on dbo.BillingPeriods (Stage)
+create index IX_BillingPeriod_Stage
+    on dbo.BillingPeriod (Stage)
 go
 
 create table dbo.DataTypes
@@ -80,7 +80,7 @@ create table dbo.BillingPeriodProperties
         primary key,
     BillingPeriodId bigint          not null
         constraint FK_BillingPeriodProperties_BillingPeriod
-            references dbo.BillingPeriods
+            references dbo.BillingPeriod
             on delete cascade,
     PropertyName    nvarchar(50) not null,
     DataType        smallint     not null
@@ -119,7 +119,7 @@ create table dbo.BillingPeriodTasks
             primary key nonclustered,
     BillingPeriodId bigint                        not null
         constraint FK_BillingPeriodTasks_BillingPeriod
-            references dbo.BillingPeriods
+            references dbo.BillingPeriod
             on delete cascade,
     TaskType            smallint                   not null
         constraint FK_BillingPeriodTasks_BillingPeriodTaskType
@@ -134,7 +134,7 @@ create table dbo.BillingPeriodTasks
     Data            nvarchar(max),
     Stage           smallint                   not null
         constraint FK_BillingPeriodTasks_Stage
-            references dbo.BillingPeriodStages
+            references dbo.BillingPeriodStage
 )
 go
 
@@ -162,7 +162,7 @@ values  (-2, N'Failed'),
 
 go
 
-insert into dbo.BillingPeriodStages (Id, Name)
+insert into dbo.BillingPeriodStage (Id, Name)
 values  (0, N'Period in progress'),
         (20, N'Record billables'),
         (40, N'Post Customer invoice'),

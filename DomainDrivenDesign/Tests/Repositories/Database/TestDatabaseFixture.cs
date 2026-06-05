@@ -48,7 +48,7 @@ public class TestDatabaseFixture : IAsyncDisposable
             [
                 "dbo"
             ],
-            TablesToIgnore = [ "DatabaseMigrations"],
+            TablesToInclude = [ "BillingPeriod", "BillingEntity", "BillingPeriodProperty", "BillingPeriodTask"],
             WithReseed = true // Sets the seeds of identity PK columns back to their beginning.
         });
     }

@@ -13,12 +13,6 @@ public abstract class DatabaseTestBase
         TestDatabase = testDatabase;
     }
 
-    protected DatabaseTestBase(AppFactory appFactory, DatabaseTestContainerFixture testDatabase)
-        : this(testDatabase)
-    {
-        ArgumentNullException.ThrowIfNull(appFactory);
-    }
-
     [OneTimeSetUp]
     public async Task InitializeDatabaseAsync()
     {

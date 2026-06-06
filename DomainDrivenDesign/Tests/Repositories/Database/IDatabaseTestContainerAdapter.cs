@@ -25,7 +25,7 @@ public interface IDatabaseTestContainerAdapter
     DockerImage Image { get; }
 
     /// <summary>
-    /// The Docker container name used for this provider's repository tests.
+    /// The Docker container name used.
     /// </summary>
     string ContainerName { get; }
 

@@ -42,8 +42,4 @@
         <ProjectReference Include="..\Repositories-EF\Odin.DDD.Repositories.EF.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Repositories\EF\Fixtures\" />
-    </ItemGroup>
-
 </Project>

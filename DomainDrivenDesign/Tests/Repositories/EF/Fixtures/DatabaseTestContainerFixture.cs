@@ -2,8 +2,9 @@ using DotNet.Testcontainers.Containers;
 using Odin.System;
 using Respawn;
 using System.Data.Common;
+using Tests.Odin.DDD.Repositories.Database;
 
-namespace Tests.Odin.DDD.Repositories.Database;
+namespace Tests.Odin.DDD.Repositories.EF.Fixtures;
 
 /// <summary>
 /// To be initialized once for an entire test run.

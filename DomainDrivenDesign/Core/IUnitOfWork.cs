@@ -14,6 +14,6 @@ namespace Odin.DDD
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default(CancellationToken));
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

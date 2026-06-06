@@ -27,7 +27,7 @@ public sealed class DomainEventTests
 
     private sealed class TestDomainEvent : DomainEvent
     {
-        public TestDomainEvent(DateTimeOffset now) : base(now)
+        public TestDomainEvent(DateTimeOffset occurredAt) : base(occurredAt)
         {
         }
     }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Tests.Odin.DDD.Repositories.Database;
+using Tests.Odin.DDD.Repositories.EF.Fixtures;
 
 namespace Tests.Odin.DDD.Repositories.EF;
 

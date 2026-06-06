@@ -9,10 +9,10 @@ namespace Odin.DDD
         /// <summary>
         /// Default constructor
         /// </summary>
-        /// <param name="now"></param>
-        protected DomainEvent(DateTimeOffset now)
+        /// <param name="occurredAt"></param>
+        protected DomainEvent(DateTimeOffset occurredAt)
         {
-            OccurredAt = now;
+            OccurredAt = occurredAt;
         }
 
         /// <summary>

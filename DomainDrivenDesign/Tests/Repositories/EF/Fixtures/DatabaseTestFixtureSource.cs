@@ -16,7 +16,13 @@ public static class DatabaseTestFixtureSource
         {
             yield return Create(new SqlServerTestContainerAdapter(TestSuiteName,2025));
             yield return Create(new SqlServerTestContainerAdapter(TestSuiteName,2022));
+            yield return Create(new SqlServerTestContainerAdapter(TestSuiteName,2019));
+            yield return Create(new SqlServerTestContainerAdapter(TestSuiteName,2017));
+            yield return Create(new PostgresTestContainerAdapter(TestSuiteName,17));
             yield return Create(new PostgresTestContainerAdapter(TestSuiteName,16));
+            yield return Create(new PostgresTestContainerAdapter(TestSuiteName,15));
+            yield return Create(new PostgresTestContainerAdapter(TestSuiteName,14));
+            yield return Create(new PostgresTestContainerAdapter(TestSuiteName,18));
         }
     }
     

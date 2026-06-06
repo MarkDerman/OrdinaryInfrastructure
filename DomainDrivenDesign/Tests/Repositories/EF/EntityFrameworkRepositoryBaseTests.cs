@@ -12,7 +12,7 @@ namespace Tests.Odin.DDD.Repositories.EF;
 [Category("IntegrationTest")]
 public sealed class EntityFrameworkRepositoryBaseTests : DatabaseTestBase
 {
-    public EntityFrameworkRepositoryBaseTests(TestDatabaseFixture testDatabase)
+    public EntityFrameworkRepositoryBaseTests(DatabaseTestContainerFixture testDatabase)
         : base(testDatabase)
     {
     }

@@ -5,15 +5,15 @@ namespace Tests.Odin.DDD.Repositories.EF;
 
 public abstract class DatabaseTestBase
 {
-    protected readonly TestDatabaseFixture TestDatabase;
+    protected readonly DatabaseTestContainerFixture TestDatabase;
 
-    protected DatabaseTestBase(TestDatabaseFixture testDatabase)
+    protected DatabaseTestBase(DatabaseTestContainerFixture testDatabase)
     {
         ArgumentNullException.ThrowIfNull(testDatabase);
         TestDatabase = testDatabase;
     }
 
-    protected DatabaseTestBase(AppFactory appFactory, TestDatabaseFixture testDatabase)
+    protected DatabaseTestBase(AppFactory appFactory, DatabaseTestContainerFixture testDatabase)
         : this(testDatabase)
     {
         ArgumentNullException.ThrowIfNull(appFactory);
@@ -40,7 +40,7 @@ public abstract class DatabaseTestBase
     protected TestDatabaseContext CreateContext()
     {
         DbContextOptionsBuilder<TestDatabaseContext> optionsBuilder = new DbContextOptionsBuilder<TestDatabaseContext>();
-        TestDatabase.DatabaseProvider.ConfigureDbContext(optionsBuilder, TestDatabase.ConnectionString);
+        TestDatabase.DatabaseTestContainer.ConfigureDbContext(optionsBuilder, TestDatabase.ConnectionString);
         return new TestDatabaseContext(optionsBuilder.Options);
     }
 

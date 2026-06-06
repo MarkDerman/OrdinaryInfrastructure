@@ -4,6 +4,7 @@ namespace Tests.Odin.DDD.Repositories.EF.Fixtures;
 
 public static class DatabaseTestFixtureSource
 {
+    public const string TestSuiteName = "Odin.DDD.Repos";
     public static IEnumerable<TestFixtureData> All
     {
         get { return SupportedDatabases; }
@@ -13,26 +14,17 @@ public static class DatabaseTestFixtureSource
     {
         get
         {
-            yield return Create(new SqlServerDatabaseProviderAdapter());
-            yield return Create(new PostgresDatabaseProviderAdapter(16));
+            yield return Create(new SqlServerTestContainerAdapter(TestSuiteName,2025));
+            yield return Create(new SqlServerTestContainerAdapter(TestSuiteName,2022));
+            yield return Create(new PostgresTestContainerAdapter(TestSuiteName,16));
         }
     }
-
-    public static IEnumerable<TestFixtureData> SqlServer
+    
+    private static TestFixtureData Create(IDatabaseTestContainerAdapter databaseTestContainer)
     {
-        get { yield return Create(new SqlServerDatabaseProviderAdapter()); }
-    }
-
-    public static IEnumerable<TestFixtureData> Postgres
-    {
-        get { yield return Create(new PostgresDatabaseProviderAdapter(16)); }
-    }
-
-    private static TestFixtureData Create(IDatabaseProviderAdapter databaseProvider)
-    {
-        TestDatabaseFixture testDatabaseFixture = new TestDatabaseFixture(databaseProvider);
+        DatabaseTestContainerFixture testDatabaseFixture = new DatabaseTestContainerFixture(databaseTestContainer);
 
         return new TestFixtureData(testDatabaseFixture)
-            .SetArgDisplayNames(databaseProvider.DatabaseProvider);
+            .SetArgDisplayNames(databaseTestContainer.DatabaseProvider, databaseTestContainer.Image.FullName);
     }
 }

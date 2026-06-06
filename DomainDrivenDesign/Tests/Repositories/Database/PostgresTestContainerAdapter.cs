@@ -1,4 +1,3 @@
-using DotNet.Testcontainers.Containers;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using Respawn;
@@ -8,15 +7,16 @@ using Tests.Odin.DDD.Repositories.EF;
 
 namespace Tests.Odin.DDD.Repositories.Database;
 
-public class PostgresDatabaseProviderAdapter : DatabaseProviderAdapterBase
+public class PostgresTestContainerAdapter : DatabaseTestContainerAdapterBase
+    <PostgreSqlBuilder, PostgreSqlContainer, PostgreSqlConfiguration>
 {
-    public PostgresDatabaseProviderAdapter(string image)
-        : base(image, DatabaseProviders.PostgreSQL)
+    public PostgresTestContainerAdapter(string containerNamePrefix, string image)
+        : base(containerNamePrefix,image, DatabaseProviders.PostgreSQL)
     {
     }
 
-    public PostgresDatabaseProviderAdapter(int version)
-        : base(LatestForVersion(version), DatabaseProviders.PostgreSQL)
+    public PostgresTestContainerAdapter(string containerNamePrefix, int version)
+        : base(containerNamePrefix,LatestForVersion(version), DatabaseProviders.PostgreSQL)
     {
     }
 
@@ -24,9 +24,9 @@ public class PostgresDatabaseProviderAdapter : DatabaseProviderAdapterBase
 
     public override IDbAdapter RespawnAdapter => DbAdapter.Postgres;
 
-    public override IDatabaseContainer BuildContainer()
+    protected override PostgreSqlBuilder CreateContainerBuilder()
     {
-        return new PostgreSqlBuilder(Image).Build();
+        return new PostgreSqlBuilder(Image);
     }
 
     public override DbConnection CreateConnection(string connectionString)

@@ -1,4 +1,3 @@
-using DotNet.Testcontainers.Containers;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Respawn;
@@ -8,15 +7,16 @@ using Tests.Odin.DDD.Repositories.EF;
 
 namespace Tests.Odin.DDD.Repositories.Database;
 
-public class SqlServerDatabaseProviderAdapter : DatabaseProviderAdapterBase
+public class SqlServerTestContainerAdapter : DatabaseTestContainerAdapterBase
+    <MsSqlBuilder, MsSqlContainer, MsSqlConfiguration>
 {
-    public SqlServerDatabaseProviderAdapter(int msSqlEditionYear = 2025)
-        : base(LatestImage(msSqlEditionYear), DatabaseProviders.MicrosoftSQLServer)
+    public SqlServerTestContainerAdapter(string containerNamePrefix, int msSqlEditionYear = 2025)
+        : base(containerNamePrefix,LatestImage(msSqlEditionYear), DatabaseProviders.MSSQLServer)
     {
     }
 
-    public SqlServerDatabaseProviderAdapter(string image)
-        : base(image, DatabaseProviders.MicrosoftSQLServer)
+    public SqlServerTestContainerAdapter(string containerNamePrefix, string image)
+        : base(containerNamePrefix,image, DatabaseProviders.MSSQLServer)
     {
     }
 
@@ -24,9 +24,9 @@ public class SqlServerDatabaseProviderAdapter : DatabaseProviderAdapterBase
 
     public override IDbAdapter RespawnAdapter => DbAdapter.SqlServer;
 
-    public override IDatabaseContainer BuildContainer()
+    protected override MsSqlBuilder CreateContainerBuilder()
     {
-        return new MsSqlBuilder(Image).Build();
+        return new MsSqlBuilder(Image);
     }
 
     public override DbConnection CreateConnection(string connectionString)

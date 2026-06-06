@@ -1,4 +1,5 @@
 using DotNet.Testcontainers.Containers;
+using DotNet.Testcontainers.Images;
 using Microsoft.EntityFrameworkCore;
 using Odin.System;
 using Respawn;
@@ -11,7 +12,7 @@ namespace Tests.Odin.DDD.Repositories.Database;
 /// <summary>
 /// Provides database-specific services needed by repository integration tests.
 /// </summary>
-public interface IDatabaseProviderAdapter
+public interface IDatabaseTestContainerAdapter
 {
     /// <summary>
     /// PostgreSQL, SQLServer, SQLite, Oracle, etc.
@@ -21,7 +22,12 @@ public interface IDatabaseProviderAdapter
     /// <summary>
     /// Docker image url.
     /// </summary>
-    string Image { get; }
+    DockerImage Image { get; }
+
+    /// <summary>
+    /// The Docker container name used for this provider's repository tests.
+    /// </summary>
+    string ContainerName { get; }
 
     /// <summary>
     /// Location containing this provider's embedded database migration scripts.
@@ -34,9 +40,9 @@ public interface IDatabaseProviderAdapter
     IDbAdapter RespawnAdapter { get; }
 
     /// <summary>
-    /// Builds the Docker container, but does not start it.
+    /// Builds the Docker database container for this provider.
     /// </summary>
-    /// <returns>The database container.</returns>
+    /// <returns>The configured database container.</returns>
     IDatabaseContainer BuildContainer();
 
     /// <summary>

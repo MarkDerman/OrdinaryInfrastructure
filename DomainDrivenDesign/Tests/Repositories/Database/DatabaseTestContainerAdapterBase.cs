@@ -1,4 +1,7 @@
+using DotNet.Testcontainers.Builders;
+using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
+using DotNet.Testcontainers.Images;
 using Microsoft.EntityFrameworkCore;
 using Odin.System;
 using Respawn;
@@ -9,19 +12,30 @@ using Tests.Odin.DDD.Repositories.EF;
 namespace Tests.Odin.DDD.Repositories.Database;
 
 /// <inheritdoc />
-public abstract class DatabaseProviderAdapterBase : IDatabaseProviderAdapter
+public abstract class DatabaseTestContainerAdapterBase<TContainerBuilder, TContainer, TConfiguration>
+    : IDatabaseTestContainerAdapter
+    where TContainerBuilder : ContainerBuilder<TContainerBuilder, TContainer, TConfiguration>
+    where TContainer : IDatabaseContainer
+    where TConfiguration : IContainerConfiguration
 {
-    protected DatabaseProviderAdapterBase(string image, string databaseProvider)
+    protected DatabaseTestContainerAdapterBase(string containerNamePrefix, string image, string databaseProvider)
     {
-        Image = image;
+        ArgumentException.ThrowIfNullOrWhiteSpace(containerNamePrefix);
+        ArgumentException.ThrowIfNullOrWhiteSpace(image);
+        ArgumentException.ThrowIfNullOrWhiteSpace(databaseProvider);
+        Image = new DockerImage(image);
         DatabaseProvider = databaseProvider;
+        ContainerName = $"{containerNamePrefix}-{DatabaseProvider}.{Image.Tag}";
     }
 
     /// <inheritdoc />
-    public string Image { get; }
+    public DockerImage Image { get; }
 
     /// <inheritdoc />
     public string DatabaseProvider { get; }
+
+    /// <inheritdoc />
+    public string ContainerName { get; }
 
     /// <inheritdoc />
     public abstract string MigrationScriptsLocation { get; }
@@ -30,7 +44,14 @@ public abstract class DatabaseProviderAdapterBase : IDatabaseProviderAdapter
     public abstract IDbAdapter RespawnAdapter { get; }
 
     /// <inheritdoc />
-    public abstract IDatabaseContainer BuildContainer();
+    public IDatabaseContainer BuildContainer()
+    {
+        return CreateContainerBuilder()
+            .WithName(ContainerName)
+            .WithReuse(true)
+            .WithCleanUp(false)
+            .Build();
+    }
 
     /// <inheritdoc />
     public abstract DbConnection CreateConnection(string connectionString);
@@ -60,6 +81,11 @@ public abstract class DatabaseProviderAdapterBase : IDatabaseProviderAdapter
         {
             await using DbConnection connection = CreateConnection(connectionString);
             await connection.OpenAsync();
+
+            if (await ApplicationSchemaExistsAsync(connection))
+            {
+                return Result.Success($"{DatabaseProvider} test database schema already exists.");
+            }
 
             foreach (string scriptName in scriptNames)
             {
@@ -97,4 +123,20 @@ public abstract class DatabaseProviderAdapterBase : IDatabaseProviderAdapter
     {
         yield return script;
     }
+
+    private static async Task<bool> ApplicationSchemaExistsAsync(DbConnection connection)
+    {
+        await using DbCommand command = connection.CreateCommand();
+        command.CommandText = """
+            select count(*)
+            from information_schema.tables
+            where table_schema = 'dbo'
+              and table_name = 'BillingEntity'
+            """;
+
+        object? result = await command.ExecuteScalarAsync();
+        return Convert.ToInt32(result) > 0;
+    }
+
+    protected abstract TContainerBuilder CreateContainerBuilder();
 }

@@ -33,7 +33,7 @@ public static class DependencyInjectionExtensions
         IConfigurationSection configurationSection)
     {
         ArgumentNullException.ThrowIfNull(configurationSection);
-
+        
         if (!configurationSection.Exists())
             throw new ApplicationException(
                 $"Configuration section '{configurationSection.Key}' missing. Cannot configure remote files.");

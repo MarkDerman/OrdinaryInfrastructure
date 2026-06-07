@@ -1,6 +1,4 @@
-
 namespace Odin.RemoteFiles;
-
 
 /// <summary>
 /// Utility class for parsing connections strings, constructing connection settings classes, etc

@@ -54,7 +54,7 @@ namespace Odin.BackgroundProcessing
                 return ResultValue<JobDetails>.Failure(message);
             }
         }
-
+        
         /// <summary>
         /// Schedules a once-off job in Hangfire
         /// </summary>

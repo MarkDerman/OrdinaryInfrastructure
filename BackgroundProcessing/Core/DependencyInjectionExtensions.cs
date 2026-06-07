@@ -141,7 +141,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             string providerAssemblyName = $"{Constants.RootNamespace}.{options.Provider}";
             ResultValue<IBackgroundProcessorServiceInjector> serviceInjectorCreation =
-                Odin.System.Activator2.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector", providerAssemblyName);
+                Activator2.TryCreate<IBackgroundProcessorServiceInjector>($"{providerAssemblyName}ServiceInjector",providerAssemblyName);
 
             if (serviceInjectorCreation.IsSuccess)
             {

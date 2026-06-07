@@ -1,6 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-                    
         <PackageIcon>icon.png</PackageIcon>
         <PackageTags>DesignByContract;Preconditions;Postconditions;Invariants;Roslyn;Analyzer</PackageTags>
         <Description>Intended to support Design by Contract by providing facilities

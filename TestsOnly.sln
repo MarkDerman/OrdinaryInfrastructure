@@ -2,27 +2,27 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.BackgroundProcessing", "BackgroundProcessing\Tests\Tests.Odin.BackgroundProcessing.csproj", "{B091589D-960C-40F6-822F-522D099828E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.RemoteFiles", "RemoteFiles\Tests\Tests.Odin.RemoteFiles.csproj", "{4F2A6CED-2886-42F1-9664-65CA810D5713}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Email", "Email\Tests\Tests.Odin.Email.csproj", "{EAD2138A-1553-43A9-B51F-55FC2A2CEFFD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Templating", "Templating\Tests\Tests.Odin.Templating.csproj", "{A2A747AD-0DEB-4EE4-85A4-84565A4B8D31}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Utility", "Utility\Tests\Tests.Odin.Utility.csproj", "{52AF2C63-2247-42FD-B3DD-4AD2AFCE0C6D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.DesignContracts", "DesignContracts\Tests\Tests.Odin.DesignContracts.csproj", "{177EDB52-3174-4037-80DD-235222F9817B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Messaging", "Messaging\Tests\Tests.Odin.Messaging.csproj", "{690312C5-1948-4530-832D-6332625D4E9C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.System", "System\Tests\Tests.Odin.System.csproj", "{957966BC-FE0E-4206-BDD8-F04591AB836E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Configuration", "Configuration\Tests\Tests.Odin.Configuration.csproj", "{64F3DBAD-2D32-42FC-9559-39C12BFB3E86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Logging", "Logging\Tests\Tests.Odin.Logging.csproj", "{8453ADDD-53C2-4CCC-8C9C-7FC335087F60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.CQRS", "CQRS\Tests\Tests.Odin.CQRS.csproj", "{56673414-CC5F-4F03-9DEE-2D7F75A14047}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.DDD", "DomainDrivenDesign\Tests\Tests.Odin.DDD.csproj", "{1365B0DE-C19E-4604-86D9-E9BBDC606DC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.CQRS", "CQRS\Tests\Tests.Odin.CQRS.csproj", "{56673414-CC5F-4F03-9DEE-2D7F75A14047}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Email", "Email\Tests\Tests.Odin.Email.csproj", "{EAD2138A-1553-43A9-B51F-55FC2A2CEFFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Logging", "Logging\Tests\Tests.Odin.Logging.csproj", "{8453ADDD-53C2-4CCC-8C9C-7FC335087F60}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Messaging", "Messaging\Tests\Tests.Odin.Messaging.csproj", "{690312C5-1948-4530-832D-6332625D4E9C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.RemoteFiles", "RemoteFiles\Tests\Tests.Odin.RemoteFiles.csproj", "{4F2A6CED-2886-42F1-9664-65CA810D5713}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Templating", "Templating\Tests\Tests.Odin.Templating.csproj", "{A2A747AD-0DEB-4EE4-85A4-84565A4B8D31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.System", "System\Tests\Tests.Odin.System.csproj", "{957966BC-FE0E-4206-BDD8-F04591AB836E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Utility", "Utility\Tests\Tests.Odin.Utility.csproj", "{52AF2C63-2247-42FD-B3DD-4AD2AFCE0C6D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Odin.Strings", "Strings\Tests\Tests.Odin.Strings.csproj", "{3D8D3305-FB11-4EFF-A119-1C78C1B04A2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,8 +31,6 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B091589D-960C-40F6-822F-522D099828E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B091589D-960C-40F6-822F-522D099828E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{177EDB52-3174-4037-80DD-235222F9817B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{177EDB52-3174-4037-80DD-235222F9817B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EAD2138A-1553-43A9-B51F-55FC2A2CEFFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAD2138A-1553-43A9-B51F-55FC2A2CEFFD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{690312C5-1948-4530-832D-6332625D4E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -53,5 +51,7 @@ Global
 		{1365B0DE-C19E-4604-86D9-E9BBDC606DC0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{56673414-CC5F-4F03-9DEE-2D7F75A14047}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{56673414-CC5F-4F03-9DEE-2D7F75A14047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D8D3305-FB11-4EFF-A119-1C78C1B04A2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D8D3305-FB11-4EFF-A119-1C78C1B04A2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

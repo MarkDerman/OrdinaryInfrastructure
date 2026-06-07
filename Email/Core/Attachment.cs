@@ -1,4 +1,4 @@
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Odin.Email
 {
@@ -23,7 +23,7 @@ namespace Odin.Email
             Data = data;
             ContentType = contentType;
         }
-
+        
         // /// <summary>
         // /// IsInline
         // /// </summary>

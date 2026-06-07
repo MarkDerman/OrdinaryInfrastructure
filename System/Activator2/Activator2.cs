@@ -41,7 +41,7 @@ public static class Activator2
         return ResultValue<T>.Failure($"Could not create instance of type {typeName} from assembly {assemblyName}. {errorMessage}");
     }
 
-
+    
     /// <summary>
     /// 
     /// </summary>

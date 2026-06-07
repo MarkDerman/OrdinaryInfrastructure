@@ -1,0 +1,34 @@
+<Project>
+
+    <PropertyGroup>
+        <!-- Used by analyzers via build_property.* to detect that rewriting is enabled. -->
+        <OdinDesignContractsRewriterEnabled>true</OdinDesignContractsRewriterEnabled>
+
+        <!-- Allow consumers to disable weaving explicitly. -->
+        <OdinDesignContractsWeaveEnabled Condition="'$(OdinDesignContractsWeaveEnabled)'==''">true</OdinDesignContractsWeaveEnabled>
+    </PropertyGroup>
+
+    <!-- Define the task location based on the same logic used for the executable -->
+    <UsingTask TaskName="Odin.DesignContracts.Rewriter.WeaveDesignContracts"
+               AssemblyFile="$(MSBuildThisFileDirectory)..\tools\$(TargetFramework)\any\Odin.DesignContracts.Rewriter.dll"/>
+
+    <Target Name="OdinDesignContractsRewrite"
+            AfterTargets="CoreCompile"
+            BeforeTargets="CopyFilesToOutputDirectory"
+            Inputs="@(IntermediateAssembly);@(Compile);$(MSBuildProjectFullPath);$(Configuration);$(TargetFramework)"
+            Outputs="$(IntermediateOutputPath)OdinDesignContracts.stamp"
+            Condition="'$(OdinDesignContractsWeaveEnabled)'=='true' and '$(TargetPath)'!=''">
+
+        <PropertyGroup>
+            <OdinDesignContractsAssemblyToRewritePath>$(MSBuildProjectDirectory)/$(IntermediateOutputPath)$(TargetFileName)</OdinDesignContractsAssemblyToRewritePath>
+        </PropertyGroup>
+        
+        <Message Text="Odin.DesignContracts: Weaving design contracts into: $(OdinDesignContractsAssemblyToRewritePath)"/>
+
+        <!-- Weave postconditions and invariants into the intermediary target. -->
+        <!-- Debug symbols in the .pdb file are also handled -->
+        <WeaveDesignContracts AssemblyToRewritePath="$(OdinDesignContractsAssemblyToRewritePath)" />
+
+        <Touch Files="$(IntermediateOutputPath)OdinDesignContracts.stamp" AlwaysCreate="true" />
+    </Target>
+</Project>

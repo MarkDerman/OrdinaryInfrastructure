@@ -22,12 +22,6 @@
     <ItemGroup>
         <Using Include="NUnit.Framework" />
     </ItemGroup>
-
-    <ItemGroup>
-        <ProjectReference Include="..\Core\Odin.Emailing.csproj"/>
-        <ProjectReference Include="..\Mailgun\Odin.Emailing.Mailgun.csproj"/>
-        <ProjectReference Include="..\Office365\Odin.Emailing.Office365.csproj"/>
-    </ItemGroup>
     <ItemGroup>
         <None Update="testSettings.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>

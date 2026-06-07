@@ -1,6 +1,5 @@
 ﻿using Odin.System;
 
-
 namespace Odin.Email
 {
     /// <summary>

@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-        
+      <Description>Tests where the target classes under test HAVE been weaved in post build
+          by the Design-by-Contract tooling.</Description>    
     <UserSecretsId>Tests.Odin</UserSecretsId>
+      <GenerateProgramFile>true</GenerateProgramFile>  
     <NoWarn>1591;</NoWarn>
   </PropertyGroup>
 
@@ -24,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Core\Odin.DesignContracts.csproj" />
+    <ProjectReference Include="..\TargetsRewritten\TargetsRewritten.csproj" />
   </ItemGroup>
 
 </Project>

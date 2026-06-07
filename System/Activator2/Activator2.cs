@@ -1,4 +1,5 @@
 using System.Runtime.Remoting;
+using Odin.DesignContracts;
 
 namespace Odin.System;
 
@@ -41,7 +42,7 @@ public static class Activator2
         return ResultValue<T>.Failure($"Could not create instance of type {typeName} from assembly {assemblyName}. {errorMessage}");
     }
 
-
+    
     /// <summary>
     /// 
     /// </summary>
@@ -49,7 +50,7 @@ public static class Activator2
     /// <returns></returns>
     public static ResultValue<T> TryCreate<T>(Type typeToCreate) where T : class
     {
-        ArgumentNullException.ThrowIfNull(typeToCreate);
+        Precondition.Requires(typeToCreate!=null!);
         try
         {
             object? obj = Activator.CreateInstance(typeToCreate);

@@ -1,3 +1,4 @@
+﻿using Odin.DesignContracts;
 
 namespace Odin.Email
 {

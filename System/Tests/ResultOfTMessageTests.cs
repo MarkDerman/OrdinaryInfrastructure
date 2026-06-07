@@ -1,8 +1,12 @@
+﻿using NUnit.Framework;
 using Odin.System;
 
 namespace Tests.Odin.System
 {
-    public abstract class ResultOfTMessageTests<TMessage> where TMessage : class
+    [TestFixture(typeof(MessageError))]
+    [TestFixture(typeof(MessageLoggingInfo))]
+    [TestFixture(typeof(MessageSeverity))]
+    public sealed class ResultOfTMessageTests<TMessage> where TMessage : class
     {
 
         [Test]
@@ -13,7 +17,7 @@ namespace Tests.Odin.System
             Assert.That(sut.IsSuccess, Is.True);
             Assert.That(sut.Messages, Is.Empty);
         }
-
+        
         [Test]
         public void Failure_without_TMessage()
         {
@@ -32,10 +36,4 @@ namespace Tests.Odin.System
             Assert.That(sut.Messages, Is.Empty);
         }
     }
-
-    public sealed class ResultOfMessageErrorTests : ResultOfTMessageTests<MessageError>;
-
-    public sealed class ResultOfMessageLoggingInfoTests : ResultOfTMessageTests<MessageLoggingInfo>;
-
-    public sealed class ResultOfMessageSeverityTests : ResultOfTMessageTests<MessageSeverity>;
 }

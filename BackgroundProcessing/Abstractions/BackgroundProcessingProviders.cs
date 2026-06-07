@@ -1,4 +1,4 @@
-﻿using Odin.Strings;
+﻿using System.Collections.Specialized;
 using Odin.System;
 
 namespace Odin.BackgroundProcessing

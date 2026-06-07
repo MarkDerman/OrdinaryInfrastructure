@@ -1,5 +1,4 @@
-﻿using Odin.DesignContracts;
-using Odin.System;
+﻿using Odin.System;
 
 namespace Odin.BackgroundProcessing
 {

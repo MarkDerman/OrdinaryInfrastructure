@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Odin.DesignContracts;
 using Odin.Email;
 using Odin.System;
 

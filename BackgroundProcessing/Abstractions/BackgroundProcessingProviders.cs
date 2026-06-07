@@ -1,5 +1,5 @@
-﻿using System.Collections.Specialized;
-using Odin.System;
+﻿
+using Odin.Strings;
 
 namespace Odin.BackgroundProcessing
 {

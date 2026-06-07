@@ -79,7 +79,7 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection serviceCollection, IConfiguration configuration,
             IConfigurationSection configurationSection, Func<IServiceProvider, string>? sqlServerConnectionStringFactory = null)
         {
-            Precondition.RequiresNotNull(configurationSection);
+            ArgumentNullException.ThrowIfNull(configurationSection);
 
             BackgroundProcessingOptions options = new BackgroundProcessingOptions();
             configurationSection.Bind(options);

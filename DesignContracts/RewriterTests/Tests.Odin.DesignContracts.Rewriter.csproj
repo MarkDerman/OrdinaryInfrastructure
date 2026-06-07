@@ -1,9 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
-    <Nullable>enable</Nullable>
     <GenerateProgramFile>true</GenerateProgramFile>
-    <ImplicitUsings>true</ImplicitUsings>
     <Description>Tests where the target classes under test have not been weaved in post build 
       by the Design-by-Contract tooling. The Rewriter is explicitly run on a target assembly 
       for each test, and the types under test dynamically loaded.</Description>
@@ -11,11 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NUnit" Version="4.4.0" />
-    <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="NUnit3TestAdapter" Version="6.0.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" /> 
-    <PackageReference Include="Mono.Cecil" Version="0.11.6" />
+    <PackageReference Include="NUnit"  />
+    <PackageReference Include="Moq" />
+    <PackageReference Include="NUnit3TestAdapter"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/> 
+    <PackageReference Include="Mono.Cecil"/>
   </ItemGroup>
 
   <ItemGroup>

@@ -25,7 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\System\Activator2\Odin.System.Activator2.csproj" />
     <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
     <ProjectReference Include="..\Core\Odin.Strings.csproj" />
   </ItemGroup>

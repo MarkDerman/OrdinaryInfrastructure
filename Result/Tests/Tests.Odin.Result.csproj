@@ -23,8 +23,4 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Core\Odin.Result.csproj" />
-  </ItemGroup>
-
 </Project>

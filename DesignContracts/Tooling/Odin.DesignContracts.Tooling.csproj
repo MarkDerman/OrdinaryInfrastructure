@@ -6,10 +6,6 @@
         <NoPackageAnalysis>true</NoPackageAnalysis>
     </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="../Rewriter/Odin.DesignContracts.Rewriter.csproj" ReferenceOutputAssembly="false"/>
-    </ItemGroup>
-
     <!-- Mimic inclusion of Rewriter at pack time in the tools folder as part of compile process for local development -->
     <Target Name="CopyRewriterOutputToTools" AfterTargets="Build">
         <PropertyGroup>

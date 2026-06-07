@@ -25,9 +25,4 @@
     <Using Include="NUnit.Framework" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj" />
-    <ProjectReference Include="..\SqlScriptsRunner\Odin.Database.SqlScriptsRunner.csproj" />
-  </ItemGroup>
-
 </Project>

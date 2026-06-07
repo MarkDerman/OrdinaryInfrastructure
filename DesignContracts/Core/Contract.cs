@@ -98,7 +98,7 @@ namespace Odin.DesignContracts
         /// <remarks>
         /// Postconditions are evaluated only when <see cref="ContractOptions.Postconditions"/> are not set to <c>Bypass</c>.
         /// This method acts as a marker method for the Contracts Rewriter to instead insert calls to
-        /// ContractImplementation.Ensures() at all method returns.
+        /// Contract.EnsuresImplementation() at all method returns.
         /// </remarks>
         public static void Ensures(bool condition, string? userMessage = null, string? conditionText = null)
         {

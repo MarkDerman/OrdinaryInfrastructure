@@ -25,7 +25,8 @@ namespace Odin.DDD.Repositories
         protected readonly DbSet<TAggregateRoot> DbSet;
 
         /// <summary>
-        /// EntityFrameworkReadOnlyRepositoryBase constructor.
+        /// EntityFrameworkReadOnlyRepositoryBase default constructor, for use when an exact
+        /// DbSet<TAggregateRoot> is available in the DbContext.
         /// </summary>
         /// <param name="dbContext">The Entity Framework database context.</param>
         /// <exception cref="ArgumentNullException"></exception>
@@ -33,14 +34,21 @@ namespace Odin.DDD.Repositories
         {
             ArgumentNullException.ThrowIfNull(dbContext);
             DbContext = dbContext;
-            // If TAggregateRoot is a base type of the actual implementation type in the database context
-            // then this exception will be thrown which is no good.
-            // if (DbContext.Model.FindEntityType(typeof(TAggregateRoot)) == null)
-            // {
-            //     throw new InvalidOperationException(
-            //         $"The DbContext does not contain a DbSet for aggregate root type {typeof(TAggregateRoot).FullName}.");
-            // }
             DbSet = DbContext.Set<TAggregateRoot>();
+        }
+        
+        /// <summary>
+        /// Used when for TAggregateRoot is a base type, or interface declaration of an actual implementation type
+        /// in the database context.
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="dbSetName"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected EntityFrameworkReadOnlyRepositoryBase(TDbContext dbContext, string dbSetName)
+        {
+            ArgumentNullException.ThrowIfNull(dbContext);
+            DbContext = dbContext;
+            DbSet = DbContext.Set<TAggregateRoot>(dbSetName);
         }
 
         /// <summary>

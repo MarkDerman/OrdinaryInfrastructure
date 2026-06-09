@@ -59,6 +59,61 @@ public sealed class EntityFrameworkRepositoryBaseTests : DatabaseTestBase
     }
 
     [Test]
+    public async Task Named_DbSet_constructor_supports_abstract_aggregate_root()
+    {
+        await SeedBillingEntitiesAsync(
+            new BillingEntityBuilder().WithName("Alpha").Build(),
+            new BillingEntityBuilder()
+                .WithName("Inactive")
+                .WithStatus(BillingEntityStatus.NotActive)
+                .Build());
+
+        await using TestDatabaseContext context = CreateContext();
+        TestBillingEntityBaseReadOnlyRepository repository = new TestBillingEntityBaseReadOnlyRepository(context);
+        TestQuerySpecification<BillingEntityBase> specification =
+            new TestQuerySpecification<BillingEntityBase>(
+                    billingEntity => billingEntity.Status == BillingEntityStatus.Active)
+                .OrderAscending(billingEntity => billingEntity.Name);
+
+        IReadOnlyList<BillingEntityBase> results = await repository.ListAsync(specification);
+
+        Assert.That(results, Has.Count.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(results[0], Is.TypeOf<BillingEntity>());
+            Assert.That(results[0].Name, Is.EqualTo("Alpha"));
+        });
+    }
+
+    [Test]
+    public async Task Named_DbSet_constructor_supports_interface_aggregate_root()
+    {
+        await SeedBillingEntitiesAsync(
+            new BillingEntityBuilder().WithName("Alpha").Build(),
+            new BillingEntityBuilder()
+                .WithName("Inactive")
+                .WithStatus(BillingEntityStatus.NotActive)
+                .Build());
+
+        await using TestDatabaseContext context = CreateContext();
+        TestBillingEntityInterfaceReadOnlyRepository repository =
+            new TestBillingEntityInterfaceReadOnlyRepository(context);
+        TestQuerySpecification<IBillingEntity> specification =
+            new TestQuerySpecification<IBillingEntity>(
+                    billingEntity => billingEntity.Status == BillingEntityStatus.Active)
+                .OrderAscending(billingEntity => billingEntity.Name);
+
+        IReadOnlyList<IBillingEntity> results = await repository.ListAsync(specification);
+
+        Assert.That(results, Has.Count.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(results[0], Is.TypeOf<BillingEntity>());
+            Assert.That(results[0].Name, Is.EqualTo("Alpha"));
+        });
+    }
+
+    [Test]
     public async Task FetchManyAsync_applies_projected_query_specification()
     {
         BillingEntity active = new BillingEntityBuilder().WithName("Active").Build();

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Odin.DDD.Repositories
 {
@@ -24,9 +25,11 @@ namespace Odin.DDD.Repositories
         /// </summary>
         protected readonly DbSet<TAggregateRoot> DbSet;
 
+        private readonly IQueryable<TAggregateRoot> _queryRoot;
+
         /// <summary>
         /// EntityFrameworkReadOnlyRepositoryBase default constructor, for use when an exact
-        /// DbSet<TAggregateRoot> is available in the DbContext.
+        /// DbSet&lt;TAggregateRoot&gt; is available in the DbContext.
         /// </summary>
         /// <param name="dbContext">The Entity Framework database context.</param>
         /// <exception cref="ArgumentNullException"></exception>
@@ -35,20 +38,33 @@ namespace Odin.DDD.Repositories
             ArgumentNullException.ThrowIfNull(dbContext);
             DbContext = dbContext;
             DbSet = DbContext.Set<TAggregateRoot>();
+            _queryRoot = DbSet;
         }
         
         /// <summary>
-        /// Used when for TAggregateRoot is a base type, or interface declaration of an actual implementation type
-        /// in the database context.
+        /// Used when TAggregateRoot is a base type or interface declaration of an actual implementation type
+        /// exposed by a named DbSet property in the database context.
         /// </summary>
-        /// <param name="dbContext"></param>
-        /// <param name="dbSetName"></param>
+        /// <param name="dbContext">The Entity Framework database context.</param>
+        /// <param name="dbSetName">The name of the DbSet property or EF named entity type.</param>
         /// <exception cref="ArgumentNullException"></exception>
         protected EntityFrameworkReadOnlyRepositoryBase(TDbContext dbContext, string dbSetName)
         {
             ArgumentNullException.ThrowIfNull(dbContext);
             DbContext = dbContext;
+            IQueryable<TAggregateRoot>? namedDbSetQueryRoot = TryCreateNamedDbSetQueryRoot(
+                dbContext,
+                dbSetName,
+                out DbSet<TAggregateRoot>? namedDbSet);
+            if (namedDbSetQueryRoot != null)
+            {
+                DbSet = namedDbSet ?? null!;
+                _queryRoot = namedDbSetQueryRoot;
+                return;
+            }
+
             DbSet = DbContext.Set<TAggregateRoot>(dbSetName);
+            _queryRoot = DbSet;
         }
 
         /// <summary>
@@ -220,7 +236,7 @@ namespace Odin.DDD.Repositories
 
         private IQueryable<TAggregateRoot> CreateQuery()
         {
-            IQueryable<TAggregateRoot> query = DbSet.AsQueryable();
+            IQueryable<TAggregateRoot> query = _queryRoot;
 
             if (UseNoTrackingQueries)
             {
@@ -228,6 +244,49 @@ namespace Odin.DDD.Repositories
             }
 
             return query;
+        }
+
+        private static IQueryable<TAggregateRoot>? TryCreateNamedDbSetQueryRoot(
+            TDbContext dbContext,
+            string dbSetName,
+            out DbSet<TAggregateRoot>? namedDbSet)
+        {
+            namedDbSet = null;
+            PropertyInfo? propertyInfo = typeof(TDbContext).GetProperty(
+                dbSetName,
+                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            if (propertyInfo == null)
+            {
+                return null;
+            }
+
+            Type propertyType = propertyInfo.PropertyType;
+            if (!propertyType.IsGenericType || propertyType.GetGenericTypeDefinition() != typeof(DbSet<>))
+            {
+                return null;
+            }
+
+            Type concreteEntityType = propertyType.GetGenericArguments()[0];
+            if (!typeof(TAggregateRoot).IsAssignableFrom(concreteEntityType))
+            {
+                return null;
+            }
+
+            object? dbSet = propertyInfo.GetValue(dbContext);
+            if (dbSet == null)
+            {
+                throw new InvalidOperationException(
+                    $"The DbSet property '{dbSetName}' on '{typeof(TDbContext).Name}' returned null.");
+            }
+
+            if (dbSet is DbSet<TAggregateRoot> aggregateRootDbSet)
+            {
+                namedDbSet = aggregateRootDbSet;
+                return aggregateRootDbSet;
+            }
+
+            return ((IQueryable)dbSet).Cast<TAggregateRoot>();
         }
     }
 }

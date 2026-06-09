@@ -25,7 +25,25 @@ namespace Odin.DDD.Repositories
         /// </summary>
         protected readonly DbSet<TAggregateRoot> DbSet;
 
-        private readonly IQueryable<TAggregateRoot> _queryRoot;
+        /// <summary>
+        /// 
+        /// </summary>
+        protected readonly IQueryable<TAggregateRoot> QueryRoot;
+        
+        /// <summary>
+        /// EntityFrameworkReadOnlyRepositoryBase default constructor, for use when an exact
+        /// DbSet&lt;TAggregateRoot&gt; is available in the DbContext.
+        /// </summary>
+        /// <param name="dbContext">The Entity Framework database context.</param>
+        /// <param name="dbSet">The Entity Framework dbSet to use.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected EntityFrameworkReadOnlyRepositoryBase(TDbContext dbContext, DbSet<TAggregateRoot> dbSet)
+        {
+            ArgumentNullException.ThrowIfNull(dbContext);
+            DbContext = dbContext;
+            DbSet = dbSet;
+            QueryRoot = dbSet;
+        }
 
         /// <summary>
         /// EntityFrameworkReadOnlyRepositoryBase default constructor, for use when an exact
@@ -37,8 +55,8 @@ namespace Odin.DDD.Repositories
         {
             ArgumentNullException.ThrowIfNull(dbContext);
             DbContext = dbContext;
-            DbSet = DbContext.Set<TAggregateRoot>();
-            _queryRoot = DbSet;
+            // DbSet = DbContext.Set<TAggregateRoot>();
+            QueryRoot = DbContext.Set<TAggregateRoot>();;
         }
         
         /// <summary>
@@ -59,12 +77,12 @@ namespace Odin.DDD.Repositories
             if (namedDbSetQueryRoot != null)
             {
                 DbSet = namedDbSet ?? null!;
-                _queryRoot = namedDbSetQueryRoot;
+                QueryRoot = namedDbSetQueryRoot;
                 return;
             }
 
             DbSet = DbContext.Set<TAggregateRoot>(dbSetName);
-            _queryRoot = DbSet;
+            QueryRoot = DbSet;
         }
 
         /// <summary>
@@ -236,7 +254,7 @@ namespace Odin.DDD.Repositories
 
         private IQueryable<TAggregateRoot> CreateQuery()
         {
-            IQueryable<TAggregateRoot> query = _queryRoot;
+            IQueryable<TAggregateRoot> query = QueryRoot;
 
             if (UseNoTrackingQueries)
             {

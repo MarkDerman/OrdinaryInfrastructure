@@ -29,6 +29,17 @@ namespace Odin.DDD.Repositories
         /// EntityFrameworkRepositoryBase constructor.
         /// </summary>
         /// <param name="dbContext"></param>
+        /// <param name="dbSet">The DbSet property</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected EntityFrameworkRepositoryBase(TDbContext dbContext, DbSet<TAggregateRoot> dbSet)
+            :base( dbContext, dbSet)
+        {
+        }
+        
+        /// <summary>
+        /// EntityFrameworkRepositoryBase constructor.
+        /// </summary>
+        /// <param name="dbContext"></param>
         /// <param name="dbSetName">The name of the DbSet property or EF named entity type.</param>
         /// <exception cref="ArgumentNullException"></exception>
         protected EntityFrameworkRepositoryBase(TDbContext dbContext, string dbSetName)

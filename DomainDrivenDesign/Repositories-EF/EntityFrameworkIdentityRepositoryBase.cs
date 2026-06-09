@@ -31,6 +31,17 @@ namespace Odin.DDD.Repositories
         }
         
         /// <summary>
+        /// EntityFrameworkRepositoryBase constructor.
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="dbSet">The DbSet property</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected EntityFrameworkIdentityRepositoryBase(TDbContext dbContext, DbSet<TAggregateRoot> dbSet)
+            :base( dbContext, dbSet)
+        {
+        }
+        
+        /// <summary>
         /// Returns a list of aggregate root IDs that match the given specification.
         /// </summary>
         /// <param name="specification"></param>

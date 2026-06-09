@@ -24,6 +24,17 @@ namespace Odin.DDD.Repositories
             : base(dbContext)
         {
         }
+        
+        /// <summary>
+        /// EntityFrameworkRepositoryBase constructor.
+        /// </summary>
+        /// <param name="dbContext"></param>
+        /// <param name="dbSetName">The name of the DbSet property or EF named entity type.</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        protected EntityFrameworkReadOnlyIdentityRepositoryBase(TDbContext dbContext, string dbSetName)
+            : base(dbContext,dbSetName)
+        {
+        }
 
         /// <summary>
         /// Returns a list of aggregate root IDs that match the given specification.

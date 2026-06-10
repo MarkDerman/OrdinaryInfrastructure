@@ -1,11 +1,10 @@
-using Odin.DDD;
-
 namespace Tests.Odin.DDD.Repositories.EF.Entities
 {
     /// <summary>
     ///    Testing entity
     /// </summary>
-    public class BillingPeriod : IAggregateRoot
+    public class BillingPeriod  : IBillingPeriod<BillingEntity>
+    
     {
         /// <summary>
         /// For EF
@@ -64,9 +63,10 @@ namespace Tests.Odin.DDD.Repositories.EF.Entities
 
         public BillingPeriodBillingStatus BillingStatus { get; set; }
 
-        public ICollection<BillingPeriodProperty> Properties { get; protected set; } = new List<BillingPeriodProperty>();
+        public IReadOnlyCollection<BillingPeriodProperty> Properties { get; protected set; } = new List<BillingPeriodProperty>();
 
-        public ICollection<BillingPeriodTask> Tasks { get; protected set; } = new List<BillingPeriodTask>();
+        public IReadOnlyList<BillingPeriodTask> Tasks { get; protected set; } = new List<BillingPeriodTask>();
+        
 
     }
     

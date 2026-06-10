@@ -24,8 +24,4 @@ public class BillingEntity : BillingEntityBase
     public string? VatNumber { get; set; }
 }
 
-public enum BillingEntityStatus : short
-{
-    NotActive = 0,
-    Active = 1,
-}
+

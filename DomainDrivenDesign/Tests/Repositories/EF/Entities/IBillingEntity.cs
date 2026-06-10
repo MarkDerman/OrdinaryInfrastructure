@@ -8,3 +8,9 @@ public interface IBillingEntity : IIdentityAggregateRoot<int>
 
     BillingEntityStatus Status { get; }
 }
+
+public enum BillingEntityStatus : short
+{
+    NotActive = 0,
+    Active = 1,
+}

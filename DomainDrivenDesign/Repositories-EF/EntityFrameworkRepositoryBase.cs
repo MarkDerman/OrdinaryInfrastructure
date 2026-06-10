@@ -26,28 +26,6 @@ namespace Odin.DDD.Repositories
         }
         
         /// <summary>
-        /// EntityFrameworkRepositoryBase constructor.
-        /// </summary>
-        /// <param name="dbContext"></param>
-        /// <param name="dbSet">The DbSet property</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        protected EntityFrameworkRepositoryBase(TDbContext dbContext, DbSet<TAggregateRoot> dbSet)
-            :base( dbContext, dbSet)
-        {
-        }
-        
-        /// <summary>
-        /// EntityFrameworkRepositoryBase constructor.
-        /// </summary>
-        /// <param name="dbContext"></param>
-        /// <param name="dbSetName">The name of the DbSet property or EF named entity type.</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        protected EntityFrameworkRepositoryBase(TDbContext dbContext, string dbSetName)
-            : base(dbContext,dbSetName)
-        {
-        }
-
-        /// <summary>
         /// Gets a value indicating whether queries should be created without EF change tracking.
         /// </summary>
         protected override bool UseNoTrackingQueries
@@ -64,24 +42,28 @@ namespace Odin.DDD.Repositories
         /// <inheritdoc />
         public void Delete(TAggregateRoot entity)
         {
+            ArgumentNullException.ThrowIfNull(entity);
             DbSet.Remove(entity);
         }
 
         /// <inheritdoc />
         public void Add(TAggregateRoot entity)
         {
+            ArgumentNullException.ThrowIfNull(entity);
             DbSet.Add(entity);
         }
 
         /// <inheritdoc />
         public void AddRange(IEnumerable<TAggregateRoot> entities)
         {
+            ArgumentNullException.ThrowIfNull(entities);
             DbSet.AddRange(entities);
         }
 
         /// <inheritdoc />
         public virtual void Update(TAggregateRoot entity)
         {
+            ArgumentNullException.ThrowIfNull(entity);
             DbSet.Update(entity);
         }
 

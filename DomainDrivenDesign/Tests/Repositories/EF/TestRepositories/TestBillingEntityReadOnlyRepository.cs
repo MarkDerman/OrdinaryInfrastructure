@@ -1,6 +1,6 @@
 using Odin.DDD.Repositories;
 using System.Linq.Expressions;
-using Tests.Odin.DDD.Repositories.EF.Entities;
+using Tests.Odin.DDD.Repositories.TestDomain;
 
 namespace Tests.Odin.DDD.Repositories.EF.TestRepositories;
 

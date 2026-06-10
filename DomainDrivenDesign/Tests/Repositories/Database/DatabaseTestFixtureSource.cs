@@ -1,6 +1,4 @@
-using Tests.Odin.DDD.Repositories.Database;
-
-namespace Tests.Odin.DDD.Repositories.EF.Fixtures;
+namespace Tests.Odin.DDD.Repositories.Database;
 
 public static class DatabaseTestFixtureSource
 {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Odin.DDD;
-using Tests.Odin.DDD.Repositories.EF.Entities;
+using Tests.Odin.DDD.Repositories.EF.Configurations;
+using Tests.Odin.DDD.Repositories.TestDomain;
 
 namespace Tests.Odin.DDD.Repositories.EF
 {

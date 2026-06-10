@@ -1,5 +1,5 @@
 using Odin.DDD.Repositories;
-using Tests.Odin.DDD.Repositories.EF.Entities;
+using Tests.Odin.DDD.Repositories.TestDomain;
 
 namespace Tests.Odin.DDD.Repositories.EF.TestRepositories;
 

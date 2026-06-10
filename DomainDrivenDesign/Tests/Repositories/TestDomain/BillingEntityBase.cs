@@ -1,4 +1,4 @@
-namespace Tests.Odin.DDD.Repositories.EF.Entities;
+namespace Tests.Odin.DDD.Repositories.TestDomain;
 
 public abstract class BillingEntityBase : IBillingEntity
 {

@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Tests.Odin.DDD.Repositories.EF.Entities;
+using Tests.Odin.DDD.Repositories.TestDomain;
 
-namespace Tests.Odin.DDD.Repositories.EF
+namespace Tests.Odin.DDD.Repositories.EF.Configurations
 {
     public class BillingPeriodPropertyConfiguration : IEntityTypeConfiguration<BillingPeriodProperty>
     {

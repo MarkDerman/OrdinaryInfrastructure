@@ -1,6 +1,6 @@
 using Odin.DDD;
 
-namespace Tests.Odin.DDD.Repositories.EF.Entities;
+namespace Tests.Odin.DDD.Repositories.TestDomain;
 
 public interface IBillingEntity : IIdentityAggregateRoot<int>
 {

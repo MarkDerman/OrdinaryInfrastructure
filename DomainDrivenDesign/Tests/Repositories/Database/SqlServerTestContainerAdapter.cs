@@ -20,7 +20,7 @@ public class SqlServerTestContainerAdapter : DatabaseTestContainerAdapterBase
     {
     }
 
-    public override string MigrationScriptsLocation => ".EF.SqlServer.";
+    public override string MigrationScriptsLocation => ".Database.SqlServer.";
 
     public override IDbAdapter RespawnAdapter => DbAdapter.SqlServer;
 

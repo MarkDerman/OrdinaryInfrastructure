@@ -1,6 +1,4 @@
-using Tests.Odin.DDD.Repositories.EF.Entities;
-
-namespace Tests.Odin.DDD.Repositories.EF.Builders;
+namespace Tests.Odin.DDD.Repositories.TestDomain;
 
 public class BillingPeriodTaskBuilder
 {

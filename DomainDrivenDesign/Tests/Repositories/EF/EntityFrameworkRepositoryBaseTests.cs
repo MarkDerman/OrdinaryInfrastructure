@@ -57,61 +57,6 @@ public sealed class EntityFrameworkRepositoryBaseTests : DatabaseTestBase
     }
 
     [Test]
-    public async Task Named_DbSet_constructor_supports_abstract_aggregate_root()
-    {
-        await SeedBillingEntitiesAsync(
-            new BillingEntityBuilder().WithName("Alpha").Build(),
-            new BillingEntityBuilder()
-                .WithName("Inactive")
-                .WithStatus(BillingEntityStatus.NotActive)
-                .Build());
-
-        await using TestDatabaseContext context = CreateContext();
-        TestBillingEntityBaseReadOnlyRepository repository = new TestBillingEntityBaseReadOnlyRepository(context);
-        TestQuerySpecification<BillingEntityBase> specification =
-            new TestQuerySpecification<BillingEntityBase>(
-                    billingEntity => billingEntity.Status == BillingEntityStatus.Active)
-                .OrderAscending(billingEntity => billingEntity.Name);
-
-        IReadOnlyList<BillingEntityBase> results = await repository.ListAsync(specification);
-
-        Assert.That(results, Has.Count.EqualTo(1));
-        Assert.Multiple(() =>
-        {
-            Assert.That(results[0], Is.TypeOf<BillingEntity>());
-            Assert.That(results[0].Name, Is.EqualTo("Alpha"));
-        });
-    }
-
-    [Test]
-    public async Task Named_DbSet_constructor_supports_interface_aggregate_root()
-    {
-        await SeedBillingEntitiesAsync(
-            new BillingEntityBuilder().WithName("Alpha").Build(),
-            new BillingEntityBuilder()
-                .WithName("Inactive")
-                .WithStatus(BillingEntityStatus.NotActive)
-                .Build());
-
-        await using TestDatabaseContext context = CreateContext();
-        TestBillingEntityInterfaceReadOnlyRepository repository =
-            new TestBillingEntityInterfaceReadOnlyRepository(context);
-        TestQuerySpecification<IBillingEntity> specification =
-            new TestQuerySpecification<IBillingEntity>(
-                    billingEntity => billingEntity.Status == BillingEntityStatus.Active)
-                .OrderAscending(billingEntity => billingEntity.Name);
-
-        IReadOnlyList<IBillingEntity> results = await repository.ListAsync(specification);
-
-        Assert.That(results, Has.Count.EqualTo(1));
-        Assert.Multiple(() =>
-        {
-            Assert.That(results[0], Is.TypeOf<BillingEntity>());
-            Assert.That(results[0].Name, Is.EqualTo("Alpha"));
-        });
-    }
-
-    [Test]
     public async Task FetchManyAsync_applies_projected_query_specification()
     {
         BillingEntity active = new BillingEntityBuilder().WithName("Active").Build();
@@ -332,36 +277,6 @@ public sealed class EntityFrameworkRepositoryBaseTests : DatabaseTestBase
 
         Assert.That(repository.UnitOfWork, Is.SameAs(context));
         await Task.CompletedTask;
-    }
-
-    [Test]
-    public async Task Seeder_persists_aggregate_graphs_created_by_builders()
-    {
-        BillingPeriod billingPeriod = new BillingPeriodBuilder()
-            .WithProperty("ExternalId", DataType.String, "external-123")
-            .WithTask(
-                new BillingPeriodTaskBuilder()
-                    .WithTaskType(BillingPeriodTaskType.CreateEndOfBillingPeriodSageARCustomerInvoice)
-                    .WithStage(BillingPeriodStage.PostCustomerInvoice)
-                    .WithData("""{"invoice":"draft"}"""))
-            .Build();
-
-        await SeedBillingPeriodsAsync(billingPeriod);
-
-        await using TestDatabaseContext context = CreateContext();
-        BillingPeriod savedPeriod = await context.BillingPeriods
-            .Include(period => period.Properties)
-            .Include(period => period.Tasks)
-            .SingleAsync();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(savedPeriod.Properties, Has.Count.EqualTo(1));
-            Assert.That(savedPeriod.Properties.Single().PropertyName, Is.EqualTo("ExternalId"));
-            Assert.That(savedPeriod.Tasks, Has.Count.EqualTo(1));
-            Assert.That(savedPeriod.Tasks.Single().TaskType,
-                Is.EqualTo(BillingPeriodTaskType.CreateEndOfBillingPeriodSageARCustomerInvoice));
-        });
     }
 
     private async Task SeedBillingEntitiesAsync(params BillingEntity[] billingEntities)

@@ -25,14 +25,6 @@ namespace Tests.Odin.DDD.Repositories.EF.Configurations
                 .WithMany()
                 .HasForeignKey(x => x.BillingEntityId)
                 .OnDelete(DeleteBehavior.Restrict);
-            builder.HasMany(x => x.Properties)
-                .WithOne(x => x.BillingPeriod)
-                .HasForeignKey(x => x.BillingPeriodId)
-                .OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(x => x.Tasks)
-                .WithOne(x => x.BillingPeriod)
-                .HasForeignKey(x => x.BillingPeriodId)
-                .OnDelete(DeleteBehavior.Cascade);
             builder.HasIndex(x => new { x.BillingEntityId, x.PeriodEnding })
                 .HasDatabaseName("IX_BillingPeriod_BillingEntityIdPeriodEnding");
         }

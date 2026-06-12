@@ -33,6 +33,5 @@ public interface IBillingPeriod<out TBillingEntity> : IAggregateRoot
     BillingPeriodStage Stage { get; set; }
 
     BillingPeriodBillingStatus BillingStatus { get; set; }
-    ICollection<BillingPeriodProperty> Properties { get; }
-    IList<BillingPeriodTask> Tasks { get; }
+    
 }

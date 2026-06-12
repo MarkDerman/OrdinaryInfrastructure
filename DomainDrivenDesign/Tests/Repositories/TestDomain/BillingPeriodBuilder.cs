@@ -7,8 +7,6 @@ public class BillingPeriodBuilder
     private DateOnly _periodEnding = new DateOnly(2026, 1, 31);
     private BillingPeriodStage _stage = BillingPeriodStage.PeriodInProgress;
     private BillingPeriodBillingStatus _billingStatus = BillingPeriodBillingStatus.NotProcessed;
-    private readonly List<BillingPeriodPropertyBuilder> _propertyBuilders = [];
-    private readonly List<BillingPeriodTaskBuilder> _taskBuilders = [];
 
     public BillingPeriodBuilder ForBillingEntity(BillingEntity billingEntity)
     {
@@ -35,32 +33,6 @@ public class BillingPeriodBuilder
         return this;
     }
 
-    public BillingPeriodBuilder WithProperty(BillingPeriodPropertyBuilder propertyBuilder)
-    {
-        _propertyBuilders.Add(propertyBuilder);
-        return this;
-    }
-
-    public BillingPeriodBuilder WithProperty(string propertyName, DataType dataType, string? dataValue)
-    {
-        return WithProperty(new BillingPeriodPropertyBuilder()
-            .WithName(propertyName)
-            .WithDataType(dataType)
-            .WithDataValue(dataValue));
-    }
-
-    public BillingPeriodBuilder WithTask(BillingPeriodTaskBuilder taskBuilder)
-    {
-        _taskBuilders.Add(taskBuilder);
-        return this;
-    }
-
-    public BillingPeriodBuilder WithTask(BillingPeriodTaskType taskType, BillingPeriodStage stage)
-    {
-        return WithTask(new BillingPeriodTaskBuilder()
-            .WithTaskType(taskType)
-            .WithStage(stage));
-    }
 
     public BillingPeriod Build()
     {
@@ -69,16 +41,6 @@ public class BillingPeriodBuilder
         {
             BillingStatus = _billingStatus
         };
-
-        foreach (BillingPeriodPropertyBuilder propertyBuilder in _propertyBuilders)
-        {
-            billingPeriod.Properties.Add(propertyBuilder.Build(billingPeriod));
-        }
-
-        foreach (BillingPeriodTaskBuilder taskBuilder in _taskBuilders)
-        {
-            billingPeriod.Tasks.Add(taskBuilder.Build(billingPeriod));
-        }
 
         return billingPeriod;
     }

@@ -20,7 +20,7 @@ public class PostgresTestContainerAdapter : DatabaseTestContainerAdapterBase
     {
     }
 
-    public override string MigrationScriptsLocation => ".EF.Postgres.";
+    public override string MigrationScriptsLocation => ".Database.Postgres.";
 
     public override IDbAdapter RespawnAdapter => DbAdapter.Postgres;
 

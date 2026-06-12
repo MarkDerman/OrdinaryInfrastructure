@@ -1,4 +1,4 @@
-namespace Tests.Odin.DDD.Repositories.EF.Entities
+namespace Tests.Odin.DDD.Repositories.TestDomain
 {
     /// <summary>
     ///    Testing entity
@@ -63,10 +63,6 @@ namespace Tests.Odin.DDD.Repositories.EF.Entities
 
         public BillingPeriodBillingStatus BillingStatus { get; set; }
 
-        public IReadOnlyCollection<BillingPeriodProperty> Properties { get; protected set; } = new List<BillingPeriodProperty>();
-
-        public IReadOnlyList<BillingPeriodTask> Tasks { get; protected set; } = new List<BillingPeriodTask>();
-        
 
     }
     

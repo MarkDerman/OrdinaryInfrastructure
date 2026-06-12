@@ -30,8 +30,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Repositories\EF\Postgres\*.sql" />
-        <EmbeddedResource Include="Repositories\EF\SqlServer\*.sql" />
+        <EmbeddedResource Include="Repositories\Database\Postgres\*.sql" />
+        <EmbeddedResource Include="Repositories\Database\SqlServer\*.sql" />
     </ItemGroup>
 
     <ItemGroup>

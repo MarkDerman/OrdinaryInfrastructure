@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Odin.DDD;
-using Tests.Odin.DDD.Repositories.EF.Entities;
+using Tests.Odin.DDD.Repositories.EF.Configurations;
+using Tests.Odin.DDD.Repositories.TestDomain;
 
 namespace Tests.Odin.DDD.Repositories.EF
 {
@@ -8,8 +9,6 @@ namespace Tests.Odin.DDD.Repositories.EF
     {
         DbSet<BillingEntity> BillingEntities { get;  }
         DbSet<BillingPeriod> BillingPeriods { get;  }
-        DbSet<BillingPeriodProperty> BillingPeriodProperties { get; }
-        DbSet<BillingPeriodTask> BillingPeriodTasks { get; }
     }
     
     public class TestDatabaseContext : DbContext, ITestDatabaseContext, IUnitOfWork
@@ -21,16 +20,12 @@ namespace Tests.Odin.DDD.Repositories.EF
 
         public virtual DbSet<BillingEntity> BillingEntities { get; set; } = null!;
         public virtual DbSet<BillingPeriod> BillingPeriods { get; set; } = null!;
-        public virtual DbSet<BillingPeriodProperty> BillingPeriodProperties { get; set; } = null!;
-        public virtual DbSet<BillingPeriodTask> BillingPeriodTasks { get; set; } = null!;
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new BillingEntityConfiguration());
             modelBuilder.ApplyConfiguration(new BillingPeriodConfiguration());
-            modelBuilder.ApplyConfiguration(new BillingPeriodPropertyConfiguration());
-            modelBuilder.ApplyConfiguration(new BillingPeriodTaskConfiguration());
         }
     }
 }

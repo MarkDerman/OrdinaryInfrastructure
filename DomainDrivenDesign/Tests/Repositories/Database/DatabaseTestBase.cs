@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Tests.Odin.DDD.Repositories.Database;
-using Tests.Odin.DDD.Repositories.EF.Fixtures;
+using Tests.Odin.DDD.Repositories.EF;
 
-namespace Tests.Odin.DDD.Repositories.EF;
+namespace Tests.Odin.DDD.Repositories.Database;
 
 public abstract class DatabaseTestBase
 {

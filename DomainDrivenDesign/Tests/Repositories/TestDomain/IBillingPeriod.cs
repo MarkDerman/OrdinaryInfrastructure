@@ -1,6 +1,6 @@
 using Odin.DDD;
 
-namespace Tests.Odin.DDD.Repositories.EF.Entities;
+namespace Tests.Odin.DDD.Repositories.TestDomain;
 
 public interface IBillingPeriod<out TBillingEntity> : IAggregateRoot
     where TBillingEntity : class, IBillingEntity
@@ -33,6 +33,5 @@ public interface IBillingPeriod<out TBillingEntity> : IAggregateRoot
     BillingPeriodStage Stage { get; set; }
 
     BillingPeriodBillingStatus BillingStatus { get; set; }
-    ICollection<BillingPeriodProperty> Properties { get; }
-    IList<BillingPeriodTask> Tasks { get; }
+    
 }

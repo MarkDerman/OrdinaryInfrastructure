@@ -26,7 +26,8 @@
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="[8.0.0,)" Condition="!$([System.String]::Copy('$(MSBuildProjectName)').StartsWith('Tests.'))"/>
         <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.8" Condition="$([System.String]::Copy('$(MSBuildProjectName)').StartsWith('Tests.'))"/>
         <PackageVersion Include="Microsoft.Data.SqlClient" Version="7.0.1"/>
-        <PackageVersion Include="Microsoft.Graph" Version="[5.0.0,)"/>
+        <PackageVersion Include="Microsoft.Graph" Version="[5.105.0,)"/>
+        <PackageVersion Include="Microsoft.Kiota.Abstractions" Version="[1.22.2,)"/>
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.5.1"/>
         <PackageVersion Include="Mono.Cecil" Version="0.11.6" />
         <PackageVersion Include="Moq" Version="4.20.72"/>

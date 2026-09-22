@@ -14,7 +14,7 @@ public class RemoteFileSessionsTests
     [TestCase("Sandulela_Daily_Electricity_Transaction_*.csv", -1)]
     public void GetFiles_gets_all_files_successfully(string? filePath, int expectedCount = -1)
     {
-        const string baseDirectory = "/Users/matthewderman/Code/Flash/SFTP/Sandulela/";
+        const string baseDirectory = "~/Code/Flash/SFTP/Sandulela/";
         RemoteFilesOptions remoteFileConfig = new RemoteFilesOptions
         {
             ConnectionStrings = new Dictionary<string, string>

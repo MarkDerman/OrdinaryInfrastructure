@@ -84,9 +84,9 @@ namespace Odin.BackgroundProcessing
         public int? SqlServerSlidingInvisibilityTimeoutSeconds { get; set; }
 
         /// <summary>
-        /// How often Hangfire polls the job queue when using SQL Server. Odin default is 2 seconds.
+        /// How often Hangfire polls the job queue when using SQL Server. Odin default is 15 seconds.
         /// </summary>
-        public int? SqlServerQueuePollIntervalSeconds { get; set; } = 2;
+        public int? SqlServerQueuePollIntervalSeconds { get; set; } = 15;
 
         /// <summary>
         /// TBA

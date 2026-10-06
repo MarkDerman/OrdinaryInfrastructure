@@ -5,41 +5,41 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ardalis.SmartEnum" />
+        <PackageReference Include="Ardalis.SmartEnum"/>
         <PackageReference Include="Moq"/>
-        <PackageReference Include="NUnit" />
-    <PackageReference Include="NUnit3TestAdapter">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="NUnit.Analyzers">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+        <PackageReference Include="NUnit"/>
+        <PackageReference Include="NUnit3TestAdapter">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="NUnit.Analyzers">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing"/>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions"/>
         <PackageReference Include="Respawn"/>
         <PackageReference Include="Testcontainers.MsSql"/>
-        <PackageReference Include="Testcontainers.PostgreSql" />
+        <PackageReference Include="Testcontainers.PostgreSql"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL"/>
     </ItemGroup>
     <ItemGroup>
-        <Using Include="NUnit.Framework" />
+        <Using Include="NUnit.Framework"/>
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Repositories\Database\Postgres\*.sql" />
-        <EmbeddedResource Include="Repositories\Database\SqlServer\*.sql" />
+        <EmbeddedResource Include="Repositories\Database\Postgres\*.sql"/>
+        <EmbeddedResource Include="Repositories\Database\SqlServer\*.sql"/>
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\Database\SqlScriptsRunner\Odin.Database.SqlScriptsRunner.csproj"/>
-        <ProjectReference Include="..\..\Strings\Core\Odin.Strings.csproj" />
+        <ProjectReference Include="..\..\Strings\Core\Odin.Strings.csproj"/>
         <ProjectReference Include="..\..\System\Result\Odin.System.Result.csproj"/>
         <ProjectReference Include="..\Core\Odin.DDD.csproj"/>
-        <ProjectReference Include="..\Repositories-EF\Odin.DDD.Repositories.EF.csproj" />
+        <ProjectReference Include="..\Repositories-EF\Odin.DDD.Repositories.EF.csproj"/>
     </ItemGroup>
 
 </Project>
